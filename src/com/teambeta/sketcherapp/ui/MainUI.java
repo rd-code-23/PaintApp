@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
  */
 public class MainUI {
     private static final String CLEAR_BUTTON_TEXT = "Clear";
-    private static final String BLACK_BUTTON_TEXT = "Black";
+    private static final String BLACK_BUTTON_TEXT = "Pen";
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
