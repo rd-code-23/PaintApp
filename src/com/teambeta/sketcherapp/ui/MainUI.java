@@ -2,17 +2,34 @@ package com.teambeta.sketcherapp.ui;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 
 /**
  * Main UI class to wrap all GUI elements together.
  */
 public class MainUI {
+    private static final String CLEAR_BUTTON_TEXT = "Clear";
+    private static final String BLACK_BUTTON_TEXT = "Black";
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
-    private static final int APPLICATION_WIDTH = 1800;
-    private static final int APPLICATION_HEIGHT = 1000;
+    private static final int APPLICATION_WIDTH = 1920;
+    private static final int APPLICATION_HEIGHT = 1080;
+
+    private JButton clearButton;
+    private JButton blackButton;
+    private DrawArea drawArea;
+    private ActionListener actionListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == clearButton) {
+                drawArea.clear();
+            } else if (e.getSource() == blackButton) {
+                drawArea.black();
+            }
+        }
+    };
 
     /**
      * Constructor.
@@ -26,18 +43,30 @@ public class MainUI {
      */
     private void prepareGUI() {
         mainFrame = new JFrame(APPLICATION_NAME);
-        mainFrame.setLayout(new BorderLayout());
+        Container mainContent = mainFrame.getContentPane();
+        mainContent.setLayout(new BorderLayout());
+
         mainFrame.setSize(APPLICATION_WIDTH, APPLICATION_HEIGHT);
         mainFrame.getContentPane().setBackground(Color.DARK_GRAY);
 
         mainFrame.setLocationByPlatform(true);
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        /* Test label. String literal here should be extracted as a constant! */
-        JLabel label = new JLabel("This is a basic GUI!", JLabel.CENTER);
-        label.setForeground(Color.WHITE);
+        drawArea = new DrawArea();
+        // ideally this should be in its own panel with a proper scale, not directly to mainContent
+        mainContent.add(drawArea, BorderLayout.CENTER);
 
-        mainFrame.add(label);
+        clearButton = new JButton(CLEAR_BUTTON_TEXT);
+        clearButton.addActionListener(actionListener);
+        blackButton = new JButton(BLACK_BUTTON_TEXT);
+        blackButton.addActionListener(actionListener);
+
+        JPanel canvasTools = new JPanel();
+        canvasTools.setBackground(Color.DARK_GRAY);
+        canvasTools.add(clearButton);
+        canvasTools.add(blackButton);
+
+        mainContent.add(canvasTools, BorderLayout.WEST);
     }
 
     /**

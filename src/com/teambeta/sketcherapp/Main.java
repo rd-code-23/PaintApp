@@ -10,7 +10,7 @@ public class Main {
     /**
      * Main program.
      *
-     * @param args of user input.
+     * @param args of user input
      */
     public static void main(String[] args) {
         MainUI mainUI = new MainUI();
