@@ -82,7 +82,7 @@ public class DrawArea extends JComponent {
     public void clear() {
         graphics.setPaint(Color.white);
         // draw white on entire draw area to clear
-        graphics.fillRect(0, 0, getSize().width, getSize().height);
+        graphics.fillRect(0, 0, MainUI.CANVAS_WIDTH, MainUI.CANVAS_HEIGHT);
         graphics.setPaint(Color.black);
         repaint();
     }

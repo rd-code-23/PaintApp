@@ -17,6 +17,8 @@ public class MainUI {
     private static final String APPLICATION_NAME = "Beta Sketcher";
     private static final int APPLICATION_WIDTH = 1920;
     private static final int APPLICATION_HEIGHT = 1080;
+    public static final int CANVAS_WIDTH = 1920;
+    public static final int CANVAS_HEIGHT = 1080;
 
     private JButton clearButton;
     private JButton blackButton;
