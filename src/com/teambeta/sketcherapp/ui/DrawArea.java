@@ -1,13 +1,13 @@
 package com.teambeta.sketcherapp.ui;
 
+import com.teambeta.sketcherapp.Main;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 
 import javax.swing.JComponent;
 
@@ -24,37 +24,75 @@ public class DrawArea extends JComponent {
     private int oldX;
     private int oldY;
 
-
     /**
      * Constructor. Set actions upon mouse press events.
      */
     public DrawArea() {
+        //TODO:change this to use the template pattern.
         setDoubleBuffered(false);
         addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+            }
+
+            @Override
             public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
                 // save coordinate x,y when mouse is pressed
                 oldX = e.getX();
                 oldY = e.getY();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                if (MainUI.getSelectedTool() == MainUI.Tool.LINE) {
+                    currentX = e.getX();
+                    currentY = e.getY();
+                    drawLine(e);
+                    // store current coordinates x,y as oldX, oldY
+                    oldX = currentX;
+                    oldY = currentY;
+                }
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                super.mouseDragged(e);
+
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                super.mouseMoved(e);
             }
         });
 
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
-                // coordinates x,y when drag mouse
-                currentX = e.getX();
-                currentY = e.getY();
-
-                if (graphics != null) {
-                    // draw line if graphics context not null
-                    graphics.drawLine(oldX, oldY, currentX, currentY);
-                    // refresh draw area to repaint
-                    repaint();
+                if (MainUI.getSelectedTool() == MainUI.Tool.PEN) {
+                    // coordinates x,y when drag mouse
+                    currentX = e.getX();
+                    currentY = e.getY();
+                    drawLine(e);
                     // store current coordinates x,y as oldX, oldY
                     oldX = currentX;
                     oldY = currentY;
                 }
             }
         });
+
+
+    }
+
+    private void drawLine(MouseEvent e) {
+        if (graphics != null) {
+            // draw line if graphics context not null
+            graphics.drawLine(oldX, oldY, currentX, currentY);
+            // refresh draw area to repaint
+            repaint();
+        }
     }
 
     /**
@@ -92,5 +130,9 @@ public class DrawArea extends JComponent {
      */
     public void black() {
         graphics.setPaint(Color.black);
+    }
+
+    public void setColor(Color color) {
+        graphics.setPaint(color);
     }
 }

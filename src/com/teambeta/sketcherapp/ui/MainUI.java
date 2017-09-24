@@ -10,8 +10,19 @@ import java.awt.event.ActionListener;
  * Main UI class to wrap all GUI elements together.
  */
 public class MainUI {
+    public static Tool getSelectedTool() {
+        return selectedTool;
+    }
+
+    public enum Tool {
+        PEN,
+        LINE
+    }
+    private static Tool selectedTool = Tool.PEN;
+
     private static final String CLEAR_BUTTON_TEXT = "Clear";
     private static final String BLACK_BUTTON_TEXT = "Pen";
+    private static final String LINE_TOOL_BUTTON_TEXT = "LINE";
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
@@ -22,6 +33,7 @@ public class MainUI {
 
     private JButton clearButton;
     private JButton blackButton;
+    private JButton lineToolButton;
     private DrawArea drawArea;
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -29,9 +41,15 @@ public class MainUI {
                 drawArea.clear();
             } else if (e.getSource() == blackButton) {
                 drawArea.black();
+                selectedTool = Tool.PEN;
+            } else if (e.getSource() == lineToolButton) {
+                //TODO:change this to the currently selected color, once the color picker has been implemented
+                selectedTool = Tool.LINE;
+                drawArea.setColor(Color.black);
             }
         }
     };
+
 
     /**
      * Constructor.
@@ -62,11 +80,14 @@ public class MainUI {
         clearButton.addActionListener(actionListener);
         blackButton = new JButton(BLACK_BUTTON_TEXT);
         blackButton.addActionListener(actionListener);
+        lineToolButton = new JButton(LINE_TOOL_BUTTON_TEXT);
+        lineToolButton.addActionListener(actionListener);
 
         JPanel canvasTools = new JPanel();
         canvasTools.setBackground(Color.DARK_GRAY);
         canvasTools.add(clearButton);
         canvasTools.add(blackButton);
+        canvasTools.add(lineToolButton);
 
         mainContent.add(canvasTools, BorderLayout.WEST);
     }
