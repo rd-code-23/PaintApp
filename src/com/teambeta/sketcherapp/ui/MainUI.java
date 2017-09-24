@@ -87,7 +87,7 @@ public class MainUI {
     /**
      * Build GUI menu bar.
      */
-    public void prepareMenuBar() {
+    private void prepareMenuBar() {
         menuBar = new JMenuBar();
 
         fileMenu = new JMenu(FILE_MENU_BUTTON_TEXT);
