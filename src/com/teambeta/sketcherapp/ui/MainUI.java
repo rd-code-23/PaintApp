@@ -18,19 +18,6 @@ public class MainUI {
     private static final int APPLICATION_WIDTH = 1920;
     private static final int APPLICATION_HEIGHT = 1080;
 
-    private static final String FILE_MENU_BUTTON_TEXT = "File";
-    private static final String EDIT_MENU_BUTTON_TEXT = "Edit";
-    private static final String IMAGE_MENU_BUTTON_TEXT = "Image";
-    private static final String WINDOW_MENU_BUTTON_TEXT = "Window";
-    private static final String HELP_MENU_BUTTON_TEXT = "Help";
-
-    private JMenuBar menuBar;
-    private JMenu fileMenu;
-    private JMenu editMenu;
-    private JMenu imageMenu;
-    private JMenu windowMenu;
-    private JMenu helpMenu;
-
     private JButton clearButton;
     private JButton blackButton;
     private DrawArea drawArea;
@@ -80,29 +67,6 @@ public class MainUI {
         canvasTools.add(blackButton);
 
         mainContent.add(canvasTools, BorderLayout.WEST);
-
-        prepareMenuBar();
-    }
-
-    /**
-     * Build GUI menu bar.
-     */
-    public void prepareMenuBar() {
-        menuBar = new JMenuBar();
-
-        fileMenu = new JMenu(FILE_MENU_BUTTON_TEXT);
-        editMenu = new JMenu(EDIT_MENU_BUTTON_TEXT);
-        imageMenu = new JMenu(IMAGE_MENU_BUTTON_TEXT);
-        windowMenu = new JMenu(WINDOW_MENU_BUTTON_TEXT);
-        helpMenu = new JMenu(HELP_MENU_BUTTON_TEXT);
-
-        menuBar.add(fileMenu);
-        menuBar.add(editMenu);
-        menuBar.add(imageMenu);
-        menuBar.add(windowMenu);
-        menuBar.add(helpMenu);
-
-        mainFrame.setJMenuBar(menuBar);
     }
 
     /**
