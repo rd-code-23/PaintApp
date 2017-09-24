@@ -1,4 +1,4 @@
-package com.teambeta.sketcherapp.model;
+package com.teambeta.sketcherapp.drawingTools;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -25,25 +25,25 @@ public class PenTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(Graphics2D graphics, MouseEvent e, int startX, int startY, int endX, int endY) {
-        //when the line tool is released draw the line
+    public void onDrag(Graphics2D graphics, MouseEvent e) {
+        //draw a path that follows your mouse while the mouse is being dragged
         if (graphics != null) {
             currentX = e.getX();
             currentY = e.getY();
             // draw line if graphics context not null
-            graphics.drawLine(startX, startY, endX, endY);
+            graphics.drawLine(lastX, lastY, currentX, currentY);
             lastX = currentX;
             lastY = currentY;
         }
-
     }
 
     @Override
-    public void onRelease(Graphics2D graphics, MouseEvent e, int startX, int startY, int endX, int endY) {
+    public void onRelease(Graphics2D graphics, MouseEvent e) {
     }
 
     @Override
-    public void onClick(Graphics2D graphics, MouseEvent e, int startX, int startY, int endX, int endY) {
+    public void onClick(Graphics2D graphics, MouseEvent e) {
+        //draw a point where the mouse was clicked
         currentX = e.getX();
         currentY = e.getY();
         graphics.drawLine(currentX, currentY, currentX, currentY);
@@ -52,11 +52,12 @@ public class PenTool extends DrawingTool {
     }
 
     @Override
-    public void onPress(Graphics2D graphics, MouseEvent e, int startX, int startY, int endX, int endY) {
-//        lastX = currentX;
-//        lastY = currentY;
+    public void onPress(Graphics2D graphics, MouseEvent e) {
+        //set the coordinates to the current point when the mouse is pressed
         currentX = e.getX();
         currentY = e.getY();
+        lastX = currentX;
+        lastY = currentY;
     }
 
     @Override

@@ -17,10 +17,6 @@ import javax.swing.JComponent;
 public class DrawArea extends JComponent {
     private Image canvas;
     private Graphics2D graphics;
-    private int currentX;
-    private int currentY;
-    private int oldX;
-    private int oldY;
 
     /**
      * Constructor. Set actions upon mouse press events.
@@ -31,61 +27,31 @@ public class DrawArea extends JComponent {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                MainUI.selectedDrawingTool.onClick(graphics,e, oldX, oldY, currentX, currentY);
+                MainUI.selectedDrawingTool.onClick(graphics, e);
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                // save coordinate x,y when mouse is pressed
-                MainUI.selectedDrawingTool.onPress(graphics,e, oldX, oldY, currentX, currentY);
-                oldX = e.getX();
-                oldY = e.getY();
+                MainUI.selectedDrawingTool.onPress(graphics, e);
+                repaint();
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
-              //  System.out.println("Mouse Started at" + oldX + ", " + oldY);
-
-                currentX = e.getX();
-                currentY = e.getY();
-               // System.out.println("Mouse Released at" + currentX + ", " + currentY);
-                MainUI.selectedDrawingTool.onRelease(graphics,e, oldX, oldY, currentX, currentY);
+                MainUI.selectedDrawingTool.onRelease(graphics, e);
                 repaint();
-                // store current coordinates x,y as oldX, oldY
-                oldX = currentX;
-                oldY = currentY;
-
-
             }
         });
 
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
-                // coordinates x,y when drag mouse
-                currentX = e.getX();
-                currentY = e.getY();
-                //drawLine();
-                MainUI.selectedDrawingTool.onDrag(graphics,e, oldX, oldY, currentX, currentY);
+                MainUI.selectedDrawingTool.onDrag(graphics, e);
                 repaint();
-                // store current coordinates x,y as oldX, oldY
-                oldX = currentX;
-                oldY = currentY;
             }
         });
-
-
     }
-
-//    private void drawLine() {
-//        if (graphics != null) {
-//            // draw line if graphics context not null
-//            graphics.drawLine(oldX, oldY, currentX, currentY);
-//            // refresh draw area to repaint
-//            repaint();
-//        }
-//    }
 
     /**
      * Creates a canvas for drawable elements.
@@ -102,7 +68,6 @@ public class DrawArea extends JComponent {
             // clear draw area
             clear();
         }
-
         canvasGraphics.drawImage(canvas, 0, 0, null);
     }
 
@@ -124,6 +89,11 @@ public class DrawArea extends JComponent {
         graphics.setPaint(Color.black);
     }
 
+    /**
+     * Set the graphics painter color.
+     *
+     * @param color the color to set the graphics painter to.
+     */
     public void setColor(Color color) {
         graphics.setPaint(color);
     }

@@ -1,21 +1,20 @@
 package com.teambeta.sketcherapp.ui;
 
-import com.teambeta.sketcherapp.model.DrawingTool;
-import com.teambeta.sketcherapp.model.LineTool;
-import com.teambeta.sketcherapp.model.PenTool;
+import com.teambeta.sketcherapp.drawingTools.DrawingTool;
+import com.teambeta.sketcherapp.drawingTools.LineTool;
+import com.teambeta.sketcherapp.drawingTools.PenTool;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
 /**
  * Main UI class to wrap all GUI elements together.
  */
 public class MainUI {
-    public static LineTool lineTool;
-    public static PenTool penTool;
+    private static LineTool lineTool;
+    private static PenTool penTool;
     public static DrawingTool selectedDrawingTool;
 
     private static final String CLEAR_BUTTON_TEXT = "Clear";
@@ -89,6 +88,9 @@ public class MainUI {
         mainContent.add(canvasTools, BorderLayout.WEST);
     }
 
+    /**
+     * Create the drawing tool objects and set the pen tool as the default selection.
+     */
     private void initDrawingTools() {
         lineTool = new LineTool();
         penTool = new PenTool();
