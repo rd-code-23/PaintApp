@@ -14,6 +14,9 @@ public class LineTool extends DrawingTool {
     private int sizeInPixels;
     private Color color;
 
+    /**
+     * The constructor sets the properties of the tool to their default values
+     */
     public LineTool() {
         color = Color.black;
         sizeInPixels = 1;
@@ -50,12 +53,18 @@ public class LineTool extends DrawingTool {
 
     @Override
     public void onPress(Graphics2D graphics, MouseEvent e) {
-        //set the
+        //set the coordinates to the current pixel clicked
         currentX = e.getX();
         currentY = e.getY();
         lastX = currentX;
         lastY = currentY;
     }
+
+    /**
+     * getColor returns the current color the line tool is set to.
+     *
+     * @return the current Color of the LineTool
+     */
     @Override
     public Color getColor() {
         return color;

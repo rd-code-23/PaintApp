@@ -15,6 +15,9 @@ public class PenTool extends DrawingTool {
     private int sizeInPixels;
     private Color color;
 
+    /**
+     * The constructor sets the properties of the tool to their default values
+     */
     public PenTool() {
         color = Color.black;
         sizeInPixels = 1;
@@ -59,7 +62,12 @@ public class PenTool extends DrawingTool {
         lastX = currentX;
         lastY = currentY;
     }
-
+    
+    /**
+     * getColor returns the current color the line tool is set to.
+     *
+     * @return the current Color of the LineTool
+     */
     @Override
     public Color getColor() {
         return color;
