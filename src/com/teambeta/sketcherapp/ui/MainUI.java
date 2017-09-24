@@ -93,6 +93,7 @@ public class MainUI {
         lineToolButton.addActionListener(actionListener);
 
         JPanel canvasTools = new JPanel();
+        canvasTools.setLayout(new BoxLayout(canvasTools,BoxLayout.Y_AXIS));
         canvasTools.setBackground(Color.DARK_GRAY);
         canvasTools.add(clearButton);
         canvasTools.add(penToolButton);
