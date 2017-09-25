@@ -9,6 +9,10 @@ public class SquareTool extends DrawingTool {
     private int currentX;
     private int initX;
     private int initY;
+    private int drawWidthX;
+    private int drawHeightY;
+    private int xAxisMagnitudeDelta;
+    private int yAxisMagnitudeDelta;
     private int sizeInPixels;
     private Color color;
 
@@ -22,6 +26,10 @@ public class SquareTool extends DrawingTool {
         initY = 0;
         currentX = 0;
         currentY = 0;
+        drawWidthX = 0;
+        drawHeightY = 0;
+        xAxisMagnitudeDelta = 0;
+        yAxisMagnitudeDelta = 0;
     }
 
     @Override
@@ -45,10 +53,8 @@ public class SquareTool extends DrawingTool {
         currentY = e.getY();
 
         // Draw the square with the longest side as long as the shortest side.
-        int drawWidthX = 0;
-        int drawHeightY = 0;
-        int xAxisMagnitudeDelta = Math.abs(currentX - initX);
-        int yAxisMagnitudeDelta = Math.abs(currentY - initY);
+        xAxisMagnitudeDelta = Math.abs(currentX - initX);
+        yAxisMagnitudeDelta = Math.abs(currentY - initY);
 
         if (xAxisMagnitudeDelta > yAxisMagnitudeDelta) {
             drawWidthX = yAxisMagnitudeDelta;
