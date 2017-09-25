@@ -1,22 +1,32 @@
 package com.teambeta.sketcherapp.ui;
 
+import com.teambeta.sketcherapp.drawingTools.DrawingTool;
+import com.teambeta.sketcherapp.drawingTools.LineTool;
+import com.teambeta.sketcherapp.drawingTools.PenTool;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-
 /**
  * Main UI class to wrap all GUI elements together.
  */
 public class MainUI {
+    private static LineTool lineTool;
+    private static PenTool penTool;
+    public static DrawingTool selectedDrawingTool;
+
     private static final String CLEAR_BUTTON_TEXT = "Clear";
-    private static final String BLACK_BUTTON_TEXT = "Pen";
+    private static final String PEN_BUTTON_TEXT = "Pen";
+    private static final String LINE_TOOL_BUTTON_TEXT = "Line";
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
     private static final int APPLICATION_WIDTH = 1920;
     private static final int APPLICATION_HEIGHT = 1080;
+    public static final int CANVAS_WIDTH = 1920;
+    public static final int CANVAS_HEIGHT = 1080;
 
     private static final String FILE_MENU_BUTTON_TEXT = "File";
     private static final String EDIT_MENU_BUTTON_TEXT = "Edit";
@@ -32,14 +42,19 @@ public class MainUI {
     private JMenu helpMenu;
 
     private JButton clearButton;
-    private JButton blackButton;
+    private JButton penToolButton;
+    private JButton lineToolButton;
     private DrawArea drawArea;
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == clearButton) {
                 drawArea.clear();
-            } else if (e.getSource() == blackButton) {
-                drawArea.black();
+            } else if (e.getSource() == penToolButton) {
+                selectedDrawingTool = penTool;
+                drawArea.setColor(penTool.getColor());
+            } else if (e.getSource() == lineToolButton) {
+                selectedDrawingTool = lineTool;
+                drawArea.setColor(lineTool.getColor());
             }
         }
     };
@@ -49,6 +64,7 @@ public class MainUI {
      */
     public MainUI() {
         prepareGUI();
+        initDrawingTools();
     }
 
     /**
@@ -71,13 +87,17 @@ public class MainUI {
 
         clearButton = new JButton(CLEAR_BUTTON_TEXT);
         clearButton.addActionListener(actionListener);
-        blackButton = new JButton(BLACK_BUTTON_TEXT);
-        blackButton.addActionListener(actionListener);
+        penToolButton = new JButton(PEN_BUTTON_TEXT);
+        penToolButton.addActionListener(actionListener);
+        lineToolButton = new JButton(LINE_TOOL_BUTTON_TEXT);
+        lineToolButton.addActionListener(actionListener);
 
         JPanel canvasTools = new JPanel();
+        canvasTools.setLayout(new BoxLayout(canvasTools,BoxLayout.Y_AXIS));
         canvasTools.setBackground(Color.DARK_GRAY);
         canvasTools.add(clearButton);
-        canvasTools.add(blackButton);
+        canvasTools.add(penToolButton);
+        canvasTools.add(lineToolButton);
 
         mainContent.add(canvasTools, BorderLayout.WEST);
 
@@ -103,6 +123,15 @@ public class MainUI {
         menuBar.add(helpMenu);
 
         mainFrame.setJMenuBar(menuBar);
+    }
+
+    /**
+     * Create the drawing tool objects and set the pen tool as the default selection.
+     */
+    private void initDrawingTools() {
+        lineTool = new LineTool();
+        penTool = new PenTool();
+        selectedDrawingTool = penTool;
     }
 
     /**

@@ -5,9 +5,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 
 import javax.swing.JComponent;
 
@@ -19,11 +17,6 @@ import javax.swing.JComponent;
 public class DrawArea extends JComponent {
     private Image canvas;
     private Graphics2D graphics;
-    private int currentX;
-    private int currentY;
-    private int oldX;
-    private int oldY;
-
 
     /**
      * Constructor. Set actions upon mouse press events.
@@ -31,28 +24,31 @@ public class DrawArea extends JComponent {
     public DrawArea() {
         setDoubleBuffered(false);
         addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                MainUI.selectedDrawingTool.onClick(graphics, e);
+            }
+
+            @Override
             public void mousePressed(MouseEvent e) {
-                // save coordinate x,y when mouse is pressed
-                oldX = e.getX();
-                oldY = e.getY();
+                super.mousePressed(e);
+                MainUI.selectedDrawingTool.onPress(graphics, e);
+                repaint();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                MainUI.selectedDrawingTool.onRelease(graphics, e);
+                repaint();
             }
         });
 
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
-                // coordinates x,y when drag mouse
-                currentX = e.getX();
-                currentY = e.getY();
-
-                if (graphics != null) {
-                    // draw line if graphics context not null
-                    graphics.drawLine(oldX, oldY, currentX, currentY);
-                    // refresh draw area to repaint
-                    repaint();
-                    // store current coordinates x,y as oldX, oldY
-                    oldX = currentX;
-                    oldY = currentY;
-                }
+                MainUI.selectedDrawingTool.onDrag(graphics, e);
+                repaint();
             }
         });
     }
@@ -72,7 +68,6 @@ public class DrawArea extends JComponent {
             // clear draw area
             clear();
         }
-
         canvasGraphics.drawImage(canvas, 0, 0, null);
     }
 
@@ -82,7 +77,7 @@ public class DrawArea extends JComponent {
     public void clear() {
         graphics.setPaint(Color.white);
         // draw white on entire draw area to clear
-        graphics.fillRect(0, 0, getSize().width, getSize().height);
+        graphics.fillRect(0, 0, MainUI.CANVAS_WIDTH, MainUI.CANVAS_HEIGHT);
         graphics.setPaint(Color.black);
         repaint();
     }
@@ -92,5 +87,14 @@ public class DrawArea extends JComponent {
      */
     public void black() {
         graphics.setPaint(Color.black);
+    }
+
+    /**
+     * Set the graphics painter color.
+     *
+     * @param color the color to set the graphics painter to.
+     */
+    public void setColor(Color color) {
+        graphics.setPaint(color);
     }
 }
