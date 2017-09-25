@@ -4,6 +4,7 @@ import com.teambeta.sketcherapp.drawingTools.DrawingTool;
 import com.teambeta.sketcherapp.drawingTools.LineTool;
 import com.teambeta.sketcherapp.drawingTools.PenTool;
 import com.teambeta.sketcherapp.drawingTools.SquareTool;
+import com.teambeta.sketcherapp.drawingTools.CircleTool;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,11 +18,13 @@ public class MainUI {
     private static LineTool lineTool;
     private static PenTool penTool;
     private static SquareTool squareTool;
+    private static CircleTool circleTool;
     public static DrawingTool selectedDrawingTool;
 
     private static final String CLEAR_BUTTON_TEXT = "Clear";
     private static final String PEN_BUTTON_TEXT = "Pen";
     private static final String SQUARE_TOOL_BUTTON_TEXT = "Square";
+    private static final String CIRCLE_TOOL_BUTTON_TEXT = "Circle";
     private static final String LINE_TOOL_BUTTON_TEXT = "Line";
     private JFrame mainFrame;
 
@@ -48,7 +51,9 @@ public class MainUI {
     private JButton penToolButton;
     private JButton lineToolButton;
     private JButton squareToolButton;
+    private JButton circleToolButton;
     private DrawArea drawArea;
+
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == clearButton) {
@@ -62,6 +67,9 @@ public class MainUI {
             } else if (e.getSource() == squareToolButton) {
                 selectedDrawingTool = squareTool;
                 drawArea.setColor(squareTool.getColor());
+            } else if (e.getSource() == circleToolButton) {
+                selectedDrawingTool = circleTool;
+                drawArea.setColor(circleTool.getColor());
             }
         }
     };
@@ -100,6 +108,8 @@ public class MainUI {
         lineToolButton.addActionListener(actionListener);
         squareToolButton = new JButton(SQUARE_TOOL_BUTTON_TEXT);
         squareToolButton.addActionListener(actionListener);
+        circleToolButton = new JButton(CIRCLE_TOOL_BUTTON_TEXT);
+        circleToolButton.addActionListener(actionListener);
 
         JPanel canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools,BoxLayout.Y_AXIS));
@@ -108,6 +118,7 @@ public class MainUI {
         canvasTools.add(penToolButton);
         canvasTools.add(lineToolButton);
         canvasTools.add(squareToolButton);
+        canvasTools.add(circleToolButton);
 
         mainContent.add(canvasTools, BorderLayout.WEST);
 
@@ -142,6 +153,7 @@ public class MainUI {
         lineTool = new LineTool();
         penTool = new PenTool();
         squareTool = new SquareTool();
+        circleTool = new CircleTool();
         selectedDrawingTool = penTool;
     }
 
