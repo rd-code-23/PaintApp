@@ -3,6 +3,7 @@ package com.teambeta.sketcherapp.ui;
 import com.teambeta.sketcherapp.drawingTools.DrawingTool;
 import com.teambeta.sketcherapp.drawingTools.LineTool;
 import com.teambeta.sketcherapp.drawingTools.PenTool;
+import com.teambeta.sketcherapp.drawingTools.SquareTool;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,10 +16,12 @@ import java.awt.event.ActionListener;
 public class MainUI {
     private static LineTool lineTool;
     private static PenTool penTool;
+    private static SquareTool squareTool;
     public static DrawingTool selectedDrawingTool;
 
     private static final String CLEAR_BUTTON_TEXT = "Clear";
     private static final String PEN_BUTTON_TEXT = "Pen";
+    private static final String SQUARE_TOOL_BUTTON_TEXT = "Square";
     private static final String LINE_TOOL_BUTTON_TEXT = "Line";
     private JFrame mainFrame;
 
@@ -44,6 +47,7 @@ public class MainUI {
     private JButton clearButton;
     private JButton penToolButton;
     private JButton lineToolButton;
+    private JButton squareToolButton;
     private DrawArea drawArea;
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -55,6 +59,9 @@ public class MainUI {
             } else if (e.getSource() == lineToolButton) {
                 selectedDrawingTool = lineTool;
                 drawArea.setColor(lineTool.getColor());
+            } else if (e.getSource() == squareToolButton) {
+                selectedDrawingTool = squareTool;
+                drawArea.setColor(squareTool.getColor());
             }
         }
     };
@@ -91,6 +98,8 @@ public class MainUI {
         penToolButton.addActionListener(actionListener);
         lineToolButton = new JButton(LINE_TOOL_BUTTON_TEXT);
         lineToolButton.addActionListener(actionListener);
+        squareToolButton = new JButton(SQUARE_TOOL_BUTTON_TEXT);
+        squareToolButton.addActionListener(actionListener);
 
         JPanel canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools,BoxLayout.Y_AXIS));
@@ -98,6 +107,7 @@ public class MainUI {
         canvasTools.add(clearButton);
         canvasTools.add(penToolButton);
         canvasTools.add(lineToolButton);
+        canvasTools.add(squareToolButton);
 
         mainContent.add(canvasTools, BorderLayout.WEST);
 
@@ -131,6 +141,7 @@ public class MainUI {
     private void initDrawingTools() {
         lineTool = new LineTool();
         penTool = new PenTool();
+        squareTool = new SquareTool();
         selectedDrawingTool = penTool;
     }
 
