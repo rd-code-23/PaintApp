@@ -17,11 +17,15 @@ import javax.swing.JComponent;
 public class DrawArea extends JComponent {
     private Image canvas;
     private Graphics2D graphics;
+    private Color backgroundColor;
 
     /**
      * Constructor. Set actions upon mouse press events.
      */
     public DrawArea() {
+        backgroundColor = Color.WHITE;
+        setBackground(backgroundColor);
+
         setDoubleBuffered(false);
         addMouseListener(new MouseAdapter() {
             @Override
@@ -103,8 +107,9 @@ public class DrawArea extends JComponent {
      *
      * @return The color of the background area
      */
-    public Color getBackgroundColor() {
-        return graphics.getBackground();
+    @Override
+    public Color getBackground() {
+        return backgroundColor;
     }
 
 }
