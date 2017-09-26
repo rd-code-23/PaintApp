@@ -7,6 +7,8 @@ import com.teambeta.sketcherapp.drawingTools.SquareTool;
 import com.teambeta.sketcherapp.drawingTools.CircleTool;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -40,6 +42,11 @@ public class MainUI {
     private static final String WINDOW_MENU_BUTTON_TEXT = "Window";
     private static final String HELP_MENU_BUTTON_TEXT = "Help";
 
+    private static final int INITIAL_SLIDER_VALUE = 10;
+    private static final int MINIMUM_SLIDER_VALUE = 0;
+    private static final int MAXIMIM_SLIDER_VALUE = 100;
+    private static final int SIZE_FONT_JLABEL = 24;
+
     private JMenuBar menuBar;
     private JMenu fileMenu;
     private JMenu editMenu;
@@ -52,6 +59,10 @@ public class MainUI {
     private JButton lineToolButton;
     private JButton squareToolButton;
     private JButton circleToolButton;
+
+    private JSlider penWidthSlider;
+    private JLabel penWidthSliderLabel;
+
     private DrawArea drawArea;
 
     private ActionListener actionListener = new ActionListener() {
@@ -73,6 +84,20 @@ public class MainUI {
             }
         }
     };
+
+
+    public class listenForSlider implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+
+            if (e.getSource() == penWidthSlider) {
+                penTool.setPenWidth(penWidthSlider.getValue());
+                penWidthSliderLabel.setText("SIZE: " + penWidthSlider.getValue());
+            }
+
+        }
+
+    }
 
     /**
      * Constructor.
@@ -97,7 +122,7 @@ public class MainUI {
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         drawArea = new DrawArea();
-        // ideally this should be in its own panel with a proper scale, not directly to mainContent
+        // ideally this should be in its own sliderPanel with a proper scale, not directly to mainContent
         mainContent.add(drawArea, BorderLayout.CENTER);
 
         clearButton = new JButton(CLEAR_BUTTON_TEXT);
@@ -112,7 +137,7 @@ public class MainUI {
         circleToolButton.addActionListener(actionListener);
 
         JPanel canvasTools = new JPanel();
-        canvasTools.setLayout(new BoxLayout(canvasTools,BoxLayout.Y_AXIS));
+        canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
         canvasTools.setBackground(Color.DARK_GRAY);
         canvasTools.add(clearButton);
         canvasTools.add(penToolButton);
@@ -120,7 +145,28 @@ public class MainUI {
         canvasTools.add(squareToolButton);
         canvasTools.add(circleToolButton);
 
+        JPanel sliderPanel = new JPanel();
+        sliderPanel.setLayout(new BoxLayout(sliderPanel, BoxLayout.X_AXIS));
+        sliderPanel.setBackground(Color.DARK_GRAY);
+
+        penWidthSliderLabel = new JLabel("SIZE: " + INITIAL_SLIDER_VALUE);
+        penWidthSliderLabel.setForeground(Color.red);
+        penWidthSliderLabel.setFont(new Font("Serif", Font.PLAIN, SIZE_FONT_JLABEL));
+
+        penWidthSlider = new JSlider(JSlider.HORIZONTAL, MINIMUM_SLIDER_VALUE, MAXIMIM_SLIDER_VALUE, INITIAL_SLIDER_VALUE);
+        penWidthSlider.setMinorTickSpacing(5);
+        penWidthSlider.setPaintLabels(true);
+        penWidthSlider.setMajorTickSpacing(20);
+        penWidthSlider.setPaintTicks(true);
+        listenForSlider listenForSlider = new listenForSlider();
+        penWidthSlider.addChangeListener(listenForSlider);
+
+        sliderPanel.add(penWidthSliderLabel);
+        sliderPanel.add(Box.createRigidArea(new Dimension(100, 0)));
+        sliderPanel.add(penWidthSlider);
+
         mainContent.add(canvasTools, BorderLayout.WEST);
+        mainContent.add(sliderPanel, BorderLayout.SOUTH);
 
         prepareMenuBar();
     }

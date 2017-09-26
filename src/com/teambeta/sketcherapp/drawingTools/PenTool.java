@@ -14,6 +14,16 @@ public class PenTool extends DrawingTool {
     private int lastY;
     private int sizeInPixels;
     private Color color;
+    private int penWidth;
+    private final  int DEFAULT_STOKE_VALUE= 5;
+
+    public int getPenWidth() {
+        return penWidth;
+    }
+
+    public void setPenWidth(int penWidth) {
+        this.penWidth = penWidth;
+    }
 
     /**
      * The constructor sets the properties of the tool to their default values
@@ -25,6 +35,7 @@ public class PenTool extends DrawingTool {
         lastY = 0;
         currentX = 0;
         currentY = 0;
+        penWidth = 10;
     }
 
     @Override
@@ -34,7 +45,11 @@ public class PenTool extends DrawingTool {
             currentX = e.getX();
             currentY = e.getY();
             // draw line if graphics context not null
+
+            graphics.setStroke(new BasicStroke(getPenWidth()));
+            //
             graphics.drawLine(lastX, lastY, currentX, currentY);
+
             lastX = currentX;
             lastY = currentY;
         }
@@ -42,6 +57,7 @@ public class PenTool extends DrawingTool {
 
     @Override
     public void onRelease(Graphics2D graphics, MouseEvent e) {
+        graphics.setStroke(new BasicStroke( DEFAULT_STOKE_VALUE));
     }
 
     @Override
