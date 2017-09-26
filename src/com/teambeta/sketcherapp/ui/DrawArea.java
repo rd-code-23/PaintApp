@@ -97,4 +97,14 @@ public class DrawArea extends JComponent {
     public void setColor(Color color) {
         graphics.setPaint(color);
     }
+
+    /**
+     * Get the background color of the canvas area.
+     *
+     * @return The color of the background area
+     */
+    public Color getBackgroundColor() {
+        return graphics.getBackground();
+    }
+
 }
