@@ -24,7 +24,7 @@ public class DrawArea extends JComponent {
      */
     public DrawArea() {
         backgroundColor = Color.WHITE;
-        this.setBackground(backgroundColor);
+        setBackground(backgroundColor);
 
         setDoubleBuffered(false);
         addMouseListener(new MouseAdapter() {
