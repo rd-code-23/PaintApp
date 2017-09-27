@@ -1,11 +1,6 @@
 package com.teambeta.sketcherapp.ui;
 
-import com.teambeta.sketcherapp.drawingTools.DrawingTool;
-import com.teambeta.sketcherapp.drawingTools.LineTool;
-import com.teambeta.sketcherapp.drawingTools.PenTool;
-import com.teambeta.sketcherapp.drawingTools.SquareTool;
-import com.teambeta.sketcherapp.drawingTools.CircleTool;
-import com.teambeta.sketcherapp.drawingTools.EraserTool;
+import com.teambeta.sketcherapp.drawingTools.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -36,6 +31,8 @@ public class MainUI {
     private static final int APPLICATION_HEIGHT = 1080;
     public static final int CANVAS_WIDTH = 1920;
     public static final int CANVAS_HEIGHT = 1080;
+    private static final int EDITOR_PANEL_WIDTH = 100;
+    private static final int EDITOR_PANEL_HEIGHT = 300;
 
     private static final String FILE_MENU_BUTTON_TEXT = "File";
     private static final String EDIT_MENU_BUTTON_TEXT = "Edit";
@@ -131,6 +128,13 @@ public class MainUI {
         canvasTools.add(eraserToolButton);
 
         mainContent.add(canvasTools, BorderLayout.WEST);
+
+        ColorChooser colourChooser = new ColorChooser();
+        JPanel editorPanel = new JPanel();
+        editorPanel.setLayout(new BorderLayout());
+        editorPanel.add(colourChooser, BorderLayout.NORTH);
+        editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
+        mainContent.add(editorPanel, BorderLayout.EAST);
 
         prepareMenuBar();
     }

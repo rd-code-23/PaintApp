@@ -1,5 +1,7 @@
 package com.teambeta.sketcherapp.drawingTools;
 
+import com.teambeta.sketcherapp.model.GeneralObserver;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
@@ -7,7 +9,6 @@ import java.awt.event.MouseEvent;
  * The LineTool class implements the drawing behavior for when the Pen tool has been selected
  */
 public class PenTool extends DrawingTool {
-
     private int currentY;
     private int currentX;
     private int lastX;
@@ -20,6 +21,7 @@ public class PenTool extends DrawingTool {
      */
     public PenTool() {
         color = Color.black;
+        registerObservers();
         sizeInPixels = 1;
         lastX = 0;
         lastY = 0;
@@ -34,6 +36,7 @@ public class PenTool extends DrawingTool {
             currentX = e.getX();
             currentY = e.getY();
             // draw line if graphics context not null
+            graphics.setColor(color);
             graphics.drawLine(lastX, lastY, currentX, currentY);
             lastX = currentX;
             lastY = currentY;
@@ -64,12 +67,24 @@ public class PenTool extends DrawingTool {
     }
     
     /**
-     * getColor returns the current color the line tool is set to.
+     * getColor returns the current color the pen tool is set to.
      *
      * @return the current Color of the LineTool
      */
     @Override
     public Color getColor() {
-        return color;
+        return ColorChooser.getColor();
+    }
+
+    /**
+     * Add a new observer to ColorChooser. Selecting a color in ColorChooser will update the color in this class
+     */
+    private void registerObservers() {
+        ColorChooser.addObserver(new GeneralObserver() {
+            @Override
+            public void update() {
+                color = ColorChooser.getColor();
+            }
+        });
     }
 }
