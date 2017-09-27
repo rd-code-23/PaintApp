@@ -71,7 +71,7 @@ public class EraserTool extends DrawingTool {
     }
     
     /**
-     * getColor returns the current color the line tool is set to.
+     * getColor returns the current color the canvas background was set to.
      *
      * @return the current Color of the LineTool
      */

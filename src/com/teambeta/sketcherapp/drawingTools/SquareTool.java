@@ -1,5 +1,7 @@
 package com.teambeta.sketcherapp.drawingTools;
 
+import com.teambeta.sketcherapp.model.GeneralObserver;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
@@ -27,6 +29,7 @@ public class SquareTool extends DrawingTool {
      * The constructor sets the properties of the tool to their default values
      */
     public SquareTool() {
+        registerObservers();
         color = Color.black;
         sizeInPixels = 1;
         initX = 0;
@@ -46,6 +49,7 @@ public class SquareTool extends DrawingTool {
             user released the mouse. This would greatly aid ease of use as the square shape is determined
             by the shortest axis difference.
         */
+        graphics.setColor(color);
     }
 
 
@@ -96,12 +100,24 @@ public class SquareTool extends DrawingTool {
     }
 
     /**
-     * getColor returns the current color the line tool is set to.
+     * getColor returns the current color the square tool is set to.
      *
      * @return the current Color of the LineTool
      */
     @Override
     public Color getColor() {
-        return color;
+        return ColorChooser.getColor();
+    }
+
+    /**
+     * Add a new observer to ColorChooser. Selecting a color in ColorChooser will update the color in this class
+     */
+    private void registerObservers() {
+        ColorChooser.addObserver(new GeneralObserver() {
+            @Override
+            public void update() {
+                color = ColorChooser.getColor();
+            }
+        });
     }
 }

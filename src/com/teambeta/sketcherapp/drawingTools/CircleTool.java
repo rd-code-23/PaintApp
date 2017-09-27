@@ -1,5 +1,7 @@
 package com.teambeta.sketcherapp.drawingTools;
 
+import com.teambeta.sketcherapp.model.GeneralObserver;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
@@ -32,6 +34,7 @@ public class CircleTool extends DrawingTool {
      */
     public CircleTool() {
         color = Color.black;
+        registerObservers();
         sizeInPixels = 1;
         initX = 0;
         initY = 0;
@@ -45,6 +48,7 @@ public class CircleTool extends DrawingTool {
 
     @Override
     public void onDrag(Graphics2D graphics, MouseEvent e) {
+        graphics.setColor(color);
     }
 
 
@@ -93,12 +97,24 @@ public class CircleTool extends DrawingTool {
     }
 
     /**
-     * getColor returns the current color the line tool is set to.
+     * getColor returns the current color the circle tool is set to.
      *
      * @return the current Color of the LineTool
      */
     @Override
     public Color getColor() {
-        return color;
+        return ColorChooser.getColor();
+    }
+
+    /**
+     * Add a new observer to ColorChooser. Selecting a color in ColorChooser will update the color in this class
+     */
+    private void registerObservers() {
+        ColorChooser.addObserver(new GeneralObserver() {
+            @Override
+            public void update() {
+                color = ColorChooser.getColor();
+            }
+        });
     }
 }

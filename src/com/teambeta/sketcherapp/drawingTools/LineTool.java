@@ -1,5 +1,7 @@
 package com.teambeta.sketcherapp.drawingTools;
 
+import com.teambeta.sketcherapp.model.GeneralObserver;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
@@ -19,6 +21,7 @@ public class LineTool extends DrawingTool {
      */
     public LineTool() {
         color = Color.black;
+        registerObservers();
         sizeInPixels = 1;
         lastX = 0;
         lastY = 0;
@@ -28,7 +31,7 @@ public class LineTool extends DrawingTool {
 
     @Override
     public void onDrag(Graphics2D graphics, MouseEvent e) {
-        //for now this does nothing.
+        graphics.setColor(color);
         //if time permits we can implement a preview of what the line would look like if the user released the mouse.
     }
 
@@ -67,6 +70,18 @@ public class LineTool extends DrawingTool {
      */
     @Override
     public Color getColor() {
-        return color;
+        return ColorChooser.getColor();
+    }
+
+    /**
+     * Add a new observer to ColorChooser. Selecting a color in ColorChooser will update the color in this class
+     */
+    private void registerObservers() {
+        ColorChooser.addObserver(new GeneralObserver() {
+            @Override
+            public void update() {
+                color = ColorChooser.getColor();
+            }
+        });
     }
 }
