@@ -42,10 +42,6 @@ public class MainUI {
     private static final String WINDOW_MENU_BUTTON_TEXT = "Window";
     private static final String HELP_MENU_BUTTON_TEXT = "Help";
 
-    private static final int INITIAL_SLIDER_VALUE = 10;
-    private static final int MINIMUM_SLIDER_VALUE = 0;
-    private static final int MAXIMIM_SLIDER_VALUE = 100;
-    private static final int SIZE_FONT_JLABEL = 24;
 
     private JMenuBar menuBar;
     private JMenu fileMenu;
@@ -60,8 +56,8 @@ public class MainUI {
     private JButton squareToolButton;
     private JButton circleToolButton;
 
-    private JSlider penWidthSlider;
-    private JLabel penWidthSliderLabel;
+    private WidthChanger widthChanger;
+
 
     private DrawArea drawArea;
 
@@ -90,9 +86,9 @@ public class MainUI {
         @Override
         public void stateChanged(ChangeEvent e) {
 
-            if (e.getSource() == penWidthSlider) {
-                penTool.setPenWidth(penWidthSlider.getValue());
-                penWidthSliderLabel.setText("SIZE: " + penWidthSlider.getValue());
+            if (e.getSource() == widthChanger.getPenWidthSlider()) {
+                penTool.setPenWidth(widthChanger.getPenWidthValue());
+                widthChanger.setPenWidthSliderLabel();
             }
 
         }
@@ -145,28 +141,14 @@ public class MainUI {
         canvasTools.add(squareToolButton);
         canvasTools.add(circleToolButton);
 
-        JPanel sliderPanel = new JPanel();
-        sliderPanel.setLayout(new BoxLayout(sliderPanel, BoxLayout.X_AXIS));
-        sliderPanel.setBackground(Color.DARK_GRAY);
+        widthChanger = new WidthChanger();
+        widthChanger.renderPanel();
 
-        penWidthSliderLabel = new JLabel("SIZE: " + INITIAL_SLIDER_VALUE);
-        penWidthSliderLabel.setForeground(Color.red);
-        penWidthSliderLabel.setFont(new Font("Serif", Font.PLAIN, SIZE_FONT_JLABEL));
-
-        penWidthSlider = new JSlider(JSlider.HORIZONTAL, MINIMUM_SLIDER_VALUE, MAXIMIM_SLIDER_VALUE, INITIAL_SLIDER_VALUE);
-        penWidthSlider.setMinorTickSpacing(5);
-        penWidthSlider.setPaintLabels(true);
-        penWidthSlider.setMajorTickSpacing(20);
-        penWidthSlider.setPaintTicks(true);
-        listenForSlider listenForSlider = new listenForSlider();
-        penWidthSlider.addChangeListener(listenForSlider);
-
-        sliderPanel.add(penWidthSliderLabel);
-        sliderPanel.add(Box.createRigidArea(new Dimension(100, 0)));
-        sliderPanel.add(penWidthSlider);
+        MainUI.listenForSlider listenForSlider = new MainUI.listenForSlider();
+        widthChanger.getPenWidthSlider().addChangeListener(listenForSlider);
 
         mainContent.add(canvasTools, BorderLayout.WEST);
-        mainContent.add(sliderPanel, BorderLayout.SOUTH);
+        mainContent.add(widthChanger.getGUI(), BorderLayout.SOUTH);
 
         prepareMenuBar();
     }
