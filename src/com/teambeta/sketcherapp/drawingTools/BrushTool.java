@@ -6,7 +6,7 @@ import java.awt.event.MouseEvent;
 /**
  * The LineTool class implements the drawing behavior for when the Pen tool has been selected
  */
-public class PenTool extends DrawingTool {
+public class BrushTool extends DrawingTool {
 
     private int currentY;
     private int currentX;
@@ -28,7 +28,7 @@ public class PenTool extends DrawingTool {
     /**
      * The constructor sets the properties of the tool to their default values
      */
-    public PenTool() {
+    public BrushTool() {
         color = Color.black;
         sizeInPixels = 1;
         lastX = 0;

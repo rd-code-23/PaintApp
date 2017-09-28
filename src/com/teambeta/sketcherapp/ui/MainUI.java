@@ -2,7 +2,7 @@ package com.teambeta.sketcherapp.ui;
 
 import com.teambeta.sketcherapp.drawingTools.DrawingTool;
 import com.teambeta.sketcherapp.drawingTools.LineTool;
-import com.teambeta.sketcherapp.drawingTools.PenTool;
+import com.teambeta.sketcherapp.drawingTools.BrushTool;
 import com.teambeta.sketcherapp.drawingTools.SquareTool;
 import com.teambeta.sketcherapp.drawingTools.CircleTool;
 
@@ -18,13 +18,13 @@ import java.awt.event.ActionListener;
  */
 public class MainUI {
     private static LineTool lineTool;
-    private static PenTool penTool;
+    private static BrushTool brushTool;
     private static SquareTool squareTool;
     private static CircleTool circleTool;
     public static DrawingTool selectedDrawingTool;
 
     private static final String CLEAR_BUTTON_TEXT = "Clear";
-    private static final String PEN_BUTTON_TEXT = "Pen";
+    private static final String PEN_BUTTON_TEXT = "Brush";
     private static final String SQUARE_TOOL_BUTTON_TEXT = "Square";
     private static final String CIRCLE_TOOL_BUTTON_TEXT = "Circle";
     private static final String LINE_TOOL_BUTTON_TEXT = "Line";
@@ -66,8 +66,8 @@ public class MainUI {
             if (e.getSource() == clearButton) {
                 drawArea.clear();
             } else if (e.getSource() == penToolButton) {
-                selectedDrawingTool = penTool;
-                drawArea.setColor(penTool.getColor());
+                selectedDrawingTool = brushTool;
+                drawArea.setColor(brushTool.getColor());
             } else if (e.getSource() == lineToolButton) {
                 selectedDrawingTool = lineTool;
                 drawArea.setColor(lineTool.getColor());
@@ -87,7 +87,7 @@ public class MainUI {
         public void stateChanged(ChangeEvent e) {
 
             if (e.getSource() == widthChanger.getPenWidthSlider()) {
-                penTool.setPenWidth(widthChanger.getPenWidthValue());
+                brushTool.setPenWidth(widthChanger.getPenWidthValue());
                 widthChanger.setPenWidthSliderLabel();
             }
 
@@ -179,10 +179,10 @@ public class MainUI {
      */
     private void initDrawingTools() {
         lineTool = new LineTool();
-        penTool = new PenTool();
+        brushTool = new BrushTool();
         squareTool = new SquareTool();
         circleTool = new CircleTool();
-        selectedDrawingTool = penTool;
+        selectedDrawingTool = brushTool;
     }
 
     /**
