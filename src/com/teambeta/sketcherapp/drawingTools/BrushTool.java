@@ -14,15 +14,15 @@ public class BrushTool extends DrawingTool {
     private int lastY;
     private int sizeInPixels;
     private Color color;
-    private int penWidth;
+    private int brushWidth;
     private final int DEFAULT_STOKE_VALUE = 1;
 
-    public int getPenWidth() {
-        return penWidth;
+    public int getBrushWidth() {
+        return brushWidth;
     }
 
-    public void setPenWidth(int penWidth) {
-        this.penWidth = penWidth;
+    public void setBrushWidth(int brushWidth) {
+        this.brushWidth = brushWidth;
     }
 
     /**
@@ -35,7 +35,7 @@ public class BrushTool extends DrawingTool {
         lastY = 0;
         currentX = 0;
         currentY = 0;
-        penWidth = 10;
+        brushWidth = 10;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class BrushTool extends DrawingTool {
             currentY = e.getY();
 
 
-            graphics.setStroke(new BasicStroke(getPenWidth(), BasicStroke.CAP_ROUND,    // End-cap style
+            graphics.setStroke(new BasicStroke(getBrushWidth(), BasicStroke.CAP_ROUND,    // End-cap style
                     BasicStroke.JOIN_ROUND));
 
             graphics.drawLine(lastX, lastY, currentX, currentY);

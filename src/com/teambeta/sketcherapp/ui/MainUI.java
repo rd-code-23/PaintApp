@@ -92,7 +92,7 @@ public class MainUI {
         public void stateChanged(ChangeEvent e) {
 
             if (e.getSource() == widthChanger.getPenWidthSlider()) {
-                brushTool.setPenWidth(widthChanger.getPenWidthValue());
+                brushTool.setBrushWidth(widthChanger.getPenWidthValue());
                 widthChanger.setPenWidthSliderLabel();
             }
 
