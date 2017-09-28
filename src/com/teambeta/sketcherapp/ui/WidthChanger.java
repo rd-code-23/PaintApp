@@ -20,6 +20,8 @@ public class WidthChanger {
 
 
         sliderPanel.setLayout(new BoxLayout(sliderPanel, BoxLayout.X_AXIS));
+
+        sliderPanel.setPreferredSize(new Dimension(10, 50));
         sliderPanel.setBackground(Color.DARK_GRAY);
 
         penWidthSliderLabel = new JLabel("SIZE: " + INITIAL_SLIDER_VALUE);
@@ -40,9 +42,9 @@ public class WidthChanger {
 
 
         sliderPanel.add(penWidthSliderLabel);
+        //  sliderPanel.add(Box.createHorizontalStrut(10));
         //     sliderPanel.add(Box.createRigidArea(new Dimension(2, 0)));
         //  sliderPanel.add(sizeTextField);
-        sliderPanel.add(Box.createRigidArea(new Dimension(2, 0)));
         sliderPanel.add(penWidthSlider);
 
 
