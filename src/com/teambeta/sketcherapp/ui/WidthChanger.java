@@ -76,4 +76,12 @@ public class WidthChanger {
         return sliderPanel;
 
     }
+
+    public void hidePanel(){
+        sliderPanel.setVisible(false);
+    }
+
+    public void showPanel(){
+        sliderPanel.setVisible(true);
+    }
 }

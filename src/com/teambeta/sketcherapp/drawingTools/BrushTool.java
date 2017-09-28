@@ -15,7 +15,7 @@ public class BrushTool extends DrawingTool {
     private int sizeInPixels;
     private Color color;
     private int penWidth;
-    private final int DEFAULT_STOKE_VALUE = 5;
+    private final int DEFAULT_STOKE_VALUE = 1;
 
     public int getPenWidth() {
         return penWidth;

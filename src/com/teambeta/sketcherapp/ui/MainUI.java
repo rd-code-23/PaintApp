@@ -24,7 +24,7 @@ public class MainUI {
     public static DrawingTool selectedDrawingTool;
 
     private static final String CLEAR_BUTTON_TEXT = "Clear";
-    private static final String PEN_BUTTON_TEXT = "Brush";
+    private static final String BRUSH_BUTTON_TEXT = "Brush";
     private static final String SQUARE_TOOL_BUTTON_TEXT = "Square";
     private static final String CIRCLE_TOOL_BUTTON_TEXT = "Circle";
     private static final String LINE_TOOL_BUTTON_TEXT = "Line";
@@ -51,13 +51,14 @@ public class MainUI {
     private JMenu helpMenu;
 
     private JButton clearButton;
-    private JButton penToolButton;
+    private JButton brushToolButton;
     private JButton lineToolButton;
     private JButton squareToolButton;
     private JButton circleToolButton;
 
     private WidthChanger widthChanger;
 
+    Container mainContent;
 
     private DrawArea drawArea;
 
@@ -65,16 +66,20 @@ public class MainUI {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == clearButton) {
                 drawArea.clear();
-            } else if (e.getSource() == penToolButton) {
+            } else if (e.getSource() == brushToolButton) {
+                widthChanger.showPanel();
                 selectedDrawingTool = brushTool;
                 drawArea.setColor(brushTool.getColor());
             } else if (e.getSource() == lineToolButton) {
+                widthChanger.hidePanel();
                 selectedDrawingTool = lineTool;
                 drawArea.setColor(lineTool.getColor());
             } else if (e.getSource() == squareToolButton) {
+                widthChanger.hidePanel();
                 selectedDrawingTool = squareTool;
                 drawArea.setColor(squareTool.getColor());
             } else if (e.getSource() == circleToolButton) {
+                widthChanger.hidePanel();
                 selectedDrawingTool = circleTool;
                 drawArea.setColor(circleTool.getColor());
             }
@@ -123,8 +128,8 @@ public class MainUI {
 
         clearButton = new JButton(CLEAR_BUTTON_TEXT);
         clearButton.addActionListener(actionListener);
-        penToolButton = new JButton(PEN_BUTTON_TEXT);
-        penToolButton.addActionListener(actionListener);
+        brushToolButton = new JButton(BRUSH_BUTTON_TEXT);
+        brushToolButton.addActionListener(actionListener);
         lineToolButton = new JButton(LINE_TOOL_BUTTON_TEXT);
         lineToolButton.addActionListener(actionListener);
         squareToolButton = new JButton(SQUARE_TOOL_BUTTON_TEXT);
@@ -136,7 +141,7 @@ public class MainUI {
         canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
         canvasTools.setBackground(Color.DARK_GRAY);
         canvasTools.add(clearButton);
-        canvasTools.add(penToolButton);
+        canvasTools.add(brushToolButton);
         canvasTools.add(lineToolButton);
         canvasTools.add(squareToolButton);
         canvasTools.add(circleToolButton);
@@ -149,6 +154,7 @@ public class MainUI {
 
         mainContent.add(canvasTools, BorderLayout.WEST);
         mainContent.add(widthChanger.getGUI(), BorderLayout.SOUTH);
+
 
         prepareMenuBar();
     }
@@ -192,4 +198,6 @@ public class MainUI {
         mainFrame.setLocationRelativeTo(null);  // positions GUI in center when opened
         mainFrame.setVisible(true);
     }
+
+
 }
