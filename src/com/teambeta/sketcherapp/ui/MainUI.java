@@ -16,6 +16,7 @@ public class MainUI {
     private static SquareTool squareTool;
     private static CircleTool circleTool;
     private static EraserTool eraserTool;
+    private static EllipseTool ellipseTool;
     public static DrawingTool selectedDrawingTool;
 
     private static final String CLEAR_BUTTON_TEXT = "Clear";
@@ -24,6 +25,7 @@ public class MainUI {
     private static final String CIRCLE_TOOL_BUTTON_TEXT = "Circle";
     private static final String LINE_TOOL_BUTTON_TEXT = "Line";
     private static final String ERASER_TOOL_BUTTON_TEXT = "Eraser";
+    private static final String ELLIPSE_TOOL_BUTTON_TEXT = "Ellipse";
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
@@ -53,6 +55,7 @@ public class MainUI {
     private JButton squareToolButton;
     private JButton circleToolButton;
     private JButton eraserToolButton;
+    private JButton ellipseToolButton;
     private DrawArea drawArea;
 
     private ActionListener actionListener = new ActionListener() {
@@ -71,6 +74,9 @@ public class MainUI {
             } else if (e.getSource() == circleToolButton) {
                 selectedDrawingTool = circleTool;
                 drawArea.setColor(circleTool.getColor());
+            } else if (e.getSource() == ellipseToolButton) {
+                selectedDrawingTool = ellipseTool;
+                drawArea.setColor(ellipseTool.getColor());
             } else if (e.getSource() == eraserToolButton) {
                 selectedDrawingTool = eraserTool;
                 drawArea.setColor(eraserTool.getColor());
@@ -116,6 +122,8 @@ public class MainUI {
         circleToolButton.addActionListener(actionListener);
         eraserToolButton = new JButton(ERASER_TOOL_BUTTON_TEXT);
         eraserToolButton.addActionListener(actionListener);
+        ellipseToolButton = new JButton(ELLIPSE_TOOL_BUTTON_TEXT);
+        ellipseToolButton.addActionListener(actionListener);
 
         JPanel canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools,BoxLayout.Y_AXIS));
@@ -125,7 +133,9 @@ public class MainUI {
         canvasTools.add(lineToolButton);
         canvasTools.add(squareToolButton);
         canvasTools.add(circleToolButton);
+        canvasTools.add(ellipseToolButton);
         canvasTools.add(eraserToolButton);
+
 
         mainContent.add(canvasTools, BorderLayout.WEST);
 
@@ -169,6 +179,7 @@ public class MainUI {
         squareTool = new SquareTool();
         circleTool = new CircleTool();
         eraserTool = new EraserTool(drawArea); // Requires drawArea due to requiring the canvas colour.
+        ellipseTool = new EllipseTool();
         selectedDrawingTool = penTool;
     }
 
