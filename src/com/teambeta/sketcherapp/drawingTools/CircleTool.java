@@ -54,11 +54,11 @@ public class CircleTool extends DrawingTool {
 
     @Override
     public void onRelease(Graphics2D graphics, MouseEvent e) {
-        // Get the coordinates of where the user released the mouse.
+        // Get the coordinates of where the user released the mouse
         currentX = e.getX();
         currentY = e.getY();
 
-        // Draw the circle with the longest side as long as the shortest side.
+        // Draw the circle with the longest side as long as the shortest side
         xAxisMagnitudeDelta = Math.abs(currentX - initX);
         yAxisMagnitudeDelta = Math.abs(currentY - initY);
 
@@ -71,7 +71,7 @@ public class CircleTool extends DrawingTool {
             drawHeightY = xAxisMagnitudeDelta;
         }
 
-        // Handle cases where the circle lies in a quadrant (with origin 0,0 at click) other than IV.
+        // Handle cases where the circle lies in a quadrant (with origin 0,0 at click) other than IV
         if (currentY < initY) {
             initY -= drawHeightY;
         }
@@ -99,7 +99,7 @@ public class CircleTool extends DrawingTool {
     /**
      * getColor returns the current color the circle tool is set to.
      *
-     * @return the current Color of the LineTool
+     * @return the current Color of the CircleTool
      */
     @Override
     public Color getColor() {
