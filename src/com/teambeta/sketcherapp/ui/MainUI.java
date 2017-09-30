@@ -58,8 +58,6 @@ public class MainUI {
 
     private WidthChanger widthChanger;
 
-    Container mainContent;
-
     private DrawArea drawArea;
 
     private ActionListener actionListener = new ActionListener() {
@@ -82,6 +80,10 @@ public class MainUI {
                 widthChanger.hidePanel();
                 selectedDrawingTool = circleTool;
                 drawArea.setColor(circleTool.getColor());
+            } else if (e.getSource() == widthChanger.getWidthTextField()) {
+                widthChanger.changePenWidthSlider(widthChanger.getTextFieldValue());
+                widthChanger.setCurrentWidthValue(widthChanger.getTextFieldValue());
+
             }
         }
     };
@@ -91,10 +93,13 @@ public class MainUI {
         @Override
         public void stateChanged(ChangeEvent e) {
 
-            if (e.getSource() == widthChanger.getPenWidthSlider()) {
-                brushTool.setBrushWidth(widthChanger.getPenWidthValue());
+            if (e.getSource() == widthChanger.getWidthSlider()) {
+                brushTool.setBrushWidth(widthChanger.getCurrentWidthValue());
+                widthChanger.setCurrentWidthValue(brushTool.getBrushWidth());
                 widthChanger.setPenWidthSliderLabel();
+                widthChanger.setSizeTextField();
             }
+
 
         }
 
@@ -150,7 +155,8 @@ public class MainUI {
         widthChanger.renderPanel();
 
         MainUI.listenForSlider listenForSlider = new MainUI.listenForSlider();
-        widthChanger.getPenWidthSlider().addChangeListener(listenForSlider);
+        widthChanger.getWidthSlider().addChangeListener(listenForSlider);
+        widthChanger.getWidthTextField().addActionListener(actionListener);
 
         mainContent.add(canvasTools, BorderLayout.WEST);
         mainContent.add(widthChanger.getGUI(), BorderLayout.SOUTH);

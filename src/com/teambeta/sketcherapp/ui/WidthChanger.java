@@ -11,64 +11,89 @@ public class WidthChanger {
     private static final int SIZE_FONT_JLABEL = 24;
 
     JPanel sliderPanel = new JPanel();
-    private JSlider penWidthSlider;
-    private JLabel penWidthSliderLabel;
-    private JTextField sizeTextField;
+    private JSlider widthSlider;
+    private JLabel widthSliderLabel;
+    private JTextField widthTextField;
+    int currentWidthValue = 0;
 
 
+    /**
+     * sets up the panel to change width
+     */
     public void renderPanel() {
 
-
+        currentWidthValue = INITIAL_SLIDER_VALUE;
         sliderPanel.setLayout(new BoxLayout(sliderPanel, BoxLayout.X_AXIS));
 
         sliderPanel.setPreferredSize(new Dimension(10, 50));
         sliderPanel.setBackground(Color.DARK_GRAY);
 
-        penWidthSliderLabel = new JLabel("SIZE: " + INITIAL_SLIDER_VALUE);
-        penWidthSliderLabel.setForeground(Color.red);
-        penWidthSliderLabel.setFont(new Font("Serif", Font.PLAIN, SIZE_FONT_JLABEL));
+        widthSliderLabel = new JLabel("Size");
+        widthSliderLabel.setForeground(Color.red);
+        widthSliderLabel.setFont(new Font("Serif", Font.PLAIN, SIZE_FONT_JLABEL));
 
-        sizeTextField = new JTextField("10", 3);
-        sizeTextField.setPreferredSize(new Dimension(2, 2));
-        //   sizeTextField.setColumns(3);
-        //   sizeTextField.setBounds(10,10,10,10);
+        widthTextField = new JTextField("10", 3);
 
+        widthSlider = new JSlider(JSlider.HORIZONTAL, MINIMUM_SLIDER_VALUE, MAXIMIM_SLIDER_VALUE, INITIAL_SLIDER_VALUE);
+        widthSlider.setMinorTickSpacing(10);
+        widthSlider.setPaintLabels(true);
+        widthSlider.setMajorTickSpacing(25);
+        widthSlider.setPaintTicks(true);
 
-        penWidthSlider = new JSlider(JSlider.HORIZONTAL, MINIMUM_SLIDER_VALUE, MAXIMIM_SLIDER_VALUE, INITIAL_SLIDER_VALUE);
-        penWidthSlider.setMinorTickSpacing(5);
-        penWidthSlider.setPaintLabels(true);
-        penWidthSlider.setMajorTickSpacing(20);
-        penWidthSlider.setPaintTicks(true);
+        widthSliderLabel.setMaximumSize(new Dimension(50, 40));
+        widthSliderLabel.setPreferredSize(new Dimension(50, 40));
+        widthSliderLabel.setMinimumSize(new Dimension(50, 40));
+        sliderPanel.add(Box.createRigidArea(new Dimension(80, 40)));
+        sliderPanel.add(widthSliderLabel);
 
+        widthTextField.setMaximumSize(new Dimension(30, 40));
+        widthTextField.setPreferredSize(new Dimension(30, 40));
+        widthTextField.setMinimumSize(new Dimension(30, 40));
+        sliderPanel.add(widthTextField);
 
-        sliderPanel.add(penWidthSliderLabel);
-        //  sliderPanel.add(Box.createHorizontalStrut(10));
-        //     sliderPanel.add(Box.createRigidArea(new Dimension(2, 0)));
-        //  sliderPanel.add(sizeTextField);
-        sliderPanel.add(penWidthSlider);
+        widthSlider.setMaximumSize(new Dimension(450, 40));
+        widthSlider.setPreferredSize(new Dimension(450, 40));
+        widthSlider.setMinimumSize(new Dimension(450, 40));
+        sliderPanel.add(widthSlider);
 
 
     }
 
-    public JSlider getPenWidthSlider() {
-        return penWidthSlider;
+    public JTextField getWidthTextField() {
+        return widthTextField;
     }
 
-    public void setPenWidthSlider(JSlider penWidthSlider) {
-        this.penWidthSlider = penWidthSlider;
+    public int getTextFieldValue() {
+
+        return Integer.parseInt(widthTextField.getText());
+
     }
 
-    public JLabel getPenWidthSliderLabel() {
-        return penWidthSliderLabel;
+    public void setSizeTextField() {
+        widthSlider.setValue(currentWidthValue);
     }
+
+
+    public JSlider getWidthSlider() {
+        return widthSlider;
+    }
+
+
+    public void changePenWidthSlider(int v) {
+        widthSlider.setValue(v);
+    }
+
 
     public void setPenWidthSliderLabel() {
-        penWidthSliderLabel.setText("SIZE: " + penWidthSlider.getValue());
+        widthTextField.setText("" + currentWidthValue);
     }
 
+    public void setCurrentWidthValue(int currentWidthValue) {
+        this.currentWidthValue = currentWidthValue;
+    }
 
-    public int getPenWidthValue() {
-        return penWidthSlider.getValue();
+    public int getCurrentWidthValue() {
+        return widthSlider.getValue();
     }
 
 
@@ -77,11 +102,11 @@ public class WidthChanger {
 
     }
 
-    public void hidePanel(){
+    public void hidePanel() {
         sliderPanel.setVisible(false);
     }
 
-    public void showPanel(){
+    public void showPanel() {
         sliderPanel.setVisible(true);
     }
 }
