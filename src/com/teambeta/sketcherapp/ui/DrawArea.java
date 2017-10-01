@@ -1,10 +1,6 @@
 package com.teambeta.sketcherapp.ui;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
@@ -17,6 +13,7 @@ import javax.swing.JComponent;
  */
 public class DrawArea extends JComponent {
     private BufferedImage canvas;
+    private BufferedImage[] layers = new BufferedImage[1];
     private Graphics2D graphics;
     private Color backgroundColor;
 
@@ -45,14 +42,14 @@ public class DrawArea extends JComponent {
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
-                MainUI.selectedDrawingTool.onRelease(graphics, e);
+                MainUI.selectedDrawingTool.onRelease(canvas, layers, e);
                 repaint();
             }
         });
 
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
-                MainUI.selectedDrawingTool.onDrag(canvas, graphics, e);
+                MainUI.selectedDrawingTool.onDrag(canvas, layers, e);
                 repaint();
             }
         });
@@ -67,6 +64,9 @@ public class DrawArea extends JComponent {
         if (canvas == null) {
             // create a canvas to draw on
             canvas = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+            for (int i = 0; i < layers.length; i++) {
+                layers[i] = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+            }
             graphics = (Graphics2D) canvas.getGraphics();
             // enable antialiasing
             graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

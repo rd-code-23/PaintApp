@@ -16,18 +16,20 @@ public abstract class DrawingTool {
     /**
      * onDrag defines the graphical behavior of the tool when the mouse is dragged.
      *
-     * @param graphics The graphics to draw onto
-     * @param e        The mouse event that needs to be responded to.
+     * @param canvas The final image to mix onto.
+     * @param layers The canvas layers to draw on.
+     * @param e      The mouse event that needs to be responded to.
      */
-    public abstract void onDrag(BufferedImage canvas, Graphics2D graphics, MouseEvent e);
+    public abstract void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e);
 
     /**
-     * onRelease defines the graphical behavior of the tool when the mouse is released.
+     * onDrag defines the graphical behavior of the tool when the mouse is dragged.
      *
-     * @param graphics The graphics to draw onto
-     * @param e        The mouse event that needs to be responded to.
+     * @param canvas The final image to mix onto.
+     * @param layers The canvas layers to draw on.
+     * @param e      The mouse event that needs to be responded to.
      */
-    public abstract void onRelease(Graphics2D graphics, MouseEvent e);
+    public abstract void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e);
 
     /**
      * onClick defines the graphical behavior of the tool when the mouse is released.

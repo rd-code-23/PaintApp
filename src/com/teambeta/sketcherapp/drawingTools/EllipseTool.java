@@ -43,13 +43,13 @@ public class EllipseTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(BufferedImage canvas, Graphics2D graphics, MouseEvent e) {
-        graphics.setColor(color);
+    public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+        canvas.getGraphics().setColor(color);
     }
 
 
     @Override
-    public void onRelease(Graphics2D graphics, MouseEvent e) {
+    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         // Get the coordinates of where the user released the mouse.
         currentX = e.getX();
         currentY = e.getY();
@@ -65,8 +65,11 @@ public class EllipseTool extends DrawingTool {
             initX -= drawWidthX;
         }
 
-        if (graphics != null) {
-            graphics.drawOval(initX, initY, drawWidthX, drawHeightY);
+        Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
+        canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        canvasGraphics.setColor(color);
+        if (canvasGraphics != null) {
+            canvasGraphics.drawOval(initX, initY, drawWidthX, drawHeightY);
         }
     }
 

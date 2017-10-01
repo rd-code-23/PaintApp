@@ -44,18 +44,18 @@ public class SquareTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(BufferedImage canvas, Graphics2D graphics, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         /*
             If time permits we can implement a preview of what the square would look like if the
             user released the mouse. This would greatly aid ease of use as the square shape is determined
             by the shortest axis difference.
         */
-        graphics.setColor(color);
+        canvas.getGraphics().setColor(color);
     }
 
 
     @Override
-    public void onRelease(Graphics2D graphics, MouseEvent e) {
+    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         // Get the coordinates of where the user released the mouse.
         currentX = e.getX();
         currentY = e.getY();
@@ -81,9 +81,13 @@ public class SquareTool extends DrawingTool {
         }
 
         // Draw the square as the user would expect.
-        if (graphics != null) {
+        Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
+        canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        canvasGraphics.setColor(color);
+
+        if (canvasGraphics != null) {
             // draw square if graphics context not null
-            graphics.drawRect(initX, initY, drawWidthX, drawHeightY);
+            canvasGraphics.drawRect(initX, initY, drawWidthX, drawHeightY);
         }
     }
 

@@ -35,20 +35,21 @@ public class EraserTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(BufferedImage canvas, Graphics2D graphics, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         //draw a path that follows your mouse while the mouse is being dragged
-        if (graphics != null) {
+        Graphics canvasGraphics = canvas.getGraphics();
+        if (canvasGraphics != null) {
             currentX = e.getX();
             currentY = e.getY();
             // draw line if graphics context not null
-            graphics.drawLine(lastX, lastY, currentX, currentY);
+            canvasGraphics.drawLine(lastX, lastY, currentX, currentY);
             lastX = currentX;
             lastY = currentY;
         }
     }
 
     @Override
-    public void onRelease(Graphics2D graphics, MouseEvent e) {
+    public  void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
     }
 
     @Override
