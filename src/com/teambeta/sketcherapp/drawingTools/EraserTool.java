@@ -1,14 +1,18 @@
 package com.teambeta.sketcherapp.drawingTools;
 
-import com.teambeta.sketcherapp.model.GeneralObserver;
+import com.teambeta.sketcherapp.ui.DrawArea;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
 /**
- * The LineTool class implements the drawing behavior for when the Pen tool has been selected
+ * NOTE:
+ * 1. sizeInPixels does nothing so far.
+ * 2. The DrawArea class object must be passed into the tool to receive the background colour.
+ *
+ * The EraserTool class implements the drawing behavior for when the Eraser tool has been selected
  */
-public class BrushTool extends DrawingTool {
+public class EraserTool extends DrawingTool {
 
     private int currentY;
     private int currentX;
@@ -16,29 +20,17 @@ public class BrushTool extends DrawingTool {
     private int lastY;
     private int sizeInPixels;
     private Color color;
-    private int brushWidth;
-    private final int DEFAULT_STOKE_VALUE = 1;
-
-    public int getBrushWidth() {
-        return brushWidth;
-    }
-
-    public void setBrushWidth(int brushWidth) {
-        this.brushWidth = brushWidth;
-    }
 
     /**
      * The constructor sets the properties of the tool to their default values
      */
-    public BrushTool() {
-        color = Color.black;
-        registerObservers();
-        sizeInPixels = 1;
+    public EraserTool(DrawArea drawArea) {
+        color = drawArea.getBackground();
+        sizeInPixels = 20;
         lastX = 0;
         lastY = 0;
         currentX = 0;
         currentY = 0;
-        brushWidth = 10;
     }
 
     @Override
@@ -47,13 +39,8 @@ public class BrushTool extends DrawingTool {
         if (graphics != null) {
             currentX = e.getX();
             currentY = e.getY();
-
-
-            graphics.setStroke(new BasicStroke(getBrushWidth(), BasicStroke.CAP_ROUND,    // End-cap style
-                    BasicStroke.JOIN_ROUND));
-
+            // draw line if graphics context not null
             graphics.drawLine(lastX, lastY, currentX, currentY);
-
             lastX = currentX;
             lastY = currentY;
         }
@@ -61,12 +48,12 @@ public class BrushTool extends DrawingTool {
 
     @Override
     public void onRelease(Graphics2D graphics, MouseEvent e) {
-        graphics.setStroke(new BasicStroke(DEFAULT_STOKE_VALUE));
     }
 
     @Override
     public void onClick(Graphics2D graphics, MouseEvent e) {
         //draw a point where the mouse was clicked
+        color = graphics.getBackground();
         currentX = e.getX();
         currentY = e.getY();
         graphics.drawLine(currentX, currentY, currentX, currentY);
@@ -82,26 +69,14 @@ public class BrushTool extends DrawingTool {
         lastX = currentX;
         lastY = currentY;
     }
-
+    
     /**
-     * getColor returns the current color the pen tool is set to.
+     * getColor returns the current color the canvas background was set to.
      *
      * @return the current Color of the LineTool
      */
     @Override
     public Color getColor() {
-        return ColorChooser.getColor();
-    }
-
-    /**
-     * Add a new observer to ColorChooser. Selecting a color in ColorChooser will update the color in this class
-     */
-    private void registerObservers() {
-        ColorChooser.addObserver(new GeneralObserver() {
-            @Override
-            public void update() {
-                color = ColorChooser.getColor();
-            }
-        });
+        return color;
     }
 }

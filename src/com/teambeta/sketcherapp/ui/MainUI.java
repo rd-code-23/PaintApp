@@ -5,6 +5,7 @@ import com.teambeta.sketcherapp.drawingTools.LineTool;
 import com.teambeta.sketcherapp.drawingTools.BrushTool;
 import com.teambeta.sketcherapp.drawingTools.SquareTool;
 import com.teambeta.sketcherapp.drawingTools.CircleTool;
+import com.teambeta.sketcherapp.drawingTools.*;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -21,6 +22,8 @@ public class MainUI {
     private static BrushTool brushTool;
     private static SquareTool squareTool;
     private static CircleTool circleTool;
+    private static EraserTool eraserTool;
+    private static EllipseTool ellipseTool;
     public static DrawingTool selectedDrawingTool;
 
     private static final String CLEAR_BUTTON_TEXT = "Clear";
@@ -28,6 +31,8 @@ public class MainUI {
     private static final String SQUARE_TOOL_BUTTON_TEXT = "Square";
     private static final String CIRCLE_TOOL_BUTTON_TEXT = "Circle";
     private static final String LINE_TOOL_BUTTON_TEXT = "Line";
+    private static final String ERASER_TOOL_BUTTON_TEXT = "Eraser";
+    private static final String ELLIPSE_TOOL_BUTTON_TEXT = "Ellipse";
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
@@ -35,13 +40,14 @@ public class MainUI {
     private static final int APPLICATION_HEIGHT = 1080;
     public static final int CANVAS_WIDTH = 1920;
     public static final int CANVAS_HEIGHT = 1080;
+    private static final int EDITOR_PANEL_WIDTH = 100;
+    private static final int EDITOR_PANEL_HEIGHT = 300;
 
     private static final String FILE_MENU_BUTTON_TEXT = "File";
     private static final String EDIT_MENU_BUTTON_TEXT = "Edit";
     private static final String IMAGE_MENU_BUTTON_TEXT = "Image";
     private static final String WINDOW_MENU_BUTTON_TEXT = "Window";
     private static final String HELP_MENU_BUTTON_TEXT = "Help";
-
 
     private JMenuBar menuBar;
     private JMenu fileMenu;
@@ -55,6 +61,8 @@ public class MainUI {
     private JButton lineToolButton;
     private JButton squareToolButton;
     private JButton circleToolButton;
+    private JButton eraserToolButton;
+    private JButton ellipseToolButton;
 
     private WidthChanger widthChanger;
 
@@ -84,6 +92,12 @@ public class MainUI {
                 widthChanger.changePenWidthSlider(widthChanger.getTextFieldValue());
                 widthChanger.setCurrentWidthValue(widthChanger.getTextFieldValue());
 
+            } else if (e.getSource() == ellipseToolButton) {
+                selectedDrawingTool = ellipseTool;
+                drawArea.setColor(ellipseTool.getColor());
+            } else if (e.getSource() == eraserToolButton) {
+                selectedDrawingTool = eraserTool;
+                drawArea.setColor(eraserTool.getColor());
             }
         }
     };
@@ -141,6 +155,10 @@ public class MainUI {
         squareToolButton.addActionListener(actionListener);
         circleToolButton = new JButton(CIRCLE_TOOL_BUTTON_TEXT);
         circleToolButton.addActionListener(actionListener);
+        eraserToolButton = new JButton(ERASER_TOOL_BUTTON_TEXT);
+        eraserToolButton.addActionListener(actionListener);
+        ellipseToolButton = new JButton(ELLIPSE_TOOL_BUTTON_TEXT);
+        ellipseToolButton.addActionListener(actionListener);
 
         JPanel canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
@@ -150,6 +168,9 @@ public class MainUI {
         canvasTools.add(lineToolButton);
         canvasTools.add(squareToolButton);
         canvasTools.add(circleToolButton);
+        canvasTools.add(ellipseToolButton);
+        canvasTools.add(eraserToolButton);
+
 
         widthChanger = new WidthChanger();
         widthChanger.renderPanel();
@@ -161,6 +182,13 @@ public class MainUI {
         mainContent.add(canvasTools, BorderLayout.WEST);
         mainContent.add(widthChanger.getGUI(), BorderLayout.SOUTH);
 
+
+        ColorChooser colourChooser = new ColorChooser();
+        JPanel editorPanel = new JPanel();
+        editorPanel.setLayout(new BorderLayout());
+        editorPanel.add(colourChooser, BorderLayout.NORTH);
+        editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
+        mainContent.add(editorPanel, BorderLayout.EAST);
 
         prepareMenuBar();
     }
@@ -195,6 +223,9 @@ public class MainUI {
         squareTool = new SquareTool();
         circleTool = new CircleTool();
         selectedDrawingTool = brushTool;
+        eraserTool = new EraserTool(drawArea); // Requires drawArea due to requiring the canvas colour.
+        ellipseTool = new EllipseTool();
+        selectedDrawingTool = penTool;
     }
 
     /**

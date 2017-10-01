@@ -6,17 +6,12 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 /**
- * The CircleTool class implements the drawing behavior for when the Circle tool has been selected
+ * The EllipseTool class implements the drawing behavior for when the Ellipse tool has been selected
  *
- * Please note: CircleTool and SquareTool implement exactly the same code except for one single line
- *              that actually draws the shape. In beta (for a working demo) this is fine, but look to create
- *              a superclass that handles these square-boundable shapes in the future.
- *
- * Behaviour of the circle tool:
- * - The longest side will take the length of the shortest side.
+ * Behaviour of the ellipse tool:
  * - The end-point relative to the init-point can be in any 4 quadrants.
  */
-public class CircleTool extends DrawingTool {
+public class EllipseTool extends DrawingTool {
 
     private int currentY;
     private int currentX;
@@ -32,7 +27,7 @@ public class CircleTool extends DrawingTool {
     /**
      * The constructor sets the properties of the tool to their default values
      */
-    public CircleTool() {
+    public EllipseTool() {
         color = Color.black;
         registerObservers();
         sizeInPixels = 1;
@@ -54,24 +49,14 @@ public class CircleTool extends DrawingTool {
 
     @Override
     public void onRelease(Graphics2D graphics, MouseEvent e) {
-        // Get the coordinates of where the user released the mouse
+        // Get the coordinates of where the user released the mouse.
         currentX = e.getX();
         currentY = e.getY();
 
-        // Draw the circle with the longest side as long as the shortest side
-        xAxisMagnitudeDelta = Math.abs(currentX - initX);
-        yAxisMagnitudeDelta = Math.abs(currentY - initY);
+        drawWidthX = Math.abs(currentX - initX);
+        drawHeightY = Math.abs(currentY - initY);
 
-        if (xAxisMagnitudeDelta > yAxisMagnitudeDelta) {
-            drawWidthX = yAxisMagnitudeDelta;
-            drawHeightY = yAxisMagnitudeDelta;
-        }
-        else {
-            drawWidthX = xAxisMagnitudeDelta;
-            drawHeightY = xAxisMagnitudeDelta;
-        }
-
-        // Handle cases where the circle lies in a quadrant (with origin 0,0 at click) other than IV
+        // Handle cases where the ellipse lies in a quadrant (with origin 0,0 at click) other than IV.
         if (currentY < initY) {
             initY -= drawHeightY;
         }
@@ -97,9 +82,9 @@ public class CircleTool extends DrawingTool {
     }
 
     /**
-     * getColor returns the current color the circle tool is set to.
+     * getColor returns the current color the ellipse tool is set to.
      *
-     * @return the current Color of the CircleTool
+     * @return the current Color of the ellipse
      */
     @Override
     public Color getColor() {
