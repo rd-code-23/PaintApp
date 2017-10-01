@@ -17,6 +17,7 @@ public class DrawArea extends JComponent {
     private Graphics2D graphics;
     private Color backgroundColor;
 
+
     /**
      * Constructor. Set actions upon mouse press events.
      */
@@ -53,6 +54,10 @@ public class DrawArea extends JComponent {
                 repaint();
             }
         });
+    }
+
+    public  Color getBackGroundColor() {
+        return backgroundColor;
     }
 
     /**

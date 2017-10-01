@@ -36,12 +36,20 @@ public class PenTool extends DrawingTool {
         Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
         canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         canvasGraphics.setColor(color);
+
+        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
+        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        layer1Graphics.setColor(color);
+
         if (canvasGraphics != null) {
             currentX = e.getX();
             currentY = e.getY();
             // draw line if graphics context not null
+
+            //TODO:move all drawing effects into layers rather then using this hack.
             canvasGraphics.setColor(color);
             canvasGraphics.drawLine(lastX, lastY, currentX, currentY);
+            layer1Graphics.drawLine(lastX, lastY, currentX, currentY);
             lastX = currentX;
             lastY = currentY;
         }

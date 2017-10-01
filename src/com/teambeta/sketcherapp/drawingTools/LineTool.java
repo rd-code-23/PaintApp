@@ -1,6 +1,7 @@
 package com.teambeta.sketcherapp.drawingTools;
 
 import com.teambeta.sketcherapp.model.GeneralObserver;
+import com.teambeta.sketcherapp.ui.DrawArea;
 import sun.plugin.dom.css.RGBColor;
 
 import java.awt.*;
@@ -35,72 +36,81 @@ public class LineTool extends DrawingTool {
 
     @Override
     public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-
         if (previewLayer == null) {
             previewLayer = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
         }
-
         //clear preview layer
-        // clearBufferImage(previewLayer);
-        previewLayer = new BufferedImage(previewLayer.getWidth(), previewLayer.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        clearBufferImage(previewLayer);
 
+        //init graphics objects
         Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
         canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         canvasGraphics.setColor(color);
-
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         layer1Graphics.setColor(color);
-
         Graphics2D previewLayerGraphics = (Graphics2D) previewLayer.getGraphics();
         canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         previewLayerGraphics.setColor(color);
 
-        previewLayerGraphics.setBackground(new Color(0, 0, 0, 0));
-        previewLayerGraphics.clearRect(0, 0, previewLayer.getWidth(), previewLayer.getHeight());
-
+        //get the current end point for the line preview
         currentX = e.getX();
         currentY = e.getY();
 
-
+        //draw the line preview onto its layer
         previewLayerGraphics.drawLine(lastX, lastY, currentX, currentY);
 
-
-        // source: https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
-        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
+        //info: https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
         //draw the preview layer on top of the drawing layer(s)
-        //previewLayerGraphics.setComposite(alphaComposite);
+        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
         canvasGraphics.setComposite(alphaComposite);
-
-        //TODO:have seperate drawing layer, only draw on canvas at the end
-        for (int i = 0; i < layers.length; i++) {
-            canvasGraphics.drawImage(layers[i], 0, 0, null);
-        }
+        drawLayersOntoCanvas(layers, canvas);
         canvasGraphics.drawImage(previewLayer, 0, 0, null);
     }
 
-    private void clearBufferImage(BufferedImage bufferedImage) {
-        for (int i = 0; i < bufferedImage.getHeight(); i++) {
-            for (int j = 0; j < bufferedImage.getWidth(); j++) {
-                bufferedImage.setRGB(j, i, Color.TRANSLUCENT);
-            }
-        }
+    //TODO:Move helper functions up so they can be used by all drawing classes
+    private void drawLayersOntoCanvas(BufferedImage[] layers, BufferedImage canvas) {
+        Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
+        //TODO:change to get actual color
+        //clear the canvas to its default color
+        canvasGraphics.setColor(Color.WHITE);
+        canvasGraphics.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
+
+        //draw the layers in order
+        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
+        canvasGraphics.setComposite(alphaComposite);
+        
+        for (BufferedImage layer : layers) {
+            canvasGraphics.drawImage(layer, 0, 0, null);
+        }
+    }
+
+    private void clearBufferImage(BufferedImage bufferedImage) {
+        Graphics2D graphics = (Graphics2D) bufferedImage.getGraphics();
+        graphics.setComposite(AlphaComposite.Src);
+        Color transparentColor = new Color(0x00FFFFFF, true);
+        graphics.setColor(transparentColor);
+        graphics.setBackground(transparentColor);
+        graphics.fillRect(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
     }
 
 
     @Override
-    public  void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        Graphics canvasGraphics = canvas.getGraphics();
+    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+        Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
         canvasGraphics.setColor(this.getColor());
+        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
+        layer1Graphics.setColor(this.getColor());
         //get the coordinates of where the user released the mouse
         currentX = e.getX();
         currentY = e.getY();
         //draw a line between the start and release points
         if (canvasGraphics != null) {
             // draw line if graphics context not null
-            canvasGraphics.drawLine(lastX, lastY, currentX, currentY);
+            layer1Graphics.drawLine(lastX, lastY, currentX, currentY);
         }
+        drawLayersOntoCanvas(layers, canvas);
         lastX = currentX;
         lastY = currentY;
     }
