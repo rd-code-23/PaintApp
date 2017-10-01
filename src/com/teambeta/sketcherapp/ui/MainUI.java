@@ -91,6 +91,7 @@ public class MainUI {
             } else if (e.getSource() == widthChanger.getWidthTextField()) {
                 widthChanger.changePenWidthSlider(widthChanger.getTextFieldValue());
                 widthChanger.setCurrentWidthValue(widthChanger.getTextFieldValue());
+                drawArea.setColor(brushTool.getColor());
 
             } else if (e.getSource() == ellipseToolButton) {
                 selectedDrawingTool = ellipseTool;
@@ -222,10 +223,10 @@ public class MainUI {
         brushTool = new BrushTool();
         squareTool = new SquareTool();
         circleTool = new CircleTool();
-        selectedDrawingTool = brushTool;
+
         eraserTool = new EraserTool(drawArea); // Requires drawArea due to requiring the canvas colour.
         ellipseTool = new EllipseTool();
-        selectedDrawingTool = penTool;
+        selectedDrawingTool = brushTool;
     }
 
     /**
