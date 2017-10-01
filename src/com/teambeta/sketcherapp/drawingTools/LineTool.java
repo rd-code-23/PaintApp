@@ -38,7 +38,7 @@ public class LineTool extends DrawingTool {
             previewLayer = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
         }
         //clear preview layer
-        DrawArea.clearBufferImage(previewLayer);
+        DrawArea.clearBufferImageToTransparent(previewLayer);
 
         //init graphics objects
         Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();

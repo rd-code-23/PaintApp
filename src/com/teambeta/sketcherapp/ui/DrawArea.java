@@ -56,7 +56,7 @@ public class DrawArea extends JComponent {
         });
     }
 
-    public static void clearBufferImage(BufferedImage bufferedImage) {
+    public static void clearBufferImageToTransparent(BufferedImage bufferedImage) {
         Graphics2D graphics = (Graphics2D) bufferedImage.getGraphics();
         graphics.setComposite(AlphaComposite.Src);
         Color transparentColor = new Color(0x00FFFFFF, true);
@@ -106,10 +106,14 @@ public class DrawArea extends JComponent {
      * Clears written elements on canvas.
      */
     public void clear() {
+        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
+        layer1Graphics.setPaint(Color.white);
         graphics.setPaint(Color.white);
         // draw white on entire draw area to clear
         graphics.fillRect(0, 0, MainUI.CANVAS_WIDTH, MainUI.CANVAS_HEIGHT);
+        layer1Graphics.fillRect(0, 0, MainUI.CANVAS_WIDTH, MainUI.CANVAS_HEIGHT);
         graphics.setPaint(Color.black);
+        layer1Graphics.setPaint(Color.black);
         repaint();
     }
 
