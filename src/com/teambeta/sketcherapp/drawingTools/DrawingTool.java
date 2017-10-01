@@ -43,8 +43,9 @@ public abstract class DrawingTool {
     /**
      * onPress defines the graphical behavior of the tool when the mouse is released.
      *
-     * @param graphics The graphics to draw onto
-     * @param e        The mouse event that needs to be responded to.
+     * @param canvas The final image to mix onto.
+     * @param layers The canvas layers to draw on.
+     * @param e      The mouse event that needs to be responded to.
      */
-    public abstract void onPress(Graphics2D graphics, MouseEvent e);
+    public abstract void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e);
 }

@@ -34,9 +34,6 @@ public class PenTool extends DrawingTool {
     @Override
     public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         //draw a path that follows your mouse while the mouse is being dragged
-        Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
-        canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        canvasGraphics.setColor(color);
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         layer1Graphics.setColor(color);
@@ -68,11 +65,10 @@ public class PenTool extends DrawingTool {
         DrawArea.drawLayersOntoCanvas(layers, canvas);
         lastX = currentX;
         lastY = currentY;
-
     }
 
     @Override
-    public void onPress(Graphics2D graphics, MouseEvent e) {
+    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         //set the coordinates to the current point when the mouse is pressed
         currentX = e.getX();
         currentY = e.getY();

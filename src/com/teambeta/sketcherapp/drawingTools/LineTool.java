@@ -88,7 +88,7 @@ public class LineTool extends DrawingTool {
     }
 
     @Override
-    public void onPress(Graphics2D graphics, MouseEvent e) {
+    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         //set the coordinates to the current pixel clicked
         currentX = e.getX();
         currentY = e.getY();

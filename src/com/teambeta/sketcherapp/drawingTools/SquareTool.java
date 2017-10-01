@@ -1,6 +1,7 @@
 package com.teambeta.sketcherapp.drawingTools;
 
 import com.teambeta.sketcherapp.model.GeneralObserver;
+import com.teambeta.sketcherapp.ui.DrawArea;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -53,7 +54,6 @@ public class SquareTool extends DrawingTool {
         canvas.getGraphics().setColor(color);
     }
 
-
     @Override
     public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         // Get the coordinates of where the user released the mouse.
@@ -80,13 +80,13 @@ public class SquareTool extends DrawingTool {
             initX -= drawWidthX;
         }
 
-        // Draw the square as the user would expect.
-        Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
-        canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        canvasGraphics.setColor(color);
+        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
+        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        layer1Graphics.setColor(color);
 
         // draw square if graphics context not null
-        canvasGraphics.drawRect(initX, initY, drawWidthX, drawHeightY);
+        layer1Graphics.drawRect(initX, initY, drawWidthX, drawHeightY);
+        DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class SquareTool extends DrawingTool {
     }
 
     @Override
-    public void onPress(Graphics2D graphics, MouseEvent e) {
+    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         currentX = e.getX();
         currentY = e.getY();
         initX = currentX;
