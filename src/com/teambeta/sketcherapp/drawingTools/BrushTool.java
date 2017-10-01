@@ -1,9 +1,11 @@
 package com.teambeta.sketcherapp.drawingTools;
 
 import com.teambeta.sketcherapp.model.GeneralObserver;
+import com.teambeta.sketcherapp.ui.DrawArea;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 /**
  * The LineTool class implements the drawing behavior for when the Pen tool has been selected
@@ -44,6 +46,7 @@ public class BrushTool extends DrawingTool {
     @Override
     public void onDrag(Graphics2D graphics, MouseEvent e) {
         graphics.setColor(color);
+    public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         //draw a path that follows your mouse while the mouse is being dragged
         if (graphics != null) {
             currentX = e.getX();
@@ -58,11 +61,13 @@ public class BrushTool extends DrawingTool {
             lastX = currentX;
             lastY = currentY;
         }
+        drawLine(canvas, layers, e);
     }
 
     @Override
     public void onRelease(Graphics2D graphics, MouseEvent e) {
         graphics.setStroke(new BasicStroke(DEFAULT_STOKE_VALUE));
+    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
     }
 
     @Override
@@ -74,10 +79,13 @@ public class BrushTool extends DrawingTool {
         graphics.drawLine(currentX, currentY, currentX, currentY);
         lastX = currentX;
         lastY = currentY;
+    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+        drawLine(canvas, layers, e);
     }
 
+
     @Override
-    public void onPress(Graphics2D graphics, MouseEvent e) {
+    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         //set the coordinates to the current point when the mouse is pressed
         currentX = e.getX();
         currentY = e.getY();
@@ -93,6 +101,26 @@ public class BrushTool extends DrawingTool {
     @Override
     public Color getColor() {
         return ColorChooser.getColor();
+    }
+
+    /**
+     * Draw a line on canvas. Used for line preview when dragging as well.
+     * @param canvas for drawing line onto.
+     * @param layers first layer by default is layers[0]
+     * @param e MouseEvent
+     */
+    private void drawLine(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
+        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        layer1Graphics.setColor(color);
+
+        //draw a point where the mouse was clicked
+        currentX = e.getX();
+        currentY = e.getY();
+        layer1Graphics.drawLine(currentX, currentY, currentX, currentY);
+        DrawArea.drawLayersOntoCanvas(layers, canvas);
+        lastX = currentX;
+        lastY = currentY;
     }
 
     /**

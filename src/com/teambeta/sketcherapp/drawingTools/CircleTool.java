@@ -1,17 +1,19 @@
 package com.teambeta.sketcherapp.drawingTools;
 
 import com.teambeta.sketcherapp.model.GeneralObserver;
+import com.teambeta.sketcherapp.ui.DrawArea;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 /**
  * The CircleTool class implements the drawing behavior for when the Circle tool has been selected
- *
+ * <p>
  * Please note: CircleTool and SquareTool implement exactly the same code except for one single line
- *              that actually draws the shape. In beta (for a working demo) this is fine, but look to create
- *              a superclass that handles these square-boundable shapes in the future.
- *
+ * that actually draws the shape. In beta (for a working demo) this is fine, but look to create
+ * a superclass that handles these square-boundable shapes in the future.
+ * <p>
  * Behaviour of the circle tool:
  * - The longest side will take the length of the shortest side.
  * - The end-point relative to the init-point can be in any 4 quadrants.
@@ -47,13 +49,12 @@ public class CircleTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(Graphics2D graphics, MouseEvent e) {
-        graphics.setColor(color);
+    public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+        canvas.getGraphics().setColor(color);
     }
 
-
     @Override
-    public void onRelease(Graphics2D graphics, MouseEvent e) {
+    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         // Get the coordinates of where the user released the mouse
         currentX = e.getX();
         currentY = e.getY();
@@ -65,8 +66,7 @@ public class CircleTool extends DrawingTool {
         if (xAxisMagnitudeDelta > yAxisMagnitudeDelta) {
             drawWidthX = yAxisMagnitudeDelta;
             drawHeightY = yAxisMagnitudeDelta;
-        }
-        else {
+        } else {
             drawWidthX = xAxisMagnitudeDelta;
             drawHeightY = xAxisMagnitudeDelta;
         }
@@ -79,17 +79,20 @@ public class CircleTool extends DrawingTool {
             initX -= drawWidthX;
         }
 
-        if (graphics != null) {
-            graphics.drawOval(initX, initY, drawWidthX, drawHeightY);
-        }
+        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
+        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        layer1Graphics.setColor(color);
+
+        layer1Graphics.drawOval(initX, initY, drawWidthX, drawHeightY);
+        DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
 
     @Override
-    public void onClick(Graphics2D graphics, MouseEvent e) {
+    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
     }
 
     @Override
-    public void onPress(Graphics2D graphics, MouseEvent e) {
+    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         currentX = e.getX();
         currentY = e.getY();
         initX = currentX;
