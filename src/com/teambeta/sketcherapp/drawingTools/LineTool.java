@@ -69,25 +69,21 @@ public class LineTool extends DrawingTool {
 
     @Override
     public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
-        canvasGraphics.setColor(this.getColor());
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
         layer1Graphics.setColor(this.getColor());
         //get the coordinates of where the user released the mouse
         currentX = e.getX();
         currentY = e.getY();
         //draw a line between the start and release points
-        if (canvasGraphics != null) {
-            // draw line if graphics context not null
-            layer1Graphics.drawLine(lastX, lastY, currentX, currentY);
-        }
+        // draw line if graphics context not null
+        layer1Graphics.drawLine(lastX, lastY, currentX, currentY);
         DrawArea.drawLayersOntoCanvas(layers, canvas);
         lastX = currentX;
         lastY = currentY;
     }
 
     @Override
-    public void onClick(Graphics2D graphics, MouseEvent e) {
+    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         //do nothing
     }
 

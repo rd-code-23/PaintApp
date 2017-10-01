@@ -53,12 +53,16 @@ public class EraserTool extends DrawingTool {
     }
 
     @Override
-    public void onClick(Graphics2D graphics, MouseEvent e) {
+    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
+        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        layer1Graphics.setColor(color);
+
         //draw a point where the mouse was clicked
-        color = graphics.getBackground();
+        color = layer1Graphics.getBackground();
         currentX = e.getX();
         currentY = e.getY();
-        graphics.drawLine(currentX, currentY, currentX, currentY);
+        layer1Graphics.drawLine(currentX, currentY, currentX, currentY);
         lastX = currentX;
         lastY = currentY;
     }

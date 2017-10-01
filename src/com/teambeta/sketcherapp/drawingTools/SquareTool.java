@@ -85,14 +85,12 @@ public class SquareTool extends DrawingTool {
         canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         canvasGraphics.setColor(color);
 
-        if (canvasGraphics != null) {
-            // draw square if graphics context not null
-            canvasGraphics.drawRect(initX, initY, drawWidthX, drawHeightY);
-        }
+        // draw square if graphics context not null
+        canvasGraphics.drawRect(initX, initY, drawWidthX, drawHeightY);
     }
 
     @Override
-    public void onClick(Graphics2D graphics, MouseEvent e) {
+    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
     }
 
     @Override

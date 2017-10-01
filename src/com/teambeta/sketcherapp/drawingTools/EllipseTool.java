@@ -68,13 +68,11 @@ public class EllipseTool extends DrawingTool {
         Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
         canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         canvasGraphics.setColor(color);
-        if (canvasGraphics != null) {
-            canvasGraphics.drawOval(initX, initY, drawWidthX, drawHeightY);
-        }
+        canvasGraphics.drawOval(initX, initY, drawWidthX, drawHeightY);
     }
 
     @Override
-    public void onClick(Graphics2D graphics, MouseEvent e) {
+    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
     }
 
     @Override

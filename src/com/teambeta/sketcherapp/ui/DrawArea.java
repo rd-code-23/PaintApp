@@ -30,7 +30,7 @@ public class DrawArea extends JComponent {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                MainUI.selectedDrawingTool.onClick(graphics, e);
+                MainUI.selectedDrawingTool.onClick(canvas, layers, e);
             }
 
             @Override
