@@ -43,6 +43,7 @@ public class BrushTool extends DrawingTool {
 
     @Override
     public void onDrag(Graphics2D graphics, MouseEvent e) {
+        graphics.setColor(color);
         //draw a path that follows your mouse while the mouse is being dragged
         if (graphics != null) {
             currentX = e.getX();
@@ -67,6 +68,7 @@ public class BrushTool extends DrawingTool {
     @Override
     public void onClick(Graphics2D graphics, MouseEvent e) {
         //draw a point where the mouse was clicked
+        graphics.setColor(color);
         currentX = e.getX();
         currentY = e.getY();
         graphics.drawLine(currentX, currentY, currentX, currentY);
@@ -84,7 +86,7 @@ public class BrushTool extends DrawingTool {
     }
 
     /**
-     * getColor returns the current color the pen tool is set to.
+     * getColor returns the current color the brush tool is set to.
      *
      * @return the current Color of the LineTool
      */

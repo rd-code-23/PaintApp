@@ -51,6 +51,7 @@ public class LineTool extends DrawingTool {
 
     @Override
     public void onClick(Graphics2D graphics, MouseEvent e) {
+        graphics.setColor(color);
         //do nothing
     }
 
@@ -72,6 +73,8 @@ public class LineTool extends DrawingTool {
     public Color getColor() {
         return ColorChooser.getColor();
     }
+
+
 
     /**
      * Add a new observer to ColorChooser. Selecting a color in ColorChooser will update the color in this class
