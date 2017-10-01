@@ -4,10 +4,11 @@ import com.teambeta.sketcherapp.model.GeneralObserver;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 /**
  * The EllipseTool class implements the drawing behavior for when the Ellipse tool has been selected
- *
+ * <p>
  * Behaviour of the ellipse tool:
  * - The end-point relative to the init-point can be in any 4 quadrants.
  */
@@ -42,7 +43,7 @@ public class EllipseTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(Graphics2D graphics, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, Graphics2D graphics, MouseEvent e) {
         graphics.setColor(color);
     }
 

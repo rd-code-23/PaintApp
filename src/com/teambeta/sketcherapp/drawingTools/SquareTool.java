@@ -4,10 +4,11 @@ import com.teambeta.sketcherapp.model.GeneralObserver;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 /**
  * The SquareTool class implements the drawing behavior for when the Square tool has been selected
- *
+ * <p>
  * Behaviour of the square tool:
  * - The longest side will take the length of the shortest side.
  * - The end-point relative to the init-point can be in any 4 quadrants.
@@ -43,7 +44,7 @@ public class SquareTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(Graphics2D graphics, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, Graphics2D graphics, MouseEvent e) {
         /*
             If time permits we can implement a preview of what the square would look like if the
             user released the mouse. This would greatly aid ease of use as the square shape is determined
@@ -66,8 +67,7 @@ public class SquareTool extends DrawingTool {
         if (xAxisMagnitudeDelta > yAxisMagnitudeDelta) {
             drawWidthX = yAxisMagnitudeDelta;
             drawHeightY = yAxisMagnitudeDelta;
-        }
-        else {
+        } else {
             drawWidthX = xAxisMagnitudeDelta;
             drawHeightY = xAxisMagnitudeDelta;
         }

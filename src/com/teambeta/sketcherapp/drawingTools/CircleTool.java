@@ -4,14 +4,15 @@ import com.teambeta.sketcherapp.model.GeneralObserver;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 /**
  * The CircleTool class implements the drawing behavior for when the Circle tool has been selected
- *
+ * <p>
  * Please note: CircleTool and SquareTool implement exactly the same code except for one single line
- *              that actually draws the shape. In beta (for a working demo) this is fine, but look to create
- *              a superclass that handles these square-boundable shapes in the future.
- *
+ * that actually draws the shape. In beta (for a working demo) this is fine, but look to create
+ * a superclass that handles these square-boundable shapes in the future.
+ * <p>
  * Behaviour of the circle tool:
  * - The longest side will take the length of the shortest side.
  * - The end-point relative to the init-point can be in any 4 quadrants.
@@ -47,7 +48,7 @@ public class CircleTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(Graphics2D graphics, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, Graphics2D graphics, MouseEvent e) {
         graphics.setColor(color);
     }
 
@@ -65,8 +66,7 @@ public class CircleTool extends DrawingTool {
         if (xAxisMagnitudeDelta > yAxisMagnitudeDelta) {
             drawWidthX = yAxisMagnitudeDelta;
             drawHeightY = yAxisMagnitudeDelta;
-        }
-        else {
+        } else {
             drawWidthX = xAxisMagnitudeDelta;
             drawHeightY = xAxisMagnitudeDelta;
         }

@@ -4,12 +4,13 @@ import com.teambeta.sketcherapp.ui.DrawArea;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 /**
  * NOTE:
  * 1. sizeInPixels does nothing so far.
  * 2. The DrawArea class object must be passed into the tool to receive the background colour.
- *
+ * <p>
  * The EraserTool class implements the drawing behavior for when the Eraser tool has been selected
  */
 public class EraserTool extends DrawingTool {
@@ -34,7 +35,7 @@ public class EraserTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(Graphics2D graphics, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, Graphics2D graphics, MouseEvent e) {
         //draw a path that follows your mouse while the mouse is being dragged
         if (graphics != null) {
             currentX = e.getX();
@@ -69,7 +70,7 @@ public class EraserTool extends DrawingTool {
         lastX = currentX;
         lastY = currentY;
     }
-    
+
     /**
      * getColor returns the current color the canvas background was set to.
      *

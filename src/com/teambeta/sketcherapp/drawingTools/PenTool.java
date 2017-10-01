@@ -4,6 +4,7 @@ import com.teambeta.sketcherapp.model.GeneralObserver;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 /**
  * The LineTool class implements the drawing behavior for when the Pen tool has been selected
@@ -30,7 +31,7 @@ public class PenTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(Graphics2D graphics, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, Graphics2D graphics, MouseEvent e) {
         //draw a path that follows your mouse while the mouse is being dragged
         if (graphics != null) {
             currentX = e.getX();
@@ -65,7 +66,7 @@ public class PenTool extends DrawingTool {
         lastX = currentX;
         lastY = currentY;
     }
-    
+
     /**
      * getColor returns the current color the pen tool is set to.
      *

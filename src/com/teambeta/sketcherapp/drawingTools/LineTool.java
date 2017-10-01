@@ -4,6 +4,7 @@ import com.teambeta.sketcherapp.model.GeneralObserver;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 /**
  * The LineTool class implements the drawing behavior for when the Line tool has been selected
@@ -15,6 +16,7 @@ public class LineTool extends DrawingTool {
     private int lastY;
     private int sizeInPixels;
     private Color color;
+    BufferedImage oldPixels = null;
 
     /**
      * The constructor sets the properties of the tool to their default values
@@ -30,9 +32,21 @@ public class LineTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(Graphics2D graphics, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, Graphics2D graphics, MouseEvent e) {
         graphics.setColor(color);
-        //if time permits we can implement a preview of what the line would look like if the user released the mouse.
+//        //if time permits we can implement a preview of what the line would look like if the user released the mouse.
+//        currentX = e.getX();
+//        currentY = e.getY();
+//        //grab old pixels around the preview
+//
+//
+//        //draw a line between the start and release points
+//        if (graphics != null) {
+//            // draw line if graphics context not null
+//            graphics.drawLine(lastX, lastY, currentX, currentY);
+//        }
+
+
     }
 
     @Override

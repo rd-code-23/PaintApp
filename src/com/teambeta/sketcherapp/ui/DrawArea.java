@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
 
@@ -15,7 +16,7 @@ import javax.swing.JComponent;
  * https://www.youtube.com/watch?v=OOb1eil4PCo
  */
 public class DrawArea extends JComponent {
-    private Image canvas;
+    private BufferedImage canvas;
     private Graphics2D graphics;
     private Color backgroundColor;
 
@@ -51,7 +52,7 @@ public class DrawArea extends JComponent {
 
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
-                MainUI.selectedDrawingTool.onDrag(graphics, e);
+                MainUI.selectedDrawingTool.onDrag(canvas, graphics, e);
                 repaint();
             }
         });
@@ -65,7 +66,7 @@ public class DrawArea extends JComponent {
     protected void paintComponent(Graphics canvasGraphics) {
         if (canvas == null) {
             // create a canvas to draw null
-            canvas = createImage(getSize().width, getSize().height);
+            canvas = (BufferedImage) createImage(getSize().width, getSize().height);
             graphics = (Graphics2D) canvas.getGraphics();
             // enable antialiasing
             graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

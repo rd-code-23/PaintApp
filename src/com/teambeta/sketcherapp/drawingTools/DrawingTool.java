@@ -2,6 +2,7 @@ package com.teambeta.sketcherapp.drawingTools;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 /**
  * DrawingTool defines the template methods for all drawing tools
@@ -18,7 +19,7 @@ public abstract class DrawingTool {
      * @param graphics The graphics to draw onto
      * @param e        The mouse event that needs to be responded to.
      */
-    public abstract void onDrag(Graphics2D graphics, MouseEvent e);
+    public abstract void onDrag(BufferedImage canvas, Graphics2D graphics, MouseEvent e);
 
     /**
      * onRelease defines the graphical behavior of the tool when the mouse is released.
