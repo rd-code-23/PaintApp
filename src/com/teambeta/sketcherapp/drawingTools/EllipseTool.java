@@ -1,13 +1,15 @@
 package com.teambeta.sketcherapp.drawingTools;
 
 import com.teambeta.sketcherapp.model.GeneralObserver;
+import com.teambeta.sketcherapp.ui.DrawArea;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 /**
  * The EllipseTool class implements the drawing behavior for when the Ellipse tool has been selected
- *
+ * <p>
  * Behaviour of the ellipse tool:
  * - The end-point relative to the init-point can be in any 4 quadrants.
  */
@@ -19,8 +21,6 @@ public class EllipseTool extends DrawingTool {
     private int initY;
     private int drawWidthX;
     private int drawHeightY;
-    private int xAxisMagnitudeDelta;
-    private int yAxisMagnitudeDelta;
     private int sizeInPixels;
     private Color color;
 
@@ -37,18 +37,15 @@ public class EllipseTool extends DrawingTool {
         currentY = 0;
         drawWidthX = 0;
         drawHeightY = 0;
-        xAxisMagnitudeDelta = 0;
-        yAxisMagnitudeDelta = 0;
     }
 
     @Override
-    public void onDrag(Graphics2D graphics, MouseEvent e) {
-        graphics.setColor(color);
+    public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+        canvas.getGraphics().setColor(color);
     }
 
-
     @Override
-    public void onRelease(Graphics2D graphics, MouseEvent e) {
+    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         // Get the coordinates of where the user released the mouse.
         currentX = e.getX();
         currentY = e.getY();
@@ -64,17 +61,20 @@ public class EllipseTool extends DrawingTool {
             initX -= drawWidthX;
         }
 
-        if (graphics != null) {
-            graphics.drawOval(initX, initY, drawWidthX, drawHeightY);
-        }
+        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
+        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        layer1Graphics.setColor(color);
+
+        layer1Graphics.drawOval(initX, initY, drawWidthX, drawHeightY);
+        DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
 
     @Override
-    public void onClick(Graphics2D graphics, MouseEvent e) {
+    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
     }
 
     @Override
-    public void onPress(Graphics2D graphics, MouseEvent e) {
+    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         currentX = e.getX();
         currentY = e.getY();
         initX = currentX;

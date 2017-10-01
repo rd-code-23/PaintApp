@@ -126,7 +126,7 @@ public class MainUI {
         ellipseToolButton.addActionListener(actionListener);
 
         JPanel canvasTools = new JPanel();
-        canvasTools.setLayout(new BoxLayout(canvasTools,BoxLayout.Y_AXIS));
+        canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
         canvasTools.setBackground(Color.DARK_GRAY);
         canvasTools.add(clearButton);
         canvasTools.add(penToolButton);

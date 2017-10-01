@@ -1,13 +1,15 @@
 package com.teambeta.sketcherapp.drawingTools;
 
 import com.teambeta.sketcherapp.model.GeneralObserver;
+import com.teambeta.sketcherapp.ui.DrawArea;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 /**
  * The SquareTool class implements the drawing behavior for when the Square tool has been selected
- *
+ * <p>
  * Behaviour of the square tool:
  * - The longest side will take the length of the shortest side.
  * - The end-point relative to the init-point can be in any 4 quadrants.
@@ -43,18 +45,17 @@ public class SquareTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(Graphics2D graphics, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         /*
             If time permits we can implement a preview of what the square would look like if the
             user released the mouse. This would greatly aid ease of use as the square shape is determined
             by the shortest axis difference.
         */
-        graphics.setColor(color);
+        canvas.getGraphics().setColor(color);
     }
 
-
     @Override
-    public void onRelease(Graphics2D graphics, MouseEvent e) {
+    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         // Get the coordinates of where the user released the mouse.
         currentX = e.getX();
         currentY = e.getY();
@@ -66,8 +67,7 @@ public class SquareTool extends DrawingTool {
         if (xAxisMagnitudeDelta > yAxisMagnitudeDelta) {
             drawWidthX = yAxisMagnitudeDelta;
             drawHeightY = yAxisMagnitudeDelta;
-        }
-        else {
+        } else {
             drawWidthX = xAxisMagnitudeDelta;
             drawHeightY = xAxisMagnitudeDelta;
         }
@@ -80,19 +80,21 @@ public class SquareTool extends DrawingTool {
             initX -= drawWidthX;
         }
 
-        // Draw the square as the user would expect.
-        if (graphics != null) {
-            // draw square if graphics context not null
-            graphics.drawRect(initX, initY, drawWidthX, drawHeightY);
-        }
+        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
+        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        layer1Graphics.setColor(color);
+
+        // draw square if graphics context not null
+        layer1Graphics.drawRect(initX, initY, drawWidthX, drawHeightY);
+        DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
 
     @Override
-    public void onClick(Graphics2D graphics, MouseEvent e) {
+    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
     }
 
     @Override
-    public void onPress(Graphics2D graphics, MouseEvent e) {
+    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         currentX = e.getX();
         currentY = e.getY();
         initX = currentX;
