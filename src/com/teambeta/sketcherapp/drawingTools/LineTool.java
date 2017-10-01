@@ -2,7 +2,6 @@ package com.teambeta.sketcherapp.drawingTools;
 
 import com.teambeta.sketcherapp.model.GeneralObserver;
 import com.teambeta.sketcherapp.ui.DrawArea;
-import sun.plugin.dom.css.RGBColor;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -31,7 +30,6 @@ public class LineTool extends DrawingTool {
         lastY = 0;
         currentX = 0;
         currentY = 0;
-
     }
 
     @Override
@@ -40,7 +38,7 @@ public class LineTool extends DrawingTool {
             previewLayer = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
         }
         //clear preview layer
-        clearBufferImage(previewLayer);
+        DrawArea.clearBufferImage(previewLayer);
 
         //init graphics objects
         Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
@@ -64,35 +62,8 @@ public class LineTool extends DrawingTool {
         //draw the preview layer on top of the drawing layer(s)
         AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
         canvasGraphics.setComposite(alphaComposite);
-        drawLayersOntoCanvas(layers, canvas);
+        DrawArea.drawLayersOntoCanvas(layers, canvas);
         canvasGraphics.drawImage(previewLayer, 0, 0, null);
-    }
-
-    //TODO:Move helper functions up so they can be used by all drawing classes
-    private void drawLayersOntoCanvas(BufferedImage[] layers, BufferedImage canvas) {
-        Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
-        //TODO:change to get actual color
-        //clear the canvas to its default color
-        canvasGraphics.setColor(Color.WHITE);
-        canvasGraphics.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
-
-        //draw the layers in order
-        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
-        canvasGraphics.setComposite(alphaComposite);
-        
-        for (BufferedImage layer : layers) {
-            canvasGraphics.drawImage(layer, 0, 0, null);
-        }
-    }
-
-    private void clearBufferImage(BufferedImage bufferedImage) {
-        Graphics2D graphics = (Graphics2D) bufferedImage.getGraphics();
-        graphics.setComposite(AlphaComposite.Src);
-        Color transparentColor = new Color(0x00FFFFFF, true);
-        graphics.setColor(transparentColor);
-        graphics.setBackground(transparentColor);
-        graphics.fillRect(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
     }
 
 
@@ -110,7 +81,7 @@ public class LineTool extends DrawingTool {
             // draw line if graphics context not null
             layer1Graphics.drawLine(lastX, lastY, currentX, currentY);
         }
-        drawLayersOntoCanvas(layers, canvas);
+        DrawArea.drawLayersOntoCanvas(layers, canvas);
         lastX = currentX;
         lastY = currentY;
     }
@@ -138,7 +109,6 @@ public class LineTool extends DrawingTool {
     public Color getColor() {
         return ColorChooser.getColor();
     }
-
 
     /**
      * Add a new observer to ColorChooser. Selecting a color in ColorChooser will update the color in this class

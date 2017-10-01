@@ -56,8 +56,29 @@ public class DrawArea extends JComponent {
         });
     }
 
-    public  Color getBackGroundColor() {
-        return backgroundColor;
+    public static void clearBufferImage(BufferedImage bufferedImage) {
+        Graphics2D graphics = (Graphics2D) bufferedImage.getGraphics();
+        graphics.setComposite(AlphaComposite.Src);
+        Color transparentColor = new Color(0x00FFFFFF, true);
+        graphics.setColor(transparentColor);
+        graphics.setBackground(transparentColor);
+        graphics.fillRect(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
+    }
+
+    public static void drawLayersOntoCanvas(BufferedImage[] layers, BufferedImage canvas) {
+        Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
+        //TODO:change to get actual color
+        //clear the canvas to its default color
+        canvasGraphics.setColor(Color.WHITE);
+        canvasGraphics.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
+        //draw the layers in order
+        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
+        canvasGraphics.setComposite(alphaComposite);
+
+        for (BufferedImage layer : layers) {
+            canvasGraphics.drawImage(layer, 0, 0, null);
+        }
     }
 
     /**
