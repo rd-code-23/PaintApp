@@ -65,8 +65,8 @@ public class DrawArea extends JComponent {
      */
     protected void paintComponent(Graphics canvasGraphics) {
         if (canvas == null) {
-            // create a canvas to draw null
-            canvas = (BufferedImage) createImage(getSize().width, getSize().height);
+            // create a canvas to draw on
+            canvas = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
             graphics = (Graphics2D) canvas.getGraphics();
             // enable antialiasing
             graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
