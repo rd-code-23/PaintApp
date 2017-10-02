@@ -17,7 +17,9 @@ public class MainUI {
     private static CircleTool circleTool;
     private static EraserTool eraserTool;
     private static EllipseTool ellipseTool;
+    private static TextTool textTool;
     public static DrawingTool selectedDrawingTool;
+
 
     private static final String CLEAR_BUTTON_TEXT = "Clear";
     private static final String PEN_BUTTON_TEXT = "Pen";
@@ -26,6 +28,7 @@ public class MainUI {
     private static final String LINE_TOOL_BUTTON_TEXT = "Line";
     private static final String ERASER_TOOL_BUTTON_TEXT = "Eraser";
     private static final String ELLIPSE_TOOL_BUTTON_TEXT = "Ellipse";
+    private static final String TEXT_TOOL_BUTTON_TEXT = "Text";
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
@@ -56,6 +59,7 @@ public class MainUI {
     private JButton circleToolButton;
     private JButton eraserToolButton;
     private JButton ellipseToolButton;
+    private JButton textToolButton;
     private DrawArea drawArea;
 
     private ActionListener actionListener = new ActionListener() {
@@ -64,22 +68,18 @@ public class MainUI {
                 drawArea.clear();
             } else if (e.getSource() == penToolButton) {
                 selectedDrawingTool = penTool;
-                drawArea.setColor(penTool.getColor());
             } else if (e.getSource() == lineToolButton) {
                 selectedDrawingTool = lineTool;
-                drawArea.setColor(lineTool.getColor());
             } else if (e.getSource() == squareToolButton) {
                 selectedDrawingTool = squareTool;
-                drawArea.setColor(squareTool.getColor());
             } else if (e.getSource() == circleToolButton) {
                 selectedDrawingTool = circleTool;
-                drawArea.setColor(circleTool.getColor());
             } else if (e.getSource() == ellipseToolButton) {
                 selectedDrawingTool = ellipseTool;
-                drawArea.setColor(ellipseTool.getColor());
             } else if (e.getSource() == eraserToolButton) {
                 selectedDrawingTool = eraserTool;
-                drawArea.setColor(eraserTool.getColor());
+            } else if (e.getSource() == textToolButton) {
+                selectedDrawingTool = textTool;
             }
         }
     };
@@ -124,6 +124,9 @@ public class MainUI {
         eraserToolButton.addActionListener(actionListener);
         ellipseToolButton = new JButton(ELLIPSE_TOOL_BUTTON_TEXT);
         ellipseToolButton.addActionListener(actionListener);
+        textToolButton = new JButton(TEXT_TOOL_BUTTON_TEXT);
+        textToolButton.addActionListener(actionListener);
+
 
         JPanel canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
@@ -135,6 +138,7 @@ public class MainUI {
         canvasTools.add(circleToolButton);
         canvasTools.add(ellipseToolButton);
         canvasTools.add(eraserToolButton);
+        canvasTools.add(textToolButton);
 
 
         mainContent.add(canvasTools, BorderLayout.WEST);
@@ -180,6 +184,7 @@ public class MainUI {
         circleTool = new CircleTool();
         eraserTool = new EraserTool(drawArea); // Requires drawArea due to requiring the canvas colour.
         ellipseTool = new EllipseTool();
+        textTool = new TextTool();
         selectedDrawingTool = penTool;
     }
 
