@@ -88,15 +88,17 @@ public class MainUI {
                 widthChanger.hidePanel();
                 selectedDrawingTool = circleTool;
                 drawArea.setColor(circleTool.getColor());
-            } else if (e.getSource() == widthChanger.getWidthTextField()) {
-                widthChanger.changePenWidthSlider(widthChanger.getTextFieldValue());
-                widthChanger.setCurrentWidthValue(widthChanger.getTextFieldValue());
+            } else if (e.getSource() == widthChanger.getJTextFieldComponent()) {
+                widthChanger.setSliderComponent(widthChanger.getJTextFieldValue());
+                widthChanger.setCurrentWidthValue(widthChanger.getJTextFieldValue());
                 drawArea.setColor(brushTool.getColor());
 
             } else if (e.getSource() == ellipseToolButton) {
+                widthChanger.hidePanel();
                 selectedDrawingTool = ellipseTool;
                 drawArea.setColor(ellipseTool.getColor());
             } else if (e.getSource() == eraserToolButton) {
+                widthChanger.hidePanel();
                 selectedDrawingTool = eraserTool;
                 drawArea.setColor(eraserTool.getColor());
             }
@@ -108,11 +110,11 @@ public class MainUI {
         @Override
         public void stateChanged(ChangeEvent e) {
 
-            if (e.getSource() == widthChanger.getWidthSlider()) {
+            if (e.getSource() == widthChanger.getSliderComponent()) {
                 brushTool.setBrushWidth(widthChanger.getCurrentWidthValue());
                 widthChanger.setCurrentWidthValue(brushTool.getBrushWidth());
-                widthChanger.setPenWidthSliderLabel();
-                widthChanger.setSizeTextField();
+                widthChanger.setJLabel();
+                //   widthChanger.setSizeTextField();
             }
 
 
@@ -177,8 +179,8 @@ public class MainUI {
         widthChanger.renderPanel();
 
         MainUI.listenForSlider listenForSlider = new MainUI.listenForSlider();
-        widthChanger.getWidthSlider().addChangeListener(listenForSlider);
-        widthChanger.getWidthTextField().addActionListener(actionListener);
+        widthChanger.getSliderComponent().addChangeListener(listenForSlider);
+        widthChanger.getJTextFieldComponent().addActionListener(actionListener);
 
         mainContent.add(canvasTools, BorderLayout.WEST);
         mainContent.add(widthChanger.getGUI(), BorderLayout.SOUTH);

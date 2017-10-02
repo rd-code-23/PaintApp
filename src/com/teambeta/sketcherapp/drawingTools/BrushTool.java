@@ -44,43 +44,19 @@ public class BrushTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(Graphics2D graphics, MouseEvent e) {
-        graphics.setColor(color);
     public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        //draw a path that follows your mouse while the mouse is being dragged
-        if (graphics != null) {
-            currentX = e.getX();
-            currentY = e.getY();
-
-
-            graphics.setStroke(new BasicStroke(getBrushWidth(), BasicStroke.CAP_ROUND,    // End-cap style
-                    BasicStroke.JOIN_ROUND));
-
-            graphics.drawLine(lastX, lastY, currentX, currentY);
-
-            lastX = currentX;
-            lastY = currentY;
-        }
         drawLine(canvas, layers, e);
     }
 
+
     @Override
-    public void onRelease(Graphics2D graphics, MouseEvent e) {
-        graphics.setStroke(new BasicStroke(DEFAULT_STOKE_VALUE));
     public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
     }
 
+
     @Override
-    public void onClick(Graphics2D graphics, MouseEvent e) {
-        //draw a point where the mouse was clicked
-        graphics.setColor(color);
-        currentX = e.getX();
-        currentY = e.getY();
-        graphics.drawLine(currentX, currentY, currentX, currentY);
-        lastX = currentX;
-        lastY = currentY;
     public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        drawLine(canvas, layers, e);
+
     }
 
 
@@ -105,20 +81,27 @@ public class BrushTool extends DrawingTool {
 
     /**
      * Draw a line on canvas. Used for line preview when dragging as well.
+     *
      * @param canvas for drawing line onto.
      * @param layers first layer by default is layers[0]
-     * @param e MouseEvent
+     * @param e      MouseEvent
      */
     private void drawLine(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         layer1Graphics.setColor(color);
 
+        layer1Graphics.setStroke(new BasicStroke(getBrushWidth(), BasicStroke.CAP_ROUND,    // End-cap style
+                BasicStroke.CAP_BUTT));
+
         //draw a point where the mouse was clicked
         currentX = e.getX();
         currentY = e.getY();
-        layer1Graphics.drawLine(currentX, currentY, currentX, currentY);
+
+        layer1Graphics.drawLine(lastX, lastY, currentX, currentY);
+
         DrawArea.drawLayersOntoCanvas(layers, canvas);
+
         lastX = currentX;
         lastY = currentY;
     }

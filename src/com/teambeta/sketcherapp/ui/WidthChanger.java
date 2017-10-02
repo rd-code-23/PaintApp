@@ -5,15 +5,26 @@ import java.awt.*;
 
 public class WidthChanger {
 
-    private static final int INITIAL_SLIDER_VALUE = 10;
+    private static final int INITIAL_WIDTH_VALUE = 10;
     private static final int MINIMUM_SLIDER_VALUE = 0;
     private static final int MAXIMIM_SLIDER_VALUE = 100;
     private static final int SIZE_FONT_JLABEL = 24;
+    public static final String PANEL_DESCRIPTION = "Size";
+    public static final int MAX_COL_JTEXTFIELD = 3;
+    public static final int HEIGHT_COMPONENT = 40;
+    public static final int WIDTH_PANEL_LABEL = 50;
+    public static final int WIDTH_TEXTFIELD = 30;
+    public static final int WIDTH_SLIDER = 450;
+    public static final int HEIGHT_PANEL = 50;
+    public static final int WIDTH_PANEL = 10;
+    public static final int WIDTH_EXTRA_SPACE = 80;
+    public static final int MINOT_TICK_SPACE_SLIDER = 10;
+    public static final int MAJOR_TICK_SPACE_SLIDER = 25;
 
     JPanel sliderPanel = new JPanel();
-    private JSlider widthSlider;
-    private JLabel widthSliderLabel;
-    private JTextField widthTextField;
+    private JSlider widthSlider;          // lets user change currentWidthValue
+    private JLabel panelLabel;      //used to describe the panel for the user
+    private JTextField widthTextField;    //lets user change currentWidthValue
     int currentWidthValue = 0;
 
 
@@ -21,72 +32,79 @@ public class WidthChanger {
      * sets up the panel to change width
      */
     public void renderPanel() {
+        currentWidthValue = INITIAL_WIDTH_VALUE;
 
-        currentWidthValue = INITIAL_SLIDER_VALUE;
         sliderPanel.setLayout(new BoxLayout(sliderPanel, BoxLayout.X_AXIS));
-
-        sliderPanel.setPreferredSize(new Dimension(10, 50));
+       sliderPanel.setPreferredSize(new Dimension(WIDTH_PANEL, HEIGHT_PANEL));
         sliderPanel.setBackground(Color.DARK_GRAY);
 
-        widthSliderLabel = new JLabel("Size");
-        widthSliderLabel.setForeground(Color.red);
-        widthSliderLabel.setFont(new Font("Serif", Font.PLAIN, SIZE_FONT_JLABEL));
+        panelLabel = new JLabel(PANEL_DESCRIPTION);
+        panelLabel.setForeground(Color.red);
+        panelLabel.setFont(new Font("Serif", Font.PLAIN, SIZE_FONT_JLABEL));
 
-        widthTextField = new JTextField("10", 3);
+        widthTextField = new JTextField(""+ INITIAL_WIDTH_VALUE, MAX_COL_JTEXTFIELD);
 
-        widthSlider = new JSlider(JSlider.HORIZONTAL, MINIMUM_SLIDER_VALUE, MAXIMIM_SLIDER_VALUE, INITIAL_SLIDER_VALUE);
-        widthSlider.setMinorTickSpacing(10);
+        widthSlider = new JSlider(JSlider.HORIZONTAL, MINIMUM_SLIDER_VALUE, MAXIMIM_SLIDER_VALUE, INITIAL_WIDTH_VALUE);
+        widthSlider.setMinorTickSpacing(MINOT_TICK_SPACE_SLIDER);
         widthSlider.setPaintLabels(true);
-        widthSlider.setMajorTickSpacing(25);
+        widthSlider.setMajorTickSpacing(MAJOR_TICK_SPACE_SLIDER);
         widthSlider.setPaintTicks(true);
 
-        widthSliderLabel.setMaximumSize(new Dimension(50, 40));
-        widthSliderLabel.setPreferredSize(new Dimension(50, 40));
-        widthSliderLabel.setMinimumSize(new Dimension(50, 40));
-        sliderPanel.add(Box.createRigidArea(new Dimension(80, 40)));
-        sliderPanel.add(widthSliderLabel);
+        panelLabel.setMaximumSize(new Dimension(WIDTH_PANEL_LABEL, HEIGHT_COMPONENT));
+        panelLabel.setPreferredSize(new Dimension(WIDTH_PANEL_LABEL, HEIGHT_COMPONENT));
+        panelLabel.setMinimumSize(new Dimension(WIDTH_PANEL_LABEL, HEIGHT_COMPONENT));
+        sliderPanel.add(Box.createRigidArea(new Dimension(WIDTH_EXTRA_SPACE, HEIGHT_COMPONENT)));
+        sliderPanel.add(panelLabel);
 
-        widthTextField.setMaximumSize(new Dimension(30, 40));
-        widthTextField.setPreferredSize(new Dimension(30, 40));
-        widthTextField.setMinimumSize(new Dimension(30, 40));
+        widthTextField.setMaximumSize(new Dimension(WIDTH_TEXTFIELD, HEIGHT_COMPONENT));
+        widthTextField.setPreferredSize(new Dimension(WIDTH_TEXTFIELD, HEIGHT_COMPONENT));
+        widthTextField.setMinimumSize(new Dimension(WIDTH_TEXTFIELD, HEIGHT_COMPONENT));
         sliderPanel.add(widthTextField);
 
-        widthSlider.setMaximumSize(new Dimension(450, 40));
-        widthSlider.setPreferredSize(new Dimension(450, 40));
-        widthSlider.setMinimumSize(new Dimension(450, 40));
+        widthSlider.setMaximumSize(new Dimension(WIDTH_SLIDER, HEIGHT_COMPONENT));
+        widthSlider.setPreferredSize(new Dimension(WIDTH_SLIDER, HEIGHT_COMPONENT));
+        widthSlider.setMinimumSize(new Dimension(WIDTH_SLIDER, HEIGHT_COMPONENT));
         sliderPanel.add(widthSlider);
-
-
     }
 
-    public JTextField getWidthTextField() {
+    /**
+     * return JtextField holding the current width value
+     */
+    public JTextField getJTextFieldComponent() {
         return widthTextField;
     }
 
-    public int getTextFieldValue() {
-
+    /**
+     * return the value of the JtextField holding the current width value
+     */
+    public int getJTextFieldValue() {
         return Integer.parseInt(widthTextField.getText());
-
     }
 
-    public void setSizeTextField() {
-        widthSlider.setValue(currentWidthValue);
-    }
-
-
-    public JSlider getWidthSlider() {
+    /**
+     * returns the JSlider holding current width value
+     * the current slider
+     */
+    public JSlider getSliderComponent() {
         return widthSlider;
     }
 
-
-    public void changePenWidthSlider(int v) {
+    /**
+     * Changes the value of the slider
+     *
+     * @param v the value of currentWidthValue
+     */
+    public void setSliderComponent(int v) {
         widthSlider.setValue(v);
     }
 
-
-    public void setPenWidthSliderLabel() {
+    /**
+     * sets the JLabel  that is used to describe the panel for the user
+     */
+    public void setJLabel() {
         widthTextField.setText("" + currentWidthValue);
     }
+
 
     public void setCurrentWidthValue(int currentWidthValue) {
         this.currentWidthValue = currentWidthValue;
@@ -96,7 +114,10 @@ public class WidthChanger {
         return widthSlider.getValue();
     }
 
-
+    /**
+     * returns the panel
+     *
+     */
     public JComponent getGUI() {
         return sliderPanel;
 
