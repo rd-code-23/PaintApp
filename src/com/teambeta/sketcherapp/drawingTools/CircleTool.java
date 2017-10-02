@@ -84,6 +84,7 @@ public class CircleTool extends DrawingTool {
         layer1Graphics.setColor(color);
 
         layer1Graphics.drawOval(initX, initY, drawWidthX, drawHeightY);
+
         DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
 
