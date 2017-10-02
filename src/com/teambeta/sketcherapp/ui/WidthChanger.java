@@ -9,17 +9,17 @@ public class WidthChanger {
     private static final int MINIMUM_SLIDER_VALUE = 0;
     private static final int MAXIMIM_SLIDER_VALUE = 100;
     private static final int SIZE_FONT_JLABEL = 24;
-    public static final String PANEL_DESCRIPTION = "Size";
-    public static final int MAX_COL_JTEXTFIELD = 3;
-    public static final int HEIGHT_COMPONENT = 40;
-    public static final int WIDTH_PANEL_LABEL = 50;
-    public static final int WIDTH_TEXTFIELD = 30;
-    public static final int WIDTH_SLIDER = 450;
-    public static final int HEIGHT_PANEL = 50;
-    public static final int WIDTH_PANEL = 10;
-    public static final int WIDTH_EXTRA_SPACE = 80;
-    public static final int MINOT_TICK_SPACE_SLIDER = 10;
-    public static final int MAJOR_TICK_SPACE_SLIDER = 25;
+    private static final String PANEL_DESCRIPTION = "Size";
+    private static final int MAX_COL_JTEXTFIELD = 3;
+    private static final int HEIGHT_COMPONENT = 40;
+    private static final int WIDTH_PANEL_LABEL = 50;
+    private static final int WIDTH_TEXTFIELD = 30;
+    private static final int WIDTH_SLIDER = 450;
+    private static final int HEIGHT_PANEL = 50;
+    private static final int WIDTH_PANEL = 10;
+    private static final int WIDTH_EXTRA_SPACE = 80;
+    private static final int MINOT_TICK_SPACE_SLIDER = 10;
+    private static final int MAJOR_TICK_SPACE_SLIDER = 25;
 
     JPanel sliderPanel = new JPanel();
     private JSlider widthSlider;          // lets user change currentWidthValue
