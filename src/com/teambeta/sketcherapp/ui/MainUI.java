@@ -116,8 +116,7 @@ public class MainUI {
                 widthChanger.setJLabel();
                 //   widthChanger.setSizeTextField();
             }
-
-
+            // everything is broken
         }
 
     }
