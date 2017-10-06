@@ -63,8 +63,7 @@ public class TextTool extends DrawingTool {
         //draw a point where the mouse was clicked
         currentX = e.getX();
         currentY = e.getY();
-
-        // TODO: currently placing a text does not update on canvas unless another action is performed
+        
         Point location = MouseInfo.getPointerInfo().getLocation();
         TextFieldInput textFieldInput = new TextFieldInput(color, (int) location.getX(), (int) location.getY());
         String userInput = textFieldInput.getUserInput();
