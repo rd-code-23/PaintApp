@@ -1,39 +1,26 @@
 package com.teambeta.sketcherapp.drawingTools;
 
+import com.teambeta.sketcherapp.model.GeneralObserver;
 import com.teambeta.sketcherapp.ui.DrawArea;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 /**
- * NOTE:
- * The DrawArea class object must be passed into the tool to receive the background colour.
- *
- * The EraserTool class implements the drawing behavior for when the Eraser tool has been selected
+ * The BrushTool class implements the drawing behavior for when the Brush tool has been selected
  */
-public class EraserTool extends DrawingTool {
+public class BrushTool extends DrawingTool {
 
-    private int currentX;
     private int currentY;
+    private int currentX;
     private int lastX;
     private int lastY;
-    private Graphics2D layer1Graphics;
+    private int sizeInPixels;
     private Color color;
     private int brushWidth;
-
-    /**
-     * The constructor sets the properties of the tool to their default values
-     */
-    public EraserTool(DrawArea drawArea) {
-        color = drawArea.getBackground();
-        brushWidth = 15;
-        currentX = 0;
-        currentY = 0;
-        lastX = 0;
-        lastX = 0;
-    }
+    private Graphics2D layer1Graphics;
+    private final int DEFAULT_STOKE_VALUE = 1;
 
     public int getBrushWidth() {
         return brushWidth;
@@ -43,9 +30,22 @@ public class EraserTool extends DrawingTool {
         this.brushWidth = brushWidth;
     }
 
+    /**
+     * The constructor sets the properties of the tool to their default values
+     */
+    public BrushTool() {
+        color = Color.black;
+        registerObservers();
+        sizeInPixels = 1;
+        lastX = 0;
+        lastY = 0;
+        currentX = 0;
+        currentY = 0;
+        brushWidth = 10;
+    }
+
     @Override
     public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        //draw a path that follows your mouse while the mouse is being dragged
         currentX = e.getX();
         currentY = e.getY();
 
@@ -65,14 +65,16 @@ public class EraserTool extends DrawingTool {
         currentX = e.getX();
         currentY = e.getY();
 
-        layer1Graphics.fillOval(currentX - (brushWidth/2),currentY - (brushWidth/2), brushWidth, brushWidth);
+        layer1Graphics.fillOval(currentX - (brushWidth/2),currentY -(brushWidth/2), brushWidth, brushWidth);
         DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
-
+    
     @Override
     public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+        // Initialize canvas settings that the tool will require.
         initLayer1Graphics(canvas, layers, e);
-        //set the coordinates to the current point when the mouse is pressed
+
+        // Set the coordinates to the current point when the mouse is pressed.
         currentX = e.getX();
         currentY = e.getY();
         lastX = currentX;
@@ -80,13 +82,25 @@ public class EraserTool extends DrawingTool {
     }
 
     /**
-     * getColor returns the current color the canvas background was set to.
+     * getColor returns the current color the brush tool is set to.
      *
      * @return the current Color of the LineTool
      */
     @Override
     public Color getColor() {
-        return color;
+        return ColorChooser.getColor();
+    }
+
+    /**
+     * Add a new observer to ColorChooser. Selecting a color in ColorChooser will update the color in this class.
+     */
+    private void registerObservers() {
+        ColorChooser.addObserver(new GeneralObserver() {
+            @Override
+            public void update() {
+                color = ColorChooser.getColor();
+            }
+        });
     }
 
     /**
