@@ -24,7 +24,9 @@ public class MainUI {
     private static CircleTool circleTool;
     private static EraserTool eraserTool;
     private static EllipseTool ellipseTool;
+    private static TextTool textTool;
     public static DrawingTool selectedDrawingTool;
+
 
     private static final String CLEAR_BUTTON_TEXT = "Clear";
     private static final String BRUSH_BUTTON_TEXT = "Brush";
@@ -33,6 +35,7 @@ public class MainUI {
     private static final String LINE_TOOL_BUTTON_TEXT = "Line";
     private static final String ERASER_TOOL_BUTTON_TEXT = "Eraser";
     private static final String ELLIPSE_TOOL_BUTTON_TEXT = "Ellipse";
+    private static final String TEXT_TOOL_BUTTON_TEXT = "Text";
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
@@ -63,9 +66,8 @@ public class MainUI {
     private JButton circleToolButton;
     private JButton eraserToolButton;
     private JButton ellipseToolButton;
-
     private WidthChanger widthChanger;
-
+    private JButton textToolButton;
     private DrawArea drawArea;
 
     private ActionListener actionListener = new ActionListener() {
@@ -79,11 +81,9 @@ public class MainUI {
             } else if (e.getSource() == lineToolButton) {
                 widthChanger.hidePanel();
                 selectedDrawingTool = lineTool;
-                drawArea.setColor(lineTool.getColor());
             } else if (e.getSource() == squareToolButton) {
                 widthChanger.hidePanel();
                 selectedDrawingTool = squareTool;
-                drawArea.setColor(squareTool.getColor());
             } else if (e.getSource() == circleToolButton) {
                 widthChanger.hidePanel();
                 selectedDrawingTool = circleTool;
@@ -96,11 +96,11 @@ public class MainUI {
             } else if (e.getSource() == ellipseToolButton) {
                 widthChanger.hidePanel();
                 selectedDrawingTool = ellipseTool;
-                drawArea.setColor(ellipseTool.getColor());
             } else if (e.getSource() == eraserToolButton) {
                 widthChanger.hidePanel();
                 selectedDrawingTool = eraserTool;
-                drawArea.setColor(eraserTool.getColor());
+            } else if (e.getSource() == textToolButton) {
+                selectedDrawingTool = textTool;
             }
         }
     };
@@ -143,6 +143,7 @@ public class MainUI {
 
         mainFrame.setLocationByPlatform(true);
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        // mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
         drawArea = new DrawArea();
         // ideally this should be in its own sliderPanel with a proper scale, not directly to mainContent
@@ -162,6 +163,9 @@ public class MainUI {
         eraserToolButton.addActionListener(actionListener);
         ellipseToolButton = new JButton(ELLIPSE_TOOL_BUTTON_TEXT);
         ellipseToolButton.addActionListener(actionListener);
+        textToolButton = new JButton(TEXT_TOOL_BUTTON_TEXT);
+        textToolButton.addActionListener(actionListener);
+
 
         JPanel canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
@@ -173,6 +177,7 @@ public class MainUI {
         canvasTools.add(circleToolButton);
         canvasTools.add(ellipseToolButton);
         canvasTools.add(eraserToolButton);
+        canvasTools.add(textToolButton);
 
 
         widthChanger = new WidthChanger();
@@ -225,10 +230,10 @@ public class MainUI {
         brushTool = new BrushTool();
         squareTool = new SquareTool();
         circleTool = new CircleTool();
-
         eraserTool = new EraserTool(drawArea); // Requires drawArea due to requiring the canvas colour.
         ellipseTool = new EllipseTool();
         selectedDrawingTool = brushTool;
+        textTool = new TextTool();
     }
 
     /**
@@ -238,6 +243,4 @@ public class MainUI {
         mainFrame.setLocationRelativeTo(null);  // positions GUI in center when opened
         mainFrame.setVisible(true);
     }
-
-
 }
