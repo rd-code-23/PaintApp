@@ -105,6 +105,7 @@ public class MainUI {
 
         mainFrame.setLocationByPlatform(true);
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        // mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
         drawArea = new DrawArea();
         // ideally this should be in its own panel with a proper scale, not directly to mainContent

@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 public class TextTool extends DrawingTool {
@@ -48,20 +49,31 @@ public class TextTool extends DrawingTool {
 
     }
 
+    /**
+     * Places text inputted by user on canvas.
+     * @param canvas to draw text onto
+     * @param layers first layer by default is layers[0]
+     * @param e MouseEvent
+     */
     private void placeText(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         layer1Graphics.setColor(color);
 
-
         //draw a point where the mouse was clicked
         currentX = e.getX();
         currentY = e.getY();
 
-        layer1Graphics.drawString("YAAAA", currentX, currentY);
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
-    }
+        // TODO: currently placing a text does not update on canvas unless another action is performed
+        Point location = MouseInfo.getPointerInfo().getLocation();
+        TextFieldInput textFieldInput = new TextFieldInput(color, (int) location.getX(), (int) location.getY());
+        String userInput = textFieldInput.getUserInput();
 
+        if (!userInput.equals("")) {
+            layer1Graphics.drawString(userInput, currentX, currentY);
+            DrawArea.drawLayersOntoCanvas(layers, canvas);
+        }
+    }
 
     /**
      * Add a new observer to ColorChooser. Selecting a color in ColorChooser will update the color in this class
