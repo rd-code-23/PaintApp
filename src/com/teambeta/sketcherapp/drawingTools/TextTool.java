@@ -11,6 +11,9 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
+/**
+ * Text tool class that places text inputted by user onto canvas.
+ */
 public class TextTool extends DrawingTool {
     private int currentY;
     private int currentX;
