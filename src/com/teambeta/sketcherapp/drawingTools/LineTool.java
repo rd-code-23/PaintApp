@@ -35,7 +35,8 @@ public class LineTool extends DrawingTool {
     @Override
     public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         if (previewLayer == null) {
-            previewLayer = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            //previewLayer = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            previewLayer = DrawArea.getPreviewLayer();
         }
         //clear preview layer
         DrawArea.clearBufferImageToTransparent(previewLayer);

@@ -92,7 +92,6 @@ public class MainUI {
                 widthChanger.setSliderComponent(widthChanger.getJTextFieldValue());
                 widthChanger.setCurrentWidthValue(widthChanger.getJTextFieldValue());
                 drawArea.setColor(brushTool.getColor());
-
             } else if (e.getSource() == ellipseToolButton) {
                 widthChanger.hidePanel();
                 selectedDrawingTool = ellipseTool;

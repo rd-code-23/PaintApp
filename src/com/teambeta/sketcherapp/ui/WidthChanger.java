@@ -21,12 +21,11 @@ public class WidthChanger {
     private static final int MINOT_TICK_SPACE_SLIDER = 10;
     private static final int MAJOR_TICK_SPACE_SLIDER = 25;
 
-    JPanel sliderPanel = new JPanel();
+    private JPanel sliderPanel = new JPanel();
     private JSlider widthSlider;          // lets user change currentWidthValue
     private JLabel panelLabel;      //used to describe the panel for the user
     private JTextField widthTextField;    //lets user change currentWidthValue
-    int currentWidthValue = 0;
-
+    private int currentWidthValue = 0;
 
     /**
      * sets up the panel to change width
@@ -35,14 +34,14 @@ public class WidthChanger {
         currentWidthValue = INITIAL_WIDTH_VALUE;
 
         sliderPanel.setLayout(new BoxLayout(sliderPanel, BoxLayout.X_AXIS));
-       sliderPanel.setPreferredSize(new Dimension(WIDTH_PANEL, HEIGHT_PANEL));
+        sliderPanel.setPreferredSize(new Dimension(WIDTH_PANEL, HEIGHT_PANEL));
         sliderPanel.setBackground(Color.DARK_GRAY);
 
         panelLabel = new JLabel(PANEL_DESCRIPTION);
         panelLabel.setForeground(Color.red);
         panelLabel.setFont(new Font("Serif", Font.PLAIN, SIZE_FONT_JLABEL));
 
-        widthTextField = new JTextField(""+ INITIAL_WIDTH_VALUE, MAX_COL_JTEXTFIELD);
+        widthTextField = new JTextField("" + INITIAL_WIDTH_VALUE, MAX_COL_JTEXTFIELD);
 
         widthSlider = new JSlider(JSlider.HORIZONTAL, MINIMUM_SLIDER_VALUE, MAXIMIM_SLIDER_VALUE, INITIAL_WIDTH_VALUE);
         widthSlider.setMinorTickSpacing(MINOT_TICK_SPACE_SLIDER);
@@ -68,7 +67,7 @@ public class WidthChanger {
     }
 
     /**
-     * return JtextField holding the current width value
+     * return JTextField holding the current width value
      */
     public JTextField getJTextFieldComponent() {
         return widthTextField;
@@ -116,7 +115,6 @@ public class WidthChanger {
 
     /**
      * returns the panel
-     *
      */
     public JComponent getGUI() {
         return sliderPanel;

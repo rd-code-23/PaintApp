@@ -14,6 +14,7 @@ import javax.swing.JComponent;
 public class DrawArea extends JComponent {
     private BufferedImage canvas;
     private BufferedImage[] layers = new BufferedImage[1];
+    private static BufferedImage previewLayer;
     private Graphics2D graphics;
     private Color backgroundColor;
 
@@ -54,6 +55,8 @@ public class DrawArea extends JComponent {
                 repaint();
             }
         });
+
+
     }
 
     public static void clearBufferImageToTransparent(BufferedImage bufferedImage) {
@@ -65,6 +68,12 @@ public class DrawArea extends JComponent {
         graphics.fillRect(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
     }
 
+    /**
+     * Draws the provided layers onto the provided canvas.
+     *
+     * @param layers the layers to draw
+     * @param canvas the canvas to draw to
+     */
     public static void drawLayersOntoCanvas(BufferedImage[] layers, BufferedImage canvas) {
         Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
         //TODO:change to get actual color
@@ -93,6 +102,7 @@ public class DrawArea extends JComponent {
             for (int i = 0; i < layers.length; i++) {
                 layers[i] = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
             }
+            previewLayer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
             graphics = (Graphics2D) canvas.getGraphics();
             // enable antialiasing
             graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -118,13 +128,6 @@ public class DrawArea extends JComponent {
     }
 
     /**
-     * Set pen tool to black.
-     */
-    public void black() {
-        graphics.setPaint(Color.black);
-    }
-
-    /**
      * Set the graphics painter color.
      *
      * @param color the color to set the graphics painter to.
@@ -143,4 +146,7 @@ public class DrawArea extends JComponent {
         return backgroundColor;
     }
 
+    public static BufferedImage getPreviewLayer() {
+        return previewLayer;
+    }
 }

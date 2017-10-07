@@ -65,10 +65,10 @@ public class BrushTool extends DrawingTool {
         currentX = e.getX();
         currentY = e.getY();
 
-        layer1Graphics.fillOval(currentX - (brushWidth/2),currentY -(brushWidth/2), brushWidth, brushWidth);
+        layer1Graphics.fillOval(currentX - (brushWidth / 2), currentY - (brushWidth / 2), brushWidth, brushWidth);
         DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
-    
+
     @Override
     public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         // Initialize canvas settings that the tool will require.
