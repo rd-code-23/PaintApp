@@ -20,7 +20,7 @@ public class BrushTool extends DrawingTool {
     private Color color;
     private int brushWidth;
     private Graphics2D layer1Graphics;
-    private final int DEFAULT_STOKE_VALUE = 1;
+    private final int DEFAULT_STOKE_VALUE = 10;
 
     public int getToolWidth() {
         return brushWidth;
@@ -41,7 +41,7 @@ public class BrushTool extends DrawingTool {
         lastY = 0;
         currentX = 0;
         currentY = 0;
-        brushWidth = 10;
+        brushWidth = DEFAULT_STOKE_VALUE;
     }
 
     @Override

@@ -77,6 +77,7 @@ public class MainUI {
             } else if (e.getSource() == brushToolButton) {
                 widthChanger.showPanel();
                 selectedDrawingTool = brushTool;
+                updateSizeSlider();
                 drawArea.setColor(brushTool.getColor());
             } else if (e.getSource() == lineToolButton) {
                 widthChanger.hidePanel();
@@ -85,8 +86,8 @@ public class MainUI {
                 widthChanger.hidePanel();
                 selectedDrawingTool = squareTool;
             } else if (e.getSource() == circleToolButton) {
-                widthChanger.hidePanel();
                 selectedDrawingTool = circleTool;
+                updateSizeSlider();
                 drawArea.setColor(circleTool.getColor());
             } else if (e.getSource() == widthChanger.getJTextFieldComponent()) {
                 widthChanger.setSliderComponent(widthChanger.getJTextFieldValue());
@@ -111,16 +112,27 @@ public class MainUI {
         public void stateChanged(ChangeEvent e) {
 
             if (e.getSource() == widthChanger.getSliderComponent()) {
-                brushTool.setToolWidth(widthChanger.getCurrentWidthValue());
-                widthChanger.setCurrentWidthValue(brushTool.getToolWidth());
+                selectedDrawingTool.setToolWidth(widthChanger.getCurrentWidthValue());
+                widthChanger.setCurrentWidthValue(selectedDrawingTool.getToolWidth());
                 widthChanger.setJLabel();
-                //   widthChanger.setSizeTextField();
             }
 
 
         }
 
     }
+
+    /**
+     * when a new brushTool is selected this method
+     * will update the size panel to the current brush tool
+     * values
+     */
+    public void updateSizeSlider() {
+        widthChanger.setCurrentWidthValue(selectedDrawingTool.getToolWidth());
+        widthChanger.setSliderComponent(selectedDrawingTool.getToolWidth());
+        widthChanger.setJLabel();
+    }
+
 
     /**
      * Constructor.
