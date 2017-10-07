@@ -96,6 +96,16 @@ public class LineTool extends DrawingTool {
         lastY = currentY;
     }
 
+    @Override
+    public int getToolWidth() {
+        return 0;
+    }
+
+    @Override
+    public void setToolWidth(int width) {
+
+    }
+
     /**
      * getColor returns the current color the line tool is set to.
      *

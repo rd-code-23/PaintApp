@@ -22,11 +22,11 @@ public class BrushTool extends DrawingTool {
     private Graphics2D layer1Graphics;
     private final int DEFAULT_STOKE_VALUE = 1;
 
-    public int getBrushWidth() {
+    public int getToolWidth() {
         return brushWidth;
     }
 
-    public void setBrushWidth(int brushWidth) {
+    public void setToolWidth(int brushWidth) {
         this.brushWidth = brushWidth;
     }
 
@@ -114,7 +114,7 @@ public class BrushTool extends DrawingTool {
         layer1Graphics = (Graphics2D) layers[0].getGraphics();
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         layer1Graphics.setColor(color);
-        layer1Graphics.setStroke(new BasicStroke(getBrushWidth(), BasicStroke.CAP_ROUND,    // End-cap style
+        layer1Graphics.setStroke(new BasicStroke(getToolWidth(), BasicStroke.CAP_ROUND,    // End-cap style
                 BasicStroke.CAP_BUTT));
     }
 

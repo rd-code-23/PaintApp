@@ -79,6 +79,16 @@ public class EraserTool extends DrawingTool {
         lastY = currentY;
     }
 
+    @Override
+    public int getToolWidth() {
+        return 0;
+    }
+
+    @Override
+    public void setToolWidth(int width) {
+
+    }
+
     /**
      * getColor returns the current color the canvas background was set to.
      *

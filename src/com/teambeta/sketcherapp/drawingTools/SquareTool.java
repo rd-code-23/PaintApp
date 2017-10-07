@@ -101,6 +101,16 @@ public class SquareTool extends DrawingTool {
         initY = currentY;
     }
 
+    @Override
+    public int getToolWidth() {
+        return 0;
+    }
+
+    @Override
+    public void setToolWidth(int width) {
+
+    }
+
     /**
      * getColor returns the current color the square tool is set to.
      *

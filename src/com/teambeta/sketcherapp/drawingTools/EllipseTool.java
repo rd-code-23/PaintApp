@@ -81,6 +81,16 @@ public class EllipseTool extends DrawingTool {
         initY = currentY;
     }
 
+    @Override
+    public int getToolWidth() {
+        return 0;
+    }
+
+    @Override
+    public void setToolWidth(int width) {
+
+    }
+
     /**
      * getColor returns the current color the ellipse tool is set to.
      *

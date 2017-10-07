@@ -49,6 +49,16 @@ public class TextTool extends DrawingTool {
 
     }
 
+    @Override
+    public int getToolWidth() {
+        return 0;
+    }
+
+    @Override
+    public void setToolWidth(int width) {
+
+    }
+
     /**
      * Places text inputted by user on canvas.
      * @param canvas to draw text onto

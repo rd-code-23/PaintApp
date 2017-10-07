@@ -111,8 +111,8 @@ public class MainUI {
         public void stateChanged(ChangeEvent e) {
 
             if (e.getSource() == widthChanger.getSliderComponent()) {
-                brushTool.setBrushWidth(widthChanger.getCurrentWidthValue());
-                widthChanger.setCurrentWidthValue(brushTool.getBrushWidth());
+                brushTool.setToolWidth(widthChanger.getCurrentWidthValue());
+                widthChanger.setCurrentWidthValue(brushTool.getToolWidth());
                 widthChanger.setJLabel();
                 //   widthChanger.setSizeTextField();
             }
