@@ -80,11 +80,13 @@ public class MainUI {
                 updateSizeSlider();
                 drawArea.setColor(brushTool.getColor());
             } else if (e.getSource() == lineToolButton) {
-                widthChanger.hidePanel();
                 selectedDrawingTool = lineTool;
+                updateSizeSlider();
+                drawArea.setColor(lineTool.getColor());
             } else if (e.getSource() == squareToolButton) {
-                widthChanger.hidePanel();
                 selectedDrawingTool = squareTool;
+                updateSizeSlider();
+                drawArea.setColor(squareTool.getColor());
             } else if (e.getSource() == circleToolButton) {
                 selectedDrawingTool = circleTool;
                 updateSizeSlider();
@@ -95,11 +97,12 @@ public class MainUI {
                 drawArea.setColor(brushTool.getColor());
 
             } else if (e.getSource() == ellipseToolButton) {
-                widthChanger.hidePanel();
                 selectedDrawingTool = ellipseTool;
+                updateSizeSlider();
+                drawArea.setColor(ellipseTool.getColor());
             } else if (e.getSource() == eraserToolButton) {
-                widthChanger.hidePanel();
                 selectedDrawingTool = eraserTool;
+                updateSizeSlider();
             } else if (e.getSource() == textToolButton) {
                 selectedDrawingTool = textTool;
             }

@@ -23,7 +23,8 @@ public class EllipseTool extends DrawingTool {
     private int drawHeightY;
     private int sizeInPixels;
     private Color color;
-
+    private final int DEFAULT_STOKE_VALUE = 10;
+    private int ellipseWidth;
     /**
      * The constructor sets the properties of the tool to their default values
      */
@@ -37,6 +38,7 @@ public class EllipseTool extends DrawingTool {
         currentY = 0;
         drawWidthX = 0;
         drawHeightY = 0;
+        ellipseWidth = DEFAULT_STOKE_VALUE;
     }
 
     @Override
@@ -62,6 +64,7 @@ public class EllipseTool extends DrawingTool {
         }
 
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
+        layer1Graphics.setStroke(new BasicStroke(getToolWidth()));
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         layer1Graphics.setColor(color);
 
@@ -83,12 +86,12 @@ public class EllipseTool extends DrawingTool {
 
     @Override
     public int getToolWidth() {
-        return 0;
+       return ellipseWidth;
     }
 
     @Override
     public void setToolWidth(int width) {
-
+    ellipseWidth = width;
     }
 
     /**

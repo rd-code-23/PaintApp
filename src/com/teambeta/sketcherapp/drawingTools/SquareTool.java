@@ -26,7 +26,8 @@ public class SquareTool extends DrawingTool {
     private int yAxisMagnitudeDelta;
     private int sizeInPixels;
     private Color color;
-
+    private int squareWidth;
+    private final int DEFAULT_WIDTH_VALUE = 10;
     /**
      * The constructor sets the properties of the tool to their default values
      */
@@ -42,6 +43,7 @@ public class SquareTool extends DrawingTool {
         drawHeightY = 0;
         xAxisMagnitudeDelta = 0;
         yAxisMagnitudeDelta = 0;
+        squareWidth = DEFAULT_WIDTH_VALUE;
     }
 
     @Override
@@ -81,6 +83,7 @@ public class SquareTool extends DrawingTool {
         }
 
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
+        layer1Graphics.setStroke(new BasicStroke(getToolWidth()));
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         layer1Graphics.setColor(color);
 
@@ -103,12 +106,12 @@ public class SquareTool extends DrawingTool {
 
     @Override
     public int getToolWidth() {
-        return 0;
+        return squareWidth;
     }
 
     @Override
     public void setToolWidth(int width) {
-
+        squareWidth = width;
     }
 
     /**
