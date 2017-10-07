@@ -22,13 +22,6 @@ public class BrushTool extends DrawingTool {
     private Graphics2D layer1Graphics;
     private final int DEFAULT_STOKE_VALUE = 10;
 
-    public int getToolWidth() {
-        return brushWidth;
-    }
-
-    public void setToolWidth(int brushWidth) {
-        this.brushWidth = brushWidth;
-    }
 
     /**
      * The constructor sets the properties of the tool to their default values
@@ -90,6 +83,15 @@ public class BrushTool extends DrawingTool {
     public Color getColor() {
         return ColorChooser.getColor();
     }
+
+    public int getToolWidth() {
+        return brushWidth;
+    }
+
+    public void setToolWidth(int brushWidth) {
+        this.brushWidth = brushWidth;
+    }
+
 
     /**
      * Add a new observer to ColorChooser. Selecting a color in ColorChooser will update the color in this class.

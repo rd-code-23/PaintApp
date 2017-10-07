@@ -105,6 +105,7 @@ public class MainUI {
                 updateSizeSlider();
             } else if (e.getSource() == textToolButton) {
                 selectedDrawingTool = textTool;
+                updateSizeSlider();
             }
         }
     };
