@@ -77,14 +77,11 @@ public class MainUI {
             } else if (e.getSource() == brushToolButton) {
                 widthChanger.showPanel();
                 selectedDrawingTool = brushTool;
-
                 updateSizeSlider();
-
                 drawArea.setColor(brushTool.getColor());
             } else if (e.getSource() == lineToolButton) {
                 selectedDrawingTool = lineTool;
                 updateSizeSlider();
-
                 drawArea.setColor(lineTool.getColor());
             } else if (e.getSource() == squareToolButton) {
                 selectedDrawingTool = squareTool;
@@ -98,7 +95,6 @@ public class MainUI {
                 widthChanger.setSliderComponent(widthChanger.getJTextFieldValue());
                 widthChanger.setCurrentWidthValue(widthChanger.getJTextFieldValue());
                 drawArea.setColor(brushTool.getColor());
-
             } else if (e.getSource() == ellipseToolButton) {
                 selectedDrawingTool = ellipseTool;
                 updateSizeSlider();
@@ -110,7 +106,6 @@ public class MainUI {
                 selectedDrawingTool = textTool;
                 updateSizeSlider();
             }
-
 
             if (e.getSource() == widthChanger.getCheckBoxGlobalSizeComponent()) {
                 if (widthChanger.isGlobalSize()) {
@@ -126,30 +121,26 @@ public class MainUI {
     public class listenForSlider implements ChangeListener {
         @Override
         public void stateChanged(ChangeEvent e) {
-
             if (e.getSource() == widthChanger.getSliderComponent()) {
                 selectedDrawingTool.setToolWidth(widthChanger.getCurrentWidthValue());
                 widthChanger.setCurrentWidthValue(selectedDrawingTool.getToolWidth());
                 widthChanger.setJLabel();
             }
-
-
         }
-
     }
 
     /**
      * when a new brushTool is selected this method
      * will update the size panel to the current brush tool
      * values
+     * if global is ticked then the component sizes wont change
+     * if global not ticked the component size can be different for each tool
      */
     public void updateSizeSlider() {
-
         if (!widthChanger.isGlobalSize()) {
             widthChanger.setCurrentWidthValue(selectedDrawingTool.getToolWidth());
             widthChanger.setSliderComponent(selectedDrawingTool.getToolWidth());
             widthChanger.setJLabel();
-
         } else {
             selectedDrawingTool.setToolWidth(widthChanger.getCurrentWidthValue());
             widthChanger.setCurrentWidthValue(selectedDrawingTool.getToolWidth());
