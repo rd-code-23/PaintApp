@@ -59,12 +59,81 @@ public class PaintBucketTool extends DrawingTool {
 
         //fill the connected area of the clicked pixels color with the paint buckets color.
         floodFill(layers[0], currentX, currentY, colorToReplace);
-
-
         DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
 
+    //see https://en.wikipedia.org/wiki/Flood_fill
     private void floodFill(BufferedImage layer, int x, int y, Color colorToReplace) {
+        //floodFillAlgorithm1(layer, x, y, colorToReplace);
+        floodFillAlgorithm2(layer, x, y, colorToReplace);
+    }
+
+    private void floodFillAlgorithm2(BufferedImage layer, int x, int y, Color colorToReplace) {
+        Queue<Integer> xCoordsOfPixelsToColor = new LinkedList<>();
+        Queue<Integer> yCoordsOfPixelsToColor = new LinkedList<>();
+        int xOfCurrentPixel = x;
+        int yOfCurrentPixel = y;
+        xCoordsOfPixelsToColor.add(xOfCurrentPixel);
+        yCoordsOfPixelsToColor.add(yOfCurrentPixel);
+        int replacementColorRGB = this.color.getRGB();
+        int colorToReplaceRGB = colorToReplace.getRGB();
+        if (replacementColorRGB == colorToReplaceRGB) {
+            //early exit
+            return;
+        }
+        int eastMostXCoord;
+        int westMostXCoord;
+        Graphics2D layer1Graphics = (Graphics2D) layer.getGraphics();
+        layer1Graphics.setColor(this.color);
+
+        while (!xCoordsOfPixelsToColor.isEmpty()) {
+            xOfCurrentPixel = xCoordsOfPixelsToColor.remove();
+            yOfCurrentPixel = yCoordsOfPixelsToColor.remove();
+            eastMostXCoord = xOfCurrentPixel;
+            westMostXCoord = xOfCurrentPixel;
+
+            while (eastMostXCoord < layer.getWidth() &&
+                    layer.getRGB(eastMostXCoord, yOfCurrentPixel) == colorToReplaceRGB) {
+                if (yOfCurrentPixel + 1 < layer.getHeight() && ((yOfCurrentPixel + 1) >= 0) &&
+                        layer.getRGB(eastMostXCoord, yOfCurrentPixel + 1) == colorToReplaceRGB) {
+                    xCoordsOfPixelsToColor.add(eastMostXCoord);
+                    yCoordsOfPixelsToColor.add(yOfCurrentPixel + 1);
+                }
+                if ((yOfCurrentPixel - 1) < layer.getHeight() && ((yOfCurrentPixel - 1) >= 0) &&
+                        layer.getRGB(eastMostXCoord, yOfCurrentPixel - 1) == colorToReplaceRGB) {
+                    xCoordsOfPixelsToColor.add(eastMostXCoord);
+                    yCoordsOfPixelsToColor.add(yOfCurrentPixel - 1);
+                }
+                eastMostXCoord++;
+            }
+            if (eastMostXCoord != xOfCurrentPixel) {
+                layer1Graphics.drawRect
+                        (xOfCurrentPixel + 1, yOfCurrentPixel, eastMostXCoord - xOfCurrentPixel, 1);
+            }
+
+            while (westMostXCoord >= 0 &&
+                    layer.getRGB(westMostXCoord, yOfCurrentPixel) == colorToReplaceRGB) {
+                if (yOfCurrentPixel + 1 < layer.getHeight() && ((yOfCurrentPixel + 1) >= 0) &&
+                        layer.getRGB(westMostXCoord, yOfCurrentPixel + 1) == colorToReplaceRGB) {
+                    xCoordsOfPixelsToColor.add(westMostXCoord);
+                    yCoordsOfPixelsToColor.add(yOfCurrentPixel + 1);
+                }
+                if (yOfCurrentPixel - 1 < layer.getHeight() && ((yOfCurrentPixel - 1) >= 0) &&
+                        layer.getRGB(westMostXCoord, yOfCurrentPixel - 1) == colorToReplaceRGB) {
+                    xCoordsOfPixelsToColor.add(westMostXCoord);
+                    yCoordsOfPixelsToColor.add(yOfCurrentPixel - 1);
+                }
+                westMostXCoord--;
+            }
+            if (westMostXCoord != xOfCurrentPixel) {
+                layer1Graphics.drawRect
+                        (westMostXCoord, yOfCurrentPixel, xOfCurrentPixel - westMostXCoord - 1, 1);
+            }
+            layer.setRGB(xOfCurrentPixel, yOfCurrentPixel, replacementColorRGB);
+        }
+    }
+
+    private void floodFillAlgorithm1(BufferedImage layer, int x, int y, Color colorToReplace) {
         Queue<Integer> xCoordsOfPixelsToColor = new LinkedList<>();
         Queue<Integer> yCoordsOfPixelsToColor = new LinkedList<>();
         int xOfCurrentPixel = x;
