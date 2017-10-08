@@ -25,8 +25,25 @@ public class WidthChanger {
     private JSlider widthSlider;          // lets user change currentWidthValue
     private JLabel panelLabel;      //used to describe the panel for the user
     private JTextField widthTextField;    //lets user change currentWidthValue
-    int currentWidthValue = 0;
+   private int currentWidthValue = 0;
+   private JCheckBox globalSize;
+   private boolean isGlobalSize = true;
 
+    public boolean isGlobalSize() {
+        return isGlobalSize;
+    }
+
+    public void setGlobalSize(boolean globalSize) {
+        isGlobalSize = globalSize;
+    }
+
+    public JCheckBox getCheckBoxGlobalSizeComponent() {
+        return globalSize;
+    }
+
+    public void setGlobalSize(JCheckBox globalSize) {
+        this.globalSize = globalSize;
+    }
 
     /**
      * sets up the panel to change width
@@ -65,6 +82,14 @@ public class WidthChanger {
         widthSlider.setPreferredSize(new Dimension(WIDTH_SLIDER, HEIGHT_COMPONENT));
         widthSlider.setMinimumSize(new Dimension(WIDTH_SLIDER, HEIGHT_COMPONENT));
         sliderPanel.add(widthSlider);
+
+        sliderPanel.add(Box.createRigidArea(new Dimension(WIDTH_EXTRA_SPACE, HEIGHT_COMPONENT)));
+        widthSlider.setMaximumSize(new Dimension(WIDTH_SLIDER, HEIGHT_COMPONENT));
+        widthSlider.setPreferredSize(new Dimension(WIDTH_SLIDER, HEIGHT_COMPONENT));
+        widthSlider.setMinimumSize(new Dimension(WIDTH_SLIDER, HEIGHT_COMPONENT));
+        globalSize = new JCheckBox("Global");
+        globalSize.setSelected(true);
+        sliderPanel.add(globalSize);
     }
 
     /**

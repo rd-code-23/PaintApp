@@ -77,11 +77,14 @@ public class MainUI {
             } else if (e.getSource() == brushToolButton) {
                 widthChanger.showPanel();
                 selectedDrawingTool = brushTool;
+
                 updateSizeSlider();
+
                 drawArea.setColor(brushTool.getColor());
             } else if (e.getSource() == lineToolButton) {
                 selectedDrawingTool = lineTool;
                 updateSizeSlider();
+
                 drawArea.setColor(lineTool.getColor());
             } else if (e.getSource() == squareToolButton) {
                 selectedDrawingTool = squareTool;
@@ -106,6 +109,15 @@ public class MainUI {
             } else if (e.getSource() == textToolButton) {
                 selectedDrawingTool = textTool;
                 updateSizeSlider();
+            }
+
+
+            if (e.getSource() == widthChanger.getCheckBoxGlobalSizeComponent()) {
+                if (widthChanger.isGlobalSize()) {
+                    widthChanger.setGlobalSize(false);
+                } else {
+                    widthChanger.setGlobalSize(true);
+                }
             }
         }
     };
@@ -132,9 +144,17 @@ public class MainUI {
      * values
      */
     public void updateSizeSlider() {
-        widthChanger.setCurrentWidthValue(selectedDrawingTool.getToolWidth());
-        widthChanger.setSliderComponent(selectedDrawingTool.getToolWidth());
-        widthChanger.setJLabel();
+
+        if (!widthChanger.isGlobalSize()) {
+            widthChanger.setCurrentWidthValue(selectedDrawingTool.getToolWidth());
+            widthChanger.setSliderComponent(selectedDrawingTool.getToolWidth());
+            widthChanger.setJLabel();
+
+        } else {
+            selectedDrawingTool.setToolWidth(widthChanger.getCurrentWidthValue());
+            widthChanger.setCurrentWidthValue(selectedDrawingTool.getToolWidth());
+            widthChanger.setJLabel();
+        }
     }
 
 
@@ -202,6 +222,7 @@ public class MainUI {
         MainUI.listenForSlider listenForSlider = new MainUI.listenForSlider();
         widthChanger.getSliderComponent().addChangeListener(listenForSlider);
         widthChanger.getJTextFieldComponent().addActionListener(actionListener);
+        widthChanger.getCheckBoxGlobalSizeComponent().addActionListener(actionListener);
 
         mainContent.add(canvasTools, BorderLayout.WEST);
         mainContent.add(widthChanger.getGUI(), BorderLayout.SOUTH);
