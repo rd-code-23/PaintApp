@@ -73,7 +73,6 @@ public class LineTool extends DrawingTool {
         currentX = e.getX();
         currentY = e.getY();
         //draw a line between the start and release points
-        // draw line if graphics context not null
         layer1Graphics.drawLine(lastX, lastY, currentX, currentY);
         DrawArea.drawLayersOntoCanvas(layers, canvas);
         lastX = currentX;
