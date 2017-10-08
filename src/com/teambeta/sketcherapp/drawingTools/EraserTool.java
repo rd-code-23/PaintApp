@@ -21,27 +21,22 @@ public class EraserTool extends DrawingTool {
     private int lastY;
     private Graphics2D layer1Graphics;
     private Color color;
-    private int brushWidth;
+    private int eraserWidth;
+    private final int DEFAULT_WIDTH_VALUE = 10;
 
     /**
      * The constructor sets the properties of the tool to their default values
      */
     public EraserTool(DrawArea drawArea) {
         color = drawArea.getBackground();
-        brushWidth = 15;
+        eraserWidth = DEFAULT_WIDTH_VALUE;
         currentX = 0;
         currentY = 0;
         lastX = 0;
         lastX = 0;
     }
 
-    public int getBrushWidth() {
-        return brushWidth;
-    }
 
-    public void setBrushWidth(int brushWidth) {
-        this.brushWidth = brushWidth;
-    }
 
     @Override
     public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
@@ -65,7 +60,7 @@ public class EraserTool extends DrawingTool {
         currentX = e.getX();
         currentY = e.getY();
 
-        layer1Graphics.fillOval(currentX - (brushWidth/2),currentY - (brushWidth/2), brushWidth, brushWidth);
+        layer1Graphics.fillOval(currentX - (eraserWidth/2),currentY - (eraserWidth/2), eraserWidth, eraserWidth);
         DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
 
@@ -77,6 +72,16 @@ public class EraserTool extends DrawingTool {
         currentY = e.getY();
         lastX = currentX;
         lastY = currentY;
+    }
+
+    @Override
+    public int getToolWidth() {
+        return eraserWidth;
+    }
+
+    @Override
+    public void setToolWidth(int width) {
+            eraserWidth = width;
     }
 
     /**
@@ -100,7 +105,7 @@ public class EraserTool extends DrawingTool {
         layer1Graphics = (Graphics2D) layers[0].getGraphics();
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         layer1Graphics.setColor(color);
-        layer1Graphics.setStroke(new BasicStroke(getBrushWidth(), BasicStroke.CAP_ROUND,    // End-cap style
+        layer1Graphics.setStroke(new BasicStroke(getToolWidth(), BasicStroke.CAP_ROUND,    // End-cap style
                 BasicStroke.CAP_BUTT));
     }
 
