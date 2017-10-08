@@ -25,8 +25,8 @@ public class MainUI {
     private static EraserTool eraserTool;
     private static EllipseTool ellipseTool;
     private static TextTool textTool;
+    private static PaintBucketTool paintBucketTool;
     public static DrawingTool selectedDrawingTool;
-
 
     private static final String CLEAR_BUTTON_TEXT = "Clear";
     private static final String BRUSH_BUTTON_TEXT = "Brush";
@@ -36,6 +36,8 @@ public class MainUI {
     private static final String ERASER_TOOL_BUTTON_TEXT = "Eraser";
     private static final String ELLIPSE_TOOL_BUTTON_TEXT = "Ellipse";
     private static final String TEXT_TOOL_BUTTON_TEXT = "Text";
+    private static final String PAINT_BUCKET_BUTTON_TEXT = "Paint Bucket";
+
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
@@ -68,6 +70,7 @@ public class MainUI {
     private JButton ellipseToolButton;
     private WidthChanger widthChanger;
     private JButton textToolButton;
+    private JButton paintBucketToolButton;
     private DrawArea drawArea;
 
     private ActionListener actionListener = new ActionListener() {
@@ -100,6 +103,8 @@ public class MainUI {
                 selectedDrawingTool = eraserTool;
             } else if (e.getSource() == textToolButton) {
                 selectedDrawingTool = textTool;
+            } else if (e.getSource() == paintBucketToolButton) {
+                selectedDrawingTool = paintBucketTool;
             }
         }
     };
@@ -115,10 +120,7 @@ public class MainUI {
                 widthChanger.setJLabel();
                 //   widthChanger.setSizeTextField();
             }
-
-
         }
-
     }
 
     /**
@@ -164,6 +166,8 @@ public class MainUI {
         ellipseToolButton.addActionListener(actionListener);
         textToolButton = new JButton(TEXT_TOOL_BUTTON_TEXT);
         textToolButton.addActionListener(actionListener);
+        paintBucketToolButton = new JButton(PAINT_BUCKET_BUTTON_TEXT);
+        paintBucketToolButton.addActionListener(actionListener);
 
 
         JPanel canvasTools = new JPanel();
@@ -177,6 +181,7 @@ public class MainUI {
         canvasTools.add(ellipseToolButton);
         canvasTools.add(eraserToolButton);
         canvasTools.add(textToolButton);
+        canvasTools.add(paintBucketToolButton);
 
 
         widthChanger = new WidthChanger();
@@ -188,7 +193,6 @@ public class MainUI {
 
         mainContent.add(canvasTools, BorderLayout.WEST);
         mainContent.add(widthChanger.getGUI(), BorderLayout.SOUTH);
-
 
         ColorChooser colourChooser = new ColorChooser();
         JPanel editorPanel = new JPanel();
@@ -233,6 +237,7 @@ public class MainUI {
         ellipseTool = new EllipseTool();
         selectedDrawingTool = brushTool;
         textTool = new TextTool();
+        paintBucketTool = new PaintBucketTool();
     }
 
     /**
