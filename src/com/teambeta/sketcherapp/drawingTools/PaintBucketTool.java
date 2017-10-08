@@ -69,6 +69,7 @@ public class PaintBucketTool extends DrawingTool {
     }
 
     private void floodFillAlgorithm2(BufferedImage layer, int x, int y, Color colorToReplace) {
+        //TODO:fix problem with anti-aliasing causing caps in the fill
         Queue<Integer> xCoordsOfPixelsToColor = new LinkedList<>();
         Queue<Integer> yCoordsOfPixelsToColor = new LinkedList<>();
         int xOfCurrentPixel = x;
@@ -92,44 +93,40 @@ public class PaintBucketTool extends DrawingTool {
             eastMostXCoord = xOfCurrentPixel;
             westMostXCoord = xOfCurrentPixel;
 
+            int downPixelY = yOfCurrentPixel - 1;
+            int upPixelY = yOfCurrentPixel + 1;
             while (eastMostXCoord < layer.getWidth() &&
                     layer.getRGB(eastMostXCoord, yOfCurrentPixel) == colorToReplaceRGB) {
-                if (yOfCurrentPixel + 1 < layer.getHeight() && ((yOfCurrentPixel + 1) >= 0) &&
-                        layer.getRGB(eastMostXCoord, yOfCurrentPixel + 1) == colorToReplaceRGB) {
+                if (downPixelY < layer.getHeight() && (downPixelY >= 0) &&
+                        (layer.getRGB(eastMostXCoord, downPixelY) - colorToReplaceRGB) == 0) {
                     xCoordsOfPixelsToColor.add(eastMostXCoord);
-                    yCoordsOfPixelsToColor.add(yOfCurrentPixel + 1);
+                    yCoordsOfPixelsToColor.add(downPixelY);
                 }
-                if ((yOfCurrentPixel - 1) < layer.getHeight() && ((yOfCurrentPixel - 1) >= 0) &&
-                        layer.getRGB(eastMostXCoord, yOfCurrentPixel - 1) == colorToReplaceRGB) {
+                if (upPixelY < layer.getHeight() && (upPixelY >= 0) &&
+                        (layer.getRGB(eastMostXCoord, upPixelY) - colorToReplaceRGB) == 0) {
                     xCoordsOfPixelsToColor.add(eastMostXCoord);
-                    yCoordsOfPixelsToColor.add(yOfCurrentPixel - 1);
+                    yCoordsOfPixelsToColor.add(upPixelY);
                 }
                 eastMostXCoord++;
             }
-            if (eastMostXCoord != xOfCurrentPixel) {
-                layer1Graphics.drawRect
-                        (xOfCurrentPixel + 1, yOfCurrentPixel, eastMostXCoord - xOfCurrentPixel, 1);
-            }
-
             while (westMostXCoord >= 0 &&
-                    layer.getRGB(westMostXCoord, yOfCurrentPixel) == colorToReplaceRGB) {
-                if (yOfCurrentPixel + 1 < layer.getHeight() && ((yOfCurrentPixel + 1) >= 0) &&
-                        layer.getRGB(westMostXCoord, yOfCurrentPixel + 1) == colorToReplaceRGB) {
+                    (layer.getRGB(westMostXCoord, yOfCurrentPixel) - colorToReplaceRGB) == 0) {
+                if (downPixelY < layer.getHeight() && (downPixelY >= 0) &&
+                        layer.getRGB(westMostXCoord, downPixelY) == colorToReplaceRGB) {
                     xCoordsOfPixelsToColor.add(westMostXCoord);
-                    yCoordsOfPixelsToColor.add(yOfCurrentPixel + 1);
+                    yCoordsOfPixelsToColor.add(downPixelY);
                 }
-                if (yOfCurrentPixel - 1 < layer.getHeight() && ((yOfCurrentPixel - 1) >= 0) &&
-                        layer.getRGB(westMostXCoord, yOfCurrentPixel - 1) == colorToReplaceRGB) {
+                if (upPixelY < layer.getHeight() && (upPixelY >= 0) &&
+                        (layer.getRGB(westMostXCoord, upPixelY) - colorToReplaceRGB) == 0) {
                     xCoordsOfPixelsToColor.add(westMostXCoord);
-                    yCoordsOfPixelsToColor.add(yOfCurrentPixel - 1);
+                    yCoordsOfPixelsToColor.add(upPixelY);
                 }
                 westMostXCoord--;
             }
-            if (westMostXCoord != xOfCurrentPixel) {
+            if (westMostXCoord != eastMostXCoord) {
                 layer1Graphics.drawRect
-                        (westMostXCoord, yOfCurrentPixel, xOfCurrentPixel - westMostXCoord - 1, 1);
+                        (westMostXCoord, yOfCurrentPixel, eastMostXCoord - westMostXCoord, 1);
             }
-            layer.setRGB(xOfCurrentPixel, yOfCurrentPixel, replacementColorRGB);
         }
     }
 
