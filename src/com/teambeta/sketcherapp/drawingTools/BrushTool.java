@@ -16,11 +16,9 @@ public class BrushTool extends DrawingTool {
     private int currentX;
     private int lastX;
     private int lastY;
-    private int sizeInPixels;
     private Color color;
     private int brushWidth;
     private Graphics2D layer1Graphics;
-    private final int DEFAULT_STOKE_VALUE = 1;
 
     public int getBrushWidth() {
         return brushWidth;
@@ -36,7 +34,6 @@ public class BrushTool extends DrawingTool {
     public BrushTool() {
         color = Color.black;
         registerObservers();
-        sizeInPixels = 1;
         lastX = 0;
         lastY = 0;
         currentX = 0;
@@ -115,7 +112,6 @@ public class BrushTool extends DrawingTool {
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         layer1Graphics.setColor(color);
         layer1Graphics.setStroke(new BasicStroke(getBrushWidth(), BasicStroke.CAP_ROUND,    // End-cap style
-                BasicStroke.CAP_BUTT));
+                BasicStroke.JOIN_ROUND));
     }
-
 }
