@@ -3,8 +3,7 @@ package com.teambeta.sketcherapp.ui;
 import com.teambeta.sketcherapp.drawingTools.DrawingTool;
 import com.teambeta.sketcherapp.drawingTools.LineTool;
 import com.teambeta.sketcherapp.drawingTools.BrushTool;
-import com.teambeta.sketcherapp.drawingTools.SquareTool;
-import com.teambeta.sketcherapp.drawingTools.CircleTool;
+import com.teambeta.sketcherapp.drawingTools.RectangleTool;
 import com.teambeta.sketcherapp.drawingTools.*;
 
 import javax.swing.*;
@@ -20,8 +19,7 @@ import java.awt.event.ActionListener;
 public class MainUI {
     private static LineTool lineTool;
     private static BrushTool brushTool;
-    private static SquareTool squareTool;
-    private static CircleTool circleTool;
+    private static RectangleTool squareTool;
     private static EraserTool eraserTool;
     private static EllipseTool ellipseTool;
     private static TextTool textTool;
@@ -30,8 +28,7 @@ public class MainUI {
 
     private static final String CLEAR_BUTTON_TEXT = "Clear";
     private static final String BRUSH_BUTTON_TEXT = "Brush";
-    private static final String SQUARE_TOOL_BUTTON_TEXT = "Square";
-    private static final String CIRCLE_TOOL_BUTTON_TEXT = "Circle";
+    private static final String RECTANGLE_TOOL_BUTTON_TEXT = "Rectangle";
     private static final String LINE_TOOL_BUTTON_TEXT = "Line";
     private static final String ERASER_TOOL_BUTTON_TEXT = "Eraser";
     private static final String ELLIPSE_TOOL_BUTTON_TEXT = "Ellipse";
@@ -62,7 +59,7 @@ public class MainUI {
     private JButton clearButton;
     private JButton brushToolButton;
     private JButton lineToolButton;
-    private JButton squareToolButton;
+    private JButton rectangleToolButton;
     private JButton circleToolButton;
     private JButton eraserToolButton;
     private JButton ellipseToolButton;
@@ -83,14 +80,10 @@ public class MainUI {
                 selectedDrawingTool = lineTool;
                 updateSizeSlider();
                 drawArea.setColor(lineTool.getColor());
-            } else if (e.getSource() == squareToolButton) {
+            } else if (e.getSource() == rectangleToolButton) {
                 selectedDrawingTool = squareTool;
                 updateSizeSlider();
                 drawArea.setColor(squareTool.getColor());
-            } else if (e.getSource() == circleToolButton) {
-                selectedDrawingTool = circleTool;
-                updateSizeSlider();
-                drawArea.setColor(circleTool.getColor());
             } else if (e.getSource() == widthChanger.getJTextFieldComponent()) {
                 widthChanger.setSliderComponent(widthChanger.getJTextFieldValue());
                 widthChanger.setCurrentWidthValue(widthChanger.getJTextFieldValue());
@@ -182,10 +175,8 @@ public class MainUI {
         brushToolButton.addActionListener(actionListener);
         lineToolButton = new JButton(LINE_TOOL_BUTTON_TEXT);
         lineToolButton.addActionListener(actionListener);
-        squareToolButton = new JButton(SQUARE_TOOL_BUTTON_TEXT);
-        squareToolButton.addActionListener(actionListener);
-        circleToolButton = new JButton(CIRCLE_TOOL_BUTTON_TEXT);
-        circleToolButton.addActionListener(actionListener);
+        rectangleToolButton = new JButton(RECTANGLE_TOOL_BUTTON_TEXT);
+        rectangleToolButton.addActionListener(actionListener);
         eraserToolButton = new JButton(ERASER_TOOL_BUTTON_TEXT);
         eraserToolButton.addActionListener(actionListener);
         ellipseToolButton = new JButton(ELLIPSE_TOOL_BUTTON_TEXT);
@@ -200,8 +191,7 @@ public class MainUI {
         canvasTools.add(clearButton);
         canvasTools.add(brushToolButton);
         canvasTools.add(lineToolButton);
-        canvasTools.add(squareToolButton);
-        canvasTools.add(circleToolButton);
+        canvasTools.add(rectangleToolButton);
         canvasTools.add(ellipseToolButton);
         canvasTools.add(eraserToolButton);
         canvasTools.add(textToolButton);
@@ -256,8 +246,7 @@ public class MainUI {
     private void initDrawingTools() {
         lineTool = new LineTool();
         brushTool = new BrushTool();
-        squareTool = new SquareTool();
-        circleTool = new CircleTool();
+        squareTool = new RectangleTool();
         eraserTool = new EraserTool(drawArea); // Requires drawArea due to requiring the canvas colour.
         ellipseTool = new EllipseTool();
         selectedDrawingTool = brushTool;
