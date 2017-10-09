@@ -13,8 +13,8 @@ import javax.swing.JFrame;
 public class TextFieldInput extends JDialog {
     private String userInput;
     private final int MOUSE_DEVIATION = 12;
-    private final int WIDTH = 400;
-    private final int HEIGHT = 50;
+    private final int WIDTH = 15;
+    private final int HEIGHT = 2;
 
     /**
      * Constructor.
@@ -22,12 +22,13 @@ public class TextFieldInput extends JDialog {
      * @param locationX x mouse coordinate
      * @param locationY y mouse coordinate
      */
-    public TextFieldInput(Color textColor, int locationX, int locationY) {
+    public TextFieldInput(Color textColor, int locationX, int locationY,Font myFont) {
         super(new JFrame(), true);
         setUndecorated(true);
         setLocation(locationX - MOUSE_DEVIATION, locationY - MOUSE_DEVIATION);
         setLayout(new BorderLayout());
         TextField textField = new TextField();
+        textField.setFont(myFont);
         textField.setForeground(textColor);
         textField.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
@@ -35,7 +36,7 @@ public class TextFieldInput extends JDialog {
                 setVisible(false);
                 dispose();
             }});
-        setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        setPreferredSize(new Dimension(WIDTH*myFont.getSize(), (HEIGHT*myFont.getSize())));
         getContentPane().add(BorderLayout.CENTER, textField);
         pack();
         setVisible(true);

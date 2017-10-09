@@ -48,4 +48,17 @@ public abstract class DrawingTool {
      * @param e      The mouse event that needs to be responded to.
      */
     public abstract void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e);
+
+    /**
+     * @return Returns the current width of the tool
+     */
+    public abstract int getToolWidth();
+
+    /**
+     * setToolWidth sets the width of a tool so the user can change how thick or thin it comes up on the canvas
+     *
+     * @param width The Width of the tool
+     */
+
+    public abstract void setToolWidth(int width);
 }
