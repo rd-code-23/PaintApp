@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
  * <p>
  * Behaviour of the ellipse tool:
  * - The end-point relative to the init-point can be in any 4 quadrants.
+ * - Draw a circle when the shift button is held on mouse release.
  */
 public class EllipseTool extends DrawingTool {
 
@@ -19,6 +20,8 @@ public class EllipseTool extends DrawingTool {
     private int currentX;
     private int initX;
     private int initY;
+    private int xAxisMagnitudeDelta;
+    private int yAxisMagnitudeDelta;
     private int drawWidthX;
     private int drawHeightY;
     private int sizeInPixels;
@@ -52,8 +55,22 @@ public class EllipseTool extends DrawingTool {
         currentX = e.getX();
         currentY = e.getY();
 
-        drawWidthX = Math.abs(currentX - initX);
-        drawHeightY = Math.abs(currentY - initY);
+        xAxisMagnitudeDelta = Math.abs(currentX - initX);
+        yAxisMagnitudeDelta = Math.abs(currentY - initY);
+
+        // Detect shift-down by the MouseEvent, e.
+        if (e.isShiftDown()) {
+            if (xAxisMagnitudeDelta > yAxisMagnitudeDelta) {
+                drawWidthX = yAxisMagnitudeDelta;
+                drawHeightY = yAxisMagnitudeDelta;
+            } else {
+                drawWidthX = xAxisMagnitudeDelta;
+                drawHeightY= yAxisMagnitudeDelta;
+            }
+        } else {
+            drawWidthX = xAxisMagnitudeDelta;
+            drawHeightY = yAxisMagnitudeDelta;
+        }
 
         // Handle cases where the ellipse lies in a quadrant (with origin 0,0 at click) other than IV.
         if (currentY < initY) {
