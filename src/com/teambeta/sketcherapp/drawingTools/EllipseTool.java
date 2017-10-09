@@ -65,7 +65,7 @@ public class EllipseTool extends DrawingTool {
                 drawHeightY = yAxisMagnitudeDelta;
             } else {
                 drawWidthX = xAxisMagnitudeDelta;
-                drawHeightY= yAxisMagnitudeDelta;
+                drawHeightY= xAxisMagnitudeDelta;
             }
         } else {
             drawWidthX = xAxisMagnitudeDelta;
