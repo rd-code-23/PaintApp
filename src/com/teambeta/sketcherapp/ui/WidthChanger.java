@@ -20,6 +20,7 @@ public class WidthChanger {
     private static final int WIDTH_EXTRA_SPACE = 80;
     private static final int MINOT_TICK_SPACE_SLIDER = 10;
     private static final int MAJOR_TICK_SPACE_SLIDER = 25;
+    private static final String FILL_CHECKBOX_TEXT = "Fill Shape";
 
     JPanel widthPanel = new JPanel();
     private JSlider widthSlider;          // lets user change currentWidthValue
@@ -80,7 +81,7 @@ public class WidthChanger {
         globalSize.setSelected(true);
         widthPanel.add(globalSize);
 
-        fillBox = new JCheckBox("Fill Shape");
+        fillBox = new JCheckBox(FILL_CHECKBOX_TEXT);
         fillBox.setSelected(false);
         isFill = fillBox.isSelected();
         widthPanel.add(fillBox);
