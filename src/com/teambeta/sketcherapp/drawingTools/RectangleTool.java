@@ -94,7 +94,10 @@ public class RectangleTool extends DrawingTool {
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         layer1Graphics.setColor(color);
 
-        // draw square if graphics context not null
+        // Draw a filled rectangle/square if the alt key is down on release.
+        if (e.isAltDown()) {
+            layer1Graphics.fillRect(initX, initY, drawWidthX, drawHeightY);
+        }
         layer1Graphics.drawRect(initX, initY, drawWidthX, drawHeightY);
         DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
