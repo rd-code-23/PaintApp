@@ -8,13 +8,14 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 /**
- * The SquareTool class implements the drawing behavior for when the Square tool has been selected
+ * The RectangleTool class implements the drawing behavior for when the Rectangle tool has been selected
  * <p>
- * Behaviour of the square tool:
+ * Behaviour of the rectangle tool:
  * - The longest side will take the length of the shortest side.
  * - The end-point relative to the init-point can be in any 4 quadrants.
+ * - Draw a square when the shift button is held on mouse release.
  */
-public class SquareTool extends DrawingTool {
+public class RectangleTool extends DrawingTool {
 
     private int currentY;
     private int currentX;
@@ -31,7 +32,7 @@ public class SquareTool extends DrawingTool {
     /**
      * The constructor sets the properties of the tool to their default values
      */
-    public SquareTool() {
+    public RectangleTool() {
         registerObservers();
         color = Color.black;
         sizeInPixels = 1;
@@ -66,12 +67,18 @@ public class SquareTool extends DrawingTool {
         xAxisMagnitudeDelta = Math.abs(currentX - initX);
         yAxisMagnitudeDelta = Math.abs(currentY - initY);
 
-        if (xAxisMagnitudeDelta > yAxisMagnitudeDelta) {
-            drawWidthX = yAxisMagnitudeDelta;
-            drawHeightY = yAxisMagnitudeDelta;
+        // Detect shift-down by the MouseEvent, e.
+        if (e.isShiftDown()) {
+            if (xAxisMagnitudeDelta > yAxisMagnitudeDelta) {
+                drawWidthX = yAxisMagnitudeDelta;
+                drawHeightY = yAxisMagnitudeDelta;
+            } else {
+                drawWidthX = xAxisMagnitudeDelta;
+                drawHeightY = xAxisMagnitudeDelta;
+            }
         } else {
             drawWidthX = xAxisMagnitudeDelta;
-            drawHeightY = xAxisMagnitudeDelta;
+            drawHeightY = yAxisMagnitudeDelta;
         }
 
         // Handle cases where the square lies in a quadrant (with origin 0,0 at click) other than IV.
