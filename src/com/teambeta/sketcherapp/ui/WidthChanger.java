@@ -21,12 +21,12 @@ public class WidthChanger {
     private static final int MINOT_TICK_SPACE_SLIDER = 10;
     private static final int MAJOR_TICK_SPACE_SLIDER = 25;
 
-    JPanel sliderPanel = new JPanel();
+    JPanel widthPanel = new JPanel();
     private JSlider widthSlider;          // lets user change currentWidthValue
     private JLabel panelLabel;      //used to describe the panel for the user
     private JTextField widthTextField;    //lets user change currentWidthValue
     private int currentWidthValue = 0;
-    private JCheckBox globalSize;          //if global is ticked then the component sizes wont change
+    private JCheckBox globalSize;          //if global is ticked then all the tool sizes change to current size
     //if global not ticked the component size can be different for each tool
     private boolean isGlobalSize = true;
 
@@ -37,9 +37,9 @@ public class WidthChanger {
     public void renderPanel() {
         currentWidthValue = INITIAL_WIDTH_VALUE;
 
-        sliderPanel.setLayout(new BoxLayout(sliderPanel, BoxLayout.X_AXIS));
-        sliderPanel.setPreferredSize(new Dimension(WIDTH_PANEL, HEIGHT_PANEL));
-        sliderPanel.setBackground(Color.DARK_GRAY);
+        widthPanel.setLayout(new BoxLayout(widthPanel, BoxLayout.X_AXIS));
+        widthPanel.setPreferredSize(new Dimension(WIDTH_PANEL, HEIGHT_PANEL));
+        widthPanel.setBackground(Color.DARK_GRAY);
 
         panelLabel = new JLabel(PANEL_DESCRIPTION);
         panelLabel.setForeground(Color.red);
@@ -56,26 +56,28 @@ public class WidthChanger {
         panelLabel.setMaximumSize(new Dimension(WIDTH_PANEL_LABEL, HEIGHT_COMPONENT));
         panelLabel.setPreferredSize(new Dimension(WIDTH_PANEL_LABEL, HEIGHT_COMPONENT));
         panelLabel.setMinimumSize(new Dimension(WIDTH_PANEL_LABEL, HEIGHT_COMPONENT));
-        sliderPanel.add(Box.createRigidArea(new Dimension(WIDTH_EXTRA_SPACE, HEIGHT_COMPONENT)));
-        sliderPanel.add(panelLabel);
+        widthPanel.add(Box.createRigidArea(new Dimension(WIDTH_EXTRA_SPACE, HEIGHT_COMPONENT)));
+        widthPanel.add(panelLabel);
 
         widthTextField.setMaximumSize(new Dimension(WIDTH_TEXTFIELD, HEIGHT_COMPONENT));
         widthTextField.setPreferredSize(new Dimension(WIDTH_TEXTFIELD, HEIGHT_COMPONENT));
         widthTextField.setMinimumSize(new Dimension(WIDTH_TEXTFIELD, HEIGHT_COMPONENT));
-        sliderPanel.add(widthTextField);
+        widthPanel.add(widthTextField);
 
         widthSlider.setMaximumSize(new Dimension(WIDTH_SLIDER, HEIGHT_COMPONENT));
         widthSlider.setPreferredSize(new Dimension(WIDTH_SLIDER, HEIGHT_COMPONENT));
         widthSlider.setMinimumSize(new Dimension(WIDTH_SLIDER, HEIGHT_COMPONENT));
-        sliderPanel.add(widthSlider);
+        widthPanel.add(widthSlider);
 
-        sliderPanel.add(Box.createRigidArea(new Dimension(WIDTH_EXTRA_SPACE, HEIGHT_COMPONENT)));
+        widthPanel.add(Box.createRigidArea(new Dimension(WIDTH_EXTRA_SPACE, HEIGHT_COMPONENT)));
         widthSlider.setMaximumSize(new Dimension(WIDTH_SLIDER, HEIGHT_COMPONENT));
         widthSlider.setPreferredSize(new Dimension(WIDTH_SLIDER, HEIGHT_COMPONENT));
         widthSlider.setMinimumSize(new Dimension(WIDTH_SLIDER, HEIGHT_COMPONENT));
         globalSize = new JCheckBox("Global");
         globalSize.setSelected(true);
-        sliderPanel.add(globalSize);
+
+
+        widthPanel.add(globalSize);
     }
 
     /**
@@ -166,15 +168,15 @@ public class WidthChanger {
      * returns the panel
      */
     public JComponent getGUI() {
-        return sliderPanel;
+        return widthPanel;
 
     }
 
     public void hidePanel() {
-        sliderPanel.setVisible(false);
+        widthPanel.setVisible(false);
     }
 
     public void showPanel() {
-        sliderPanel.setVisible(true);
+        widthPanel.setVisible(true);
     }
 }
