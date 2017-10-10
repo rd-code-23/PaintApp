@@ -126,7 +126,7 @@ public class MainUI {
      * when a new brushTool is selected this method
      * will update the size panel to the current brush tool
      * values
-     * if global is ticked then the component sizes wont change
+     * if global is ticked then all the tool sizes change to current size
      * if global not ticked the component size can be different for each tool
      */
     public void updateSizeSlider() {
@@ -166,7 +166,7 @@ public class MainUI {
         // mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
         drawArea = new DrawArea();
-        // ideally this should be in its own sliderPanel with a proper scale, not directly to mainContent
+        // ideally this should be in its own widthPanel with a proper scale, not directly to mainContent
         mainContent.add(drawArea, BorderLayout.CENTER);
 
         clearButton = new JButton(CLEAR_BUTTON_TEXT);
@@ -204,9 +204,8 @@ public class MainUI {
         widthChanger.getSliderComponent().addChangeListener(listenForSlider);
         widthChanger.getJTextFieldComponent().addActionListener(actionListener);
         widthChanger.getCheckBoxGlobalSizeComponent().addActionListener(actionListener);
-
+        mainContent.add(widthChanger.getGUI(), BorderLayout.NORTH);
         mainContent.add(canvasTools, BorderLayout.WEST);
-        mainContent.add(widthChanger.getGUI(), BorderLayout.SOUTH);
 
 
         ColorChooser colourChooser = new ColorChooser();
