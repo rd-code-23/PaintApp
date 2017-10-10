@@ -85,6 +85,10 @@ public class EllipseTool extends DrawingTool {
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         layer1Graphics.setColor(color);
 
+        // Draw a filled ellipse/circle if the alt key is down on release.
+        if (e.isAltDown()) {
+            layer1Graphics.fillOval(initX, initY, drawWidthX, drawHeightY);
+        }
         layer1Graphics.drawOval(initX, initY, drawWidthX, drawHeightY);
         DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
