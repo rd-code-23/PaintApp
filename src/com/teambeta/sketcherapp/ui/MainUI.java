@@ -23,6 +23,7 @@ public class MainUI {
     private static EraserTool eraserTool;
     private static EllipseTool ellipseTool;
     private static TextTool textTool;
+    private static EyeDropperTool eyeDropperTool;
     public static DrawingTool selectedDrawingTool;
 
 
@@ -33,6 +34,7 @@ public class MainUI {
     private static final String ERASER_TOOL_BUTTON_TEXT = "Eraser";
     private static final String ELLIPSE_TOOL_BUTTON_TEXT = "Ellipse";
     private static final String TEXT_TOOL_BUTTON_TEXT = "Text";
+    private static final String EYEDROPPER_TOOL_BUTTON_TEXT = "Eye Dropper";
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
@@ -60,10 +62,10 @@ public class MainUI {
     private JButton brushToolButton;
     private JButton lineToolButton;
     private JButton rectangleToolButton;
-    private JButton circleToolButton;
     private JButton eraserToolButton;
     private JButton ellipseToolButton;
     private WidthChanger widthChanger;
+    private JButton eyeDropperToolButton;
     private JButton textToolButton;
     private DrawArea drawArea;
 
@@ -100,6 +102,8 @@ public class MainUI {
             } else if (e.getSource() == textToolButton) {
                 selectedDrawingTool = textTool;
                 updateSizeSlider();
+            } else if (e.getSource() == eyeDropperToolButton) {
+                selectedDrawingTool = eyeDropperTool;
             }
 
             if (e.getSource() == widthChanger.getCheckBoxGlobalSizeComponent()) {
@@ -199,6 +203,8 @@ public class MainUI {
         ellipseToolButton.addActionListener(actionListener);
         textToolButton = new JButton(TEXT_TOOL_BUTTON_TEXT);
         textToolButton.addActionListener(actionListener);
+        eyeDropperToolButton = new JButton(EYEDROPPER_TOOL_BUTTON_TEXT);
+        eyeDropperToolButton.addActionListener(actionListener);
 
 
         JPanel canvasTools = new JPanel();
@@ -211,6 +217,7 @@ public class MainUI {
         canvasTools.add(ellipseToolButton);
         canvasTools.add(eraserToolButton);
         canvasTools.add(textToolButton);
+        canvasTools.add(eyeDropperToolButton);
 
 
         widthChanger = new WidthChanger();
@@ -233,6 +240,10 @@ public class MainUI {
         mainContent.add(editorPanel, BorderLayout.EAST);
 
         prepareMenuBar();
+    }
+
+    public DrawingTool getSelectedDrawingTool() {
+        return selectedDrawingTool;
     }
 
     /**
@@ -265,6 +276,7 @@ public class MainUI {
         rectangleTool = new RectangleTool();
         eraserTool = new EraserTool(drawArea); // Requires drawArea due to requiring the canvas colour.
         ellipseTool = new EllipseTool();
+        eyeDropperTool = new EyeDropperTool(widthChanger); // Requires widthChanger UI element for direct text update.
         selectedDrawingTool = brushTool;
         textTool = new TextTool();
     }
