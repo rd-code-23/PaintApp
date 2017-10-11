@@ -27,6 +27,10 @@ public class WidthChanger {
     private static final int MAJOR_TICK_SPACE_SLIDER = 25;
     private static final String FILL_CHECKBOX_TEXT = "Fill Shape";
     private static final String GLOBAL_WIDTH_CHECKBOX_TEXT = "Global";
+    private static final String EYEDROPPER_TEXTFIELD_RED_PREFIX = "R: ";
+    private static final String EYEDROPPER_TEXTFIELD_GREEN_PREFIX = "G: ";
+    private static final String EYEDROPPER_TEXTFIELD_BLUE_PREFIX = "B: ";
+    private static final String EYEDROPPER_TEXTFIELD_SPACE = " ";
 
     JPanel widthPanel = new JPanel();
     private JSlider widthSlider;          // lets user change currentWidthValue
@@ -251,7 +255,11 @@ public class WidthChanger {
      * @param color The color to be parsed
      */
     public void updateEyeDropperTextField(Color color) {
-        eyeDropperTextField.setText("R: " + color.getRed() + " G: " + color.getGreen() + " B: " + color.getBlue());
+        eyeDropperTextField.setText(EYEDROPPER_TEXTFIELD_RED_PREFIX + color.getRed()
+                                    + EYEDROPPER_TEXTFIELD_SPACE
+                                    + EYEDROPPER_TEXTFIELD_GREEN_PREFIX + color.getGreen()
+                                    + EYEDROPPER_TEXTFIELD_SPACE
+                                    + EYEDROPPER_TEXTFIELD_BLUE_PREFIX + color.getBlue());
     }
 
 }
