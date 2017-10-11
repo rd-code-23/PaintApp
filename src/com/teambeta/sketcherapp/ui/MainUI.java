@@ -128,6 +128,9 @@ public class MainUI {
     };
 
 
+    /**
+     * Class to listen for changes in the widthChanger slider.
+     */ 
     public class listenForSlider implements ChangeListener {
         @Override
         public void stateChanged(ChangeEvent e) {
@@ -141,7 +144,7 @@ public class MainUI {
 
 
     /**
-     * when a new brushTool is selected this method
+     * When a new brushTool is selected this method
      * will update the size panel to the current brush tool
      * values
      * if global is ticked then all the tool sizes change to current size
@@ -251,6 +254,10 @@ public class MainUI {
         prepareMenuBar();
     }
 
+    /**
+     * Return the currently selected drawing tool.
+     * 
+     */
     public DrawingTool getSelectedDrawingTool() {
         return selectedDrawingTool;
     }
