@@ -15,6 +15,11 @@ public class EyeDropperTool extends DrawingTool {
     // Directly update to width changer MainUI object upon mouse press.
     private WidthChanger toolWidthChanger;
 
+    /**
+     * Constructor.
+     * 
+     * @param widthChanger to change the width of the tool.
+     */
     public EyeDropperTool(WidthChanger widthChanger) {
         toolWidthChanger = widthChanger;
     }
