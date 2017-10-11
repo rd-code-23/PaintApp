@@ -23,6 +23,9 @@ public class FanTool extends DrawingTool {
     private Color lineColor;
     private Graphics2D layer1Graphics;
 
+    /**
+     * Constructor.
+     */
     public FanTool() {
         lineColor = Color.BLACK;
         x_start = 0;
@@ -78,6 +81,7 @@ public class FanTool extends DrawingTool {
     public void setFillState(boolean fillState) {
 
     }
+    
     /**
      * Add a new observer to ColorChooser. Selecting a color in ColorChooser will update the color in this class
      */
