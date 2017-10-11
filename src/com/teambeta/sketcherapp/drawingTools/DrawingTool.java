@@ -61,4 +61,12 @@ public abstract class DrawingTool {
      */
 
     public abstract void setToolWidth(int width);
+
+    /**
+     * setFillState updates the fill state of tools that support filling.
+     * By default, nothing will occur if the tool doesn't have support.
+     * @param fillState The boolean expression of the required fill state
+     */
+    public abstract void setFillState(boolean fillState);
+
 }

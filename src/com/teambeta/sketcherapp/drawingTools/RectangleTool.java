@@ -29,6 +29,8 @@ public class RectangleTool extends DrawingTool {
     private Color color;
     private int squareWidth;
     private final int DEFAULT_WIDTH_VALUE = 10;
+    private boolean fillShape;
+
     /**
      * The constructor sets the properties of the tool to their default values
      */
@@ -45,6 +47,7 @@ public class RectangleTool extends DrawingTool {
         xAxisMagnitudeDelta = 0;
         yAxisMagnitudeDelta = 0;
         squareWidth = DEFAULT_WIDTH_VALUE;
+        fillShape = false;
     }
 
     @Override
@@ -94,7 +97,10 @@ public class RectangleTool extends DrawingTool {
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         layer1Graphics.setColor(color);
 
-        // draw square if graphics context not null
+        // Draw a filled rectangle/square if the alt key is down on release.
+        if (fillShape) {
+            layer1Graphics.fillRect(initX, initY, drawWidthX, drawHeightY);
+        }
         layer1Graphics.drawRect(initX, initY, drawWidthX, drawHeightY);
         DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
@@ -141,5 +147,9 @@ public class RectangleTool extends DrawingTool {
                 color = ColorChooser.getColor();
             }
         });
+    }
+
+    public void setFillState(boolean fillState) {
+        fillShape = fillState;
     }
 }

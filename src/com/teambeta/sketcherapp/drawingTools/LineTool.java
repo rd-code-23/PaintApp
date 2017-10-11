@@ -133,4 +133,9 @@ public class LineTool extends DrawingTool {
             }
         });
     }
+
+    @Override
+    public void setFillState(boolean fillState) {
+
+    }
 }

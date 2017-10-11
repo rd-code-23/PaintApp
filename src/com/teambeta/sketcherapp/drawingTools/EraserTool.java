@@ -109,4 +109,7 @@ public class EraserTool extends DrawingTool {
                 BasicStroke.CAP_BUTT));
     }
 
+    public void setFillState(boolean fillState) {
+        
+    };
 }
