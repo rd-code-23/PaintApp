@@ -36,7 +36,7 @@ public class MainUI {
     private static final String ELLIPSE_TOOL_BUTTON_TEXT = "Ellipse";
     private static final String TEXT_TOOL_BUTTON_TEXT = "Text";
     private static final String EYEDROPPER_TOOL_BUTTON_TEXT = "Eye Dropper";
-    private static final String FAN_TOOL_BUTTON_TEXT = "Fan Tool";
+    private static final String FAN_TOOL_BUTTON_TEXT = "Fan-out";
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
