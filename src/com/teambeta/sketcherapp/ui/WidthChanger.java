@@ -7,7 +7,7 @@ public class WidthChanger {
 
     private static final int INITIAL_WIDTH_VALUE = 10;
     private static final int MINIMUM_SLIDER_VALUE = 0;
-    private static final int MAXIMIM_SLIDER_VALUE = 100;
+    private static final int MAXIMUM_SLIDER_VALUE = 100;
     private static final int SIZE_FONT_JLABEL = 24;
     private static final String PANEL_DESCRIPTION = "Size";
     private static final int MAX_COL_JTEXTFIELD = 3;
@@ -20,6 +20,7 @@ public class WidthChanger {
     private static final int WIDTH_EXTRA_SPACE = 80;
     private static final int MINOT_TICK_SPACE_SLIDER = 10;
     private static final int MAJOR_TICK_SPACE_SLIDER = 25;
+    private static final String FILL_CHECKBOX_TEXT = "Fill Shape";
 
     JPanel widthPanel = new JPanel();
     private JSlider widthSlider;          // lets user change currentWidthValue
@@ -29,6 +30,9 @@ public class WidthChanger {
     private JCheckBox globalSize;          //if global is ticked then all the tool sizes change to current size
     //if global not ticked the component size can be different for each tool
     private boolean isGlobalSize = true;
+
+    private JCheckBox fillBox;
+    private boolean isFill = false;
 
 
     /**
@@ -47,7 +51,7 @@ public class WidthChanger {
 
         widthTextField = new JTextField("" + INITIAL_WIDTH_VALUE, MAX_COL_JTEXTFIELD);
 
-        widthSlider = new JSlider(JSlider.HORIZONTAL, MINIMUM_SLIDER_VALUE, MAXIMIM_SLIDER_VALUE, INITIAL_WIDTH_VALUE);
+        widthSlider = new JSlider(JSlider.HORIZONTAL, MINIMUM_SLIDER_VALUE, MAXIMUM_SLIDER_VALUE, INITIAL_WIDTH_VALUE);
         widthSlider.setMinorTickSpacing(MINOT_TICK_SPACE_SLIDER);
         widthSlider.setPaintLabels(true);
         widthSlider.setMajorTickSpacing(MAJOR_TICK_SPACE_SLIDER);
@@ -75,9 +79,12 @@ public class WidthChanger {
         widthSlider.setMinimumSize(new Dimension(WIDTH_SLIDER, HEIGHT_COMPONENT));
         globalSize = new JCheckBox("Global");
         globalSize.setSelected(true);
-
-
         widthPanel.add(globalSize);
+
+        fillBox = new JCheckBox(FILL_CHECKBOX_TEXT);
+        fillBox.setSelected(false);
+        isFill = fillBox.isSelected();
+        widthPanel.add(fillBox);
     }
 
     /**
@@ -179,4 +186,18 @@ public class WidthChanger {
     public void showPanel() {
         widthPanel.setVisible(true);
     }
+
+    public JCheckBox getFillBox() {
+        return fillBox;
+    }
+
+    public boolean isFill() {
+        isFill = fillBox.isSelected();
+        return isFill;
+    }
+
+    public void setFill(boolean state) {
+        isFill = state;
+    }
+
 }

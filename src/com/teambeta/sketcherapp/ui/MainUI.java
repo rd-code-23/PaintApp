@@ -19,7 +19,7 @@ import java.awt.event.ActionListener;
 public class MainUI {
     private static LineTool lineTool;
     private static BrushTool brushTool;
-    private static RectangleTool squareTool;
+    private static RectangleTool rectangleTool;
     private static EraserTool eraserTool;
     private static EllipseTool ellipseTool;
     private static TextTool textTool;
@@ -81,9 +81,10 @@ public class MainUI {
                 updateSizeSlider();
                 drawArea.setColor(lineTool.getColor());
             } else if (e.getSource() == rectangleToolButton) {
-                selectedDrawingTool = squareTool;
+                selectedDrawingTool = rectangleTool;
                 updateSizeSlider();
-                drawArea.setColor(squareTool.getColor());
+                updateFillState(); // Tool supports filling
+                drawArea.setColor(rectangleTool.getColor());
             } else if (e.getSource() == widthChanger.getJTextFieldComponent()) {
                 widthChanger.setSliderComponent(widthChanger.getJTextFieldValue());
                 widthChanger.setCurrentWidthValue(widthChanger.getJTextFieldValue());
@@ -91,6 +92,7 @@ public class MainUI {
             } else if (e.getSource() == ellipseToolButton) {
                 selectedDrawingTool = ellipseTool;
                 updateSizeSlider();
+                updateFillState(); // Tool supports filling
                 drawArea.setColor(ellipseTool.getColor());
             } else if (e.getSource() == eraserToolButton) {
                 selectedDrawingTool = eraserTool;
@@ -107,6 +109,11 @@ public class MainUI {
                     widthChanger.setGlobalSize(true);
                 }
             }
+
+            if (e.getSource() == widthChanger.getFillBox()) {
+                widthChanger.setFill(!widthChanger.isFill());
+                selectedDrawingTool.setFillState(widthChanger.isFill());
+            }
         }
     };
 
@@ -121,6 +128,7 @@ public class MainUI {
             }
         }
     }
+
 
     /**
      * when a new brushTool is selected this method
@@ -141,6 +149,14 @@ public class MainUI {
         }
     }
 
+
+    /**
+     * When a new tool is selected, tools that support filling will set their
+     * fill state to the fill checkbox.
+     */
+    public void updateFillState() {
+        selectedDrawingTool.setFillState(widthChanger.isFill());
+    }
 
     /**
      * Constructor.
@@ -204,6 +220,7 @@ public class MainUI {
         widthChanger.getSliderComponent().addChangeListener(listenForSlider);
         widthChanger.getJTextFieldComponent().addActionListener(actionListener);
         widthChanger.getCheckBoxGlobalSizeComponent().addActionListener(actionListener);
+        widthChanger.getFillBox().addActionListener(actionListener);
         mainContent.add(widthChanger.getGUI(), BorderLayout.NORTH);
         mainContent.add(canvasTools, BorderLayout.WEST);
 
@@ -245,7 +262,7 @@ public class MainUI {
     private void initDrawingTools() {
         lineTool = new LineTool();
         brushTool = new BrushTool();
-        squareTool = new RectangleTool();
+        rectangleTool = new RectangleTool();
         eraserTool = new EraserTool(drawArea); // Requires drawArea due to requiring the canvas colour.
         ellipseTool = new EllipseTool();
         selectedDrawingTool = brushTool;

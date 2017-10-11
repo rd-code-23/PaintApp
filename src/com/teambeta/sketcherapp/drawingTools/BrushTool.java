@@ -120,4 +120,8 @@ public class BrushTool extends DrawingTool {
                 BasicStroke.CAP_BUTT));
     }
 
+    @Override
+    public void setFillState(boolean fillState) {
+
+    }
 }

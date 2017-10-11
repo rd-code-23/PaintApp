@@ -109,4 +109,9 @@ public class TextTool extends DrawingTool {
             }
         });
     }
+
+    @Override
+    public void setFillState(boolean fillState) {
+
+    }
 }

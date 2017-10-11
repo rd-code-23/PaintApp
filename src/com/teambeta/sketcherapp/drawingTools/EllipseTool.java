@@ -28,6 +28,8 @@ public class EllipseTool extends DrawingTool {
     private Color color;
     private final int DEFAULT_STOKE_VALUE = 10;
     private int ellipseWidth;
+    private boolean fillShape;
+
     /**
      * The constructor sets the properties of the tool to their default values
      */
@@ -42,6 +44,7 @@ public class EllipseTool extends DrawingTool {
         drawWidthX = 0;
         drawHeightY = 0;
         ellipseWidth = DEFAULT_STOKE_VALUE;
+        fillShape = false;
     }
 
     @Override
@@ -86,7 +89,7 @@ public class EllipseTool extends DrawingTool {
         layer1Graphics.setColor(color);
 
         // Draw a filled ellipse/circle if the alt key is down on release.
-        if (e.isAltDown()) {
+        if (fillShape) {
             layer1Graphics.fillOval(initX, initY, drawWidthX, drawHeightY);
         }
         layer1Graphics.drawOval(initX, initY, drawWidthX, drawHeightY);
@@ -135,5 +138,9 @@ public class EllipseTool extends DrawingTool {
                 color = ColorChooser.getColor();
             }
         });
+    }
+
+    public void setFillState(boolean fillState) {
+        fillShape = fillState;
     }
 }
