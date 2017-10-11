@@ -23,6 +23,8 @@ public class MainUI {
     private static EraserTool eraserTool;
     private static EllipseTool ellipseTool;
     private static TextTool textTool;
+    private static EyeDropperTool eyeDropperTool;
+    private static FanTool fanTool;
     public static DrawingTool selectedDrawingTool;
 
 
@@ -33,6 +35,8 @@ public class MainUI {
     private static final String ERASER_TOOL_BUTTON_TEXT = "Eraser";
     private static final String ELLIPSE_TOOL_BUTTON_TEXT = "Ellipse";
     private static final String TEXT_TOOL_BUTTON_TEXT = "Text";
+    private static final String EYEDROPPER_TOOL_BUTTON_TEXT = "Eye Dropper";
+    private static final String FAN_TOOL_BUTTON_TEXT = "Fan-out";
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
@@ -60,11 +64,12 @@ public class MainUI {
     private JButton brushToolButton;
     private JButton lineToolButton;
     private JButton rectangleToolButton;
-    private JButton circleToolButton;
     private JButton eraserToolButton;
     private JButton ellipseToolButton;
     private WidthChanger widthChanger;
+    private JButton eyeDropperToolButton;
     private JButton textToolButton;
+    private JButton fanToolButton;
     private DrawArea drawArea;
 
     private ActionListener actionListener = new ActionListener() {
@@ -76,6 +81,9 @@ public class MainUI {
                 selectedDrawingTool = brushTool;
                 updateSizeSlider();
                 drawArea.setColor(brushTool.getColor());
+            } else if (e.getSource() == fanToolButton) {
+                selectedDrawingTool = fanTool;
+                updateSizeSlider();
             } else if (e.getSource() == lineToolButton) {
                 selectedDrawingTool = lineTool;
                 updateSizeSlider();
@@ -100,6 +108,8 @@ public class MainUI {
             } else if (e.getSource() == textToolButton) {
                 selectedDrawingTool = textTool;
                 updateSizeSlider();
+            } else if (e.getSource() == eyeDropperToolButton) {
+                selectedDrawingTool = eyeDropperTool;
             }
 
             if (e.getSource() == widthChanger.getCheckBoxGlobalSizeComponent()) {
@@ -118,6 +128,9 @@ public class MainUI {
     };
 
 
+    /**
+     * Class to listen for changes in the widthChanger slider.
+     */ 
     public class listenForSlider implements ChangeListener {
         @Override
         public void stateChanged(ChangeEvent e) {
@@ -131,7 +144,7 @@ public class MainUI {
 
 
     /**
-     * when a new brushTool is selected this method
+     * When a new brushTool is selected this method
      * will update the size panel to the current brush tool
      * values
      * if global is ticked then all the tool sizes change to current size
@@ -199,6 +212,10 @@ public class MainUI {
         ellipseToolButton.addActionListener(actionListener);
         textToolButton = new JButton(TEXT_TOOL_BUTTON_TEXT);
         textToolButton.addActionListener(actionListener);
+        eyeDropperToolButton = new JButton(EYEDROPPER_TOOL_BUTTON_TEXT);
+        eyeDropperToolButton.addActionListener(actionListener);
+        fanToolButton = new JButton(FAN_TOOL_BUTTON_TEXT);
+        fanToolButton.addActionListener(actionListener);
 
 
         JPanel canvasTools = new JPanel();
@@ -211,6 +228,8 @@ public class MainUI {
         canvasTools.add(ellipseToolButton);
         canvasTools.add(eraserToolButton);
         canvasTools.add(textToolButton);
+        canvasTools.add(eyeDropperToolButton);
+        canvasTools.add(fanToolButton);
 
 
         widthChanger = new WidthChanger();
@@ -233,6 +252,14 @@ public class MainUI {
         mainContent.add(editorPanel, BorderLayout.EAST);
 
         prepareMenuBar();
+    }
+
+    /**
+     * Return the currently selected drawing tool.
+     * 
+     */
+    public DrawingTool getSelectedDrawingTool() {
+        return selectedDrawingTool;
     }
 
     /**
@@ -265,8 +292,10 @@ public class MainUI {
         rectangleTool = new RectangleTool();
         eraserTool = new EraserTool(drawArea); // Requires drawArea due to requiring the canvas colour.
         ellipseTool = new EllipseTool();
+        eyeDropperTool = new EyeDropperTool(widthChanger); // Requires widthChanger UI element for direct text update.
         selectedDrawingTool = brushTool;
         textTool = new TextTool();
+        fanTool = new FanTool();
     }
 
     /**
