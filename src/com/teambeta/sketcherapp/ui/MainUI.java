@@ -24,6 +24,7 @@ public class MainUI {
     private static EllipseTool ellipseTool;
     private static TextTool textTool;
     private static EyeDropperTool eyeDropperTool;
+    private static FanTool fanTool;
     public static DrawingTool selectedDrawingTool;
 
 
@@ -35,6 +36,7 @@ public class MainUI {
     private static final String ELLIPSE_TOOL_BUTTON_TEXT = "Ellipse";
     private static final String TEXT_TOOL_BUTTON_TEXT = "Text";
     private static final String EYEDROPPER_TOOL_BUTTON_TEXT = "Eye Dropper";
+    private static final String FAN_TOOL_BUTTON_TEXT = "Fan Tool";
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
@@ -67,6 +69,7 @@ public class MainUI {
     private WidthChanger widthChanger;
     private JButton eyeDropperToolButton;
     private JButton textToolButton;
+    private JButton fanToolButton;
     private DrawArea drawArea;
 
     private ActionListener actionListener = new ActionListener() {
@@ -78,6 +81,9 @@ public class MainUI {
                 selectedDrawingTool = brushTool;
                 updateSizeSlider();
                 drawArea.setColor(brushTool.getColor());
+            } else if (e.getSource() == fanToolButton) {
+                selectedDrawingTool = fanTool;
+                updateSizeSlider();
             } else if (e.getSource() == lineToolButton) {
                 selectedDrawingTool = lineTool;
                 updateSizeSlider();
@@ -205,6 +211,8 @@ public class MainUI {
         textToolButton.addActionListener(actionListener);
         eyeDropperToolButton = new JButton(EYEDROPPER_TOOL_BUTTON_TEXT);
         eyeDropperToolButton.addActionListener(actionListener);
+        fanToolButton = new JButton(FAN_TOOL_BUTTON_TEXT);
+        fanToolButton.addActionListener(actionListener);
 
 
         JPanel canvasTools = new JPanel();
@@ -218,6 +226,7 @@ public class MainUI {
         canvasTools.add(eraserToolButton);
         canvasTools.add(textToolButton);
         canvasTools.add(eyeDropperToolButton);
+        canvasTools.add(fanToolButton);
 
 
         widthChanger = new WidthChanger();
@@ -279,6 +288,7 @@ public class MainUI {
         eyeDropperTool = new EyeDropperTool(widthChanger); // Requires widthChanger UI element for direct text update.
         selectedDrawingTool = brushTool;
         textTool = new TextTool();
+        fanTool = new FanTool();
     }
 
     /**

@@ -262,4 +262,5 @@ public class WidthChanger {
                                     + EYEDROPPER_TEXTFIELD_BLUE_PREFIX + color.getBlue());
     }
 
+
 }
