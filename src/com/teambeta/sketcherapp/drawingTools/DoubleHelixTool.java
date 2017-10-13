@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
  *
  * The amplitude and period values are currently fixed numbers. Requires dedicated UI to update.
  */
-public class CelticKnotTool extends DrawingTool {
+public class DoubleHelixTool extends DrawingTool {
 
     private double amplitude;
     private double bValue;
@@ -29,15 +29,17 @@ public class CelticKnotTool extends DrawingTool {
 
     private CartesianPoint firstWaveUpper;
     private CartesianPoint firstWaveLower;
-    private CartesianPoint secondWaveUpper;
-    private CartesianPoint secondWaveLower;
-    private CartesianPoint thirdWaveUpper;
-    private CartesianPoint thirdWaveLower;
     private CartesianPoint[] pointContainer;
 
     private int currentY;
     private int currentX;
     private int lastX;
+    private boolean inFirstPeriod;
+
+
+    // Access bar by n-1;
+    private boolean[] periodBars = {false, false, false, false, false, false, false, false, false, false };
+
     private Color color;
     private int brushWidth;
     private Graphics2D layer1Graphics;
@@ -46,7 +48,7 @@ public class CelticKnotTool extends DrawingTool {
         /**
          * The constructor sets the properties of the tool to their default values
          */
-    public CelticKnotTool() {
+    public DoubleHelixTool() {
         registerObservers();
         color = Color.black;
         currentX = 0;
@@ -56,21 +58,14 @@ public class CelticKnotTool extends DrawingTool {
         bValue = TWO_PI / DEFAULT_PERIOD;
         brushWidth = DEFAULT_STOKE_VALUE;
         waveWidth = DEFAULT_WAVE_WIDTH;
+        inFirstPeriod = false;
 
         firstWaveUpper = new CartesianPoint();
         firstWaveLower = new CartesianPoint();
-        secondWaveUpper = new CartesianPoint();
-        secondWaveLower = new CartesianPoint();
-        thirdWaveUpper = new CartesianPoint();
-        thirdWaveLower = new CartesianPoint();
 
-        pointContainer = new CartesianPoint[6];
+        pointContainer = new CartesianPoint[2];
         pointContainer[0] = firstWaveUpper;
         pointContainer[1] = firstWaveLower;
-        pointContainer[2] = secondWaveUpper;
-        pointContainer[3] = secondWaveLower;
-        pointContainer[4] = thirdWaveUpper;
-        pointContainer[5] = thirdWaveLower;
     }
 
     @Override
@@ -81,20 +76,75 @@ public class CelticKnotTool extends DrawingTool {
 
         firstWaveUpper.setCurrent(currentX,
                 (currentY +
-                        (int)(amplitude * Math.sin(bValue * (double) xDifferenceToOrigin))) + waveWidth / 2);
-        firstWaveLower.setCurrent(currentX, firstWaveUpper.getYCurrent() - waveWidth);
+                        (int)(amplitude * Math.sin(bValue * (double) xDifferenceToOrigin))));
+        firstWaveLower.setCurrent(currentX, (currentY -
+                (int)(amplitude * Math.sin(bValue * (double) xDifferenceToOrigin))));
 
-        secondWaveUpper.setCurrent(currentX,
-                (currentY +
-                        (int)(amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - SECOND_WAVE_PHASE_SHIFT))))
-                        + waveWidth / 2);
-        secondWaveLower.setCurrent(currentX, secondWaveUpper.getYCurrent() - waveWidth);
+        double periodRatio = Math.abs(((xDifferenceToOrigin % DEFAULT_PERIOD) / DEFAULT_PERIOD));
 
-        thirdWaveUpper.setCurrent(currentX,
-                (currentY
-                        + (int)(amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - THIRD_WAVE_PHASE_SHIFT))))
-                        + waveWidth / 2);
-        thirdWaveLower.setCurrent(currentX, thirdWaveUpper.getYCurrent() - waveWidth);
+        if (Math.abs(periodRatio) < 0.5) {
+            // First half-period
+
+            for (int i = 5; i < 10; ++i) {
+                periodBars[i] = false;
+            }
+
+            if (!inFirstPeriod) {
+                inFirstPeriod = true;
+            }
+
+            // Bar 1
+            if (Math.abs(periodRatio - 0.15) < 0.040 && !getBarDrawn(1)) {
+                setBarDrawn(1, true);
+                drawLineBetweenWaves();
+            }
+
+            // Half-way bar
+            if (Math.abs(periodRatio - 0.25) < 0.040 && !getBarDrawn(3)) {
+                setBarDrawn(3, true);
+                drawLineBetweenWaves();
+            }
+
+            // Bar 5
+            if (Math.abs(periodRatio - 0.40) < 0.040 && !getBarDrawn(5)) {
+                setBarDrawn(5, true);
+                drawLineBetweenWaves();
+            }
+
+        } else {
+            for (int i = 0; i < 5; ++i) {
+                periodBars[i] = false;
+            }
+
+            // Second half-period
+            if (inFirstPeriod) {
+                inFirstPeriod = false;
+            }
+
+            // Bar 6
+            if (Math.abs(periodRatio - 0.65) < 0.040 && !getBarDrawn(6)) {
+                setBarDrawn(6, true);
+                drawLineBetweenWaves();
+            }
+
+            if (Math.abs(periodRatio - 0.75) < 0.040 && !getBarDrawn(8)) {
+                setBarDrawn(8, true);
+                drawLineBetweenWaves();
+            }
+
+            // Bar 10
+            if (Math.abs(periodRatio - 0.85) < 0.040 && !getBarDrawn(10)) {
+                setBarDrawn(10, true);
+                drawLineBetweenWaves();
+            }
+
+        }
+        // FIRST LOOP
+        if (Math.abs(periodRatio - 0.25) < 0.01) {
+
+        }
+
+        // SECOND LOOP
 
         for (CartesianPoint point : pointContainer) {
             layer1Graphics.drawLine(point.getXPrevious(), point.getYPrevious(),
@@ -109,6 +159,12 @@ public class CelticKnotTool extends DrawingTool {
 
     @Override
     public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+        xDifferenceToOrigin = 0;
+        inFirstPeriod = false;
+
+        for (int i = 0; i < 10; ++i) {
+            periodBars[i] = false;
+        }
     }
 
     @Override
@@ -124,23 +180,10 @@ public class CelticKnotTool extends DrawingTool {
         lastX = currentX;
         xDifferenceToOrigin = 0;
 
-        firstWaveUpper.setCurrent(currentX,
-                (currentY +
-                        (int)(amplitude * Math.sin(bValue * (double) xDifferenceToOrigin))) + waveWidth / 2);
-        firstWaveLower.setCurrent(currentX, firstWaveUpper.getYCurrent() - waveWidth);
+        firstWaveUpper.setCurrent(currentX, currentY);
+        firstWaveLower.setCurrent(currentX, currentY);
 
-        secondWaveUpper.setCurrent(currentX,
-                (currentY +
-                        (int)(amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - SECOND_WAVE_PHASE_SHIFT))))
-                        + waveWidth / 2);
-        secondWaveLower.setCurrent(currentX, secondWaveUpper.getYCurrent() - waveWidth);
-
-        thirdWaveUpper.setCurrent(currentX,
-                (currentY
-                        + (int)(amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - THIRD_WAVE_PHASE_SHIFT))))
-                        + waveWidth / 2);
-        thirdWaveLower.setCurrent(currentX, thirdWaveUpper.getYCurrent() - waveWidth);
-
+        inFirstPeriod = false;
         for (CartesianPoint point : pointContainer) {
             point.setPreviousFromCurrent();
         }
@@ -195,4 +238,18 @@ public class CelticKnotTool extends DrawingTool {
     public void setFillState(boolean fillState) {
 
     }
+
+    private void drawLineBetweenWaves() {
+        layer1Graphics.drawLine(firstWaveLower.getXCurrent(), firstWaveLower.getYCurrent(),
+                                firstWaveUpper.getXCurrent(), firstWaveUpper.getYCurrent());
+    }
+
+    private boolean getBarDrawn(int bar) {
+        return periodBars[bar - 1];
+    }
+
+    private void setBarDrawn(int bar, boolean state) {
+        periodBars[bar - 1] = state;
+    }
+
 }

@@ -26,6 +26,7 @@ public class MainUI {
     private static EyeDropperTool eyeDropperTool;
     private static FanTool fanTool;
     private static CelticKnotTool celticKnotTool;
+    private static DoubleHelixTool doubleHelixTool;
     public static DrawingTool selectedDrawingTool;
 
 
@@ -39,6 +40,7 @@ public class MainUI {
     private static final String EYEDROPPER_TOOL_BUTTON_TEXT = "Eye Dropper";
     private static final String FAN_TOOL_BUTTON_TEXT = "Fan-out";
     private static final String CELTIC_KNOT_TOOL_BUTTON_TEXT = "Celtic Knot";
+    private static final String DOUBLE_HELIX_TOOL_BUTTON_TEXT = "Double Helix";
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
@@ -73,6 +75,7 @@ public class MainUI {
     private JButton textToolButton;
     private JButton fanToolButton;
     private JButton celticKnotToolButton;
+    private JButton doubleHelixToolButton;
     private DrawArea drawArea;
 
     private ActionListener actionListener = new ActionListener() {
@@ -115,6 +118,9 @@ public class MainUI {
                 selectedDrawingTool = eyeDropperTool;
             } else if (e.getSource() == celticKnotToolButton) {
                 selectedDrawingTool = celticKnotTool;
+                updateSizeSlider();
+            } else if (e.getSource() == doubleHelixToolButton) {
+                selectedDrawingTool = doubleHelixTool;
                 updateSizeSlider();
             }
 
@@ -224,6 +230,8 @@ public class MainUI {
         fanToolButton.addActionListener(actionListener);
         celticKnotToolButton = new JButton(CELTIC_KNOT_TOOL_BUTTON_TEXT);
         celticKnotToolButton.addActionListener(actionListener);
+        doubleHelixToolButton = new JButton(DOUBLE_HELIX_TOOL_BUTTON_TEXT);
+        doubleHelixToolButton.addActionListener(actionListener);
 
         JPanel canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
@@ -238,6 +246,7 @@ public class MainUI {
         canvasTools.add(eyeDropperToolButton);
         canvasTools.add(fanToolButton);
         canvasTools.add(celticKnotToolButton);
+        canvasTools.add(doubleHelixToolButton);
 
         widthChanger = new WidthChanger();
         widthChanger.renderPanel();
@@ -304,6 +313,7 @@ public class MainUI {
         textTool = new TextTool();
         fanTool = new FanTool();
         celticKnotTool = new CelticKnotTool();
+        doubleHelixTool = new DoubleHelixTool();
     }
 
     /**
