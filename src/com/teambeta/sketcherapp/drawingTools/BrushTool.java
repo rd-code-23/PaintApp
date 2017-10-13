@@ -92,7 +92,6 @@ public class BrushTool extends DrawingTool {
         this.brushWidth = brushWidth;
     }
 
-
     /**
      * Add a new observer to ColorChooser. Selecting a color in ColorChooser will update the color in this class.
      */
