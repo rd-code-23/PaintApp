@@ -79,18 +79,21 @@ public class CelticKnotTool extends DrawingTool {
         xDifferenceToOrigin += (currentX - xDifferenceToOrigin);
 
         firstWaveUpper.setCurrent(currentX,
-                currentY + (int)(amplitude * Math.sin(bValue * (double) xDifferenceToOrigin)));
-        firstWaveLower.setCurrent(currentX, firstWaveUpper.getYCurrent() - waveWidth);
+                (currentY +
+                        (int)(amplitude * Math.sin(bValue * (double) xDifferenceToOrigin))) + waveWidth / 2);
+        firstWaveLower.setCurrent(currentX, firstWaveUpper.getYCurrent() - waveWidth / 2);
 
         secondWaveUpper.setCurrent(currentX,
-                currentY
-                        + (int)(amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - SECOND_WAVE_PHASE_SHIFT))));
-        secondWaveLower.setCurrent(currentX, secondWaveUpper.getYCurrent() - waveWidth);
+                (currentY +
+                        (int)(amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - SECOND_WAVE_PHASE_SHIFT))))
+                        + waveWidth / 2);
+        secondWaveLower.setCurrent(currentX, secondWaveUpper.getYCurrent() - waveWidth / 2);
 
         thirdWaveUpper.setCurrent(currentX,
-                currentY
-                        + (int)(amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - THIRD_WAVE_PHASE_SHIFT))));
-        thirdWaveLower.setCurrent(currentX, thirdWaveUpper.getYCurrent() - waveWidth);
+                (currentY
+                        + (int)(amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - THIRD_WAVE_PHASE_SHIFT))))
+                        + waveWidth / 2);
+        thirdWaveLower.setCurrent(currentX, thirdWaveUpper.getYCurrent() - waveWidth / 2);
 
         for (CartesianPoint point : pointContainer) {
             layer1Graphics.drawLine(point.getXPrevious(), point.getYPrevious(),
@@ -117,19 +120,26 @@ public class CelticKnotTool extends DrawingTool {
         currentY = e.getY();
         xDifferenceToOrigin = 0;
 
-        firstWaveUpper.setPrevious(currentX,
-                currentY + (int)(amplitude * Math.sin(bValue * (double) xDifferenceToOrigin)));
-        firstWaveLower.setPrevious(currentX, firstWaveUpper.getYPrevious() - waveWidth);
+        firstWaveUpper.setCurrent(currentX,
+                (currentY +
+                        (int)(amplitude * Math.sin(bValue * (double) xDifferenceToOrigin))) + waveWidth / 2);
+        firstWaveLower.setCurrent(currentX, firstWaveUpper.getYCurrent() - waveWidth / 2);
 
-        secondWaveUpper.setPrevious(currentX,
-                currentY
-                        + (int)(amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - SECOND_WAVE_PHASE_SHIFT))));
-        secondWaveLower.setPrevious(currentX, secondWaveUpper.getYPrevious() - waveWidth);
+        secondWaveUpper.setCurrent(currentX,
+                (currentY +
+                        (int)(amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - SECOND_WAVE_PHASE_SHIFT))))
+                        + waveWidth / 2);
+        secondWaveLower.setCurrent(currentX, secondWaveUpper.getYCurrent() - waveWidth / 2);
 
-        thirdWaveUpper.setPrevious(currentX,
-                currentY
-                        + (int)(amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - THIRD_WAVE_PHASE_SHIFT))));
-        thirdWaveLower.setPrevious(currentX, thirdWaveUpper.getYPrevious() - waveWidth);
+        thirdWaveUpper.setCurrent(currentX,
+                (currentY
+                        + (int)(amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - THIRD_WAVE_PHASE_SHIFT))))
+                        + waveWidth / 2);
+        thirdWaveLower.setCurrent(currentX, thirdWaveUpper.getYCurrent() - waveWidth / 2);
+
+        for (CartesianPoint point : pointContainer) {
+            point.setPreviousFromCurrent();
+        }
     }
 
     /**
