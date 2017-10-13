@@ -18,15 +18,12 @@ public class CelticKnotTool extends DrawingTool {
     private double amplitude;
     private double bValue;
     private int waveWidth;
-    
+    private int xDifferenceToOrigin;
+
     private final double TWO_PI = 2 * Math.PI;
     private final double DEFAULT_AMPLITUDE = 100;
     private final double DEFAULT_PERIOD = 350;
     private final int DEFAULT_WAVE_WIDTH = 65;
-
-    private boolean firstOverlapping;
-    private boolean secondOverlapping;
-    private boolean thirdOverlapping;
 
     private CartesianPoint firstWaveUpper;
     private CartesianPoint firstWaveLower;
@@ -51,6 +48,7 @@ public class CelticKnotTool extends DrawingTool {
         color = Color.black;
         currentX = 0;
         currentY = 0;
+        xDifferenceToOrigin = 0;
         amplitude = DEFAULT_AMPLITUDE;
         bValue = TWO_PI / DEFAULT_PERIOD;
         brushWidth = DEFAULT_STOKE_VALUE;
@@ -76,17 +74,19 @@ public class CelticKnotTool extends DrawingTool {
     public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         currentX = e.getX();
         currentY = e.getY();
+        xDifferenceToOrigin += (currentX - xDifferenceToOrigin);
 
         firstWaveUpper.setCurrent(currentX,
-                currentY + (int)(amplitude * Math.sin(bValue * (double) currentX)));
+                currentY + (int)(amplitude * Math.sin(bValue * (double) xDifferenceToOrigin)));
         firstWaveLower.setCurrent(currentX, firstWaveUpper.getYCurrent() - waveWidth);
 
         secondWaveUpper.setCurrent(currentX,
-                currentY + (int)(amplitude * Math.sin(bValue * ((double) currentX - DEFAULT_PERIOD/3))));
+                currentY + (int)(amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - DEFAULT_PERIOD/3))));
         secondWaveLower.setCurrent(currentX, secondWaveUpper.getYCurrent() - waveWidth);
 
         thirdWaveUpper.setCurrent(currentX,
-                currentY + (int)(amplitude * Math.sin(bValue * ((double) currentX - 2*DEFAULT_PERIOD/3))));
+                currentY
+                        + (int)(amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - 2 * DEFAULT_PERIOD/3))));
         thirdWaveLower.setCurrent(currentX, thirdWaveUpper.getYCurrent() - waveWidth);
 
         for (CartesianPoint point : pointContainer) {
@@ -112,17 +112,19 @@ public class CelticKnotTool extends DrawingTool {
         initLayer1Graphics(canvas, layers, e);
         currentX = e.getX();
         currentY = e.getY();
+        xDifferenceToOrigin = 0;
 
         firstWaveUpper.setPrevious(currentX,
-                currentY + (int)(amplitude * Math.sin(bValue * (double) currentX)));
+                currentY + (int)(amplitude * Math.sin(bValue * (double) xDifferenceToOrigin)));
         firstWaveLower.setPrevious(currentX, firstWaveUpper.getYPrevious() - waveWidth);
 
         secondWaveUpper.setPrevious(currentX,
-                currentY + (int)(amplitude * Math.sin(bValue * ((double) currentX - DEFAULT_PERIOD/3))));
+                currentY + (int)(amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - DEFAULT_PERIOD/3))));
         secondWaveLower.setPrevious(currentX, secondWaveUpper.getYPrevious() - waveWidth);
 
         thirdWaveUpper.setPrevious(currentX,
-                currentY + (int)(amplitude * Math.sin(bValue * ((double) currentX - 2*DEFAULT_PERIOD/3))));
+                currentY
+                        + (int)(amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - 2 * DEFAULT_PERIOD/3))));
         thirdWaveLower.setPrevious(currentX, thirdWaveUpper.getYPrevious() - waveWidth);
     }
 
