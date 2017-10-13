@@ -17,15 +17,24 @@ public class CelticKnotTool extends DrawingTool {
 
     private double amplitude;
     private double bValue;
+    private int waveWidth;
     
     private final double TWO_PI = 2 * Math.PI;
     private final double DEFAULT_AMPLITUDE = 100;
     private final double DEFAULT_PERIOD = 350;
+    private final int DEFAULT_WAVE_WIDTH = 65;
 
-    private CartesianPoint sine;
-    private CartesianPoint negativeSine;
-    private CartesianPoint cosine;
-    private CartesianPoint negativeCosine;
+    private boolean firstOverlapping;
+    private boolean secondOverlapping;
+    private boolean thirdOverlapping;
+
+    private CartesianPoint firstWaveUpper;
+    private CartesianPoint firstWaveLower;
+    private CartesianPoint secondWaveUpper;
+    private CartesianPoint secondWaveLower;
+    private CartesianPoint thirdWaveUpper;
+    private CartesianPoint thirdWaveLower;
+    private CartesianPoint[] pointContainer;
 
     private int currentY;
     private int currentX;
@@ -45,11 +54,22 @@ public class CelticKnotTool extends DrawingTool {
         amplitude = DEFAULT_AMPLITUDE;
         bValue = TWO_PI / DEFAULT_PERIOD;
         brushWidth = DEFAULT_STOKE_VALUE;
+        waveWidth = DEFAULT_WAVE_WIDTH;
 
-        sine = new CartesianPoint();
-        negativeSine = new CartesianPoint();
-        cosine = new CartesianPoint();
-        negativeCosine = new CartesianPoint();
+        firstWaveUpper = new CartesianPoint();
+        firstWaveLower = new CartesianPoint();
+        secondWaveUpper = new CartesianPoint();
+        secondWaveLower = new CartesianPoint();
+        thirdWaveUpper = new CartesianPoint();
+        thirdWaveLower = new CartesianPoint();
+
+        pointContainer = new CartesianPoint[6];
+        pointContainer[0] = firstWaveUpper;
+        pointContainer[1] = firstWaveLower;
+        pointContainer[2] = secondWaveUpper;
+        pointContainer[3] = secondWaveLower;
+        pointContainer[4] = thirdWaveUpper;
+        pointContainer[5] = thirdWaveLower;
     }
 
     @Override
@@ -57,28 +77,23 @@ public class CelticKnotTool extends DrawingTool {
         currentX = e.getX();
         currentY = e.getY();
 
-        sine.setCurrent(currentX, currentY + (int)(amplitude * Math.sin(bValue * (double) currentX)));
-        negativeSine.setCurrent(currentX, currentY - (int)(amplitude * Math.sin(bValue * (double) currentX)));
-        cosine.setCurrent(currentX, currentY + (int)(amplitude * Math.cos(bValue * (double) currentX)));
-        negativeCosine.setCurrent(currentX, currentY - (int)(amplitude * Math.cos(bValue * (double) currentX)));
+        firstWaveUpper.setCurrent(currentX,
+                currentY + (int)(amplitude * Math.sin(bValue * (double) currentX)));
+        firstWaveLower.setCurrent(currentX, firstWaveUpper.getYCurrent() - waveWidth);
 
-        // Sine wave
-        layer1Graphics.drawLine(sine.getXPrevious(), sine.getYPrevious(),
-                                sine.getXCurrent(), sine.getYCurrent());
-        // Negative sine wave
-        layer1Graphics.drawLine(negativeSine.getXPrevious(), negativeSine.getYPrevious(),
-                                negativeSine.getXCurrent(), negativeSine.getYCurrent());
-        // Cosine wave
-        layer1Graphics.drawLine(cosine.getXPrevious(), cosine.getYPrevious(),
-                                cosine.getXCurrent(), cosine.getYCurrent());
-        // Negative cosine wave
-        layer1Graphics.drawLine(negativeCosine.getXPrevious(), negativeCosine.getYPrevious(),
-                                negativeCosine.getXCurrent(), negativeCosine.getYCurrent());
+        secondWaveUpper.setCurrent(currentX,
+                currentY + (int)(amplitude * Math.sin(bValue * ((double) currentX - DEFAULT_PERIOD/3))));
+        secondWaveLower.setCurrent(currentX, secondWaveUpper.getYCurrent() - waveWidth);
 
-        sine.setPreviousFromCurrent();
-        negativeSine.setPreviousFromCurrent();
-        cosine.setPreviousFromCurrent();
-        negativeCosine.setPreviousFromCurrent();
+        thirdWaveUpper.setCurrent(currentX,
+                currentY + (int)(amplitude * Math.sin(bValue * ((double) currentX - 2*DEFAULT_PERIOD/3))));
+        thirdWaveLower.setCurrent(currentX, thirdWaveUpper.getYCurrent() - waveWidth);
+
+        for (CartesianPoint point : pointContainer) {
+            layer1Graphics.drawLine(point.getXPrevious(), point.getYPrevious(),
+                                    point.getXCurrent(), point.getYCurrent());
+            point.setPreviousFromCurrent();
+        }
 
         DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
@@ -98,11 +113,17 @@ public class CelticKnotTool extends DrawingTool {
         currentX = e.getX();
         currentY = e.getY();
 
-        // Set the start of the sinusoidal waves as a function of the initial press location.
-        sine.setPrevious(currentX, currentY + (int)(amplitude * Math.sin(bValue * (double) currentX)));
-        negativeSine.setPrevious(currentX, currentY - (int)(amplitude * Math.sin(bValue * (double) currentX)));
-        cosine.setPrevious(currentX, currentY + (int)(amplitude * Math.cos(bValue * (double) currentX)));
-        negativeCosine.setPrevious(currentX, currentY - (int)(amplitude * Math.cos(bValue * (double) currentX)));
+        firstWaveUpper.setPrevious(currentX,
+                currentY + (int)(amplitude * Math.sin(bValue * (double) currentX)));
+        firstWaveLower.setPrevious(currentX, firstWaveUpper.getYPrevious() - waveWidth);
+
+        secondWaveUpper.setPrevious(currentX,
+                currentY + (int)(amplitude * Math.sin(bValue * ((double) currentX - DEFAULT_PERIOD/3))));
+        secondWaveLower.setPrevious(currentX, secondWaveUpper.getYPrevious() - waveWidth);
+
+        thirdWaveUpper.setPrevious(currentX,
+                currentY + (int)(amplitude * Math.sin(bValue * ((double) currentX - 2*DEFAULT_PERIOD/3))));
+        thirdWaveLower.setPrevious(currentX, thirdWaveUpper.getYPrevious() - waveWidth);
     }
 
     /**
