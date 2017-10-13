@@ -25,6 +25,7 @@ public class DoubleHelixTool extends DrawingTool {
     private final double DEFAULT_PERIOD = 350.0;
     private final double SECOND_WAVE_PHASE_SHIFT = DEFAULT_PERIOD / 3.0;
     private final double THIRD_WAVE_PHASE_SHIFT = 2.0 * DEFAULT_PERIOD / 3.0;
+    private final double EPSILON = 0.035;
     private final int DEFAULT_WAVE_WIDTH = 65;
 
     private CartesianPoint firstWaveUpper;
@@ -38,7 +39,7 @@ public class DoubleHelixTool extends DrawingTool {
 
 
     // Access bar by n-1;
-    private boolean[] periodBars = {false, false, false, false, false, false, false, false, false, false };
+    private boolean[] periodBars = {false, false, false, false, false, false};
 
     private Color color;
     private int brushWidth;
@@ -85,7 +86,7 @@ public class DoubleHelixTool extends DrawingTool {
         if (Math.abs(periodRatio) < 0.5) {
             // First half-period
 
-            for (int i = 5; i < 10; ++i) {
+            for (int i = 3; i < 6; ++i) {
                 periodBars[i] = false;
             }
 
@@ -94,25 +95,25 @@ public class DoubleHelixTool extends DrawingTool {
             }
 
             // Bar 1
-            if (Math.abs(periodRatio - 0.15) < 0.040 && !getBarDrawn(1)) {
+            if (Math.abs(periodRatio - 0.15) < EPSILON && !getBarDrawn(1)) {
                 setBarDrawn(1, true);
                 drawLineBetweenWaves();
             }
 
-            // Half-way bar
-            if (Math.abs(periodRatio - 0.25) < 0.040 && !getBarDrawn(3)) {
+            // Bar 2
+            if (Math.abs(periodRatio - 0.25) < EPSILON && !getBarDrawn(2)) {
+                setBarDrawn(2, true);
+                drawLineBetweenWaves();
+            }
+
+            // Bar 3
+            if (Math.abs(periodRatio - 0.35) < EPSILON && !getBarDrawn(3)) {
                 setBarDrawn(3, true);
                 drawLineBetweenWaves();
             }
 
-            // Bar 5
-            if (Math.abs(periodRatio - 0.40) < 0.040 && !getBarDrawn(5)) {
-                setBarDrawn(5, true);
-                drawLineBetweenWaves();
-            }
-
         } else {
-            for (int i = 0; i < 5; ++i) {
+            for (int i = 0; i < 3; ++i) {
                 periodBars[i] = false;
             }
 
@@ -121,20 +122,21 @@ public class DoubleHelixTool extends DrawingTool {
                 inFirstPeriod = false;
             }
 
+            // Bar 4
+            if (Math.abs(periodRatio - 0.65) < EPSILON && !getBarDrawn(4)) {
+                setBarDrawn(4, true);
+                drawLineBetweenWaves();
+            }
+
+            // Bar 5
+            if (Math.abs(periodRatio - 0.75) < EPSILON && !getBarDrawn(5)) {
+                setBarDrawn(5, true);
+                drawLineBetweenWaves();
+            }
+
             // Bar 6
-            if (Math.abs(periodRatio - 0.65) < 0.040 && !getBarDrawn(6)) {
+            if (Math.abs(periodRatio - 0.85) < EPSILON && !getBarDrawn(6)) {
                 setBarDrawn(6, true);
-                drawLineBetweenWaves();
-            }
-
-            if (Math.abs(periodRatio - 0.75) < 0.040 && !getBarDrawn(8)) {
-                setBarDrawn(8, true);
-                drawLineBetweenWaves();
-            }
-
-            // Bar 10
-            if (Math.abs(periodRatio - 0.85) < 0.040 && !getBarDrawn(10)) {
-                setBarDrawn(10, true);
                 drawLineBetweenWaves();
             }
 
@@ -162,7 +164,7 @@ public class DoubleHelixTool extends DrawingTool {
         xDifferenceToOrigin = 0;
         inFirstPeriod = false;
 
-        for (int i = 0; i < 10; ++i) {
+        for (int i = 0; i < periodBars.length; ++i) {
             periodBars[i] = false;
         }
     }
