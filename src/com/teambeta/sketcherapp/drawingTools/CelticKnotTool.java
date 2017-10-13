@@ -113,12 +113,6 @@ public class CelticKnotTool extends DrawingTool {
         currentX = e.getX();
         currentY = e.getY();
 
-        // Set the start of the sinusoidal waves as a function of the initial press location.
-//        firstWaveUpper.setPrevious(currentX, currentY + (int)(amplitude * Math.sin(bValue * (double) currentX)));
-//        firstWaveLower.setPrevious(currentX, currentY - (int)(amplitude * Math.sin(bValue * (double) currentX)));
-//        secondWaveUpper.setPrevious(currentX, currentY + (int)(amplitude * Math.cos(bValue * (double) currentX)));
-//        secondWaveLower.setPrevious(currentX, currentY - (int)(amplitude * Math.cos(bValue * (double) currentX)));
-
         firstWaveUpper.setPrevious(currentX,
                 currentY + (int)(amplitude * Math.sin(bValue * (double) currentX)));
         firstWaveLower.setPrevious(currentX, firstWaveUpper.getYPrevious() - waveWidth);
@@ -130,7 +124,6 @@ public class CelticKnotTool extends DrawingTool {
         thirdWaveUpper.setPrevious(currentX,
                 currentY + (int)(amplitude * Math.sin(bValue * ((double) currentX - 2*DEFAULT_PERIOD/3))));
         thirdWaveLower.setPrevious(currentX, thirdWaveUpper.getYPrevious() - waveWidth);
-
     }
 
     /**
