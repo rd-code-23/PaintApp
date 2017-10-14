@@ -15,9 +15,10 @@ public class LineTool extends DrawingTool {
     private int currentX;
     private int lastX;
     private int lastY;
-    private int sizeInPixels;
     private Color color;
     private BufferedImage previewLayer = null;
+    private int lineWidth;
+    private final int DEFAULT_WIDTH_VALUE = 10;
 
     /**
      * The constructor sets the properties of the tool to their default values
@@ -25,17 +26,17 @@ public class LineTool extends DrawingTool {
     public LineTool() {
         color = Color.black;
         registerObservers();
-        sizeInPixels = 1;
         lastX = 0;
         lastY = 0;
         currentX = 0;
         currentY = 0;
+        lineWidth = DEFAULT_WIDTH_VALUE;
     }
 
     @Override
     public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         if (previewLayer == null) {
-            previewLayer = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            previewLayer = DrawArea.getPreviewLayer();
         }
         //clear preview layer
         DrawArea.clearBufferImageToTransparent(previewLayer);
@@ -45,9 +46,11 @@ public class LineTool extends DrawingTool {
         canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         canvasGraphics.setColor(color);
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
+        layer1Graphics.setStroke(new BasicStroke(getToolWidth()));
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         layer1Graphics.setColor(color);
         Graphics2D previewLayerGraphics = (Graphics2D) previewLayer.getGraphics();
+        previewLayerGraphics.setStroke(new BasicStroke(getToolWidth()));
         canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         previewLayerGraphics.setColor(color);
 
@@ -70,12 +73,12 @@ public class LineTool extends DrawingTool {
     @Override
     public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
+        layer1Graphics.setStroke(new BasicStroke(getToolWidth()));
         layer1Graphics.setColor(this.getColor());
         //get the coordinates of where the user released the mouse
         currentX = e.getX();
         currentY = e.getY();
         //draw a line between the start and release points
-        // draw line if graphics context not null
         layer1Graphics.drawLine(lastX, lastY, currentX, currentY);
         DrawArea.drawLayersOntoCanvas(layers, canvas);
         lastX = currentX;
@@ -94,6 +97,16 @@ public class LineTool extends DrawingTool {
         currentY = e.getY();
         lastX = currentX;
         lastY = currentY;
+    }
+
+    @Override
+    public int getToolWidth() {
+        return lineWidth;
+    }
+
+    @Override
+    public void setToolWidth(int width) {
+        lineWidth = width;
     }
 
     /**
@@ -116,5 +129,10 @@ public class LineTool extends DrawingTool {
                 color = ColorChooser.getColor();
             }
         });
+    }
+
+    @Override
+    public void setFillState(boolean fillState) {
+
     }
 }
