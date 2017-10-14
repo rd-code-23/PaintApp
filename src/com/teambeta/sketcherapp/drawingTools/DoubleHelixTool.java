@@ -88,7 +88,6 @@ public class DoubleHelixTool extends DrawingTool {
                         (int)(amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - (DEFAULT_PERIOD/3))))));
 
         double periodRatio = Math.abs(((xDifferenceToOrigin % DEFAULT_PERIOD) / DEFAULT_PERIOD));
-        System.out.println(periodRatio);
 
         if (Math.abs(periodRatio) < HALF_PERIOD_RATIO) {
             // First half-period
@@ -102,28 +101,8 @@ public class DoubleHelixTool extends DrawingTool {
                 inFirstHalfPeriod = true;
             }
 
-            // Bar 1
-            if (Math.abs(periodRatio - barRatios[0]) < EPSILON && !getBarDrawn(1)) {
-                setBarDrawn(1, true);
-                drawLineBetweenWaves();
-            }
-
-            // Bar 2
-            if (Math.abs(periodRatio - barRatios[1]) < EPSILON && !getBarDrawn(2)) {
-                setBarDrawn(2, true);
-                drawLineBetweenWaves();
-            }
-
-            // Bar 3
-            if (Math.abs(periodRatio - barRatios[2]) < EPSILON && !getBarDrawn(3)) {
-                setBarDrawn(3, true);
-                drawLineBetweenWaves();
-            }
-
-            // Bar 4
-            if (Math.abs(periodRatio - barRatios[3]) < EPSILON && !getBarDrawn(4)) {
-                setBarDrawn(4, true);
-                drawLineBetweenWaves();
+            for (int i = FIRST_HALF_PERIOD_BAR_START_INDEX; i <= FIRST_HALF_PERIOD_BAR_END_INDEX; ++i) {
+                drawLegalBar(i, periodRatio);
             }
 
         } else {
@@ -138,28 +117,8 @@ public class DoubleHelixTool extends DrawingTool {
                 inFirstHalfPeriod = false;
             }
 
-            // Bar 5
-            if (Math.abs(periodRatio - barRatios[4]) < EPSILON && !getBarDrawn(5)) {
-                setBarDrawn(5, true);
-                drawLineBetweenWaves();
-            }
-
-            // Bar 6
-            if (Math.abs(periodRatio - barRatios[5]) < EPSILON && !getBarDrawn(6)) {
-                setBarDrawn(6, true);
-                drawLineBetweenWaves();
-            }
-
-            // Bar 7
-            if (Math.abs(periodRatio - barRatios[6]) < EPSILON && !getBarDrawn(7)) {
-                setBarDrawn(7, true);
-                drawLineBetweenWaves();
-            }
-
-            // Bar 8
-            if (Math.abs(periodRatio - barRatios[7]) < EPSILON && !getBarDrawn(8)) {
-                setBarDrawn(8, true);
-                drawLineBetweenWaves();
+            for (int i = SECOND_HALF_PERIOD_BAR_START_INDEX; i <= SECOND_HALF_PERIOD_BAR_END_INDEX; ++i) {
+                drawLegalBar(i, periodRatio);
             }
         }
 
@@ -271,7 +230,7 @@ public class DoubleHelixTool extends DrawingTool {
      */
     private void drawLineBetweenWaves() {
         int originalBrushWidth = getToolWidth();
-        double barBrushWidth = getToolWidth() * (3.0/4.0); // Expected integer precision loss.
+        double barBrushWidth = originalBrushWidth * (3.0/4.0); // Expected integer precision loss.
         layer1Graphics.setStroke(new BasicStroke((int) barBrushWidth, BasicStroke.CAP_ROUND,
                 BasicStroke.CAP_BUTT));
         layer1Graphics.drawLine(firstWaveLower.getXCurrent(), firstWaveLower.getYCurrent(),
@@ -291,13 +250,15 @@ public class DoubleHelixTool extends DrawingTool {
     }
 
     /**
-     * Set the bar drawn state.
-     *
-     * @param bar The bar to update (index start from 1)
-     * @param state The state to set it
+     * Draw a bar between the waves given that it is allowed to.
+     * @param bar_index The bar index number
+     * @param period_ratio The period ratio at the current point
      */
-    private void setBarDrawn(int bar, boolean state) {
-        periodBars[bar - 1] = state;
+    private void drawLegalBar(int bar_index, double period_ratio) {
+        if (Math.abs(period_ratio - barRatios[bar_index]) < EPSILON && !getBarDrawn(bar_index + 1)) {
+            periodBars[bar_index] = true;
+            drawLineBetweenWaves();
+        }
     }
 
 }
