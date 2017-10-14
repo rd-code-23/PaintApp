@@ -62,17 +62,20 @@ public class EllipseTool extends DrawingTool {
         Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
         canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         canvasGraphics.setColor(color);
-        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
-        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        layer1Graphics.setColor(color);
+
         Graphics2D previewLayerGraphics = (Graphics2D) previewLayer.getGraphics();
-        canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        previewLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        previewLayerGraphics.setStroke(new BasicStroke(getToolWidth()));
         previewLayerGraphics.setColor(color);
 
         calcEllipseCoordinateData(e, layers, canvas);
 
         //draw the circle preview onto the preview layer
         previewLayerGraphics.drawOval(initX, initY, drawWidthX, drawHeightY);
+        // Draw a filled ellipse/circle if the alt key is down on release.
+        if (fillShape) {
+            previewLayerGraphics.fillOval(initX, initY, drawWidthX, drawHeightY);
+        }
 
         //info: https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
         //draw the preview layer on top of the drawing layer(s)
@@ -88,9 +91,13 @@ public class EllipseTool extends DrawingTool {
 
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        layer1Graphics.setStroke(new BasicStroke(getToolWidth()));
         layer1Graphics.setColor(color);
-
         layer1Graphics.drawOval(initX, initY, drawWidthX, drawHeightY);
+        // Draw a filled ellipse/circle if the alt key is down on release.
+        if (fillShape) {
+            layer1Graphics.fillOval(initX, initY, drawWidthX, drawHeightY);
+        }
         DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
 
@@ -124,17 +131,6 @@ public class EllipseTool extends DrawingTool {
             initX -= drawWidthX;
         }
 
-        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
-        layer1Graphics.setStroke(new BasicStroke(getToolWidth()));
-        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        layer1Graphics.setColor(color);
-
-        // Draw a filled ellipse/circle if the alt key is down on release.
-        if (fillShape) {
-            layer1Graphics.fillOval(initX, initY, drawWidthX, drawHeightY);
-        }
-        layer1Graphics.drawOval(initX, initY, drawWidthX, drawHeightY);
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
 
     @Override
