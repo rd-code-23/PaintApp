@@ -37,7 +37,7 @@ public class DoubleHelixTool extends DrawingTool {
     private int currentY;
     private int currentX;
     private int lastX;
-    private boolean inFirstPeriod;
+    private boolean inFirstHalfPeriod;
 
 
     // Access bar by n-1;
@@ -64,7 +64,7 @@ public class DoubleHelixTool extends DrawingTool {
         amplitude = DEFAULT_AMPLITUDE;
         bValue = TWO_PI / DEFAULT_PERIOD;
         brushWidth = DEFAULT_STOKE_VALUE;
-        inFirstPeriod = false;
+        inFirstHalfPeriod = false;
 
         firstWaveUpper = new CartesianPoint();
         firstWaveLower = new CartesianPoint();
@@ -92,12 +92,14 @@ public class DoubleHelixTool extends DrawingTool {
 
         if (Math.abs(periodRatio) < HALF_PERIOD_RATIO) {
             // First half-period
+
+            // Prepare the second half-period for drawing.
             for (int i = SECOND_HALF_PERIOD_BAR_START_INDEX; i <= SECOND_HALF_PERIOD_BAR_END_INDEX; ++i) {
                 periodBars[i] = false;
             }
 
-            if (!inFirstPeriod) {
-                inFirstPeriod = true;
+            if (!inFirstHalfPeriod) {
+                inFirstHalfPeriod = true;
             }
 
             // Bar 1
@@ -126,40 +128,42 @@ public class DoubleHelixTool extends DrawingTool {
 
         } else {
             // Second half-period
+
+            // Prepare the first half-period for drawing.
             for (int i = FIRST_HALF_PERIOD_BAR_START_INDEX; i <= FIRST_HALF_PERIOD_BAR_END_INDEX; ++i) {
                 periodBars[i] = false;
             }
 
-            if (inFirstPeriod) {
-                inFirstPeriod = false;
+            if (inFirstHalfPeriod) {
+                inFirstHalfPeriod = false;
             }
 
-            // Bar 4
+            // Bar 5
             if (Math.abs(periodRatio - barRatios[4]) < EPSILON && !getBarDrawn(5)) {
                 setBarDrawn(5, true);
                 drawLineBetweenWaves();
             }
 
-            // Bar 5
+            // Bar 6
             if (Math.abs(periodRatio - barRatios[5]) < EPSILON && !getBarDrawn(6)) {
                 setBarDrawn(6, true);
                 drawLineBetweenWaves();
             }
 
-
-            // Bar 6
+            // Bar 7
             if (Math.abs(periodRatio - barRatios[6]) < EPSILON && !getBarDrawn(7)) {
                 setBarDrawn(7, true);
                 drawLineBetweenWaves();
             }
 
-            // Bar 6
+            // Bar 8
             if (Math.abs(periodRatio - barRatios[7]) < EPSILON && !getBarDrawn(8)) {
                 setBarDrawn(8, true);
                 drawLineBetweenWaves();
             }
         }
 
+        // Finally, draw the computed sinusoidal lines.
         for (CartesianPoint point : pointContainer) {
             layer1Graphics.drawLine(point.getXPrevious(), point.getYPrevious(),
                                     point.getXCurrent(), point.getYCurrent());
@@ -174,7 +178,7 @@ public class DoubleHelixTool extends DrawingTool {
     @Override
     public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         xDifferenceToOrigin = 0;
-        inFirstPeriod = false;
+        inFirstHalfPeriod = false;
 
         for (int i = 0; i < periodBars.length; ++i) {
             periodBars[i] = false;
@@ -197,7 +201,7 @@ public class DoubleHelixTool extends DrawingTool {
         firstWaveUpper.setCurrent(currentX, currentY);
         firstWaveLower.setCurrent(currentX, currentY);
 
-        inFirstPeriod = false;
+        inFirstHalfPeriod = false;
         for (CartesianPoint point : pointContainer) {
             point.setPreviousFromCurrent();
         }
