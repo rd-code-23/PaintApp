@@ -21,6 +21,8 @@ public class RectangleTool extends DrawingTool {
     private int currentX;
     private int initX;
     private int initY;
+    private int mouseOriginX;
+    private int mouseOriginY;
     private int drawWidthX;
     private int drawHeightY;
     private int xAxisMagnitudeDelta;
@@ -41,6 +43,8 @@ public class RectangleTool extends DrawingTool {
         initY = 0;
         currentX = 0;
         currentY = 0;
+        mouseOriginX = 0;
+        mouseOriginY = 0;
         drawWidthX = 0;
         drawHeightY = 0;
         xAxisMagnitudeDelta = 0;
@@ -109,8 +113,8 @@ public class RectangleTool extends DrawingTool {
         currentY = e.getY();
 
         // Draw the square with the longest side as long as the shortest side.
-        xAxisMagnitudeDelta = Math.abs(currentX - initX);
-        yAxisMagnitudeDelta = Math.abs(currentY - initY);
+        xAxisMagnitudeDelta = Math.abs(currentX - mouseOriginX);
+        yAxisMagnitudeDelta = Math.abs(currentY - mouseOriginY);
 
         // Detect shift-down by the MouseEvent, e.
         if (e.isShiftDown()) {
@@ -127,11 +131,11 @@ public class RectangleTool extends DrawingTool {
         }
 
         // Handle cases where the square lies in a quadrant (with origin 0,0 at click) other than IV.
-        if (currentY < initY) {
-            initY -= drawHeightY;
+        if (currentY < mouseOriginY) {
+            initY = mouseOriginY - drawHeightY;
         }
-        if (currentX < initX) {
-            initX -= drawWidthX;
+        if (currentX < mouseOriginX) {
+            initX = mouseOriginX - drawWidthX;
         }
 
     }
@@ -147,6 +151,8 @@ public class RectangleTool extends DrawingTool {
         currentY = e.getY();
         initX = currentX;
         initY = currentY;
+        mouseOriginX = currentX;
+        mouseOriginY = currentY;
     }
 
     @Override

@@ -20,6 +20,8 @@ public class EllipseTool extends DrawingTool {
     private int currentX;
     private int initX;
     private int initY;
+    private int mouseOriginX;
+    private int mouseOriginY;
     private int xAxisMagnitudeDelta;
     private int yAxisMagnitudeDelta;
     private int drawWidthX;
@@ -40,6 +42,8 @@ public class EllipseTool extends DrawingTool {
         initY = 0;
         currentX = 0;
         currentY = 0;
+        mouseOriginX = 0;
+        mouseOriginY = 0;
         drawWidthX = 0;
         drawHeightY = 0;
         ellipseWidth = DEFAULT_STOKE_VALUE;
@@ -48,9 +52,6 @@ public class EllipseTool extends DrawingTool {
 
     @Override
     public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        // canvas.getGraphics().setColor(color);
-        calcEllipseCoordinateData(e, layers, canvas);
-
         if (previewLayer == null) {
             //previewLayer = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
             previewLayer = DrawArea.getPreviewLayer();
@@ -106,8 +107,8 @@ public class EllipseTool extends DrawingTool {
         currentX = e.getX();
         currentY = e.getY();
 
-        xAxisMagnitudeDelta = Math.abs(currentX - initX);
-        yAxisMagnitudeDelta = Math.abs(currentY - initY);
+        xAxisMagnitudeDelta = Math.abs(currentX - mouseOriginX);
+        yAxisMagnitudeDelta = Math.abs(currentY - mouseOriginY);
 
         // Detect shift-down by the MouseEvent, e.
         if (e.isShiftDown()) {
@@ -124,11 +125,11 @@ public class EllipseTool extends DrawingTool {
         }
 
         // Handle cases where the ellipse lies in a quadrant (with origin 0,0 at click) other than IV.
-        if (currentY < initY) {
-            initY -= drawHeightY;
+        if (currentY < mouseOriginY) {
+            initY = mouseOriginY - drawHeightY;
         }
-        if (currentX < initX) {
-            initX -= drawWidthX;
+        if (currentX < mouseOriginX) {
+            initX = mouseOriginX - drawWidthX;
         }
 
     }
@@ -144,6 +145,8 @@ public class EllipseTool extends DrawingTool {
         currentY = e.getY();
         initX = currentX;
         initY = currentY;
+        mouseOriginX = currentX;
+        mouseOriginY = currentY;
     }
 
     @Override
