@@ -95,7 +95,7 @@ public class DNATool extends DrawingTool {
 
         currentPeriodRatio = Math.abs(((xDifferenceToOrigin % DEFAULT_PERIOD) / DEFAULT_PERIOD));
 
-        if (wasGoingRight && currentX < lastX || !wasGoingRight && currentX > lastX ) {
+        if ((wasGoingRight && currentX < lastX ) || (!wasGoingRight && currentX > lastX)) {
             for (int i = FIRST_HALF_PERIOD_BAR_START_INDEX; i <= SECOND_HALF_PERIOD_BAR_END_INDEX; ++i) {
                 periodBars[i] = false;
             }
@@ -105,7 +105,6 @@ public class DNATool extends DrawingTool {
         }
 
         wasGoingRight = currentX >= lastX;
-
 
         if (Math.abs(currentPeriodRatio) < HALF_PERIOD_RATIO) {
             // First half-period
