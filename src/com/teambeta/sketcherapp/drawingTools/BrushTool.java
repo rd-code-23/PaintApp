@@ -16,7 +16,6 @@ public class BrushTool extends DrawingTool {
     private int currentX;
     private int lastX;
     private int lastY;
-    private int sizeInPixels;
     private Color color;
     private int brushWidth;
     private Graphics2D layer1Graphics;
@@ -29,7 +28,6 @@ public class BrushTool extends DrawingTool {
     public BrushTool() {
         color = Color.black;
         registerObservers();
-        sizeInPixels = 1;
         lastX = 0;
         lastY = 0;
         currentX = 0;
@@ -58,10 +56,10 @@ public class BrushTool extends DrawingTool {
         currentX = e.getX();
         currentY = e.getY();
 
-        layer1Graphics.fillOval(currentX - (brushWidth/2),currentY -(brushWidth/2), brushWidth, brushWidth);
+        layer1Graphics.fillOval(currentX - (brushWidth / 2), currentY - (brushWidth / 2), brushWidth, brushWidth);
         DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
-    
+
     @Override
     public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         // Initialize canvas settings that the tool will require.
