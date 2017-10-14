@@ -27,6 +27,7 @@ public class MainUI {
     private static EyeDropperTool eyeDropperTool;
     private static FanTool fanTool;
     private static CelticKnotTool celticKnotTool;
+    private static DNATool dnaTool;
     public static DrawingTool selectedDrawingTool;
 
     private static final String CLEAR_BUTTON_TEXT = "Clear";
@@ -41,6 +42,7 @@ public class MainUI {
     private static final String EYEDROPPER_TOOL_BUTTON_TEXT = "Eye Dropper";
     private static final String FAN_TOOL_BUTTON_TEXT = "Fan-out";
     private static final String CELTIC_KNOT_TOOL_BUTTON_TEXT = "Celtic Knot";
+    private static final String DNA_TOOL_BUTTON_TEXT = "DNA";
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
@@ -76,6 +78,7 @@ public class MainUI {
     private JButton fanToolButton;
     private JButton celticKnotToolButton;
     private JButton paintBucketToolButton;
+    private JButton dnaToolButton;
     private DrawArea drawArea;
 
     private ActionListener actionListener = new ActionListener() {
@@ -120,6 +123,9 @@ public class MainUI {
                 selectedDrawingTool = eyeDropperTool;
             } else if (e.getSource() == celticKnotToolButton) {
                 selectedDrawingTool = celticKnotTool;
+                updateSizeSlider();
+            } else if (e.getSource() == dnaToolButton) {
+                selectedDrawingTool = dnaTool;
                 updateSizeSlider();
             }
 
@@ -230,7 +236,8 @@ public class MainUI {
         celticKnotToolButton.addActionListener(actionListener);
         paintBucketToolButton = new JButton(PAINT_BUCKET_BUTTON_TEXT);
         paintBucketToolButton.addActionListener(actionListener);
-
+        dnaToolButton = new JButton(DNA_TOOL_BUTTON_TEXT);
+        dnaToolButton.addActionListener(actionListener);
 
         JPanel canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
@@ -247,6 +254,7 @@ public class MainUI {
         canvasTools.add(eyeDropperToolButton);
         canvasTools.add(fanToolButton);
         canvasTools.add(celticKnotToolButton);
+        canvasTools.add(dnaToolButton);
 
         widthChanger = new WidthChanger();
         widthChanger.renderPanel();
@@ -312,6 +320,8 @@ public class MainUI {
         fanTool = new FanTool();
         celticKnotTool = new CelticKnotTool();
         paintBucketTool = new PaintBucketTool();
+        dnaTool = new DNATool();
+
     }
 
     /**
