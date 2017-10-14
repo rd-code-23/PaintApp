@@ -43,18 +43,6 @@ public class MainUI {
     private static final int EDITOR_PANEL_WIDTH = 100;
     private static final int EDITOR_PANEL_HEIGHT = 300;
 
-    private static final String FILE_MENU_BUTTON_TEXT = "File";
-    private static final String EDIT_MENU_BUTTON_TEXT = "Edit";
-    private static final String IMAGE_MENU_BUTTON_TEXT = "Image";
-    private static final String WINDOW_MENU_BUTTON_TEXT = "Window";
-    private static final String HELP_MENU_BUTTON_TEXT = "Help";
-
-    private JMenuBar menuBar;
-    private JMenu fileMenu;
-    private JMenu editMenu;
-    private JMenu imageMenu;
-    private JMenu windowMenu;
-    private JMenu helpMenu;
 
     private JButton clearButton;
     private JButton brushToolButton;
@@ -193,29 +181,14 @@ public class MainUI {
         editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
         mainContent.add(editorPanel, BorderLayout.EAST);
 
-        prepareMenuBar();
+
+        MenuUI menuUI = new MenuUI();
+        mainFrame.add(menuUI, BorderLayout.NORTH);
+
+
     }
 
-    /**
-     * Build GUI menu bar.
-     */
-    private void prepareMenuBar() {
-        menuBar = new JMenuBar();
 
-        fileMenu = new JMenu(FILE_MENU_BUTTON_TEXT);
-        editMenu = new JMenu(EDIT_MENU_BUTTON_TEXT);
-        imageMenu = new JMenu(IMAGE_MENU_BUTTON_TEXT);
-        windowMenu = new JMenu(WINDOW_MENU_BUTTON_TEXT);
-        helpMenu = new JMenu(HELP_MENU_BUTTON_TEXT);
-
-        menuBar.add(fileMenu);
-        menuBar.add(editMenu);
-        menuBar.add(imageMenu);
-        menuBar.add(windowMenu);
-        menuBar.add(helpMenu);
-
-        mainFrame.setJMenuBar(menuBar);
-    }
 
     /**
      * Create the drawing tool objects and set the pen tool as the default selection.
