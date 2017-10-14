@@ -7,13 +7,14 @@ import com.teambeta.sketcherapp.ui.DrawArea;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
 /**
- * The CelticKnotTool class implements the drawing behavior for when the Celtic Knot tool has been selected.
+ * The DNATool class implements the drawing behavior for when the DNATool has been selected.
  *
  * The amplitude and period values are currently fixed numbers. Requires dedicated UI to update.
  */
-public class DoubleHelixTool extends DrawingTool {
+public class DNATool extends DrawingTool {
 
     private final double TWO_PI = 2.0 * Math.PI;
     private final double DEFAULT_AMPLITUDE = 100.0;
@@ -40,7 +41,6 @@ public class DoubleHelixTool extends DrawingTool {
     private double currentPeriodRatio;
     private boolean inFirstHalfPeriod;
 
-
     // Access bar by n-1;
     private boolean[] periodBars = {false, false, false, false,
                                     false, false, false, false};
@@ -53,10 +53,12 @@ public class DoubleHelixTool extends DrawingTool {
     private Graphics2D layer1Graphics;
     private final int DEFAULT_STOKE_VALUE = 10;
 
+    private Random rand;
+
     /**
      * The constructor sets the properties of the tool to their default values
      */
-    public DoubleHelixTool() {
+    public DNATool() {
         registerObservers();
         color = Color.black;
         currentX = 0;
@@ -74,6 +76,8 @@ public class DoubleHelixTool extends DrawingTool {
         pointContainer = new CartesianPoint[2];
         pointContainer[0] = upperWave;
         pointContainer[1] = lowerWave;
+
+        rand = new Random();
     }
 
     @Override
@@ -232,12 +236,30 @@ public class DoubleHelixTool extends DrawingTool {
      * This line will be ~75% the brush width of the main wave.
      */
     private void drawBarBetweenWaves() {
+        int barMiddleY = (lowerWave.getYCurrent() + upperWave.getYCurrent()) / 2;
         int originalBrushWidth = getToolWidth();
         double barBrushWidth = originalBrushWidth * BAR_REDUCTION_FACTOR; // Expected integer precision loss.
+
+        Color originalColor = getColor();
+        Color[] atcg_colors = {Color.red, Color.green, Color.blue, Color.yellow};
+
+        // Set the color and brush width profiles for ATCG mode.
         layer1Graphics.setStroke(new BasicStroke((int) barBrushWidth, BasicStroke.CAP_ROUND,
                 BasicStroke.CAP_BUTT));
+        layer1Graphics.setColor(atcg_colors[randomInt(0, atcg_colors.length - 1)]);
+
+        // Draw the lower half of the bar with a new color.
         layer1Graphics.drawLine(lowerWave.getXCurrent(), lowerWave.getYCurrent(),
-                                upperWave.getXCurrent(), upperWave.getYCurrent());
+                                upperWave.getXCurrent(), barMiddleY);
+
+        layer1Graphics.setColor(atcg_colors[randomInt(0, atcg_colors.length - 1)]);
+
+        // Draw the upper half of the bar with another color.
+        layer1Graphics.drawLine(lowerWave.getXCurrent(), barMiddleY,
+                upperWave.getXCurrent(), upperWave.getYCurrent());
+
+        // Return to the normal color and brush width profiles.
+        layer1Graphics.setColor(originalColor);
         layer1Graphics.setStroke(new BasicStroke(originalBrushWidth, BasicStroke.CAP_ROUND,
                 BasicStroke.CAP_BUTT));
     }
@@ -252,6 +274,17 @@ public class DoubleHelixTool extends DrawingTool {
             periodBars[bar_index] = true;
             drawBarBetweenWaves();
         }
+    }
+
+    /**
+     * Return a random integer within the closed interval of min to max.
+     *
+     * @param min The minimum number
+     * @param max The maximum number
+     * @return The random number from min to max
+     */
+    private int randomInt(int min, int max) {
+        return rand.nextInt((max - min) + 1);
     }
 
 }
