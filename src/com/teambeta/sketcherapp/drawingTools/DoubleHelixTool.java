@@ -23,7 +23,12 @@ public class DoubleHelixTool extends DrawingTool {
     private final double DEFAULT_AMPLITUDE = 100.0;
     private final double DEFAULT_PERIOD = 400.0;
     private final double EPSILON = 0.035;
-    private final int DEFAULT_WAVE_WIDTH = 65;
+    private final double HALF_PERIOD_RATIO = 0.5;
+
+    private final int FIRST_HALF_PERIOD_BAR_START_INDEX = 0;
+    private final int FIRST_HALF_PERIOD_BAR_END_INDEX = 3;
+    private final int SECOND_HALF_PERIOD_BAR_START_INDEX = 4;
+    private final int SECOND_HALF_PERIOD_BAR_END_INDEX = 7;
 
     private CartesianPoint firstWaveUpper;
     private CartesianPoint firstWaveLower;
@@ -38,6 +43,7 @@ public class DoubleHelixTool extends DrawingTool {
     // Access bar by n-1;
     private boolean[] periodBars = {false, false, false, false,
                                     false, false, false, false};
+    // IMPORTANT PERIODIC RATIOS FOR BAR LOCATIONS. DO NOT CHANGE.
     private final double[] barRatios = {0.05, 0.15, 0.25, 0.35,
                                         0.55, 0.65, 0.75, 0.85};
 
@@ -84,9 +90,9 @@ public class DoubleHelixTool extends DrawingTool {
         double periodRatio = Math.abs(((xDifferenceToOrigin % DEFAULT_PERIOD) / DEFAULT_PERIOD));
         System.out.println(periodRatio);
 
-        if (Math.abs(periodRatio) < 0.5) {
+        if (Math.abs(periodRatio) < HALF_PERIOD_RATIO) {
             // First half-period
-            for (int i = 4; i < 8; ++i) {
+            for (int i = SECOND_HALF_PERIOD_BAR_START_INDEX; i <= SECOND_HALF_PERIOD_BAR_END_INDEX; ++i) {
                 periodBars[i] = false;
             }
 
@@ -120,7 +126,7 @@ public class DoubleHelixTool extends DrawingTool {
 
         } else {
             // Second half-period
-            for (int i = 0; i < 4; ++i) {
+            for (int i = FIRST_HALF_PERIOD_BAR_START_INDEX; i <= FIRST_HALF_PERIOD_BAR_END_INDEX; ++i) {
                 periodBars[i] = false;
             }
 
@@ -198,19 +204,27 @@ public class DoubleHelixTool extends DrawingTool {
     }
 
     /**
-     * getColor returns the current color the brush tool is set to.
+     * getColor returns the current color that tool is set to.
      *
-     * @return the current Color of the LineTool
+     * @return The current tool color
      */
     @Override
     public Color getColor() {
         return ColorChooser.getColor();
     }
 
+    /**
+     * getToolWidth returns the current width that the tool is set to.
+     * @return The current tool width
+     */
     public int getToolWidth() {
         return brushWidth;
     }
 
+    /**
+     * setToolWidth sets the tool width
+     * @param brushWidth The tool width
+     */
     public void setToolWidth(int brushWidth) {
         this.brushWidth = brushWidth;
     }
