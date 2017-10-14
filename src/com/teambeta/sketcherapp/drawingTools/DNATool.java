@@ -7,7 +7,7 @@ import com.teambeta.sketcherapp.ui.DrawArea;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * The DNATool class implements the drawing behavior for when the DNATool has been selected.
@@ -39,25 +39,27 @@ public class DNATool extends DrawingTool {
     private double bValue;
     private double currentPeriodRatio;
     private boolean inFirstHalfPeriod;
+    private boolean wasGoingRight;
 
     // Access bar by n-1;
     private boolean[] periodBars = {false, false, false, false,
-                                    false, false, false, false};
+            false, false, false, false};
     // IMPORTANT PERIODIC RATIOS FOR BAR LOCATIONS. DO NOT CHANGE.
-    private final double[] barRatios = {0.05, 0.15, 0.25, 0.35,
-                                        0.55, 0.65, 0.75, 0.85};
+    private final double[] leftToRightBarRatios = {0.02, 0.12, 0.22, 0.32,
+            0.52, 0.62, 0.72, 0.82};
+    private double[] rightToLeftBarRatios = {0.17, 0.27, 0.37, 0.47,
+            0.67, 0.77, 0.87, 0.97};
 
     private Color color;
     private int brushWidth;
     private Graphics2D layer1Graphics;
     private final int DEFAULT_STOKE_VALUE = 10;
 
-    private Random rand;
-
     /**
      * The constructor sets the properties of the tool to their default values
      */
     public DNATool() {
+
         registerObservers();
         color = Color.black;
         currentX = 0;
@@ -76,7 +78,6 @@ public class DNATool extends DrawingTool {
         pointContainer[0] = upperWave;
         pointContainer[1] = lowerWave;
 
-        rand = new Random();
     }
 
     @Override
@@ -93,6 +94,17 @@ public class DNATool extends DrawingTool {
                         (int)(amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - LOWER_WAVE_PHASE_SHIFT)))));
 
         currentPeriodRatio = Math.abs(((xDifferenceToOrigin % DEFAULT_PERIOD) / DEFAULT_PERIOD));
+
+        if ((wasGoingRight && currentX < lastX ) || (!wasGoingRight && currentX > lastX)) {
+            for (int i = FIRST_HALF_PERIOD_BAR_START_INDEX; i <= SECOND_HALF_PERIOD_BAR_END_INDEX; ++i) {
+                periodBars[i] = false;
+            }
+            currentPeriodRatio = 0.0;
+            xDifferenceToOrigin = 0;
+            inFirstHalfPeriod = currentX > lastX;
+        }
+
+        wasGoingRight = currentX >= lastX;
 
         if (Math.abs(currentPeriodRatio) < HALF_PERIOD_RATIO) {
             // First half-period
@@ -130,7 +142,7 @@ public class DNATool extends DrawingTool {
         // Finally, draw the computed sinusoidal lines.
         for (CartesianPoint point : pointContainer) {
             layer1Graphics.drawLine(point.getXPrevious(), point.getYPrevious(),
-                                    point.getXCurrent(), point.getYCurrent());
+                    point.getXCurrent(), point.getYCurrent());
             point.setPreviousFromCurrent();
         }
 
@@ -152,7 +164,7 @@ public class DNATool extends DrawingTool {
     @Override
     public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
     }
-    
+
     @Override
     public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         // Initialize canvas settings that the tool will require.
@@ -249,7 +261,7 @@ public class DNATool extends DrawingTool {
 
         // Draw the lower half of the bar with a new color.
         layer1Graphics.drawLine(lowerWave.getXCurrent(), lowerWave.getYCurrent(),
-                                upperWave.getXCurrent(), barMiddleY);
+                upperWave.getXCurrent(), barMiddleY);
 
         layer1Graphics.setColor(atcg_colors[randomInt(0, atcg_colors.length - 1)]);
 
@@ -269,9 +281,17 @@ public class DNATool extends DrawingTool {
      * @param period_ratio The period ratio at the current point
      */
     private void drawLegalBar(int bar_index, double period_ratio) {
-        if ((Math.abs(period_ratio) >= barRatios[bar_index]) && !(periodBars[bar_index])) {
-            periodBars[bar_index] = true;
-            drawBarBetweenWaves();
+        if (wasGoingRight) {
+            if (((Math.abs(period_ratio) >= leftToRightBarRatios[bar_index])) && !(periodBars[bar_index])) {
+                periodBars[bar_index] = true;
+                drawBarBetweenWaves();
+
+            }
+        } else {
+            if (((Math.abs(period_ratio) >= rightToLeftBarRatios[bar_index])) && !(periodBars[bar_index])) {
+                periodBars[bar_index] = true;
+                drawBarBetweenWaves();
+            }
         }
     }
 
@@ -283,7 +303,7 @@ public class DNATool extends DrawingTool {
      * @return The random number from min to max
      */
     private int randomInt(int min, int max) {
-        return rand.nextInt((max - min) + 1);
+        return ThreadLocalRandom.current().nextInt(max - min + 1) + min;
     }
 
 }

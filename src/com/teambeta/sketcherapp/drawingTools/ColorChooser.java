@@ -55,7 +55,6 @@ public class ColorChooser extends JPanel {
         notifyObservers();
     }
 
-
     /**
      * Gets the color of the graphic selector.
      *

@@ -48,6 +48,7 @@ public class CartesianPoint {
 
     /**
      * Explicitly set the previous point data
+     *
      * @param x The previous x-axis value
      * @param y The previous y-axis value
      */

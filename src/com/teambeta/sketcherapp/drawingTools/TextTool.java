@@ -35,12 +35,10 @@ public class TextTool extends DrawingTool {
 
     @Override
     public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-
     }
 
     @Override
     public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-
     }
 
     @Override
@@ -51,7 +49,6 @@ public class TextTool extends DrawingTool {
 
     @Override
     public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-
     }
 
     @Override
@@ -66,10 +63,9 @@ public class TextTool extends DrawingTool {
 
     /**
      * Places text inputted by user on canvas.
-     *
      * @param canvas to draw text onto
      * @param layers first layer by default is layers[0]
-     * @param e      MouseEvent
+     * @param e MouseEvent
      */
     private void placeText(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
@@ -80,7 +76,8 @@ public class TextTool extends DrawingTool {
         layer1Graphics.setColor(color);
 
 
-        //draw a point where the mouse was clicked
+
+        //draw where the mouse was clicked
         currentX = e.getX();
         currentY = e.getY();
 
@@ -89,11 +86,8 @@ public class TextTool extends DrawingTool {
         TextFieldInput textFieldInput = new TextFieldInput(color, (int) location.getX(), (int) location.getY(), myFont);
         String userInput = textFieldInput.getUserInput();
 
-
         if (!userInput.equals("")) {
-            layer1Graphics.setFont(myFont);
             layer1Graphics.drawString(userInput, currentX, currentY);
-
             DrawArea.drawLayersOntoCanvas(layers, canvas);
         }
     }

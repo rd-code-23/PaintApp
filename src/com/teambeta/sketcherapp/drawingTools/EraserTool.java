@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 /**
  * NOTE:
  * The DrawArea class object must be passed into the tool to receive the background colour.
- *
+ * <p>
  * The EraserTool class implements the drawing behavior for when the Eraser tool has been selected
  */
 public class EraserTool extends DrawingTool {
@@ -110,6 +110,6 @@ public class EraserTool extends DrawingTool {
     }
 
     public void setFillState(boolean fillState) {
-        
-    };
+
+    }
 }
