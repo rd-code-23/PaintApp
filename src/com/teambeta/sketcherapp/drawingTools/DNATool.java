@@ -244,7 +244,7 @@ public class DNATool extends DrawingTool {
         Color[] atcg_colors = {Color.red, Color.green, Color.blue, Color.yellow};
 
         // Set the color and brush width profiles for ATCG mode.
-        layer1Graphics.setStroke(new BasicStroke((int) barBrushWidth, BasicStroke.CAP_ROUND,
+        layer1Graphics.setStroke(new BasicStroke((int) barBrushWidth, BasicStroke.CAP_SQUARE,
                 BasicStroke.CAP_BUTT));
         layer1Graphics.setColor(atcg_colors[randomInt(0, atcg_colors.length - 1)]);
 
