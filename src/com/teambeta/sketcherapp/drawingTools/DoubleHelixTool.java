@@ -267,10 +267,17 @@ public class DoubleHelixTool extends DrawingTool {
 
     /**
      * Draw a line between the sine waves at their current render point.
+     * This line will be ~75% the brush width of the main wave.
      */
     private void drawLineBetweenWaves() {
+        int originalBrushWidth = getToolWidth();
+        double barBrushWidth = getToolWidth() * (3.0/4.0); // Expected integer precision loss.
+        layer1Graphics.setStroke(new BasicStroke((int) barBrushWidth, BasicStroke.CAP_ROUND,
+                BasicStroke.CAP_BUTT));
         layer1Graphics.drawLine(firstWaveLower.getXCurrent(), firstWaveLower.getYCurrent(),
                                 firstWaveUpper.getXCurrent(), firstWaveUpper.getYCurrent());
+        layer1Graphics.setStroke(new BasicStroke(originalBrushWidth, BasicStroke.CAP_ROUND,
+                BasicStroke.CAP_BUTT));
     }
 
     /**
