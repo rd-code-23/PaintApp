@@ -282,13 +282,13 @@ public class DNATool extends DrawingTool {
      */
     private void drawLegalBar(int bar_index, double period_ratio) {
         if (wasGoingRight) {
-            if ((Math.abs(period_ratio) >= leftToRightBarRatios[bar_index]) && !(periodBars[bar_index])) {
+            if (((Math.abs(period_ratio) >= leftToRightBarRatios[bar_index])) && !(periodBars[bar_index])) {
                 periodBars[bar_index] = true;
                 drawBarBetweenWaves();
 
             }
         } else {
-            if ((Math.abs(period_ratio) >= rightToLeftBarRatios[bar_index]) && !(periodBars[bar_index])) {
+            if (((Math.abs(period_ratio) >= rightToLeftBarRatios[bar_index])) && !(periodBars[bar_index])) {
                 periodBars[bar_index] = true;
                 drawBarBetweenWaves();
             }
