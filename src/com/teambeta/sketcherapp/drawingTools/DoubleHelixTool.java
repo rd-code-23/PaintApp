@@ -17,14 +17,11 @@ public class DoubleHelixTool extends DrawingTool {
 
     private double amplitude;
     private double bValue;
-    private int waveWidth;
     private int xDifferenceToOrigin;
 
     private final double TWO_PI = 2.0 * Math.PI;
     private final double DEFAULT_AMPLITUDE = 100.0;
-    private final double DEFAULT_PERIOD = 350.0;
-    private final double SECOND_WAVE_PHASE_SHIFT = DEFAULT_PERIOD / 3.0;
-    private final double THIRD_WAVE_PHASE_SHIFT = 2.0 * DEFAULT_PERIOD / 3.0;
+    private final double DEFAULT_PERIOD = 400.0;
     private final double EPSILON = 0.035;
     private final int DEFAULT_WAVE_WIDTH = 65;
 
@@ -39,16 +36,19 @@ public class DoubleHelixTool extends DrawingTool {
 
 
     // Access bar by n-1;
-    private boolean[] periodBars = {false, false, false, false, false, false};
+    private boolean[] periodBars = {false, false, false, false,
+                                    false, false, false, false};
+    private final double[] barRatios = {0.05, 0.15, 0.25, 0.35,
+                                        0.55, 0.65, 0.75, 0.85};
 
     private Color color;
     private int brushWidth;
     private Graphics2D layer1Graphics;
     private final int DEFAULT_STOKE_VALUE = 10;
 
-        /**
-         * The constructor sets the properties of the tool to their default values
-         */
+    /**
+     * The constructor sets the properties of the tool to their default values
+     */
     public DoubleHelixTool() {
         registerObservers();
         color = Color.black;
@@ -58,7 +58,6 @@ public class DoubleHelixTool extends DrawingTool {
         amplitude = DEFAULT_AMPLITUDE;
         bValue = TWO_PI / DEFAULT_PERIOD;
         brushWidth = DEFAULT_STOKE_VALUE;
-        waveWidth = DEFAULT_WAVE_WIDTH;
         inFirstPeriod = false;
 
         firstWaveUpper = new CartesianPoint();
@@ -78,15 +77,16 @@ public class DoubleHelixTool extends DrawingTool {
         firstWaveUpper.setCurrent(currentX,
                 (currentY +
                         (int)(amplitude * Math.sin(bValue * (double) xDifferenceToOrigin))));
-        firstWaveLower.setCurrent(currentX, (currentY -
-                (int)(amplitude * Math.sin(bValue * (double) xDifferenceToOrigin))));
+        firstWaveLower.setCurrent(currentX,
+                (currentY +
+                        (int)(amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - (DEFAULT_PERIOD/3))))));
 
         double periodRatio = Math.abs(((xDifferenceToOrigin % DEFAULT_PERIOD) / DEFAULT_PERIOD));
+        System.out.println(periodRatio);
 
         if (Math.abs(periodRatio) < 0.5) {
             // First half-period
-
-            for (int i = 3; i < 6; ++i) {
+            for (int i = 4; i < 8; ++i) {
                 periodBars[i] = false;
             }
 
@@ -95,58 +95,64 @@ public class DoubleHelixTool extends DrawingTool {
             }
 
             // Bar 1
-            if (Math.abs(periodRatio - 0.15) < EPSILON && !getBarDrawn(1)) {
+            if (Math.abs(periodRatio - barRatios[0]) < EPSILON && !getBarDrawn(1)) {
                 setBarDrawn(1, true);
                 drawLineBetweenWaves();
             }
 
             // Bar 2
-            if (Math.abs(periodRatio - 0.25) < EPSILON && !getBarDrawn(2)) {
+            if (Math.abs(periodRatio - barRatios[1]) < EPSILON && !getBarDrawn(2)) {
                 setBarDrawn(2, true);
                 drawLineBetweenWaves();
             }
 
             // Bar 3
-            if (Math.abs(periodRatio - 0.35) < EPSILON && !getBarDrawn(3)) {
+            if (Math.abs(periodRatio - barRatios[2]) < EPSILON && !getBarDrawn(3)) {
                 setBarDrawn(3, true);
                 drawLineBetweenWaves();
             }
 
+            // Bar 4
+            if (Math.abs(periodRatio - barRatios[3]) < EPSILON && !getBarDrawn(4)) {
+                setBarDrawn(4, true);
+                drawLineBetweenWaves();
+            }
+
         } else {
-            for (int i = 0; i < 3; ++i) {
+            // Second half-period
+            for (int i = 0; i < 4; ++i) {
                 periodBars[i] = false;
             }
 
-            // Second half-period
             if (inFirstPeriod) {
                 inFirstPeriod = false;
             }
 
             // Bar 4
-            if (Math.abs(periodRatio - 0.65) < EPSILON && !getBarDrawn(4)) {
-                setBarDrawn(4, true);
-                drawLineBetweenWaves();
-            }
-
-            // Bar 5
-            if (Math.abs(periodRatio - 0.75) < EPSILON && !getBarDrawn(5)) {
+            if (Math.abs(periodRatio - barRatios[4]) < EPSILON && !getBarDrawn(5)) {
                 setBarDrawn(5, true);
                 drawLineBetweenWaves();
             }
 
-            // Bar 6
-            if (Math.abs(periodRatio - 0.85) < EPSILON && !getBarDrawn(6)) {
+            // Bar 5
+            if (Math.abs(periodRatio - barRatios[5]) < EPSILON && !getBarDrawn(6)) {
                 setBarDrawn(6, true);
                 drawLineBetweenWaves();
             }
 
-        }
-        // FIRST LOOP
-        if (Math.abs(periodRatio - 0.25) < 0.01) {
 
-        }
+            // Bar 6
+            if (Math.abs(periodRatio - barRatios[6]) < EPSILON && !getBarDrawn(7)) {
+                setBarDrawn(7, true);
+                drawLineBetweenWaves();
+            }
 
-        // SECOND LOOP
+            // Bar 6
+            if (Math.abs(periodRatio - barRatios[7]) < EPSILON && !getBarDrawn(8)) {
+                setBarDrawn(8, true);
+                drawLineBetweenWaves();
+            }
+        }
 
         for (CartesianPoint point : pointContainer) {
             layer1Graphics.drawLine(point.getXPrevious(), point.getYPrevious(),
@@ -241,15 +247,30 @@ public class DoubleHelixTool extends DrawingTool {
 
     }
 
+    /**
+     * Draw a line between the sine waves at their current render point.
+     */
     private void drawLineBetweenWaves() {
         layer1Graphics.drawLine(firstWaveLower.getXCurrent(), firstWaveLower.getYCurrent(),
                                 firstWaveUpper.getXCurrent(), firstWaveUpper.getYCurrent());
     }
 
+    /**
+     * Check if the specified bar was drawn.
+     *
+     * @param bar The bar to check (index start from 1)
+     * @return If it was drawn
+     */
     private boolean getBarDrawn(int bar) {
         return periodBars[bar - 1];
     }
 
+    /**
+     * Set the bar drawn state.
+     *
+     * @param bar The bar to update (index start from 1)
+     * @param state The state to set it
+     */
     private void setBarDrawn(int bar, boolean state) {
         periodBars[bar - 1] = state;
     }
