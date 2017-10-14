@@ -12,6 +12,7 @@ import java.awt.image.BufferedImage;
  * <p>
  * Behaviour of the ellipse tool:
  * - The end-point relative to the init-point can be in any 4 quadrants.
+ * - Draw a circle when the shift button is held on mouse release.
  */
 public class EllipseTool extends DrawingTool {
 
@@ -19,9 +20,14 @@ public class EllipseTool extends DrawingTool {
     private int currentX;
     private int initX;
     private int initY;
+    private int xAxisMagnitudeDelta;
+    private int yAxisMagnitudeDelta;
     private int drawWidthX;
     private int drawHeightY;
     private Color color;
+    private final int DEFAULT_STOKE_VALUE = 10;
+    private int ellipseWidth;
+    private boolean fillShape;
     private BufferedImage previewLayer = null;
 
     /**
@@ -36,6 +42,8 @@ public class EllipseTool extends DrawingTool {
         currentY = 0;
         drawWidthX = 0;
         drawHeightY = 0;
+        ellipseWidth = DEFAULT_STOKE_VALUE;
+        fillShape = false;
     }
 
     @Override
@@ -77,7 +85,7 @@ public class EllipseTool extends DrawingTool {
     @Override
     public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         calcEllipseCoordinateData(e);
-        
+
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         layer1Graphics.setColor(color);
@@ -91,8 +99,22 @@ public class EllipseTool extends DrawingTool {
         currentX = e.getX();
         currentY = e.getY();
 
-        drawWidthX = Math.abs(currentX - initX);
-        drawHeightY = Math.abs(currentY - initY);
+        xAxisMagnitudeDelta = Math.abs(currentX - initX);
+        yAxisMagnitudeDelta = Math.abs(currentY - initY);
+
+        // Detect shift-down by the MouseEvent, e.
+        if (e.isShiftDown()) {
+            if (xAxisMagnitudeDelta > yAxisMagnitudeDelta) {
+                drawWidthX = yAxisMagnitudeDelta;
+                drawHeightY = yAxisMagnitudeDelta;
+            } else {
+                drawWidthX = xAxisMagnitudeDelta;
+                drawHeightY= xAxisMagnitudeDelta;
+            }
+        } else {
+            drawWidthX = xAxisMagnitudeDelta;
+            drawHeightY = yAxisMagnitudeDelta;
+        }
 
         // Handle cases where the ellipse lies in a quadrant (with origin 0,0 at click) other than IV.
         if (currentY < initY) {
@@ -101,6 +123,18 @@ public class EllipseTool extends DrawingTool {
         if (currentX < initX) {
             initX -= drawWidthX;
         }
+
+        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
+        layer1Graphics.setStroke(new BasicStroke(getToolWidth()));
+        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        layer1Graphics.setColor(color);
+
+        // Draw a filled ellipse/circle if the alt key is down on release.
+        if (fillShape) {
+            layer1Graphics.fillOval(initX, initY, drawWidthX, drawHeightY);
+        }
+        layer1Graphics.drawOval(initX, initY, drawWidthX, drawHeightY);
+        DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
 
     @Override
@@ -114,6 +148,16 @@ public class EllipseTool extends DrawingTool {
         currentY = e.getY();
         initX = currentX;
         initY = currentY;
+    }
+
+    @Override
+    public int getToolWidth() {
+       return ellipseWidth;
+    }
+
+    @Override
+    public void setToolWidth(int width) {
+    ellipseWidth = width;
     }
 
     /**
@@ -136,5 +180,9 @@ public class EllipseTool extends DrawingTool {
                 color = ColorChooser.getColor();
             }
         });
+    }
+
+    public void setFillState(boolean fillState) {
+        fillShape = fillState;
     }
 }

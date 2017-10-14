@@ -8,17 +8,14 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 /**
- * The CircleTool class implements the drawing behavior for when the Circle tool has been selected
+ * The RectangleTool class implements the drawing behavior for when the Rectangle tool has been selected
  * <p>
- * Please note: CircleTool and SquareTool implement exactly the same code except for one single line
- * that actually draws the shape. In beta (for a working demo) this is fine, but look to create
- * a superclass that handles these square-boundable shapes in the future.
- * <p>
- * Behaviour of the circle tool:
+ * Behaviour of the rectangle tool:
  * - The longest side will take the length of the shortest side.
  * - The end-point relative to the init-point can be in any 4 quadrants.
+ * - Draw a square when the shift button is held on mouse release.
  */
-public class CircleTool extends DrawingTool {
+public class RectangleTool extends DrawingTool {
 
     private int currentY;
     private int currentX;
@@ -28,17 +25,18 @@ public class CircleTool extends DrawingTool {
     private int drawHeightY;
     private int xAxisMagnitudeDelta;
     private int yAxisMagnitudeDelta;
-    private int sizeInPixels;
     private Color color;
     private BufferedImage previewLayer = null;
+    private int squareWidth;
+    private final int DEFAULT_WIDTH_VALUE = 10;
+    private boolean fillShape;
 
     /**
      * The constructor sets the properties of the tool to their default values
      */
-    public CircleTool() {
-        color = Color.black;
+    public RectangleTool() {
         registerObservers();
-        sizeInPixels = 1;
+        color = Color.black;
         initX = 0;
         initY = 0;
         currentX = 0;
@@ -47,14 +45,13 @@ public class CircleTool extends DrawingTool {
         drawHeightY = 0;
         xAxisMagnitudeDelta = 0;
         yAxisMagnitudeDelta = 0;
+        squareWidth = DEFAULT_WIDTH_VALUE;
+        fillShape = false;
     }
 
     @Override
     public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-//        canvas.getGraphics().setColor(color);
-
         if (previewLayer == null) {
-            //previewLayer = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
             previewLayer = DrawArea.getPreviewLayer();
         }
         //clear preview layer
@@ -64,17 +61,14 @@ public class CircleTool extends DrawingTool {
         Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
         canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         canvasGraphics.setColor(color);
-        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
-        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        layer1Graphics.setColor(color);
         Graphics2D previewLayerGraphics = (Graphics2D) previewLayer.getGraphics();
         canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         previewLayerGraphics.setColor(color);
 
-        calcCircleData(e);
 
-        //draw the circle preview onto the preview layer
-        previewLayerGraphics.drawOval(initX, initY, drawWidthX, drawHeightY);
+        calcSquareCoordinateData(e);
+        //draw the square preview onto its layer.
+        previewLayerGraphics.drawRect(initX, initY, drawWidthX, drawHeightY);
 
         //info: https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
         //draw the preview layer on top of the drawing layer(s)
@@ -86,40 +80,58 @@ public class CircleTool extends DrawingTool {
 
     @Override
     public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        calcCircleData(e);
+        calcSquareCoordinateData(e);
 
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         layer1Graphics.setColor(color);
 
-        layer1Graphics.drawOval(initX, initY, drawWidthX, drawHeightY);
+        layer1Graphics.drawRect(initX, initY, drawWidthX, drawHeightY);
         DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
 
-    private void calcCircleData(MouseEvent e) {
-        // Get the coordinates of where the user released the mouse
+    private void calcSquareCoordinateData(MouseEvent e) {
+        // Get the coordinates of where the user released the mouse.
         currentX = e.getX();
         currentY = e.getY();
 
-        // Draw the circle with the longest side as long as the shortest side
+        // Draw the square with the longest side as long as the shortest side.
         xAxisMagnitudeDelta = Math.abs(currentX - initX);
         yAxisMagnitudeDelta = Math.abs(currentY - initY);
 
-        if (xAxisMagnitudeDelta > yAxisMagnitudeDelta) {
-            drawWidthX = yAxisMagnitudeDelta;
-            drawHeightY = yAxisMagnitudeDelta;
+        // Detect shift-down by the MouseEvent, e.
+        if (e.isShiftDown()) {
+            if (xAxisMagnitudeDelta > yAxisMagnitudeDelta) {
+                drawWidthX = yAxisMagnitudeDelta;
+                drawHeightY = yAxisMagnitudeDelta;
+            } else {
+                drawWidthX = xAxisMagnitudeDelta;
+                drawHeightY = xAxisMagnitudeDelta;
+            }
         } else {
             drawWidthX = xAxisMagnitudeDelta;
-            drawHeightY = xAxisMagnitudeDelta;
+            drawHeightY = yAxisMagnitudeDelta;
         }
 
-        // Handle cases where the circle lies in a quadrant (with origin 0,0 at click) other than IV
+        // Handle cases where the square lies in a quadrant (with origin 0,0 at click) other than IV.
         if (currentY < initY) {
             initY -= drawHeightY;
         }
         if (currentX < initX) {
             initX -= drawWidthX;
         }
+
+        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
+        layer1Graphics.setStroke(new BasicStroke(getToolWidth()));
+        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        layer1Graphics.setColor(color);
+
+        // Draw a filled rectangle/square if the alt key is down on release.
+        if (fillShape) {
+            layer1Graphics.fillRect(initX, initY, drawWidthX, drawHeightY);
+        }
+        layer1Graphics.drawRect(initX, initY, drawWidthX, drawHeightY);
+        DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
 
     @Override
@@ -135,10 +147,20 @@ public class CircleTool extends DrawingTool {
         initY = currentY;
     }
 
+    @Override
+    public int getToolWidth() {
+        return squareWidth;
+    }
+
+    @Override
+    public void setToolWidth(int width) {
+        squareWidth = width;
+    }
+
     /**
-     * getColor returns the current color the circle tool is set to.
+     * getColor returns the current color the square tool is set to.
      *
-     * @return the current Color of the CircleTool
+     * @return the current Color of the LineTool
      */
     @Override
     public Color getColor() {
@@ -155,5 +177,9 @@ public class CircleTool extends DrawingTool {
                 color = ColorChooser.getColor();
             }
         });
+    }
+
+    public void setFillState(boolean fillState) {
+        fillShape = fillState;
     }
 }

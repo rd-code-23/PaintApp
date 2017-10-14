@@ -3,8 +3,7 @@ package com.teambeta.sketcherapp.ui;
 import com.teambeta.sketcherapp.drawingTools.DrawingTool;
 import com.teambeta.sketcherapp.drawingTools.LineTool;
 import com.teambeta.sketcherapp.drawingTools.BrushTool;
-import com.teambeta.sketcherapp.drawingTools.SquareTool;
-import com.teambeta.sketcherapp.drawingTools.CircleTool;
+import com.teambeta.sketcherapp.drawingTools.RectangleTool;
 import com.teambeta.sketcherapp.drawingTools.*;
 
 import javax.swing.*;
@@ -20,24 +19,28 @@ import java.awt.event.ActionListener;
 public class MainUI {
     private static LineTool lineTool;
     private static BrushTool brushTool;
-    private static SquareTool squareTool;
-    private static CircleTool circleTool;
+    private static RectangleTool rectangleTool;
     private static EraserTool eraserTool;
     private static EllipseTool ellipseTool;
     private static TextTool textTool;
     private static PaintBucketTool paintBucketTool;
+    private static EyeDropperTool eyeDropperTool;
+    private static FanTool fanTool;
+    private static CelticKnotTool celticKnotTool;
     public static DrawingTool selectedDrawingTool;
 
     private static final String CLEAR_BUTTON_TEXT = "Clear";
     private static final String BRUSH_BUTTON_TEXT = "Brush";
-    private static final String SQUARE_TOOL_BUTTON_TEXT = "Square";
-    private static final String CIRCLE_TOOL_BUTTON_TEXT = "Circle";
+    private static final String RECTANGLE_TOOL_BUTTON_TEXT = "Rectangle";
     private static final String LINE_TOOL_BUTTON_TEXT = "Line";
     private static final String ERASER_TOOL_BUTTON_TEXT = "Eraser";
     private static final String ELLIPSE_TOOL_BUTTON_TEXT = "Ellipse";
     private static final String TEXT_TOOL_BUTTON_TEXT = "Text";
     private static final String PAINT_BUCKET_BUTTON_TEXT = "Paint Bucket";
 
+    private static final String EYEDROPPER_TOOL_BUTTON_TEXT = "Eye Dropper";
+    private static final String FAN_TOOL_BUTTON_TEXT = "Fan-out";
+    private static final String CELTIC_KNOT_TOOL_BUTTON_TEXT = "Celtic Knot";
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
@@ -64,12 +67,14 @@ public class MainUI {
     private JButton clearButton;
     private JButton brushToolButton;
     private JButton lineToolButton;
-    private JButton squareToolButton;
-    private JButton circleToolButton;
+    private JButton rectangleToolButton;
     private JButton eraserToolButton;
     private JButton ellipseToolButton;
     private WidthChanger widthChanger;
+    private JButton eyeDropperToolButton;
     private JButton textToolButton;
+    private JButton fanToolButton;
+    private JButton celticKnotToolButton;
     private JButton paintBucketToolButton;
     private DrawArea drawArea;
 
@@ -80,47 +85,101 @@ public class MainUI {
             } else if (e.getSource() == brushToolButton) {
                 widthChanger.showPanel();
                 selectedDrawingTool = brushTool;
+                updateSizeSlider();
                 drawArea.setColor(brushTool.getColor());
+            } else if (e.getSource() == fanToolButton) {
+                selectedDrawingTool = fanTool;
+                updateSizeSlider();
             } else if (e.getSource() == lineToolButton) {
-                widthChanger.hidePanel();
                 selectedDrawingTool = lineTool;
-            } else if (e.getSource() == squareToolButton) {
-                widthChanger.hidePanel();
-                selectedDrawingTool = squareTool;
-            } else if (e.getSource() == circleToolButton) {
-                widthChanger.hidePanel();
-                selectedDrawingTool = circleTool;
-                drawArea.setColor(circleTool.getColor());
+                updateSizeSlider();
+                drawArea.setColor(lineTool.getColor());
+            } else if (e.getSource() == rectangleToolButton) {
+                selectedDrawingTool = rectangleTool;
+                updateSizeSlider();
+                updateFillState(); // Tool supports filling
+                drawArea.setColor(rectangleTool.getColor());
             } else if (e.getSource() == widthChanger.getJTextFieldComponent()) {
                 widthChanger.setSliderComponent(widthChanger.getJTextFieldValue());
                 widthChanger.setCurrentWidthValue(widthChanger.getJTextFieldValue());
                 drawArea.setColor(brushTool.getColor());
             } else if (e.getSource() == ellipseToolButton) {
-                widthChanger.hidePanel();
                 selectedDrawingTool = ellipseTool;
+                updateSizeSlider();
+                updateFillState(); // Tool supports filling
+                drawArea.setColor(ellipseTool.getColor());
             } else if (e.getSource() == eraserToolButton) {
-                widthChanger.hidePanel();
                 selectedDrawingTool = eraserTool;
+                updateSizeSlider();
             } else if (e.getSource() == textToolButton) {
                 selectedDrawingTool = textTool;
             } else if (e.getSource() == paintBucketToolButton) {
                 selectedDrawingTool = paintBucketTool;
+                updateSizeSlider();
+            } else if (e.getSource() == eyeDropperToolButton) {
+                selectedDrawingTool = eyeDropperTool;
+            } else if (e.getSource() == celticKnotToolButton) {
+                selectedDrawingTool = celticKnotTool;
+                updateSizeSlider();
+            }
+
+            if (e.getSource() == widthChanger.getCheckBoxGlobalSizeComponent()) {
+                if (widthChanger.isGlobalSize()) {
+                    widthChanger.setGlobalSize(false);
+                } else {
+                    widthChanger.setGlobalSize(true);
+                }
+            }
+
+            if (e.getSource() == widthChanger.getFillBox()) {
+                widthChanger.setFill(!widthChanger.isFill());
+                selectedDrawingTool.setFillState(widthChanger.isFill());
             }
         }
     };
 
 
+    /**
+     * Class to listen for changes in the widthChanger slider.
+     */
     public class listenForSlider implements ChangeListener {
         @Override
         public void stateChanged(ChangeEvent e) {
-
             if (e.getSource() == widthChanger.getSliderComponent()) {
-                brushTool.setBrushWidth(widthChanger.getCurrentWidthValue());
-                widthChanger.setCurrentWidthValue(brushTool.getBrushWidth());
+                selectedDrawingTool.setToolWidth(widthChanger.getCurrentWidthValue());
+                widthChanger.setCurrentWidthValue(selectedDrawingTool.getToolWidth());
                 widthChanger.setJLabel();
-                //   widthChanger.setSizeTextField();
             }
         }
+    }
+
+
+    /**
+     * When a new brushTool is selected this method
+     * will update the size panel to the current brush tool
+     * values
+     * if global is ticked then all the tool sizes change to current size
+     * if global not ticked the component size can be different for each tool
+     */
+    public void updateSizeSlider() {
+        if (!widthChanger.isGlobalSize()) {
+            widthChanger.setCurrentWidthValue(selectedDrawingTool.getToolWidth());
+            widthChanger.setSliderComponent(selectedDrawingTool.getToolWidth());
+            widthChanger.setJLabel();
+        } else {
+            selectedDrawingTool.setToolWidth(widthChanger.getCurrentWidthValue());
+            widthChanger.setCurrentWidthValue(selectedDrawingTool.getToolWidth());
+            widthChanger.setJLabel();
+        }
+    }
+
+
+    /**
+     * When a new tool is selected, tools that support filling will set their
+     * fill state to the fill checkbox.
+     */
+    public void updateFillState() {
+        selectedDrawingTool.setFillState(widthChanger.isFill());
     }
 
     /**
@@ -147,7 +206,7 @@ public class MainUI {
         // mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
         drawArea = new DrawArea();
-        // ideally this should be in its own sliderPanel with a proper scale, not directly to mainContent
+        // ideally this should be in its own widthPanel with a proper scale, not directly to mainContent
         mainContent.add(drawArea, BorderLayout.CENTER);
 
         clearButton = new JButton(CLEAR_BUTTON_TEXT);
@@ -156,16 +215,20 @@ public class MainUI {
         brushToolButton.addActionListener(actionListener);
         lineToolButton = new JButton(LINE_TOOL_BUTTON_TEXT);
         lineToolButton.addActionListener(actionListener);
-        squareToolButton = new JButton(SQUARE_TOOL_BUTTON_TEXT);
-        squareToolButton.addActionListener(actionListener);
-        circleToolButton = new JButton(CIRCLE_TOOL_BUTTON_TEXT);
-        circleToolButton.addActionListener(actionListener);
+        rectangleToolButton = new JButton(RECTANGLE_TOOL_BUTTON_TEXT);
+        rectangleToolButton.addActionListener(actionListener);
         eraserToolButton = new JButton(ERASER_TOOL_BUTTON_TEXT);
         eraserToolButton.addActionListener(actionListener);
         ellipseToolButton = new JButton(ELLIPSE_TOOL_BUTTON_TEXT);
         ellipseToolButton.addActionListener(actionListener);
         textToolButton = new JButton(TEXT_TOOL_BUTTON_TEXT);
         textToolButton.addActionListener(actionListener);
+        eyeDropperToolButton = new JButton(EYEDROPPER_TOOL_BUTTON_TEXT);
+        eyeDropperToolButton.addActionListener(actionListener);
+        fanToolButton = new JButton(FAN_TOOL_BUTTON_TEXT);
+        fanToolButton.addActionListener(actionListener);
+        celticKnotToolButton = new JButton(CELTIC_KNOT_TOOL_BUTTON_TEXT);
+        celticKnotToolButton.addActionListener(actionListener);
         paintBucketToolButton = new JButton(PAINT_BUCKET_BUTTON_TEXT);
         paintBucketToolButton.addActionListener(actionListener);
 
@@ -176,13 +239,15 @@ public class MainUI {
         canvasTools.add(clearButton);
         canvasTools.add(brushToolButton);
         canvasTools.add(lineToolButton);
-        canvasTools.add(squareToolButton);
-        canvasTools.add(circleToolButton);
+        canvasTools.add(rectangleToolButton);
         canvasTools.add(ellipseToolButton);
         canvasTools.add(eraserToolButton);
         canvasTools.add(textToolButton);
         canvasTools.add(paintBucketToolButton);
 
+        canvasTools.add(eyeDropperToolButton);
+        canvasTools.add(fanToolButton);
+        canvasTools.add(celticKnotToolButton);
 
         widthChanger = new WidthChanger();
         widthChanger.renderPanel();
@@ -190,9 +255,10 @@ public class MainUI {
         MainUI.listenForSlider listenForSlider = new MainUI.listenForSlider();
         widthChanger.getSliderComponent().addChangeListener(listenForSlider);
         widthChanger.getJTextFieldComponent().addActionListener(actionListener);
-
+        widthChanger.getCheckBoxGlobalSizeComponent().addActionListener(actionListener);
+        widthChanger.getFillBox().addActionListener(actionListener);
+        mainContent.add(widthChanger.getGUI(), BorderLayout.NORTH);
         mainContent.add(canvasTools, BorderLayout.WEST);
-        mainContent.add(widthChanger.getGUI(), BorderLayout.SOUTH);
 
         ColorChooser colourChooser = new ColorChooser();
         JPanel editorPanel = new JPanel();
@@ -202,6 +268,14 @@ public class MainUI {
         mainContent.add(editorPanel, BorderLayout.EAST);
 
         prepareMenuBar();
+    }
+
+    /**
+     * Return the currently selected drawing tool.
+     *
+     */
+    public DrawingTool getSelectedDrawingTool() {
+        return selectedDrawingTool;
     }
 
     /**
@@ -231,12 +305,14 @@ public class MainUI {
     private void initDrawingTools() {
         lineTool = new LineTool();
         brushTool = new BrushTool();
-        squareTool = new SquareTool();
-        circleTool = new CircleTool();
+        rectangleTool = new RectangleTool();
         eraserTool = new EraserTool(drawArea); // Requires drawArea due to requiring the canvas colour.
         ellipseTool = new EllipseTool();
+        eyeDropperTool = new EyeDropperTool(widthChanger); // Requires widthChanger UI element for direct text update.
         selectedDrawingTool = brushTool;
         textTool = new TextTool();
+        fanTool = new FanTool();
+        celticKnotTool = new CelticKnotTool();
         paintBucketTool = new PaintBucketTool();
     }
 

@@ -19,14 +19,8 @@ public class BrushTool extends DrawingTool {
     private Color color;
     private int brushWidth;
     private Graphics2D layer1Graphics;
+    private final int DEFAULT_STOKE_VALUE = 10;
 
-    public int getBrushWidth() {
-        return brushWidth;
-    }
-
-    public void setBrushWidth(int brushWidth) {
-        this.brushWidth = brushWidth;
-    }
 
     /**
      * The constructor sets the properties of the tool to their default values
@@ -38,7 +32,7 @@ public class BrushTool extends DrawingTool {
         lastY = 0;
         currentX = 0;
         currentY = 0;
-        brushWidth = 10;
+        brushWidth = DEFAULT_STOKE_VALUE;
     }
 
     @Override
@@ -88,6 +82,14 @@ public class BrushTool extends DrawingTool {
         return ColorChooser.getColor();
     }
 
+    public int getToolWidth() {
+        return brushWidth;
+    }
+
+    public void setToolWidth(int brushWidth) {
+        this.brushWidth = brushWidth;
+    }
+
     /**
      * Add a new observer to ColorChooser. Selecting a color in ColorChooser will update the color in this class.
      */
@@ -111,7 +113,12 @@ public class BrushTool extends DrawingTool {
         layer1Graphics = (Graphics2D) layers[0].getGraphics();
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         layer1Graphics.setColor(color);
-        layer1Graphics.setStroke(new BasicStroke(getBrushWidth(), BasicStroke.CAP_ROUND,    // End-cap style
-                BasicStroke.JOIN_ROUND));
+        layer1Graphics.setStroke(new BasicStroke(getToolWidth(), BasicStroke.CAP_ROUND,    // End-cap style
+                BasicStroke.CAP_BUTT));
+    }
+
+    @Override
+    public void setFillState(boolean fillState) {
+
     }
 }
