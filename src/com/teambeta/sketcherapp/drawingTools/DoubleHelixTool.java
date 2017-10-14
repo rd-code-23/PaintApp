@@ -15,28 +15,29 @@ import java.awt.image.BufferedImage;
  */
 public class DoubleHelixTool extends DrawingTool {
 
-    private double amplitude;
-    private double bValue;
-    private int xDifferenceToOrigin;
-
     private final double TWO_PI = 2.0 * Math.PI;
     private final double DEFAULT_AMPLITUDE = 100.0;
     private final double DEFAULT_PERIOD = 400.0;
     private final double EPSILON = 0.035;
     private final double HALF_PERIOD_RATIO = 0.5;
-
+    private final double LOWER_WAVE_PHASE_SHIFT = DEFAULT_PERIOD / 3;
+    private final double BAR_REDUCTION_FACTOR = 0.75;
     private final int FIRST_HALF_PERIOD_BAR_START_INDEX = 0;
     private final int FIRST_HALF_PERIOD_BAR_END_INDEX = 3;
     private final int SECOND_HALF_PERIOD_BAR_START_INDEX = 4;
     private final int SECOND_HALF_PERIOD_BAR_END_INDEX = 7;
 
-    private CartesianPoint firstWaveUpper;
-    private CartesianPoint firstWaveLower;
+    private CartesianPoint upperWave;
+    private CartesianPoint lowerWave;
     private CartesianPoint[] pointContainer;
 
-    private int currentY;
     private int currentX;
+    private int currentY;
     private int lastX;
+    private int xDifferenceToOrigin;
+    private double amplitude;
+    private double bValue;
+    private double currentPeriodRatio;
     private boolean inFirstHalfPeriod;
 
 
@@ -61,17 +62,18 @@ public class DoubleHelixTool extends DrawingTool {
         currentX = 0;
         currentY = 0;
         xDifferenceToOrigin = 0;
+        currentPeriodRatio = 0;
         amplitude = DEFAULT_AMPLITUDE;
         bValue = TWO_PI / DEFAULT_PERIOD;
         brushWidth = DEFAULT_STOKE_VALUE;
         inFirstHalfPeriod = false;
 
-        firstWaveUpper = new CartesianPoint();
-        firstWaveLower = new CartesianPoint();
+        upperWave = new CartesianPoint();
+        lowerWave = new CartesianPoint();
 
         pointContainer = new CartesianPoint[2];
-        pointContainer[0] = firstWaveUpper;
-        pointContainer[1] = firstWaveLower;
+        pointContainer[0] = upperWave;
+        pointContainer[1] = lowerWave;
     }
 
     @Override
@@ -80,16 +82,16 @@ public class DoubleHelixTool extends DrawingTool {
         currentY = e.getY();
         xDifferenceToOrigin += (currentX - lastX);
 
-        firstWaveUpper.setCurrent(currentX,
+        upperWave.setCurrent(currentX,
                 (currentY +
                         (int)(amplitude * Math.sin(bValue * (double) xDifferenceToOrigin))));
-        firstWaveLower.setCurrent(currentX,
+        lowerWave.setCurrent(currentX,
                 (currentY +
-                        (int)(amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - (DEFAULT_PERIOD/3))))));
+                        (int)(amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - LOWER_WAVE_PHASE_SHIFT)))));
 
-        double periodRatio = Math.abs(((xDifferenceToOrigin % DEFAULT_PERIOD) / DEFAULT_PERIOD));
+        currentPeriodRatio = Math.abs(((xDifferenceToOrigin % DEFAULT_PERIOD) / DEFAULT_PERIOD));
 
-        if (Math.abs(periodRatio) < HALF_PERIOD_RATIO) {
+        if (Math.abs(currentPeriodRatio) < HALF_PERIOD_RATIO) {
             // First half-period
 
             // Prepare the second half-period for drawing.
@@ -102,7 +104,7 @@ public class DoubleHelixTool extends DrawingTool {
             }
 
             for (int i = FIRST_HALF_PERIOD_BAR_START_INDEX; i <= FIRST_HALF_PERIOD_BAR_END_INDEX; ++i) {
-                drawLegalBar(i, periodRatio);
+                drawLegalBar(i, currentPeriodRatio);
             }
 
         } else {
@@ -118,7 +120,7 @@ public class DoubleHelixTool extends DrawingTool {
             }
 
             for (int i = SECOND_HALF_PERIOD_BAR_START_INDEX; i <= SECOND_HALF_PERIOD_BAR_END_INDEX; ++i) {
-                drawLegalBar(i, periodRatio);
+                drawLegalBar(i, currentPeriodRatio);
             }
         }
 
@@ -156,9 +158,10 @@ public class DoubleHelixTool extends DrawingTool {
         currentY = e.getY();
         lastX = currentX;
         xDifferenceToOrigin = 0;
+        currentPeriodRatio = 0;
 
-        firstWaveUpper.setCurrent(currentX, currentY);
-        firstWaveLower.setCurrent(currentX, currentY);
+        upperWave.setCurrent(currentX, currentY);
+        lowerWave.setCurrent(currentX, currentY);
 
         inFirstHalfPeriod = false;
         for (CartesianPoint point : pointContainer) {
@@ -230,11 +233,11 @@ public class DoubleHelixTool extends DrawingTool {
      */
     private void drawBarBetweenWaves() {
         int originalBrushWidth = getToolWidth();
-        double barBrushWidth = originalBrushWidth * (3.0/4.0); // Expected integer precision loss.
+        double barBrushWidth = originalBrushWidth * BAR_REDUCTION_FACTOR; // Expected integer precision loss.
         layer1Graphics.setStroke(new BasicStroke((int) barBrushWidth, BasicStroke.CAP_ROUND,
                 BasicStroke.CAP_BUTT));
-        layer1Graphics.drawLine(firstWaveLower.getXCurrent(), firstWaveLower.getYCurrent(),
-                                firstWaveUpper.getXCurrent(), firstWaveUpper.getYCurrent());
+        layer1Graphics.drawLine(lowerWave.getXCurrent(), lowerWave.getYCurrent(),
+                                upperWave.getXCurrent(), upperWave.getYCurrent());
         layer1Graphics.setStroke(new BasicStroke(originalBrushWidth, BasicStroke.CAP_ROUND,
                 BasicStroke.CAP_BUTT));
     }
