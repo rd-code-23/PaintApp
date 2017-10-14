@@ -215,7 +215,7 @@ public class DoubleHelixTool extends DrawingTool {
         layer1Graphics = (Graphics2D) layers[0].getGraphics();
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         layer1Graphics.setColor(color);
-        layer1Graphics.setStroke(new BasicStroke(getToolWidth(), BasicStroke.CAP_ROUND,    // End-cap style
+        layer1Graphics.setStroke(new BasicStroke(getToolWidth(), BasicStroke.CAP_ROUND,
                 BasicStroke.CAP_BUTT));
     }
 
@@ -228,7 +228,7 @@ public class DoubleHelixTool extends DrawingTool {
      * Draw a line between the sine waves at their current render point.
      * This line will be ~75% the brush width of the main wave.
      */
-    private void drawLineBetweenWaves() {
+    private void drawBarBetweenWaves() {
         int originalBrushWidth = getToolWidth();
         double barBrushWidth = originalBrushWidth * (3.0/4.0); // Expected integer precision loss.
         layer1Graphics.setStroke(new BasicStroke((int) barBrushWidth, BasicStroke.CAP_ROUND,
@@ -240,24 +240,14 @@ public class DoubleHelixTool extends DrawingTool {
     }
 
     /**
-     * Check if the specified bar was drawn.
-     *
-     * @param bar The bar to check (index start from 1)
-     * @return If it was drawn
-     */
-    private boolean getBarDrawn(int bar) {
-        return periodBars[bar - 1];
-    }
-
-    /**
      * Draw a bar between the waves given that it is allowed to.
      * @param bar_index The bar index number
      * @param period_ratio The period ratio at the current point
      */
     private void drawLegalBar(int bar_index, double period_ratio) {
-        if (Math.abs(period_ratio - barRatios[bar_index]) < EPSILON && !getBarDrawn(bar_index + 1)) {
+        if ((Math.abs(period_ratio - barRatios[bar_index]) < EPSILON) && !(periodBars[bar_index])) {
             periodBars[bar_index] = true;
-            drawLineBetweenWaves();
+            drawBarBetweenWaves();
         }
     }
 
