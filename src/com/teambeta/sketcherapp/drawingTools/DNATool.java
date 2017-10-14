@@ -19,7 +19,6 @@ public class DNATool extends DrawingTool {
     private final double TWO_PI = 2.0 * Math.PI;
     private final double DEFAULT_AMPLITUDE = 100.0;
     private final double DEFAULT_PERIOD = 400.0;
-    private final double EPSILON = 0.035;
     private final double HALF_PERIOD_RATIO = 0.5;
     private final double LOWER_WAVE_PHASE_SHIFT = DEFAULT_PERIOD / 3;
     private final double BAR_REDUCTION_FACTOR = 0.75;
@@ -270,7 +269,7 @@ public class DNATool extends DrawingTool {
      * @param period_ratio The period ratio at the current point
      */
     private void drawLegalBar(int bar_index, double period_ratio) {
-        if ((Math.abs(period_ratio - barRatios[bar_index]) < EPSILON) && !(periodBars[bar_index])) {
+        if ((Math.abs(period_ratio) >= barRatios[bar_index]) && !(periodBars[bar_index])) {
             periodBars[bar_index] = true;
             drawBarBetweenWaves();
         }
