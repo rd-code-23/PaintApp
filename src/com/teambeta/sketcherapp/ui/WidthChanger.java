@@ -33,11 +33,10 @@ public class WidthChanger {
     private static final String EYEDROPPER_TEXTFIELD_SPACE = " ";
 
     private JPanel sliderPanel = new JPanel();
-    JPanel widthPanel = new JPanel();
+    private JPanel widthPanel = new JPanel();
     private JSlider widthSlider;          // lets user change currentWidthValue
     private JLabel panelLabel;      //used to describe the panel for the user
     private JTextField widthTextField;    //lets user change currentWidthValue
-    private int currentWidthValue = 0;
     private int currentWidthValue = 0;
     private JCheckBox globalSize;          //if global is ticked then all the tool sizes change to current size
     //if global not ticked the component size can be different for each tool
@@ -224,6 +223,7 @@ public class WidthChanger {
 
     /**
      * Get the fill state checkbox for manipulations.
+     *
      * @return The fill state JCheckBox
      */
     public JCheckBox getFillBox() {
@@ -232,6 +232,7 @@ public class WidthChanger {
 
     /**
      * Determine if the fill state is enabled
+     *
      * @return The fill state
      */
     public boolean isFill() {
@@ -241,6 +242,7 @@ public class WidthChanger {
 
     /**
      * Update the fill state for supporting tools.
+     *
      * @param state The state for filling
      */
     public void setFill(boolean state) {
@@ -248,7 +250,6 @@ public class WidthChanger {
     }
 
     /**
-     *
      * @return The eye dropper text field to be used by the eye dropper tool
      */
     public JTextField getEyeDropperTextField() {
@@ -257,15 +258,14 @@ public class WidthChanger {
 
     /**
      * Update the eye dropper text field with a color object.
+     *
      * @param color The color to be parsed
      */
     public void updateEyeDropperTextField(Color color) {
         eyeDropperTextField.setText(EYEDROPPER_TEXTFIELD_RED_PREFIX + color.getRed()
-                                    + EYEDROPPER_TEXTFIELD_SPACE
-                                    + EYEDROPPER_TEXTFIELD_GREEN_PREFIX + color.getGreen()
-                                    + EYEDROPPER_TEXTFIELD_SPACE
-                                    + EYEDROPPER_TEXTFIELD_BLUE_PREFIX + color.getBlue());
+                + EYEDROPPER_TEXTFIELD_SPACE
+                + EYEDROPPER_TEXTFIELD_GREEN_PREFIX + color.getGreen()
+                + EYEDROPPER_TEXTFIELD_SPACE
+                + EYEDROPPER_TEXTFIELD_BLUE_PREFIX + color.getBlue());
     }
-
-
 }

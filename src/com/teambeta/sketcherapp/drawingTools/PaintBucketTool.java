@@ -62,14 +62,8 @@ public class PaintBucketTool extends DrawingTool {
         DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
 
-    //see https://en.wikipedia.org/wiki/Flood_fill
     private void floodFill(BufferedImage layer, int x, int y, Color colorToReplace) {
-        //floodFillAlgorithm1(layer, x, y, colorToReplace);
-        floodFillAlgorithm2(layer, x, y, colorToReplace);
-    }
-
-    private void floodFillAlgorithm2(BufferedImage layer, int x, int y, Color colorToReplace) {
-        //TODO:fix problem with anti-aliasing causing caps in the fill
+        //TODO:fix problem with anti-aliasing causing gaps in the fill
         Queue<Integer> xCoordsOfPixelsToColor = new LinkedList<>();
         Queue<Integer> yCoordsOfPixelsToColor = new LinkedList<>();
         int xOfCurrentPixel = x;
@@ -83,18 +77,21 @@ public class PaintBucketTool extends DrawingTool {
             return;
         }
         int eastMostXCoord;
+        int downPixelY;
+        int upPixelY;
         int westMostXCoord;
         Graphics2D layer1Graphics = (Graphics2D) layer.getGraphics();
         layer1Graphics.setColor(this.color);
 
-        while (!xCoordsOfPixelsToColor.isEmpty()) {
+        while (!xCoordsOfPixelsToColor.isEmpty() || !yCoordsOfPixelsToColor.isEmpty()) {
             xOfCurrentPixel = xCoordsOfPixelsToColor.remove();
             yOfCurrentPixel = yCoordsOfPixelsToColor.remove();
             eastMostXCoord = xOfCurrentPixel;
             westMostXCoord = xOfCurrentPixel;
 
-            int downPixelY = yOfCurrentPixel - 1;
-            int upPixelY = yOfCurrentPixel + 1;
+            downPixelY = yOfCurrentPixel - 1;
+            //TODO: find out why +2 works and not +1.
+            upPixelY = yOfCurrentPixel + 2;
             while (eastMostXCoord < layer.getWidth() &&
                     layer.getRGB(eastMostXCoord, yOfCurrentPixel) == colorToReplaceRGB) {
                 if (downPixelY < layer.getHeight() && (downPixelY >= 0) &&
@@ -112,7 +109,7 @@ public class PaintBucketTool extends DrawingTool {
             while (westMostXCoord >= 0 &&
                     (layer.getRGB(westMostXCoord, yOfCurrentPixel) - colorToReplaceRGB) == 0) {
                 if (downPixelY < layer.getHeight() && (downPixelY >= 0) &&
-                        layer.getRGB(westMostXCoord, downPixelY) == colorToReplaceRGB) {
+                        layer.getRGB(westMostXCoord, downPixelY) - colorToReplaceRGB == 0) {
                     xCoordsOfPixelsToColor.add(westMostXCoord);
                     yCoordsOfPixelsToColor.add(downPixelY);
                 }
@@ -130,87 +127,23 @@ public class PaintBucketTool extends DrawingTool {
         }
     }
 
-    private void floodFillAlgorithm1(BufferedImage layer, int x, int y, Color colorToReplace) {
-        Queue<Integer> xCoordsOfPixelsToColor = new LinkedList<>();
-        Queue<Integer> yCoordsOfPixelsToColor = new LinkedList<>();
-        int xOfCurrentPixel = x;
-        int yOfCurrentPixel = y;
-        xCoordsOfPixelsToColor.add(xOfCurrentPixel);
-        yCoordsOfPixelsToColor.add(yOfCurrentPixel);
-        int replacementColorRGB = this.color.getRGB();
-        int colorToReplaceRGB = colorToReplace.getRGB();
+    @Override
+    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
 
-        //repeat until the queue is empty.
-        while (!xCoordsOfPixelsToColor.isEmpty()) {
-            //color the current pixel
-            xOfCurrentPixel = xCoordsOfPixelsToColor.remove();
-            yOfCurrentPixel = yCoordsOfPixelsToColor.remove();
-            layer.setRGB(xOfCurrentPixel, yOfCurrentPixel, replacementColorRGB);
-            //put the adjacent pixels of the target color into the queue.
-            boolean isLeftPixelInBounds = xOfCurrentPixel - 1 >= 0;
-            boolean isRightPixelInBounds = xOfCurrentPixel + 1 <= layer.getWidth();
-            boolean isUpPixelInBounds = yOfCurrentPixel + 1 <= layer.getHeight();
-            boolean isDownPixelInBounds = yOfCurrentPixel - 1 >= 0;
-
-            boolean isLeftPixelOfTargetColor = isLeftPixelInBounds &&
-                    (layer.getRGB(xOfCurrentPixel - 1, yOfCurrentPixel) == colorToReplaceRGB);
-            boolean isUpLeftPixelOfTargetColor = isLeftPixelInBounds && isUpPixelInBounds &&
-                    (layer.getRGB(xOfCurrentPixel - 1, yOfCurrentPixel + 1) == colorToReplaceRGB);
-            boolean isUpPixelOfTargetColor = isUpPixelInBounds &&
-                    (layer.getRGB(xOfCurrentPixel, yOfCurrentPixel + 1) == colorToReplaceRGB);
-            boolean isUpRightPixelOfTargetColor = isUpPixelInBounds && isRightPixelInBounds &&
-                    (layer.getRGB(xOfCurrentPixel + 1, yOfCurrentPixel + 1) == colorToReplaceRGB);
-            boolean isRightPixelOfTargetColor = isRightPixelInBounds &&
-                    (layer.getRGB(xOfCurrentPixel + 1, yOfCurrentPixel) == colorToReplaceRGB);
-            boolean isRightDownPixelOfTargetColor = isRightPixelInBounds && isDownPixelInBounds &&
-                    (layer.getRGB(xOfCurrentPixel + 1, yOfCurrentPixel - 1) == colorToReplaceRGB);
-            boolean isDownPixelOfTargetColor = isDownPixelInBounds &&
-                    (layer.getRGB(xOfCurrentPixel, yOfCurrentPixel - 1) == colorToReplaceRGB);
-            boolean isDownLeftPixelOfTargetColor = isDownPixelInBounds && isLeftPixelInBounds &&
-                    (layer.getRGB(xOfCurrentPixel - 1, yOfCurrentPixel - 1) == colorToReplaceRGB);
-
-            if (isLeftPixelOfTargetColor) {
-                xCoordsOfPixelsToColor.add(xOfCurrentPixel - 1);
-                yCoordsOfPixelsToColor.add(yOfCurrentPixel);
-            }
-            if (isUpLeftPixelOfTargetColor) {
-                xCoordsOfPixelsToColor.add(xOfCurrentPixel - 1);
-                yCoordsOfPixelsToColor.add(yOfCurrentPixel + 1);
-            }
-            if (isUpPixelOfTargetColor) {
-                xCoordsOfPixelsToColor.add(xOfCurrentPixel);
-                yCoordsOfPixelsToColor.add(yOfCurrentPixel + 1);
-            }
-
-            if (isUpRightPixelOfTargetColor) {
-                xCoordsOfPixelsToColor.add(xOfCurrentPixel + 1);
-                yCoordsOfPixelsToColor.add(yOfCurrentPixel + 1);
-            }
-
-            if (isRightPixelOfTargetColor) {
-                xCoordsOfPixelsToColor.add(xOfCurrentPixel + 1);
-                yCoordsOfPixelsToColor.add(yOfCurrentPixel);
-            }
-
-            if (isRightDownPixelOfTargetColor) {
-                xCoordsOfPixelsToColor.add(xOfCurrentPixel + 1);
-                yCoordsOfPixelsToColor.add(yOfCurrentPixel - 1);
-            }
-
-            if (isDownPixelOfTargetColor) {
-                xCoordsOfPixelsToColor.add(xOfCurrentPixel);
-                yCoordsOfPixelsToColor.add(yOfCurrentPixel - 1);
-            }
-
-            if (isDownLeftPixelOfTargetColor) {
-                xCoordsOfPixelsToColor.add(xOfCurrentPixel - 1);
-                yCoordsOfPixelsToColor.add(yOfCurrentPixel - 1);
-            }
-        }
     }
 
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public int getToolWidth() {
+        return 0;
+    }
+
+    @Override
+    public void setToolWidth(int width) {
+
+    }
+
+    @Override
+    public void setFillState(boolean fillState) {
 
     }
 }

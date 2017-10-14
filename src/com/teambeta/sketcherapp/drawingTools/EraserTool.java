@@ -111,5 +111,5 @@ public class EraserTool extends DrawingTool {
 
     public void setFillState(boolean fillState) {
 
-    };
+    }
 }

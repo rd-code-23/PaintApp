@@ -66,7 +66,7 @@ public class RectangleTool extends DrawingTool {
         previewLayerGraphics.setColor(color);
 
 
-        calcSquareCoordinateData(e);
+        calcSquareCoordinateData(e, layers, canvas);
         //draw the square preview onto its layer.
         previewLayerGraphics.drawRect(initX, initY, drawWidthX, drawHeightY);
 
@@ -80,7 +80,7 @@ public class RectangleTool extends DrawingTool {
 
     @Override
     public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        calcSquareCoordinateData(e);
+        calcSquareCoordinateData(e,layers,canvas);
 
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -90,7 +90,7 @@ public class RectangleTool extends DrawingTool {
         DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
 
-    private void calcSquareCoordinateData(MouseEvent e) {
+    private void calcSquareCoordinateData(MouseEvent e, BufferedImage[] layers, BufferedImage canvas) {
         // Get the coordinates of where the user released the mouse.
         currentX = e.getX();
         currentY = e.getY();

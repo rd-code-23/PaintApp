@@ -173,7 +173,6 @@ public class MainUI {
         }
     }
 
-
     /**
      * When a new tool is selected, tools that support filling will set their
      * fill state to the fill checkbox.
@@ -272,7 +271,6 @@ public class MainUI {
 
     /**
      * Return the currently selected drawing tool.
-     *
      */
     public DrawingTool getSelectedDrawingTool() {
         return selectedDrawingTool;

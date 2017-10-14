@@ -55,8 +55,6 @@ public class DrawArea extends JComponent {
                 repaint();
             }
         });
-
-
     }
 
     public static void clearBufferImageToTransparent(BufferedImage bufferedImage) {

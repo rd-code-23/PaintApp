@@ -49,7 +49,7 @@ public class EllipseTool extends DrawingTool {
     @Override
     public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         // canvas.getGraphics().setColor(color);
-        calcEllipseCoordinateData(e);
+        calcEllipseCoordinateData(e, layers, canvas);
 
         if (previewLayer == null) {
             //previewLayer = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -69,7 +69,7 @@ public class EllipseTool extends DrawingTool {
         canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         previewLayerGraphics.setColor(color);
 
-        calcEllipseCoordinateData(e);
+        calcEllipseCoordinateData(e, layers, canvas);
 
         //draw the circle preview onto the preview layer
         previewLayerGraphics.drawOval(initX, initY, drawWidthX, drawHeightY);
@@ -84,7 +84,7 @@ public class EllipseTool extends DrawingTool {
 
     @Override
     public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        calcEllipseCoordinateData(e);
+        calcEllipseCoordinateData(e, layers, canvas);
 
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -94,7 +94,7 @@ public class EllipseTool extends DrawingTool {
         DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
 
-    private void calcEllipseCoordinateData(MouseEvent e) {
+    private void calcEllipseCoordinateData(MouseEvent e, BufferedImage[] layers, BufferedImage canvas) {
         // Get the coordinates of where the user released the mouse.
         currentX = e.getX();
         currentY = e.getY();
@@ -109,7 +109,7 @@ public class EllipseTool extends DrawingTool {
                 drawHeightY = yAxisMagnitudeDelta;
             } else {
                 drawWidthX = xAxisMagnitudeDelta;
-                drawHeightY= xAxisMagnitudeDelta;
+                drawHeightY = xAxisMagnitudeDelta;
             }
         } else {
             drawWidthX = xAxisMagnitudeDelta;
@@ -152,12 +152,12 @@ public class EllipseTool extends DrawingTool {
 
     @Override
     public int getToolWidth() {
-       return ellipseWidth;
+        return ellipseWidth;
     }
 
     @Override
     public void setToolWidth(int width) {
-    ellipseWidth = width;
+        ellipseWidth = width;
     }
 
     /**
