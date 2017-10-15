@@ -274,8 +274,14 @@ public class MainUI {
         canvasTools.add(celticKnotToolButton);
         canvasTools.add(exportButton);
 
+        JPanel northPanels = new JPanel();
+        northPanels.setLayout(new BorderLayout());
+        MenuUI menuUI = new MenuUI();
+        northPanels.add(menuUI, BorderLayout.NORTH);
+
         widthChanger = new WidthChanger();
         widthChanger.renderPanel();
+        northPanels.add(widthChanger.getGUI(), BorderLayout.CENTER);
 
         MainUI.listenForSlider listenForSlider = new MainUI.listenForSlider();
         widthChanger.getSliderComponent().addChangeListener(listenForSlider);
@@ -283,9 +289,7 @@ public class MainUI {
         widthChanger.getCheckBoxGlobalSizeComponent().addActionListener(actionListener);
         widthChanger.getFillBox().addActionListener(actionListener);
 
-        mainContent.add(widthChanger.getGUI(), BorderLayout.NORTH);
         mainContent.add(canvasTools, BorderLayout.WEST);
-
 
         ColorChooser colourChooser = new ColorChooser();
         JPanel editorPanel = new JPanel();
@@ -294,8 +298,7 @@ public class MainUI {
         editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
         mainContent.add(editorPanel, BorderLayout.EAST);
 
-        MenuUI menuUI = new MenuUI();
-        mainFrame.add(menuUI, BorderLayout.NORTH);
+        mainContent.add(northPanels, BorderLayout.NORTH);
     }
 
     /**
