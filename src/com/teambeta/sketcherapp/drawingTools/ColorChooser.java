@@ -50,7 +50,13 @@ public class ColorChooser extends JPanel {
      * Changes color for the graphic selector.
      */
     private void changeColor() {
+        Color previousColor = getColor();
         color = JColorChooser.showDialog(null, "Select a Color", color);
+        // Canceling or exiting the colour panel will return null and break everything.
+        // Store the previous colour and keep it if null is encountered.
+        if (color == null) {
+            color = previousColor;
+        }
         paintComponent(getGraphics());
         notifyObservers();
     }
