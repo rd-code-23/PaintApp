@@ -36,14 +36,13 @@ public class DNATool extends DrawingTool {
     private int currentY;
     private int lastX;
     private int xDifferenceToOrigin;
+    private int switchPointX;
     private double amplitude;
     private double bValue;
     private double currentPeriodRatio;
     private boolean inFirstHalfPeriod;
     private boolean wasGoingRight;
-
-    int switchPointX;
-    boolean switchPointSet = false;
+    private boolean switchPointSet;
 
     // Access bar by n-1;
     private boolean[] periodBars = {false, false, false, false,
@@ -70,6 +69,8 @@ public class DNATool extends DrawingTool {
         currentY = 0;
         xDifferenceToOrigin = 0;
         currentPeriodRatio = 0;
+        switchPointX = 0;
+        switchPointSet = false;
         amplitude = DEFAULT_AMPLITUDE;
         bValue = TWO_PI / DEFAULT_PERIOD;
         brushWidth = DEFAULT_STOKE_VALUE;
