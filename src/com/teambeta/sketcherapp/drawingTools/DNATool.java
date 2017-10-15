@@ -26,6 +26,7 @@ public class DNATool extends DrawingTool {
     private final int FIRST_HALF_PERIOD_BAR_END_INDEX = 3;
     private final int SECOND_HALF_PERIOD_BAR_START_INDEX = 4;
     private final int SECOND_HALF_PERIOD_BAR_END_INDEX = 7;
+    private final int MAXIMUM_ALLOWABLE_X_AXIS_DRIFT = 5;
 
     private CartesianPoint upperWave;
     private CartesianPoint lowerWave;
@@ -40,6 +41,9 @@ public class DNATool extends DrawingTool {
     private double currentPeriodRatio;
     private boolean inFirstHalfPeriod;
     private boolean wasGoingRight;
+
+    int switchPointX;
+    boolean switchPointSet = false;
 
     // Access bar by n-1;
     private boolean[] periodBars = {false, false, false, false,
@@ -95,18 +99,27 @@ public class DNATool extends DrawingTool {
 
         currentPeriodRatio = Math.abs(((xDifferenceToOrigin % DEFAULT_PERIOD) / DEFAULT_PERIOD));
 
-        if ((wasGoingRight && currentX < lastX ) || (!wasGoingRight && currentX > lastX)) {
-            for (int i = FIRST_HALF_PERIOD_BAR_START_INDEX; i <= SECOND_HALF_PERIOD_BAR_END_INDEX; ++i) {
-                periodBars[i] = false;
+        // Reset tool state if the direction changes and the difference is greater than a certain requirement.
+        if (wasGoingRight != (currentX >= lastX)) {
+            if (!switchPointSet) {
+                switchPointX = currentX;
+                switchPointSet = true;
             }
-            currentPeriodRatio = 0.0;
-            xDifferenceToOrigin = 0;
-            inFirstHalfPeriod = currentX > lastX;
+
+            if (switchPointSet && ((Math.abs(currentX - switchPointX) > MAXIMUM_ALLOWABLE_X_AXIS_DRIFT))) {
+                for (int i = FIRST_HALF_PERIOD_BAR_START_INDEX; i <= SECOND_HALF_PERIOD_BAR_END_INDEX; ++i) {
+                    periodBars[i] = false;
+                }
+                currentPeriodRatio = 0.0;
+                xDifferenceToOrigin = 0;
+                inFirstHalfPeriod = true;
+                switchPointSet = false;
+            }
         }
 
         wasGoingRight = currentX >= lastX;
 
-        if (Math.abs(currentPeriodRatio) < HALF_PERIOD_RATIO) {
+        if (Math.abs(currentPeriodRatio) <= HALF_PERIOD_RATIO) {
             // First half-period
 
             // Prepare the second half-period for drawing.
