@@ -40,7 +40,6 @@ public class DNATool extends DrawingTool {
     private double amplitude;
     private double bValue;
     private double currentPeriodRatio;
-    private boolean inFirstHalfPeriod;
     private boolean wasGoingRight;
     private boolean switchPointSet;
 
@@ -74,7 +73,6 @@ public class DNATool extends DrawingTool {
         amplitude = DEFAULT_AMPLITUDE;
         bValue = TWO_PI / DEFAULT_PERIOD;
         brushWidth = DEFAULT_STOKE_VALUE;
-        inFirstHalfPeriod = false;
 
         upperWave = new CartesianPoint();
         lowerWave = new CartesianPoint();
@@ -113,7 +111,6 @@ public class DNATool extends DrawingTool {
                 }
                 currentPeriodRatio = 0.0;
                 xDifferenceToOrigin = 0;
-                inFirstHalfPeriod = true;
                 switchPointSet = false;
             }
         }
@@ -128,10 +125,6 @@ public class DNATool extends DrawingTool {
                 periodBars[i] = false;
             }
 
-            if (!inFirstHalfPeriod) {
-                inFirstHalfPeriod = true;
-            }
-
             for (int i = FIRST_HALF_PERIOD_BAR_START_INDEX; i <= FIRST_HALF_PERIOD_BAR_END_INDEX; ++i) {
                 drawLegalBar(i, currentPeriodRatio);
             }
@@ -142,10 +135,6 @@ public class DNATool extends DrawingTool {
             // Prepare the first half-period for drawing.
             for (int i = FIRST_HALF_PERIOD_BAR_START_INDEX; i <= FIRST_HALF_PERIOD_BAR_END_INDEX; ++i) {
                 periodBars[i] = false;
-            }
-
-            if (inFirstHalfPeriod) {
-                inFirstHalfPeriod = false;
             }
 
             for (int i = SECOND_HALF_PERIOD_BAR_START_INDEX; i <= SECOND_HALF_PERIOD_BAR_END_INDEX; ++i) {
@@ -168,7 +157,6 @@ public class DNATool extends DrawingTool {
     @Override
     public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         xDifferenceToOrigin = 0;
-        inFirstHalfPeriod = false;
 
         for (int i = 0; i < periodBars.length; ++i) {
             periodBars[i] = false;
@@ -192,7 +180,6 @@ public class DNATool extends DrawingTool {
         upperWave.setCurrent(currentX, currentY);
         lowerWave.setCurrent(currentX, currentY);
 
-        inFirstHalfPeriod = false;
         for (CartesianPoint point : pointContainer) {
             point.setPreviousFromCurrent();
         }
