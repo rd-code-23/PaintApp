@@ -8,13 +8,14 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 /**
- * The EllipseTool class implements the drawing behavior for when the Ellipse tool has been selected
+ * The RectangleTool class implements the drawing behavior for when the Rectangle tool has been selected
  * <p>
- * Behaviour of the ellipse tool:
+ * Behaviour of the rectangle tool:
+ * - The longest side will take the length of the shortest side.
  * - The end-point relative to the init-point can be in any 4 quadrants.
- * - Draw a circle when the shift button is held on mouse release.
+ * - Draw a square when the shift button is held on mouse release.
  */
-public class EllipseTool extends DrawingTool {
+public class RectangleTool extends DrawingTool {
 
     private int currentY;
     private int currentX;
@@ -22,22 +23,22 @@ public class EllipseTool extends DrawingTool {
     private int initY;
     private int mouseOriginX;
     private int mouseOriginY;
-    private int xAxisMagnitudeDelta;
-    private int yAxisMagnitudeDelta;
     private int drawWidthX;
     private int drawHeightY;
+    private int xAxisMagnitudeDelta;
+    private int yAxisMagnitudeDelta;
     private Color color;
-    private final int DEFAULT_STOKE_VALUE = 10;
-    private int ellipseWidth;
-    private boolean fillShape;
     private BufferedImage previewLayer = null;
+    private int squareWidth;
+    private final int DEFAULT_WIDTH_VALUE = 10;
+    private boolean fillShape;
 
     /**
      * The constructor sets the properties of the tool to their default values
      */
-    public EllipseTool() {
-        color = Color.black;
+    public RectangleTool() {
         registerObservers();
+        color = Color.black;
         initX = 0;
         initY = 0;
         currentX = 0;
@@ -46,14 +47,15 @@ public class EllipseTool extends DrawingTool {
         mouseOriginY = 0;
         drawWidthX = 0;
         drawHeightY = 0;
-        ellipseWidth = DEFAULT_STOKE_VALUE;
+        xAxisMagnitudeDelta = 0;
+        yAxisMagnitudeDelta = 0;
+        squareWidth = DEFAULT_WIDTH_VALUE;
         fillShape = false;
     }
 
     @Override
     public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         if (previewLayer == null) {
-            //previewLayer = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
             previewLayer = DrawArea.getPreviewLayer();
         }
         //clear preview layer
@@ -63,20 +65,21 @@ public class EllipseTool extends DrawingTool {
         Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
         canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         canvasGraphics.setColor(color);
-
         Graphics2D previewLayerGraphics = (Graphics2D) previewLayer.getGraphics();
-        previewLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        previewLayerGraphics.setStroke(new BasicStroke(getToolWidth()));
+        canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         previewLayerGraphics.setColor(color);
+        previewLayerGraphics.setStroke(new BasicStroke(getToolWidth()));
 
-        calcEllipseCoordinateData(e, layers, canvas);
+        calcSquareCoordinateData(e, layers, canvas);
 
-        //draw the circle preview onto the preview layer
-        previewLayerGraphics.drawOval(initX, initY, drawWidthX, drawHeightY);
-        // Draw a filled ellipse/circle if the alt key is down on release.
+        //draw the square preview onto its layer.
+        // Draw a filled rectangle/square if the alt key is down on release.
         if (fillShape) {
-            previewLayerGraphics.fillOval(initX, initY, drawWidthX, drawHeightY);
+            previewLayerGraphics.fillRect(initX, initY, drawWidthX, drawHeightY);
         }
+        previewLayerGraphics.drawRect(initX, initY, drawWidthX, drawHeightY);
+        DrawArea.drawLayersOntoCanvas(layers, canvas);
+
 
         //info: https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
         //draw the preview layer on top of the drawing layer(s)
@@ -88,25 +91,28 @@ public class EllipseTool extends DrawingTool {
 
     @Override
     public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        calcEllipseCoordinateData(e, layers, canvas);
+        calcSquareCoordinateData(e, layers, canvas);
 
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        layer1Graphics.setStroke(new BasicStroke(getToolWidth()));
         layer1Graphics.setColor(color);
-        layer1Graphics.drawOval(initX, initY, drawWidthX, drawHeightY);
-        // Draw a filled ellipse/circle if the alt key is down on release.
+        layer1Graphics.setStroke(new BasicStroke(getToolWidth()));
+
+        // Draw a filled rectangle/square if the alt key is down on release.
         if (fillShape) {
-            layer1Graphics.fillOval(initX, initY, drawWidthX, drawHeightY);
+            layer1Graphics.fillRect(initX, initY, drawWidthX, drawHeightY);
         }
+        layer1Graphics.drawRect(initX, initY, drawWidthX, drawHeightY);
         DrawArea.drawLayersOntoCanvas(layers, canvas);
+
     }
 
-    private void calcEllipseCoordinateData(MouseEvent e, BufferedImage[] layers, BufferedImage canvas) {
+    private void calcSquareCoordinateData(MouseEvent e, BufferedImage[] layers, BufferedImage canvas) {
         // Get the coordinates of where the user released the mouse.
         currentX = e.getX();
         currentY = e.getY();
 
+        // Draw the square with the longest side as long as the shortest side.
         xAxisMagnitudeDelta = Math.abs(currentX - mouseOriginX);
         yAxisMagnitudeDelta = Math.abs(currentY - mouseOriginY);
 
@@ -124,7 +130,7 @@ public class EllipseTool extends DrawingTool {
             drawHeightY = yAxisMagnitudeDelta;
         }
 
-        // Handle cases where the ellipse lies in a quadrant (with origin 0,0 at click) other than IV.
+        // Handle cases where the square lies in a quadrant (with origin 0,0 at click) other than IV.
         if (currentY < mouseOriginY) {
             initY = mouseOriginY - drawHeightY;
         }
@@ -151,18 +157,18 @@ public class EllipseTool extends DrawingTool {
 
     @Override
     public int getToolWidth() {
-        return ellipseWidth;
+        return squareWidth;
     }
 
     @Override
     public void setToolWidth(int width) {
-        ellipseWidth = width;
+        squareWidth = width;
     }
 
     /**
-     * getColor returns the current color the ellipse tool is set to.
+     * getColor returns the current color the square tool is set to.
      *
-     * @return the current Color of the ellipse
+     * @return the current Color of the LineTool
      */
     @Override
     public Color getColor() {
