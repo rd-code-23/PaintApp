@@ -17,6 +17,14 @@ public class DrawArea extends JComponent {
     private Graphics2D graphics;
     private Color backgroundColor;
 
+    public BufferedImage getCanvas() {
+        return canvas;
+    }
+
+    public void setCanvas(BufferedImage canvas) {
+        this.canvas = canvas;
+    }
+
     /**
      * Constructor. Set actions upon mouse press events.
      */

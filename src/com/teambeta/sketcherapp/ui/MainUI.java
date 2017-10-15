@@ -5,13 +5,19 @@ import com.teambeta.sketcherapp.drawingTools.LineTool;
 import com.teambeta.sketcherapp.drawingTools.BrushTool;
 import com.teambeta.sketcherapp.drawingTools.RectangleTool;
 import com.teambeta.sketcherapp.drawingTools.*;
+import javafx.stage.FileChooser;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Main UI class to wrap all GUI elements together.
@@ -75,6 +81,9 @@ public class MainUI {
     private JButton celticKnotToolButton;
     private DrawArea drawArea;
 
+    private JButton exportButton;
+
+
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == clearButton) {
@@ -129,6 +138,25 @@ public class MainUI {
             if (e.getSource() == widthChanger.getFillBox()) {
                 widthChanger.setFill(!widthChanger.isFill());
                 selectedDrawingTool.setFillState(widthChanger.isFill());
+            }
+
+
+            if (e.getSource() == exportButton) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setCurrentDirectory(new java.io.File("C:\\"));
+                fileChooser.setDialogTitle("Save Canvas");
+                int retrieval = fileChooser.showSaveDialog(null);
+
+                if (retrieval == JFileChooser.APPROVE_OPTION) {
+                    File file = null;
+                    //write image to a file
+                    try {
+                        file = new File(fileChooser.getSelectedFile() + ".png");
+                        ImageIO.write(drawArea.getCanvas(), "png", file);
+                    } catch (IOException exc) {
+                        exc.printStackTrace();
+                    }
+                }
             }
         }
     };
@@ -224,6 +252,8 @@ public class MainUI {
         fanToolButton.addActionListener(actionListener);
         celticKnotToolButton = new JButton(CELTIC_KNOT_TOOL_BUTTON_TEXT);
         celticKnotToolButton.addActionListener(actionListener);
+        exportButton = new JButton("Save");
+        exportButton.addActionListener(actionListener);
 
         JPanel canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
@@ -238,6 +268,7 @@ public class MainUI {
         canvasTools.add(eyeDropperToolButton);
         canvasTools.add(fanToolButton);
         canvasTools.add(celticKnotToolButton);
+        canvasTools.add(exportButton);
 
         widthChanger = new WidthChanger();
         widthChanger.renderPanel();
@@ -247,9 +278,9 @@ public class MainUI {
         widthChanger.getJTextFieldComponent().addActionListener(actionListener);
         widthChanger.getCheckBoxGlobalSizeComponent().addActionListener(actionListener);
         widthChanger.getFillBox().addActionListener(actionListener);
+
         mainContent.add(widthChanger.getGUI(), BorderLayout.NORTH);
         mainContent.add(canvasTools, BorderLayout.WEST);
-
 
         ColorChooser colourChooser = new ColorChooser();
         JPanel editorPanel = new JPanel();
