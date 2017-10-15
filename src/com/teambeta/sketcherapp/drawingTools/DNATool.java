@@ -26,7 +26,7 @@ public class DNATool extends DrawingTool {
     private final int FIRST_HALF_PERIOD_BAR_END_INDEX = 3;
     private final int SECOND_HALF_PERIOD_BAR_START_INDEX = 4;
     private final int SECOND_HALF_PERIOD_BAR_END_INDEX = 7;
-    private final int MAXIMUM_ALLOWABLE_X_AXIS_DRIFT = 5;
+    private final int MAXIMUM_ALLOWABLE_X_AXIS_DRIFT = 10;
 
     private CartesianPoint upperWave;
     private CartesianPoint lowerWave;

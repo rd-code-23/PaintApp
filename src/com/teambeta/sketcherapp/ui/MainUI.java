@@ -45,7 +45,6 @@ public class MainUI {
     private static final String ELLIPSE_TOOL_BUTTON_TEXT = "Ellipse";
     private static final String TEXT_TOOL_BUTTON_TEXT = "Text";
     private static final String PAINT_BUCKET_BUTTON_TEXT = "Paint Bucket";
-
     private static final String EYEDROPPER_TOOL_BUTTON_TEXT = "Eye Dropper";
     private static final String FAN_TOOL_BUTTON_TEXT = "Fan-out";
     private static final String CELTIC_KNOT_TOOL_BUTTON_TEXT = "Celtic Knot";
@@ -55,10 +54,10 @@ public class MainUI {
     private static final String APPLICATION_NAME = "Beta Sketcher";
     private static final int APPLICATION_WIDTH = 1920;
     private static final int APPLICATION_HEIGHT = 1080;
-    public static final int CANVAS_WIDTH = 1920;
-    public static final int CANVAS_HEIGHT = 1080;
     private static final int EDITOR_PANEL_WIDTH = 100;
     private static final int EDITOR_PANEL_HEIGHT = 300;
+    public static final int CANVAS_WIDTH = 1920;
+    public static final int CANVAS_HEIGHT = 1080;
 
 
     private JButton clearButton;
@@ -67,13 +66,13 @@ public class MainUI {
     private JButton rectangleToolButton;
     private JButton eraserToolButton;
     private JButton ellipseToolButton;
-    private WidthChanger widthChanger;
     private JButton eyeDropperToolButton;
     private JButton textToolButton;
     private JButton fanToolButton;
     private JButton celticKnotToolButton;
     private JButton paintBucketToolButton;
     private JButton dnaToolButton;
+    private WidthChanger widthChanger;
     private DrawArea drawArea;
 
     private JButton exportButton;
@@ -268,10 +267,10 @@ public class MainUI {
         canvasTools.add(eraserToolButton);
         canvasTools.add(textToolButton);
         canvasTools.add(paintBucketToolButton);
-
-        canvasTools.add(eyeDropperToolButton);
         canvasTools.add(fanToolButton);
         canvasTools.add(celticKnotToolButton);
+        canvasTools.add(dnaToolButton);
+        canvasTools.add(eyeDropperToolButton);
         canvasTools.add(exportButton);
 
         JPanel northPanels = new JPanel();
