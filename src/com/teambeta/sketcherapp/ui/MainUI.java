@@ -296,7 +296,7 @@ public class MainUI {
 
         MenuUI menuUI = new MenuUI();
         mainFrame.add(menuUI, BorderLayout.NORTH);
-
+    }
 
     /**
      * Return the currently selected drawing tool.
