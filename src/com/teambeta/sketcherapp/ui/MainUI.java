@@ -173,7 +173,14 @@ public class MainUI {
         }
     };
 
-
+    /**
+     * Constructor.
+     */
+    public MainUI() {
+        prepareGUI();
+        initDrawingTools();
+    }
+    
     /**
      * Class to listen for changes in the widthChanger slider.
      */
@@ -208,21 +215,12 @@ public class MainUI {
         }
     }
 
-
     /**
      * When a new tool is selected, tools that support filling will set their
      * fill state to the fill checkbox.
      */
     public void updateFillState() {
         selectedDrawingTool.setFillState(widthChanger.isFill());
-    }
-
-    /**
-     * Constructor.
-     */
-    public MainUI() {
-        prepareGUI();
-        initDrawingTools();
     }
 
     /**
@@ -314,6 +312,7 @@ public class MainUI {
     /**
      * Return the currently selected drawing tool.
      * 
+     * @return selected drawing tool.
      */
     public DrawingTool getSelectedDrawingTool() {
         return selectedDrawingTool;
