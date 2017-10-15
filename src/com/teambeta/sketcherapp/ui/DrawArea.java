@@ -3,7 +3,6 @@ package com.teambeta.sketcherapp.ui;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-
 import javax.swing.JComponent;
 
 /**
@@ -17,8 +16,6 @@ public class DrawArea extends JComponent {
     private static BufferedImage previewLayer;
     private Graphics2D graphics;
     private Color backgroundColor;
-
-
 
     /**
      * Constructor. Set actions upon mouse press events.
@@ -59,6 +56,11 @@ public class DrawArea extends JComponent {
         });
     }
 
+    /**
+     * Clears buffer image.
+     * 
+     * @param bufferdImage canvas to clear.
+     */
     public static void clearBufferImageToTransparent(BufferedImage bufferedImage) {
         Graphics2D graphics = (Graphics2D) bufferedImage.getGraphics();
         graphics.setComposite(AlphaComposite.Src);
@@ -146,13 +148,29 @@ public class DrawArea extends JComponent {
         return backgroundColor;
     }
 
+    /**
+     * Get the preview layer.
+     * 
+     * @return preview layer.
+     */ 
     public static BufferedImage getPreviewLayer() {
         return previewLayer;
     }
+    
+    /**
+     * Get canvas.
+     * 
+     * @return canvas.
+     */ 
     public BufferedImage getCanvas() {
         return canvas;
     }
 
+    /**
+     * Set class specified canvas.
+     * 
+     * @param canvas to set class to.
+     */ 
     public void setCanvas(BufferedImage canvas) {
         this.canvas = canvas;
     }
