@@ -2,6 +2,10 @@ package com.teambeta.sketcherapp.ui;
 
 import javax.swing.*;
 
+/**
+ * The MenuUI class adds a menu bar with submenus to the top of the application.
+ */
+
 
 
 public class MenuUI extends JMenuBar{
@@ -13,7 +17,7 @@ public class MenuUI extends JMenuBar{
     private static final String WINDOW_MENU_BUTTON_TEXT = "Window";
     private static final String HELP_MENU_BUTTON_TEXT = "Help";
 
-    public JMenuBar menuBar;
+
     private JMenu fileMenu;
     private JMenu editMenu;
     private JMenu imageMenu;
@@ -84,8 +88,11 @@ public class MenuUI extends JMenuBar{
         prepareMenuBar();
     }
 
+    /**
+     * The prepareMenuBar function builds the menu and adds submenus.
+     */
     public void prepareMenuBar() {
-        menuBar = new JMenuBar();
+
 
         fileMenu = new JMenu(FILE_MENU_BUTTON_TEXT);
         editMenu = new JMenu(EDIT_MENU_BUTTON_TEXT);
@@ -93,11 +100,12 @@ public class MenuUI extends JMenuBar{
         windowMenu = new JMenu(WINDOW_MENU_BUTTON_TEXT);
         helpMenu = new JMenu(HELP_MENU_BUTTON_TEXT);
 
-        menuBar.add(fileMenu);
-        menuBar.add(editMenu);
-        menuBar.add(imageMenu);
-        menuBar.add(windowMenu);
-        menuBar.add(helpMenu);
+        add(fileMenu);
+        add(editMenu);
+        add(imageMenu);
+        add(windowMenu);
+        add(helpMenu);
+
 
         fOpen = new JMenuItem(FOPEN_MENU_BUTTON_TEXT);
         fNew = new JMenuItem(FNEW_MENU_BUTTON_TEXT);
@@ -105,7 +113,6 @@ public class MenuUI extends JMenuBar{
         fShare = new JMenuItem(FSHARE_MENU_BUTTON_TEXT);
         fPrint = new JMenuItem(FPRINT_MENU_BUTTON_TEXT);
         fClose = new JMenuItem(FCLOSE_MENU_BUTTON_TEXT);
-
 
         fileMenu.add(fOpen);
         fileMenu.add(fNew);
