@@ -20,15 +20,17 @@ public class EllipseTool extends DrawingTool {
     private int currentX;
     private int initX;
     private int initY;
+    private int mouseOriginX;
+    private int mouseOriginY;
     private int xAxisMagnitudeDelta;
     private int yAxisMagnitudeDelta;
     private int drawWidthX;
     private int drawHeightY;
-    private int sizeInPixels;
     private Color color;
     private final int DEFAULT_STOKE_VALUE = 10;
     private int ellipseWidth;
     private boolean fillShape;
+    private BufferedImage previewLayer = null;
 
     /**
      * The constructor sets the properties of the tool to their default values
@@ -36,11 +38,12 @@ public class EllipseTool extends DrawingTool {
     public EllipseTool() {
         color = Color.black;
         registerObservers();
-        sizeInPixels = 1;
         initX = 0;
         initY = 0;
         currentX = 0;
         currentY = 0;
+        mouseOriginX = 0;
+        mouseOriginY = 0;
         drawWidthX = 0;
         drawHeightY = 0;
         ellipseWidth = DEFAULT_STOKE_VALUE;
@@ -49,17 +52,63 @@ public class EllipseTool extends DrawingTool {
 
     @Override
     public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        canvas.getGraphics().setColor(color);
+        if (previewLayer == null) {
+            //previewLayer = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            previewLayer = DrawArea.getPreviewLayer();
+        }
+        //clear preview layer
+        DrawArea.clearBufferImageToTransparent(previewLayer);
+
+        //init graphics objects
+        Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
+        canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        canvasGraphics.setColor(color);
+
+        Graphics2D previewLayerGraphics = (Graphics2D) previewLayer.getGraphics();
+        previewLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        previewLayerGraphics.setStroke(new BasicStroke(getToolWidth()));
+        previewLayerGraphics.setColor(color);
+
+        calcEllipseCoordinateData(e, layers, canvas);
+
+        //draw the circle preview onto the preview layer
+        previewLayerGraphics.drawOval(initX, initY, drawWidthX, drawHeightY);
+        // Draw a filled ellipse/circle if the alt key is down on release.
+        if (fillShape) {
+            previewLayerGraphics.fillOval(initX, initY, drawWidthX, drawHeightY);
+        }
+
+        //info: https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
+        //draw the preview layer on top of the drawing layer(s)
+        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
+        canvasGraphics.setComposite(alphaComposite);
+        DrawArea.drawLayersOntoCanvas(layers, canvas);
+        canvasGraphics.drawImage(previewLayer, 0, 0, null);
     }
 
     @Override
     public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+        calcEllipseCoordinateData(e, layers, canvas);
+
+        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
+        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        layer1Graphics.setStroke(new BasicStroke(getToolWidth()));
+        layer1Graphics.setColor(color);
+        layer1Graphics.drawOval(initX, initY, drawWidthX, drawHeightY);
+        // Draw a filled ellipse/circle if the alt key is down on release.
+        if (fillShape) {
+            layer1Graphics.fillOval(initX, initY, drawWidthX, drawHeightY);
+        }
+        DrawArea.drawLayersOntoCanvas(layers, canvas);
+    }
+
+    private void calcEllipseCoordinateData(MouseEvent e, BufferedImage[] layers, BufferedImage canvas) {
         // Get the coordinates of where the user released the mouse.
         currentX = e.getX();
         currentY = e.getY();
 
-        xAxisMagnitudeDelta = Math.abs(currentX - initX);
-        yAxisMagnitudeDelta = Math.abs(currentY - initY);
+        xAxisMagnitudeDelta = Math.abs(currentX - mouseOriginX);
+        yAxisMagnitudeDelta = Math.abs(currentY - mouseOriginY);
 
         // Detect shift-down by the MouseEvent, e.
         if (e.isShiftDown()) {
@@ -68,7 +117,7 @@ public class EllipseTool extends DrawingTool {
                 drawHeightY = yAxisMagnitudeDelta;
             } else {
                 drawWidthX = xAxisMagnitudeDelta;
-                drawHeightY= xAxisMagnitudeDelta;
+                drawHeightY = xAxisMagnitudeDelta;
             }
         } else {
             drawWidthX = xAxisMagnitudeDelta;
@@ -76,24 +125,13 @@ public class EllipseTool extends DrawingTool {
         }
 
         // Handle cases where the ellipse lies in a quadrant (with origin 0,0 at click) other than IV.
-        if (currentY < initY) {
-            initY -= drawHeightY;
+        if (currentY < mouseOriginY) {
+            initY = mouseOriginY - drawHeightY;
         }
-        if (currentX < initX) {
-            initX -= drawWidthX;
+        if (currentX < mouseOriginX) {
+            initX = mouseOriginX - drawWidthX;
         }
 
-        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
-        layer1Graphics.setStroke(new BasicStroke(getToolWidth()));
-        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        layer1Graphics.setColor(color);
-
-        // Draw a filled ellipse/circle if the alt key is down on release.
-        if (fillShape) {
-            layer1Graphics.fillOval(initX, initY, drawWidthX, drawHeightY);
-        }
-        layer1Graphics.drawOval(initX, initY, drawWidthX, drawHeightY);
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
 
     @Override
@@ -102,20 +140,23 @@ public class EllipseTool extends DrawingTool {
 
     @Override
     public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+        canvas.getGraphics().setColor(color);
         currentX = e.getX();
         currentY = e.getY();
         initX = currentX;
         initY = currentY;
+        mouseOriginX = currentX;
+        mouseOriginY = currentY;
     }
 
     @Override
     public int getToolWidth() {
-       return ellipseWidth;
+        return ellipseWidth;
     }
 
     @Override
     public void setToolWidth(int width) {
-    ellipseWidth = width;
+        ellipseWidth = width;
     }
 
     /**

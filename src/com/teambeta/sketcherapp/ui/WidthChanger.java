@@ -32,7 +32,8 @@ public class WidthChanger {
     private static final String EYEDROPPER_TEXTFIELD_BLUE_PREFIX = "B: ";
     private static final String EYEDROPPER_TEXTFIELD_SPACE = " ";
 
-    JPanel widthPanel = new JPanel();
+    private JPanel sliderPanel = new JPanel();
+    private JPanel widthPanel = new JPanel();
     private JSlider widthSlider;          // lets user change currentWidthValue
     private JLabel panelLabel;      //used to describe the panel for the user
     private JTextField widthTextField;    //lets user change currentWidthValue
@@ -54,6 +55,9 @@ public class WidthChanger {
     public void renderPanel() {
         currentWidthValue = INITIAL_WIDTH_VALUE;
 
+        sliderPanel.setLayout(new BoxLayout(sliderPanel, BoxLayout.X_AXIS));
+        sliderPanel.setPreferredSize(new Dimension(WIDTH_PANEL, HEIGHT_PANEL));
+        sliderPanel.setBackground(Color.DARK_GRAY);
         widthPanel.setLayout(new BoxLayout(widthPanel, BoxLayout.X_AXIS));
         widthPanel.setPreferredSize(new Dimension(WIDTH_PANEL, HEIGHT_PANEL));
         widthPanel.setBackground(Color.DARK_GRAY);
@@ -118,7 +122,7 @@ public class WidthChanger {
     }
 
     /**
-     * return JtextField holding the current width value
+     * return JTextField holding the current width value
      */
     public JTextField getJTextFieldComponent() {
         return widthTextField;
@@ -219,6 +223,7 @@ public class WidthChanger {
 
     /**
      * Get the fill state checkbox for manipulations.
+     *
      * @return The fill state JCheckBox
      */
     public JCheckBox getFillBox() {
@@ -227,6 +232,7 @@ public class WidthChanger {
 
     /**
      * Determine if the fill state is enabled
+     *
      * @return The fill state
      */
     public boolean isFill() {
@@ -236,6 +242,7 @@ public class WidthChanger {
 
     /**
      * Update the fill state for supporting tools.
+     *
      * @param state The state for filling
      */
     public void setFill(boolean state) {
@@ -243,7 +250,6 @@ public class WidthChanger {
     }
 
     /**
-     *
      * @return The eye dropper text field to be used by the eye dropper tool
      */
     public JTextField getEyeDropperTextField() {
@@ -252,15 +258,14 @@ public class WidthChanger {
 
     /**
      * Update the eye dropper text field with a color object.
+     *
      * @param color The color to be parsed
      */
     public void updateEyeDropperTextField(Color color) {
         eyeDropperTextField.setText(EYEDROPPER_TEXTFIELD_RED_PREFIX + color.getRed()
-                                    + EYEDROPPER_TEXTFIELD_SPACE
-                                    + EYEDROPPER_TEXTFIELD_GREEN_PREFIX + color.getGreen()
-                                    + EYEDROPPER_TEXTFIELD_SPACE
-                                    + EYEDROPPER_TEXTFIELD_BLUE_PREFIX + color.getBlue());
+                + EYEDROPPER_TEXTFIELD_SPACE
+                + EYEDROPPER_TEXTFIELD_GREEN_PREFIX + color.getGreen()
+                + EYEDROPPER_TEXTFIELD_SPACE
+                + EYEDROPPER_TEXTFIELD_BLUE_PREFIX + color.getBlue());
     }
-
-
 }

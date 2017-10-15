@@ -29,9 +29,11 @@ public class MainUI {
     private static EraserTool eraserTool;
     private static EllipseTool ellipseTool;
     private static TextTool textTool;
+    private static PaintBucketTool paintBucketTool;
     private static EyeDropperTool eyeDropperTool;
     private static FanTool fanTool;
     private static CelticKnotTool celticKnotTool;
+    private static DNATool dnaTool;
     public static DrawingTool selectedDrawingTool;
 
 
@@ -42,9 +44,12 @@ public class MainUI {
     private static final String ERASER_TOOL_BUTTON_TEXT = "Eraser";
     private static final String ELLIPSE_TOOL_BUTTON_TEXT = "Ellipse";
     private static final String TEXT_TOOL_BUTTON_TEXT = "Text";
+    private static final String PAINT_BUCKET_BUTTON_TEXT = "Paint Bucket";
+
     private static final String EYEDROPPER_TOOL_BUTTON_TEXT = "Eye Dropper";
     private static final String FAN_TOOL_BUTTON_TEXT = "Fan-out";
     private static final String CELTIC_KNOT_TOOL_BUTTON_TEXT = "Celtic Knot";
+    private static final String DNA_TOOL_BUTTON_TEXT = "DNA";
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
@@ -79,6 +84,8 @@ public class MainUI {
     private JButton textToolButton;
     private JButton fanToolButton;
     private JButton celticKnotToolButton;
+    private JButton paintBucketToolButton;
+    private JButton dnaToolButton;
     private DrawArea drawArea;
 
     private JButton exportButton;
@@ -119,11 +126,16 @@ public class MainUI {
                 updateSizeSlider();
             } else if (e.getSource() == textToolButton) {
                 selectedDrawingTool = textTool;
+            } else if (e.getSource() == paintBucketToolButton) {
+                selectedDrawingTool = paintBucketTool;
                 updateSizeSlider();
             } else if (e.getSource() == eyeDropperToolButton) {
                 selectedDrawingTool = eyeDropperTool;
             } else if (e.getSource() == celticKnotToolButton) {
                 selectedDrawingTool = celticKnotTool;
+                updateSizeSlider();
+            } else if (e.getSource() == dnaToolButton) {
+                selectedDrawingTool = dnaTool;
                 updateSizeSlider();
             }
 
@@ -164,7 +176,7 @@ public class MainUI {
 
     /**
      * Class to listen for changes in the widthChanger slider.
-     */ 
+     */
     public class listenForSlider implements ChangeListener {
         @Override
         public void stateChanged(ChangeEvent e) {
@@ -252,6 +264,10 @@ public class MainUI {
         fanToolButton.addActionListener(actionListener);
         celticKnotToolButton = new JButton(CELTIC_KNOT_TOOL_BUTTON_TEXT);
         celticKnotToolButton.addActionListener(actionListener);
+        paintBucketToolButton = new JButton(PAINT_BUCKET_BUTTON_TEXT);
+        paintBucketToolButton.addActionListener(actionListener);
+        dnaToolButton = new JButton(DNA_TOOL_BUTTON_TEXT);
+        dnaToolButton.addActionListener(actionListener);
         exportButton = new JButton("Save");
         exportButton.addActionListener(actionListener);
 
@@ -265,6 +281,8 @@ public class MainUI {
         canvasTools.add(ellipseToolButton);
         canvasTools.add(eraserToolButton);
         canvasTools.add(textToolButton);
+        canvasTools.add(paintBucketToolButton);
+
         canvasTools.add(eyeDropperToolButton);
         canvasTools.add(fanToolButton);
         canvasTools.add(celticKnotToolButton);
@@ -281,6 +299,7 @@ public class MainUI {
 
         mainContent.add(widthChanger.getGUI(), BorderLayout.NORTH);
         mainContent.add(canvasTools, BorderLayout.WEST);
+
 
         ColorChooser colourChooser = new ColorChooser();
         JPanel editorPanel = new JPanel();
@@ -335,6 +354,9 @@ public class MainUI {
         textTool = new TextTool();
         fanTool = new FanTool();
         celticKnotTool = new CelticKnotTool();
+        paintBucketTool = new PaintBucketTool();
+        dnaTool = new DNATool();
+
     }
 
     /**

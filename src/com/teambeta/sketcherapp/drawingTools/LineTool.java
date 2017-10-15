@@ -15,7 +15,6 @@ public class LineTool extends DrawingTool {
     private int currentX;
     private int lastX;
     private int lastY;
-    private int sizeInPixels;
     private Color color;
     private BufferedImage previewLayer = null;
     private int lineWidth;
@@ -27,7 +26,6 @@ public class LineTool extends DrawingTool {
     public LineTool() {
         color = Color.black;
         registerObservers();
-        sizeInPixels = 1;
         lastX = 0;
         lastY = 0;
         currentX = 0;
@@ -38,7 +36,7 @@ public class LineTool extends DrawingTool {
     @Override
     public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         if (previewLayer == null) {
-            previewLayer = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
+            previewLayer = DrawArea.getPreviewLayer();
         }
         //clear preview layer
         DrawArea.clearBufferImageToTransparent(previewLayer);
@@ -81,7 +79,6 @@ public class LineTool extends DrawingTool {
         currentX = e.getX();
         currentY = e.getY();
         //draw a line between the start and release points
-        // draw line if graphics context not null
         layer1Graphics.drawLine(lastX, lastY, currentX, currentY);
         DrawArea.drawLayersOntoCanvas(layers, canvas);
         lastX = currentX;
