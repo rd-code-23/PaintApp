@@ -308,29 +308,6 @@ public class MainUI {
     }
 
     /**
-     * Build GUI menu bar.
-     */
-    private void prepareMenuBar() {
-        menuBar = new JMenuBar();
-
-        fileMenu = new JMenu(FILE_MENU_BUTTON_TEXT);
-        editMenu = new JMenu(EDIT_MENU_BUTTON_TEXT);
-        imageMenu = new JMenu(IMAGE_MENU_BUTTON_TEXT);
-        windowMenu = new JMenu(WINDOW_MENU_BUTTON_TEXT);
-        helpMenu = new JMenu(HELP_MENU_BUTTON_TEXT);
-
-        menuBar.add(fileMenu);
-        menuBar.add(editMenu);
-        menuBar.add(imageMenu);
-        menuBar.add(windowMenu);
-        menuBar.add(helpMenu);
-
-        mainFrame.setJMenuBar(menuBar);
-    }
-
-
-
-    /**
      * Create the drawing tool objects and set the pen tool as the default selection.
      */
     private void initDrawingTools() {
