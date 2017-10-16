@@ -28,7 +28,7 @@ public class AirBrushTool extends DrawingTool {
 
 
     /**
-     * The constructor sets the properties of the tool to their default values
+     * The constructor sets the properties of the tool to their default values.
      */
     public AirBrushTool() {
         color = Color.black;
@@ -72,6 +72,10 @@ public class AirBrushTool extends DrawingTool {
         drawDotsAroundPoint();
     }
 
+    
+    /**
+     * Generate random dots around an area.
+     */
     private void drawDotsAroundPoint() {
         for (int i = 0; i <= dotsToDraw; i++) {
             dotX = randomInt(currentX - dotRadius, currentX + dotRadius);
@@ -91,10 +95,20 @@ public class AirBrushTool extends DrawingTool {
         return ColorChooser.getColor();
     }
 
+    /**
+     * Get width of the tool.
+     * 
+     * @return dot's radius.
+     */
     public int getToolWidth() {
         return dotRadius;
     }
 
+    /**
+     * Set dot radius to brush width.
+     * 
+     * @param brush width to set dot radius to.
+     */
     public void setToolWidth(int brushWidth) {
         dotRadius = brushWidth;
     }
