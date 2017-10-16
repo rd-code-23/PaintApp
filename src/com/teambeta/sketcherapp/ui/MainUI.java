@@ -34,6 +34,7 @@ public class MainUI {
     private static FanTool fanTool;
     private static CelticKnotTool celticKnotTool;
     private static DNATool dnaTool;
+    private static AirBrushTool airBrushTool;
     public static DrawingTool selectedDrawingTool;
 
 
@@ -49,6 +50,7 @@ public class MainUI {
     private static final String FAN_TOOL_BUTTON_TEXT = "Fan-out";
     private static final String CELTIC_KNOT_TOOL_BUTTON_TEXT = "Celtic Knot";
     private static final String DNA_TOOL_BUTTON_TEXT = "DNA";
+    private static final String AIR_BRUSH_TOOL_BUTTON_TEXT = "Airbrush";
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
@@ -72,6 +74,7 @@ public class MainUI {
     private JButton celticKnotToolButton;
     private JButton paintBucketToolButton;
     private JButton dnaToolButton;
+    private JButton airBrushToolButton;
     private WidthChanger widthChanger;
     private DrawArea drawArea;
 
@@ -121,6 +124,9 @@ public class MainUI {
                 updateSizeSlider();
             } else if (e.getSource() == dnaToolButton) {
                 selectedDrawingTool = dnaTool;
+                updateSizeSlider();
+            } else if (e.getSource() == airBrushToolButton) {
+                selectedDrawingTool = airBrushTool;
                 updateSizeSlider();
             }
 
@@ -223,11 +229,12 @@ public class MainUI {
         celticKnotToolButton = new JButton(CELTIC_KNOT_TOOL_BUTTON_TEXT);
         paintBucketToolButton = new JButton(PAINT_BUCKET_BUTTON_TEXT);
         dnaToolButton = new JButton(DNA_TOOL_BUTTON_TEXT);
+        airBrushToolButton = new JButton(AIR_BRUSH_TOOL_BUTTON_TEXT);
 
         // Add a button to this array to register to actionListener and canvasTools
         JButton[] buttonContainer = {clearButton, brushToolButton, lineToolButton, rectangleToolButton,
                 ellipseToolButton, eraserToolButton, textToolButton, paintBucketToolButton, fanToolButton,
-                celticKnotToolButton, dnaToolButton, eyeDropperToolButton
+                celticKnotToolButton, dnaToolButton, eyeDropperToolButton, airBrushToolButton
                  };
 
         JPanel canvasTools = new JPanel();
@@ -293,6 +300,7 @@ public class MainUI {
         celticKnotTool = new CelticKnotTool();
         paintBucketTool = new PaintBucketTool();
         dnaTool = new DNATool();
+        airBrushTool = new AirBrushTool();
         selectedDrawingTool = brushTool;
     }
 
