@@ -16,7 +16,6 @@ public class AirBrushTool extends DrawingTool {
     private int currentY;
     private int currentX;
     private Color color;
-    private int brushWidth;
     private Graphics2D layer1Graphics;
     private int dotsToDraw;
     private int dotRadius;
@@ -36,7 +35,6 @@ public class AirBrushTool extends DrawingTool {
         registerObservers();
         currentX = 0;
         currentY = 0;
-        brushWidth = DEFAULT_STOKE_VALUE;
         dotRadius = DEFAULT_DOT_RADIUS;
         dotsToDraw = DEFAULT_DOTS_TO_DRAW;
         dotX = 0;
