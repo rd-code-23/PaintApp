@@ -85,6 +85,8 @@ public class MenuUI extends JMenuBar{
 
     private DrawArea drawArea;
 
+    private static final String EXPORT_CANVAS_DIALOG_TITLE = "Export Canvas";
+
 
     /**
      * constructor
@@ -174,7 +176,7 @@ public class MenuUI extends JMenuBar{
             if (e.getSource() == iExport) {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setCurrentDirectory(new java.io.File("C:\\"));
-                fileChooser.setDialogTitle("Save Canvas");
+                fileChooser.setDialogTitle(EXPORT_CANVAS_DIALOG_TITLE);
                 int retrieval = fileChooser.showSaveDialog(null);
 
                 if (retrieval == JFileChooser.APPROVE_OPTION) {
