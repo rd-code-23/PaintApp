@@ -209,46 +209,38 @@ public class MainUI {
         // ideally this should be in its own widthPanel with a proper scale, not directly to mainContent
         mainContent.add(drawArea, BorderLayout.CENTER);
 
+        /* START MAINUI BUTTONS */
+
         clearButton = new JButton(CLEAR_BUTTON_TEXT);
-        clearButton.addActionListener(actionListener);
         brushToolButton = new JButton(BRUSH_BUTTON_TEXT);
-        brushToolButton.addActionListener(actionListener);
         lineToolButton = new JButton(LINE_TOOL_BUTTON_TEXT);
-        lineToolButton.addActionListener(actionListener);
         rectangleToolButton = new JButton(RECTANGLE_TOOL_BUTTON_TEXT);
-        rectangleToolButton.addActionListener(actionListener);
         eraserToolButton = new JButton(ERASER_TOOL_BUTTON_TEXT);
-        eraserToolButton.addActionListener(actionListener);
         ellipseToolButton = new JButton(ELLIPSE_TOOL_BUTTON_TEXT);
-        ellipseToolButton.addActionListener(actionListener);
         textToolButton = new JButton(TEXT_TOOL_BUTTON_TEXT);
-        textToolButton.addActionListener(actionListener);
         eyeDropperToolButton = new JButton(EYEDROPPER_TOOL_BUTTON_TEXT);
-        eyeDropperToolButton.addActionListener(actionListener);
         fanToolButton = new JButton(FAN_TOOL_BUTTON_TEXT);
-        fanToolButton.addActionListener(actionListener);
         celticKnotToolButton = new JButton(CELTIC_KNOT_TOOL_BUTTON_TEXT);
-        celticKnotToolButton.addActionListener(actionListener);
         paintBucketToolButton = new JButton(PAINT_BUCKET_BUTTON_TEXT);
-        paintBucketToolButton.addActionListener(actionListener);
         dnaToolButton = new JButton(DNA_TOOL_BUTTON_TEXT);
-        dnaToolButton.addActionListener(actionListener);
+
+        // Add a button to this array to register to actionListener and canvasTools
+        JButton[] buttonContainer = {clearButton, brushToolButton, lineToolButton, rectangleToolButton,
+                ellipseToolButton, eraserToolButton, textToolButton, paintBucketToolButton, fanToolButton,
+                celticKnotToolButton, dnaToolButton, eyeDropperToolButton
+                 };
 
         JPanel canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
         canvasTools.setBackground(Color.DARK_GRAY);
-        canvasTools.add(clearButton);
-        canvasTools.add(brushToolButton);
-        canvasTools.add(lineToolButton);
-        canvasTools.add(rectangleToolButton);
-        canvasTools.add(ellipseToolButton);
-        canvasTools.add(eraserToolButton);
-        canvasTools.add(textToolButton);
-        canvasTools.add(paintBucketToolButton);
-        canvasTools.add(fanToolButton);
-        canvasTools.add(celticKnotToolButton);
-        canvasTools.add(dnaToolButton);
-        canvasTools.add(eyeDropperToolButton);
+
+        // Register buttons to actionListener and canvasTools
+        for (JButton button : buttonContainer) {
+            button.addActionListener(actionListener);
+            canvasTools.add(button);
+        }
+
+        /* END MAINUI BUTTONS */
 
         JPanel northPanels = new JPanel();
         northPanels.setLayout(new BorderLayout());
@@ -296,13 +288,12 @@ public class MainUI {
         eraserTool = new EraserTool(drawArea); // Requires drawArea due to requiring the canvas colour.
         ellipseTool = new EllipseTool();
         eyeDropperTool = new EyeDropperTool(widthChanger); // Requires widthChanger UI element for direct text update.
-        selectedDrawingTool = brushTool;
         textTool = new TextTool();
         fanTool = new FanTool();
         celticKnotTool = new CelticKnotTool();
         paintBucketTool = new PaintBucketTool();
         dnaTool = new DNATool();
-
+        selectedDrawingTool = brushTool;
     }
 
     /**
