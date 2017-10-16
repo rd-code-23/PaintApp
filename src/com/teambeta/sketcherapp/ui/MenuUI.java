@@ -162,7 +162,7 @@ public class MenuUI extends JMenuBar{
         helpMenu.add(hAbout);
 
         // MENU ACTION LISTENERS
-        fSave.addActionListener(menuActionListener);
+        iExport.addActionListener(menuActionListener);
 
     }
 
@@ -170,8 +170,8 @@ public class MenuUI extends JMenuBar{
         @Override
         public void actionPerformed(ActionEvent e) {
 
-            // Save canvas menu button
-            if (e.getSource() == fSave) {
+            // Export canvas menu button
+            if (e.getSource() == iExport) {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setCurrentDirectory(new java.io.File("C:\\"));
                 fileChooser.setDialogTitle("Save Canvas");
