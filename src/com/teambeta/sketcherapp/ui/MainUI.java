@@ -75,8 +75,6 @@ public class MainUI {
     private WidthChanger widthChanger;
     private DrawArea drawArea;
 
-    private JButton exportButton;
-
 
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -139,24 +137,6 @@ public class MainUI {
                 selectedDrawingTool.setFillState(widthChanger.isFill());
             }
 
-
-            if (e.getSource() == exportButton) {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setCurrentDirectory(new java.io.File("C:\\"));
-                fileChooser.setDialogTitle("Save Canvas");
-                int retrieval = fileChooser.showSaveDialog(null);
-
-                if (retrieval == JFileChooser.APPROVE_OPTION) {
-                    File file = null;
-                    //write image to a file
-                    try {
-                        file = new File(fileChooser.getSelectedFile() + ".png");
-                        ImageIO.write(drawArea.getCanvas(), "png", file);
-                    } catch (IOException exc) {
-                        exc.printStackTrace();
-                    }
-                }
-            }
         }
     };
 
@@ -253,8 +233,6 @@ public class MainUI {
         paintBucketToolButton.addActionListener(actionListener);
         dnaToolButton = new JButton(DNA_TOOL_BUTTON_TEXT);
         dnaToolButton.addActionListener(actionListener);
-        exportButton = new JButton("Save");
-        exportButton.addActionListener(actionListener);
 
         JPanel canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
@@ -271,11 +249,10 @@ public class MainUI {
         canvasTools.add(celticKnotToolButton);
         canvasTools.add(dnaToolButton);
         canvasTools.add(eyeDropperToolButton);
-        canvasTools.add(exportButton);
 
         JPanel northPanels = new JPanel();
         northPanels.setLayout(new BorderLayout());
-        MenuUI menuUI = new MenuUI();
+        MenuUI menuUI = new MenuUI(drawArea);
         northPanels.add(menuUI, BorderLayout.NORTH);
 
         widthChanger = new WidthChanger();

@@ -1,6 +1,11 @@
 package com.teambeta.sketcherapp.ui;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * The MenuUI class adds a menu bar with submenus to the top of the application.
@@ -78,13 +83,16 @@ public class MenuUI extends JMenuBar{
     private static final String HDEVELOPERINFO_MENU_BUTTON_TEXT = "Developer Info";
     private static final String HABOUT_MENU_BUTTON_TEXT = "About";
 
+    private DrawArea drawArea;
+
 
     /**
      * constructor
      */
 
-    public MenuUI(){
+    public MenuUI(DrawArea drawArea){
 
+        this.drawArea = drawArea;
         prepareMenuBar();
     }
 
@@ -92,7 +100,6 @@ public class MenuUI extends JMenuBar{
      * The prepareMenuBar function builds the menu and adds submenus.
      */
     public void prepareMenuBar() {
-
 
         fileMenu = new JMenu(FILE_MENU_BUTTON_TEXT);
         editMenu = new JMenu(EDIT_MENU_BUTTON_TEXT);
@@ -105,7 +112,6 @@ public class MenuUI extends JMenuBar{
         add(imageMenu);
         add(windowMenu);
         add(helpMenu);
-
 
         fOpen = new JMenuItem(FOPEN_MENU_BUTTON_TEXT);
         fNew = new JMenuItem(FNEW_MENU_BUTTON_TEXT);
@@ -121,13 +127,11 @@ public class MenuUI extends JMenuBar{
         fileMenu.add(fPrint);
         fileMenu.add(fClose);
 
-
         eUndo = new JMenuItem(EUNDO_MENU_BUTTON_TEXT);
         eRedo = new JMenuItem(EREDO_MENU_BUTTON_TEXT);
 
         editMenu.add(eUndo);
         editMenu.add(eRedo);
-
 
         iCanvasSize = new JMenuItem(ICANVASSIZE_MENU_BUTTON_TEXT);
         iRotateCanvas = new JMenuItem(IROTATECANVAS_MENU_BUTTON_TEXT);
@@ -141,7 +145,6 @@ public class MenuUI extends JMenuBar{
         imageMenu.add(iImport);
         imageMenu.add(iExport);
 
-
         wZoom = new JMenuItem(WZOOM_MENU_BUTTON_TEXT);
         wNewWindow = new JMenuItem(WNEWWINDOW_MENU_BUTTON_TEXT);
         wMinimize = new JMenuItem(WMINIMIZE_MENU_BUTTON_TEXT);
@@ -149,7 +152,6 @@ public class MenuUI extends JMenuBar{
         windowMenu.add(wZoom);
         windowMenu.add(wNewWindow);
         windowMenu.add(wMinimize);
-
 
         hManual = new JMenuItem(HMANUAL_MENU_BUTTON_TEXT);
         hDeveloperInfo = new JMenuItem(HDEVELOPERINFO_MENU_BUTTON_TEXT);
@@ -159,8 +161,36 @@ public class MenuUI extends JMenuBar{
         helpMenu.add(hDeveloperInfo);
         helpMenu.add(hAbout);
 
+        // MENU ACTION LISTENERS
+        fSave.addActionListener(menuActionListener);
 
     }
+
+    private ActionListener menuActionListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            // Save canvas menu button
+            if (e.getSource() == fSave) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setCurrentDirectory(new java.io.File("C:\\"));
+                fileChooser.setDialogTitle("Save Canvas");
+                int retrieval = fileChooser.showSaveDialog(null);
+
+                if (retrieval == JFileChooser.APPROVE_OPTION) {
+                    File file = null;
+                    //write image to a file
+                    try {
+                        file = new File(fileChooser.getSelectedFile() + ".png");
+                        ImageIO.write(drawArea.getCanvas(), "png", file);
+                    } catch (IOException exc) {
+                        exc.printStackTrace();
+                    }
+                }
+            }
+
+        }
+    };
 
 }
 
