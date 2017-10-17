@@ -16,9 +16,8 @@ public class DrawArea extends JComponent {
     private static BufferedImage previewLayer;
     private Graphics2D graphics;
     private Color backgroundColor;
-
-
     private boolean isCanvasAltered = false;
+
     /**
      * Constructor. Set actions upon mouse press events.
      */
@@ -63,7 +62,7 @@ public class DrawArea extends JComponent {
 
     /**
      * Clears buffer image.
-     * 
+     *
      * @param bufferdImage canvas to clear.
      */
     public static void clearBufferImageToTransparent(BufferedImage bufferedImage) {
@@ -144,13 +143,6 @@ public class DrawArea extends JComponent {
         graphics.setPaint(color);
     }
 
-    public boolean isCanvasAltered() {
-        return isCanvasAltered;
-    }
-
-    public void setCanvasAltered(boolean canvasAltered) {
-        isCanvasAltered = canvasAltered;
-    }
 
     /**
      * Get the background color of the canvas area.
@@ -164,40 +156,61 @@ public class DrawArea extends JComponent {
 
     /**
      * Get the preview layer.
-     * 
+     *
      * @return preview layer.
-     */ 
+     */
     public static BufferedImage getPreviewLayer() {
         return previewLayer;
     }
-    
+
     /**
      * Get canvas.
-     * 
+     *
      * @return canvas.
-     */ 
+     */
     public BufferedImage getCanvas() {
         return canvas;
     }
 
     /**
      * Set class specified canvas.
-     * 
+     *
      * @param canvas to set class to.
-     */ 
+     */
     public void setCanvas(BufferedImage canvas) {
         this.canvas = canvas;
     }
 
-    public  void setImportedImage( BufferedImage image ) {
+    /**
+     * lets user import an image
+     *
+     * @param image
+     */
+    public void setImportedImage(BufferedImage image) {
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
-        layer1Graphics.drawImage(image, 50, 50,this);
-        graphics.drawImage(image, 50, 50, this);
+        layer1Graphics.drawImage(image, 0, 0, this);
+        graphics.drawImage(image, 0, 0, this);
         graphics.finalize();
         isCanvasAltered = false;
         repaint();
     }
 
+    /**
+     * checks to see if the user has altered the canvas
+     *
+     * @return
+     */
+    public boolean isCanvasAltered() {
+        return isCanvasAltered;
+    }
 
+    /**
+     * sets whether the canvas has been altered
+     *
+     * @param canvasAltered
+     */
+    public void setCanvasAltered(boolean canvasAltered) {
+        isCanvasAltered = canvasAltered;
+    }
 
 }

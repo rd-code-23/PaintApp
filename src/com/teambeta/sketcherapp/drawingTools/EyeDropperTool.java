@@ -14,14 +14,16 @@ public class EyeDropperTool extends DrawingTool {
 
     // Directly update to width changer MainUI object upon mouse press.
     private WidthChanger toolWidthChanger;
+    private ColorChooser colorChooser;
 
     /**
      * Constructor.
      * 
      * @param widthChanger to change the width of the tool.
      */
-    public EyeDropperTool(WidthChanger widthChanger) {
+    public EyeDropperTool(WidthChanger widthChanger, ColorChooser colorChooser) {
         toolWidthChanger = widthChanger;
+        this.colorChooser = colorChooser;
     }
 
     @Override
@@ -48,7 +50,7 @@ public class EyeDropperTool extends DrawingTool {
     public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         Color colorAtPoint = new Color(layers[0].getRGB(e.getX(), e.getY())); // Pull from layer 0 by default.
         toolWidthChanger.updateEyeDropperTextField(colorAtPoint); // Update directly to UI element.
-
+        colorChooser.setColorFromEyeDropper(colorAtPoint ); // Update to the color chooser.
     }
 
     @Override

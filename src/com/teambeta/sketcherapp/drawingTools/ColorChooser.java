@@ -62,6 +62,17 @@ public class ColorChooser extends JPanel {
     }
 
     /**
+     * Used by the eye dropper tool to directly update the color of the color chooser.
+     * @param color The color to be set
+     */
+    public void setColorFromEyeDropper(Color color) {
+        this.color = color;
+        paintComponent(getGraphics());
+        notifyObservers();
+    }
+
+
+    /**
      * Gets the color of the graphic selector.
      *
      * @return color of the graphic selector.

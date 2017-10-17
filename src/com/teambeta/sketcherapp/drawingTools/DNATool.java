@@ -286,7 +286,6 @@ public class DNATool extends DrawingTool {
             if (((Math.abs(period_ratio) >= leftToRightBarRatios[bar_index])) && !(periodBars[bar_index])) {
                 periodBars[bar_index] = true;
                 drawBarBetweenWaves();
-
             }
         } else {
             if (((Math.abs(period_ratio) >= rightToLeftBarRatios[bar_index])) && !(periodBars[bar_index])) {
