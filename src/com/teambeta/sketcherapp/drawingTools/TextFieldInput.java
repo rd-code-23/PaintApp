@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
+
 /**
  * Custom text field used for TextTool class. Text field that closes upon the "Enter" key.
  */

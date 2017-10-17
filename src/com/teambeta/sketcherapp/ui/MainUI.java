@@ -14,6 +14,8 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
@@ -77,6 +79,8 @@ public class MainUI {
     private JButton airBrushToolButton;
     private WidthChanger widthChanger;
     private DrawArea drawArea;
+
+    //adding key binding stuff
 
 
     private ActionListener actionListener = new ActionListener() {
@@ -273,6 +277,8 @@ public class MainUI {
         widthChanger.getCheckBoxGlobalSizeComponent().addActionListener(actionListener);
         widthChanger.getFillBox().addActionListener(actionListener);
 
+
+
         mainContent.add(canvasTools, BorderLayout.WEST);
 
         ColorChooser colourChooser = new ColorChooser();
@@ -283,7 +289,11 @@ public class MainUI {
         mainContent.add(editorPanel, BorderLayout.EAST);
 
         mainContent.add(northPanels, BorderLayout.NORTH);
+        //adding key binding
 
+        addKeyBinding(editorPanel,KeyEvent.VK_B,"BRUSH TOOL",(evt) -> {
+        selectedDrawingTool = brushTool;
+        });
     }
 
     /**
@@ -321,4 +331,24 @@ public class MainUI {
         mainFrame.setLocationRelativeTo(null);  // positions GUI in center when opened
         mainFrame.setVisible(true);
     }
+
+    public static void addKeyBinding(JComponent component, int keyCode, String id,ActionListener actionListener ){
+
+        InputMap im = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+
+        im.put(KeyStroke.getKeyStroke(keyCode,0,false),id);
+
+        ActionMap actionMap = component.getActionMap();
+
+        actionMap.put(id, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actionListener.actionPerformed(e);
+            }
+        });
+
+
+
+    }
+
 }
