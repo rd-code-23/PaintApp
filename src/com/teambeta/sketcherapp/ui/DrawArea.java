@@ -188,8 +188,8 @@ public class DrawArea extends JComponent {
      */
     public void setImportedImage(BufferedImage image) {
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
-        layer1Graphics.drawImage(image, 50, 50, this);
-        graphics.drawImage(image, 50, 50, this);
+        layer1Graphics.drawImage(image, 0, 0, this);
+        graphics.drawImage(image, 0, 0, this);
         graphics.finalize();
         isCanvasAltered = false;
         repaint();
