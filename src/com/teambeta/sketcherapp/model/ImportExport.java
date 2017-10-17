@@ -29,14 +29,21 @@ public class ImportExport {
     private DrawArea drawArea;
     private MainUI mainUI;
 
+    /**
+     * Constructor so we can can access methods from other classes
+     * @param drawArea
+     * @param mainUI
+     */
     public ImportExport(DrawArea drawArea, MainUI mainUI) {
         this.drawArea = drawArea;
         this.mainUI = mainUI;
     }
 
+    /**
+     * lets user export an image into PNG to their computer
+     */
     public void exportImage() {
-
-        String userDir = System.getProperty(USER_DESKTOP);
+        String userDir = System.getProperty(USER_HOME);
         JFileChooser fileChooser = new JFileChooser(userDir + USER_DESKTOP);
         fileChooser.setDialogTitle(EXPORT_CANVAS_DIALOG_TITLE);
         int retrieval = fileChooser.showSaveDialog(null);
@@ -52,8 +59,14 @@ public class ImportExport {
             }
         }
 
+        drawArea.setCanvasAltered(false);
     }
 
+    /**
+     * lets user import an image from their computer and into the canvas
+     * if user has altered the canvas without saving then
+     * the program prompts a message to let them save
+     */
     public void importImage() {
         String userDir = System.getProperty(USER_HOME);
         JFileChooser fileChooser = new JFileChooser(userDir + USER_DESKTOP);
