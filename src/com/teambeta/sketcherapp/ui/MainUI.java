@@ -340,7 +340,7 @@ public class MainUI {
     public void generateDefaultKeyBindings(JPanel editorPanel) {
 
         //TODO cannot get clear to work with ctrl+c ??? thats why i added the boolean to function call
-        addKeyBinding(editorPanel, KeyEvent.VK_C, false,false ,"CLEAR CANVAS", (evt) -> {
+        addKeyBinding(editorPanel, KeyEvent.VK_C, false,true ,"CLEAR CANVAS", (evt) -> {
             drawArea.clear();
         });
 
