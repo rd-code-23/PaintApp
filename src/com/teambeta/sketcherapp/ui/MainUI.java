@@ -7,6 +7,7 @@ import com.teambeta.sketcherapp.drawingTools.RectangleTool;
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.ImportExport;
 import javafx.stage.FileChooser;
+import sun.font.TrueTypeFont;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -81,8 +82,8 @@ public class MainUI {
     private JButton airBrushToolButton;
     private WidthChanger widthChanger;
     private DrawArea drawArea;
+    ImportExport importExport;
 
-    //adding key binding stuff
 
 
     private ActionListener actionListener = new ActionListener() {
@@ -228,7 +229,7 @@ public class MainUI {
 
         drawArea = new DrawArea();
 
-        ImportExport importExport = new ImportExport(drawArea,this);
+        importExport = new ImportExport(drawArea,this);
 
         // ideally this should be in its own widthPanel with a proper scale, not directly to mainContent
         mainContent.add(drawArea, BorderLayout.CENTER);
@@ -295,10 +296,7 @@ public class MainUI {
 
         mainContent.add(northPanels, BorderLayout.NORTH);
 
-
-
-        //adding key binding
-            generateDefaultKeyBindings(editorPanel);
+        generateDefaultKeyBindings(editorPanel);
 
     }
 
@@ -341,60 +339,82 @@ public class MainUI {
 
     public void generateDefaultKeyBindings(JPanel editorPanel) {
 
-
         //TODO cannot get clear to work with ctrl+c ??? thats why i added the boolean to function call
-        addKeyBinding(editorPanel, KeyEvent.VK_C, false, "CLEAR CANVAS", (evt) -> {
+        addKeyBinding(editorPanel, KeyEvent.VK_C, false,false ,"CLEAR CANVAS", (evt) -> {
             drawArea.clear();
         });
 
+        addKeyBinding(editorPanel, KeyEvent.VK_I, true,false , "EXPORT TOOL", (evt) -> {
+            importExport.exportImage();
+        });
 
-        addKeyBinding(editorPanel, KeyEvent.VK_B, true, "BRUSH TOOL", (evt) -> {
+        addKeyBinding(editorPanel, KeyEvent.VK_O, true, false ,"IMPORT TOOL", (evt) -> {
+            importExport.importImage();
+        });
+
+        addKeyBinding(editorPanel, KeyEvent.VK_B, true,false , "BRUSH TOOL", (evt) -> {
             selectedDrawingTool = brushTool;
         });
 
-        addKeyBinding(editorPanel, KeyEvent.VK_L, true, "LINE TOOL", (evt) -> {
+        addKeyBinding(editorPanel, KeyEvent.VK_L, true, false ,"LINE TOOL", (evt) -> {
             selectedDrawingTool = lineTool;
         });
 
-        addKeyBinding(editorPanel, KeyEvent.VK_R, true, "RECT TOOL", (evt) -> {
+        addKeyBinding(editorPanel, KeyEvent.VK_R, true,false , "RECT TOOL", (evt) -> {
             selectedDrawingTool = rectangleTool;
         });
 
-        addKeyBinding(editorPanel, KeyEvent.VK_E, true, "ELIPSE TOOL", (evt) -> {
+        addKeyBinding(editorPanel, KeyEvent.VK_E, true, false ,"ELIPSE TOOL", (evt) -> {
             selectedDrawingTool = ellipseTool;
         });
 
-        addKeyBinding(editorPanel, KeyEvent.VK_Q, true, "ELIPSE TOOL", (evt) -> {
+        addKeyBinding(editorPanel, KeyEvent.VK_Q, true, false ,"ELIPSE TOOL", (evt) -> {
             selectedDrawingTool = ellipseTool;
         });
 
-        addKeyBinding(editorPanel, KeyEvent.VK_E, true, "ERASER TOOL", (evt) -> {
+        addKeyBinding(editorPanel, KeyEvent.VK_E, true, false ,"ERASER TOOL", (evt) -> {
             selectedDrawingTool = eraserTool;
         });
 
-        addKeyBinding(editorPanel, KeyEvent.VK_T, true, "TEXT TOOL", (evt) -> {
+        addKeyBinding(editorPanel, KeyEvent.VK_T, true, false ,"TEXT TOOL", (evt) -> {
             selectedDrawingTool = textTool;
         });
 
-        addKeyBinding(editorPanel, KeyEvent.VK_P, true, "PAINTBUCKET TOOL", (evt) -> {
+        addKeyBinding(editorPanel, KeyEvent.VK_P, true, false ,"PAINTBUCKET TOOL", (evt) -> {
             selectedDrawingTool = paintBucketTool;
         });
 
-        addKeyBinding(editorPanel, KeyEvent.VK_F, true, "PAINTBUCKET TOOL", (evt) -> {
+        addKeyBinding(editorPanel, KeyEvent.VK_F, true,false , "FAN TOOL", (evt) -> {
             selectedDrawingTool = fanTool;
         });
 
-     //   addKeyBinding(editorPanel, KeyEvent.VK_S, true, "PAINTBUCKET TOOL", (evt) -> {
-      //     ME;
-      //  });
+        addKeyBinding(editorPanel, KeyEvent.VK_C, true,false , "CELTIC TOOL", (evt) -> {
+            selectedDrawingTool = celticKnotTool;
+        });
+
+        addKeyBinding(editorPanel, KeyEvent.VK_D, true,false , "DNA TOOL", (evt) -> {
+            selectedDrawingTool = dnaTool;
+        });
+
+        addKeyBinding(editorPanel, KeyEvent.VK_N, true, false ,"EYE TOOL", (evt) -> {
+            selectedDrawingTool = eyeDropperTool;
+        });
+
+       addKeyBinding(editorPanel, KeyEvent.VK_A, true, false,"AIRBRUSH TOOL", (evt) -> {
+            selectedDrawingTool = airBrushTool;
+       });
+
+
     }
 
-    public static void addKeyBinding(JComponent component, int keyCode,boolean useControl, String id,ActionListener actionListener ){
+    public static void addKeyBinding(JComponent component, int keyCode,boolean useControl,boolean useShift ,String id,ActionListener actionListener ){
 
         InputMap im = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 
         if(useControl) {
             im.put(KeyStroke.getKeyStroke(keyCode, InputEvent.CTRL_DOWN_MASK), id);
+        } else if (useShift){
+            im.put(KeyStroke.getKeyStroke(keyCode, InputEvent.SHIFT_DOWN_MASK), id);
         } else {
             im.put(KeyStroke.getKeyStroke(keyCode, 0,false),id);
         }
