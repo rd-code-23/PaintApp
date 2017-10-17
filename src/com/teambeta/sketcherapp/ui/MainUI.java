@@ -169,6 +169,14 @@ public class MainUI {
     }
 
 
+    public  JFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(JFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
     /**
      * When a new brushTool is selected this method
      * will update the size panel to the current brush tool
@@ -186,6 +194,7 @@ public class MainUI {
             widthChanger.setCurrentWidthValue(selectedDrawingTool.getToolWidth());
             widthChanger.setJLabel();
         }
+
     }
 
     /**
@@ -251,7 +260,7 @@ public class MainUI {
 
         JPanel northPanels = new JPanel();
         northPanels.setLayout(new BorderLayout());
-        MenuUI menuUI = new MenuUI(drawArea);
+        MenuUI menuUI = new MenuUI(drawArea,this);
         northPanels.add(menuUI, BorderLayout.NORTH);
 
         widthChanger = new WidthChanger();
@@ -274,6 +283,7 @@ public class MainUI {
         mainContent.add(editorPanel, BorderLayout.EAST);
 
         mainContent.add(northPanels, BorderLayout.NORTH);
+
     }
 
     /**

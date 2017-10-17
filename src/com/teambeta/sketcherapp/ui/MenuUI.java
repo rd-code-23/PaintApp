@@ -13,8 +13,7 @@ import java.io.IOException;
  */
 
 
-
-public class MenuUI extends JMenuBar{
+public class MenuUI extends JMenuBar {
 
 
     private static final String FILE_MENU_BUTTON_TEXT = "File";
@@ -22,7 +21,6 @@ public class MenuUI extends JMenuBar{
     private static final String IMAGE_MENU_BUTTON_TEXT = "Image";
     private static final String WINDOW_MENU_BUTTON_TEXT = "Window";
     private static final String HELP_MENU_BUTTON_TEXT = "Help";
-
 
 
     private JMenu fileMenu;
@@ -86,6 +84,7 @@ public class MenuUI extends JMenuBar{
     private static final String HABOUT_MENU_BUTTON_TEXT = "About";
 
     private DrawArea drawArea;
+    private  MainUI mainUI;
 
     private static final String EXPORT_CANVAS_DIALOG_TITLE = "Export Canvas";
     public static final String IMPORT_CANVAS_DIALOG_TITLE = "Import Canvas";
@@ -94,9 +93,10 @@ public class MenuUI extends JMenuBar{
      * constructor
      */
 
-    public MenuUI(DrawArea drawArea){
+    public MenuUI(DrawArea drawArea, MainUI mainUI) {
 
         this.drawArea = drawArea;
+        this.mainUI = mainUI;
         prepareMenuBar();
     }
 
@@ -177,52 +177,82 @@ public class MenuUI extends JMenuBar{
 
             // Export canvas menu button
             if (e.getSource() == iExport) {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setCurrentDirectory(new java.io.File("C:\\"));
-                fileChooser.setDialogTitle(EXPORT_CANVAS_DIALOG_TITLE);
-                int retrieval = fileChooser.showSaveDialog(null);
-
-                if (retrieval == JFileChooser.APPROVE_OPTION) {
-                    File file = null;
-                    //write image to a file
-                    try {
-                        file = new File(fileChooser.getSelectedFile() + ".png");
-                        ImageIO.write(drawArea.getCanvas(), "png", file);
-                    } catch (IOException exc) {
-                        exc.printStackTrace();
-                    }
-                }
+                exportImage();
             }
             if (e.getSource() == iImport) {
-                JFileChooser fileChooser = new JFileChooser();
-                File workingDirectory = new File(System.getProperty("user.dir"));
-                fileChooser.setCurrentDirectory(workingDirectory);
-                fileChooser.setDialogTitle(IMPORT_CANVAS_DIALOG_TITLE);
-                int retrieval = fileChooser.showOpenDialog(null);
+                 importImage();
+            }
+        }
 
-                if (retrieval == JFileChooser.APPROVE_OPTION) {
-                    //write image to a file
-                    File selectedFile = fileChooser.getSelectedFile();
-                    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
-
-                        BufferedImage image  = null;
-                        File imageFile = new File(selectedFile.getAbsolutePath());
-                        try {
-                            image = ImageIO.read(imageFile);
-                        } catch (IOException exc) {
-                            exc.printStackTrace();
-                        }
+    };
 
 
-                        drawArea.setImportedImage(image);
+    public void exportImage(){
 
+        String userDir = System.getProperty("user.home");
+        JFileChooser fileChooser = new JFileChooser(userDir +"/Desktop");
+        fileChooser.setDialogTitle(EXPORT_CANVAS_DIALOG_TITLE);
+        int retrieval = fileChooser.showSaveDialog(null);
 
+        if (retrieval == JFileChooser.APPROVE_OPTION) {
+            File file = null;
+            //write image to a file
+            try {
+                file = new File(fileChooser.getSelectedFile() + ".png");
+                ImageIO.write(drawArea.getCanvas(), "png", file);
+            } catch (IOException exc) {
+                exc.printStackTrace();
+            }
+        }
+
+    }
+
+    public void importImage(){
+            String userDir = System.getProperty("user.home");
+            JFileChooser fileChooser = new JFileChooser(userDir +"/Desktop");
+            //fileChooser.setCurrentDirectory(workingDirectory);
+            fileChooser.setDialogTitle(IMPORT_CANVAS_DIALOG_TITLE);
+            int retrieval = fileChooser.showOpenDialog(null);
+
+            if (retrieval == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                BufferedImage image = null;
+                File imageFile = new File(selectedFile.getAbsolutePath());
+                try {
+                    image = ImageIO.read(imageFile);
+                } catch (IOException exc) {
+                    exc.printStackTrace();
+                }
+
+                if( drawArea.isCanvasAltered() == true)   {
+
+                    //Custom button text
+                    Object[] options = {"Save",
+                            "Dont Save",
+                            "Cancel"};
+                    int userOption = JOptionPane.showOptionDialog(mainUI.getMainFrame(),
+                            "Save your work?",
+                            "",
+                            JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            options,
+                            options[2]);
+
+                    if(userOption == 0){
+                        exportImage();
+                    }
 
 
                 }
+
+
+                drawArea.setImportedImage(image);
+
             }
         }
-    };
+
+
 
 }
 

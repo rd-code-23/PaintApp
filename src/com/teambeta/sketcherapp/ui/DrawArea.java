@@ -17,6 +17,8 @@ public class DrawArea extends JComponent {
     private Graphics2D graphics;
     private Color backgroundColor;
 
+
+    private boolean isCanvasAltered = false;
     /**
      * Constructor. Set actions upon mouse press events.
      */
@@ -30,6 +32,7 @@ public class DrawArea extends JComponent {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 MainUI.selectedDrawingTool.onClick(canvas, layers, e);
+                isCanvasAltered = true;
                 repaint();
             }
 
@@ -37,6 +40,7 @@ public class DrawArea extends JComponent {
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
                 MainUI.selectedDrawingTool.onPress(canvas, layers, e);
+                isCanvasAltered = true;
                 repaint();
             }
 
@@ -44,6 +48,7 @@ public class DrawArea extends JComponent {
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
                 MainUI.selectedDrawingTool.onRelease(canvas, layers, e);
+                isCanvasAltered = true;
                 repaint();
             }
         });
@@ -126,6 +131,7 @@ public class DrawArea extends JComponent {
         layer1Graphics.fillRect(0, 0, MainUI.CANVAS_WIDTH, MainUI.CANVAS_HEIGHT);
         graphics.setPaint(Color.black);
         layer1Graphics.setPaint(Color.black);
+        isCanvasAltered = false;
         repaint();
     }
 
@@ -136,6 +142,14 @@ public class DrawArea extends JComponent {
      */
     public void setColor(Color color) {
         graphics.setPaint(color);
+    }
+
+    public boolean isCanvasAltered() {
+        return isCanvasAltered;
+    }
+
+    public void setCanvasAltered(boolean canvasAltered) {
+        isCanvasAltered = canvasAltered;
     }
 
     /**
@@ -180,6 +194,7 @@ public class DrawArea extends JComponent {
         layer1Graphics.drawImage(image, 50, 50,this);
         graphics.drawImage(image, 50, 50, this);
         graphics.finalize();
+        isCanvasAltered = false;
         repaint();
     }
 
