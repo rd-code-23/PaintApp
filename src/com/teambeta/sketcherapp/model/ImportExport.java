@@ -10,9 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * Created by rdhol on 2017-10-16.
- */
+
 public class ImportExport {
 
     private static final String EXPORT_CANVAS_DIALOG_TITLE = "Export Canvas";
