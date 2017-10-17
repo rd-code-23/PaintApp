@@ -15,6 +15,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.KeyStroke;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -289,11 +290,12 @@ public class MainUI {
         mainContent.add(editorPanel, BorderLayout.EAST);
 
         mainContent.add(northPanels, BorderLayout.NORTH);
-        //adding key binding
 
-        addKeyBinding(editorPanel,KeyEvent.VK_B,"BRUSH TOOL",(evt) -> {
-        selectedDrawingTool = brushTool;
-        });
+
+
+        //adding key binding
+            generateDefaultKeyBindings(editorPanel);
+
     }
 
     /**
@@ -332,11 +334,28 @@ public class MainUI {
         mainFrame.setVisible(true);
     }
 
-    public static void addKeyBinding(JComponent component, int keyCode, String id,ActionListener actionListener ){
+
+    public void generateDefaultKeyBindings(JPanel editorPanel){
+
+       addKeyBinding(editorPanel,KeyEvent.VK_B,true,"BRUSH TOOL",(evt3) -> {
+          selectedDrawingTool = brushTool;
+       });
+
+       //TODO cannot get clear to work with ctrl+c ??? thats why i added the boolean to function call
+       addKeyBinding(editorPanel,KeyEvent.VK_C,false,"CLEAR CANVAS",(evt) -> {
+            drawArea.clear();
+        });
+    }
+
+    public static void addKeyBinding(JComponent component, int keyCode,boolean useControl, String id,ActionListener actionListener ){
 
         InputMap im = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 
-        im.put(KeyStroke.getKeyStroke(keyCode,0,false),id);
+        if(useControl) {
+            im.put(KeyStroke.getKeyStroke(keyCode, InputEvent.CTRL_DOWN_MASK), id);
+        } else {
+            im.put(KeyStroke.getKeyStroke(keyCode, 0,false),id);
+        }
 
         ActionMap actionMap = component.getActionMap();
 
