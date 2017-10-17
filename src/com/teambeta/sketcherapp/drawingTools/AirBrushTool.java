@@ -6,6 +6,7 @@ import com.teambeta.sketcherapp.ui.DrawArea;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -18,12 +19,12 @@ public class AirBrushTool extends DrawingTool {
     private Color color;
     private Graphics2D layer1Graphics;
     private int dotsToDraw;
-    private int dotRadius;
+    private int dotDiameter;
     private int dotX;
     private int dotY;
     private final double DOT_WIDTH_RATIO = 0.50;
-    private final int DEFAULT_DOT_RADIUS = 20;
-    private final int DEFAULT_DOTS_TO_DRAW = 20;
+    private final int DEFAULT_DOT_DIAMETER = 20;
+    private final int DEFAULT_DOTS_TO_DRAW = 10;
     private final int DEFAULT_STOKE_VALUE = 10;
 
 
@@ -35,7 +36,7 @@ public class AirBrushTool extends DrawingTool {
         registerObservers();
         currentX = 0;
         currentY = 0;
-        dotRadius = DEFAULT_DOT_RADIUS;
+        dotDiameter = DEFAULT_DOT_DIAMETER;
         dotsToDraw = DEFAULT_DOTS_TO_DRAW;
         dotX = 0;
         dotY = 0;
@@ -46,8 +47,7 @@ public class AirBrushTool extends DrawingTool {
         currentX = e.getX();
         currentY = e.getY();
 
-        drawDotsAroundPoint();
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
+        drawDotsAroundPoint(canvas, layers);
     }
 
     @Override
@@ -69,19 +69,24 @@ public class AirBrushTool extends DrawingTool {
         currentX = e.getX();
         currentY = e.getY();
 
-        drawDotsAroundPoint();
+        drawDotsAroundPoint(canvas, layers);
     }
 
-    
+
     /**
-     * Generate random dots around an area.
+     * Generate random dots within the area of the unit circle bounded by the radius to the mouse cursor.
      */
-    private void drawDotsAroundPoint() {
-        for (int i = 0; i <= dotsToDraw; i++) {
-            dotX = randomInt(currentX - dotRadius, currentX + dotRadius);
-            dotY = randomInt(currentY - dotRadius, currentY + dotRadius);
+    private void drawDotsAroundPoint(BufferedImage canvas, BufferedImage[] layers) {
+        double dot_angle;
+        double rand_radius;
+        for (int i = 0; i < dotsToDraw; ++i) {
+            dot_angle = randomDouble(0, 2 * Math.PI);
+            rand_radius = randomInt(-dotDiameter / 2, dotDiameter / 2);
+            dotX = (int) (currentX + rand_radius * Math.sin(dot_angle));
+            dotY = (int) (currentY + rand_radius * Math.cos(dot_angle));
             layer1Graphics.drawLine(dotX, dotY, dotX, dotY);
         }
+        DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
 
 
@@ -97,20 +102,20 @@ public class AirBrushTool extends DrawingTool {
 
     /**
      * Get width of the tool.
-     * 
+     *
      * @return dot's radius.
      */
     public int getToolWidth() {
-        return dotRadius;
+        return dotDiameter;
     }
 
     /**
      * Set dot radius to brush width.
-     * 
-     * @param brush width to set dot radius to.
+     *
+     * @param brushWidth width to set dot radius to.
      */
     public void setToolWidth(int brushWidth) {
-        dotRadius = brushWidth;
+        dotDiameter = brushWidth;
     }
 
     /**
@@ -154,5 +159,16 @@ public class AirBrushTool extends DrawingTool {
      */
     private int randomInt(int min, int max) {
         return ThreadLocalRandom.current().nextInt(max - min + 1) + min;
+    }
+
+    /**
+     * Return a random double within the closed interval of min to max.
+     *
+     * @param min The minimum number
+     * @param max The maximum number
+     * @return The random number from min to max
+     */
+    private double randomDouble(double min, double max) {
+        return ThreadLocalRandom.current().nextDouble(max - min + 1.0) + min;
     }
 }

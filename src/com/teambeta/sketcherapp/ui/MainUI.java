@@ -79,6 +79,8 @@ public class MainUI {
     private WidthChanger widthChanger;
     private DrawArea drawArea;
 
+    private ColorChooser colorChooser;
+
 
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -279,10 +281,10 @@ public class MainUI {
 
         mainContent.add(canvasTools, BorderLayout.WEST);
 
-        ColorChooser colourChooser = new ColorChooser();
+        colorChooser = new ColorChooser();
         JPanel editorPanel = new JPanel();
         editorPanel.setLayout(new BorderLayout());
-        editorPanel.add(colourChooser, BorderLayout.NORTH);
+        editorPanel.add(colorChooser, BorderLayout.NORTH);
         editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
         mainContent.add(editorPanel, BorderLayout.EAST);
 
@@ -308,7 +310,7 @@ public class MainUI {
         rectangleTool = new RectangleTool();
         eraserTool = new EraserTool(drawArea); // Requires drawArea due to requiring the canvas colour.
         ellipseTool = new EllipseTool();
-        eyeDropperTool = new EyeDropperTool(widthChanger); // Requires widthChanger UI element for direct text update.
+        eyeDropperTool = new EyeDropperTool(widthChanger, colorChooser); // Requires widthChanger UI element for direct text update.
         textTool = new TextTool();
         fanTool = new FanTool();
         celticKnotTool = new CelticKnotTool();
