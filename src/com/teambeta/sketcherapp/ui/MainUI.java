@@ -335,16 +335,54 @@ public class MainUI {
     }
 
 
-    public void generateDefaultKeyBindings(JPanel editorPanel){
+    public void generateDefaultKeyBindings(JPanel editorPanel) {
 
-       addKeyBinding(editorPanel,KeyEvent.VK_B,true,"BRUSH TOOL",(evt3) -> {
-          selectedDrawingTool = brushTool;
-       });
 
-       //TODO cannot get clear to work with ctrl+c ??? thats why i added the boolean to function call
-       addKeyBinding(editorPanel,KeyEvent.VK_C,false,"CLEAR CANVAS",(evt) -> {
+        //TODO cannot get clear to work with ctrl+c ??? thats why i added the boolean to function call
+        addKeyBinding(editorPanel, KeyEvent.VK_C, false, "CLEAR CANVAS", (evt) -> {
             drawArea.clear();
         });
+
+
+        addKeyBinding(editorPanel, KeyEvent.VK_B, true, "BRUSH TOOL", (evt) -> {
+            selectedDrawingTool = brushTool;
+        });
+
+        addKeyBinding(editorPanel, KeyEvent.VK_L, true, "LINE TOOL", (evt) -> {
+            selectedDrawingTool = lineTool;
+        });
+
+        addKeyBinding(editorPanel, KeyEvent.VK_R, true, "RECT TOOL", (evt) -> {
+            selectedDrawingTool = rectangleTool;
+        });
+
+        addKeyBinding(editorPanel, KeyEvent.VK_E, true, "ELIPSE TOOL", (evt) -> {
+            selectedDrawingTool = ellipseTool;
+        });
+
+        addKeyBinding(editorPanel, KeyEvent.VK_Q, true, "ELIPSE TOOL", (evt) -> {
+            selectedDrawingTool = ellipseTool;
+        });
+
+        addKeyBinding(editorPanel, KeyEvent.VK_E, true, "ERASER TOOL", (evt) -> {
+            selectedDrawingTool = eraserTool;
+        });
+
+        addKeyBinding(editorPanel, KeyEvent.VK_T, true, "TEXT TOOL", (evt) -> {
+            selectedDrawingTool = textTool;
+        });
+
+        addKeyBinding(editorPanel, KeyEvent.VK_P, true, "PAINTBUCKET TOOL", (evt) -> {
+            selectedDrawingTool = paintBucketTool;
+        });
+
+        addKeyBinding(editorPanel, KeyEvent.VK_F, true, "PAINTBUCKET TOOL", (evt) -> {
+            selectedDrawingTool = fanTool;
+        });
+
+     //   addKeyBinding(editorPanel, KeyEvent.VK_S, true, "PAINTBUCKET TOOL", (evt) -> {
+      //     ME;
+      //  });
     }
 
     public static void addKeyBinding(JComponent component, int keyCode,boolean useControl, String id,ActionListener actionListener ){
