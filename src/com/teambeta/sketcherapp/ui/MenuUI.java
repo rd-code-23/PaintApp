@@ -1,5 +1,7 @@
 package com.teambeta.sketcherapp.ui;
 
+import com.teambeta.sketcherapp.model.ImportExport;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -15,20 +17,17 @@ import java.io.IOException;
 
 public class MenuUI extends JMenuBar {
 
-
     private static final String FILE_MENU_BUTTON_TEXT = "File";
     private static final String EDIT_MENU_BUTTON_TEXT = "Edit";
     private static final String IMAGE_MENU_BUTTON_TEXT = "Image";
     private static final String WINDOW_MENU_BUTTON_TEXT = "Window";
     private static final String HELP_MENU_BUTTON_TEXT = "Help";
 
-
     private JMenu fileMenu;
     private JMenu editMenu;
     private JMenu imageMenu;
     private JMenu windowMenu;
     private JMenu helpMenu;
-
 
     private static final String FOPEN_MENU_BUTTON_TEXT = "Open";
     private static final String FNEW_MENU_BUTTON_TEXT = "New";
@@ -44,13 +43,11 @@ public class MenuUI extends JMenuBar {
     private JMenuItem fPrint;
     private JMenuItem fClose;
 
-
     private JMenuItem eUndo;
     private JMenuItem eRedo;
 
     private static final String EUNDO_MENU_BUTTON_TEXT = "Undo";
     private static final String EREDO_MENU_BUTTON_TEXT = "Redo";
-
 
     private JMenuItem iCanvasSize;
     private JMenuItem iRotateCanvas;
@@ -64,7 +61,6 @@ public class MenuUI extends JMenuBar {
     private static final String IIMPORT_MENU_BUTTON_TEXT = "Import";
     private static final String IEXPORT_MENU_BUTTON_TEXT = "Export";
 
-
     private JMenuItem wZoom;
     private JMenuItem wMinimize;
     private JMenuItem wNewWindow;
@@ -73,30 +69,26 @@ public class MenuUI extends JMenuBar {
     private static final String WMINIMIZE_MENU_BUTTON_TEXT = "Minimize";
     private static final String WNEWWINDOW_MENU_BUTTON_TEXT = "New Window";
 
-
     private JMenuItem hManual;
     private JMenuItem hDeveloperInfo;
     private JMenuItem hAbout;
-
 
     private static final String HMANUAL_MENU_BUTTON_TEXT = "Manual";
     private static final String HDEVELOPERINFO_MENU_BUTTON_TEXT = "Developer Info";
     private static final String HABOUT_MENU_BUTTON_TEXT = "About";
 
     private DrawArea drawArea;
-    private  MainUI mainUI;
+    private ImportExport importExport;
 
-    private static final String EXPORT_CANVAS_DIALOG_TITLE = "Export Canvas";
-    public static final String IMPORT_CANVAS_DIALOG_TITLE = "Import Canvas";
 
     /**
      * constructor
      */
 
-    public MenuUI(DrawArea drawArea, MainUI mainUI) {
+    public MenuUI(DrawArea drawArea, ImportExport importExport) {
 
         this.drawArea = drawArea;
-        this.mainUI = mainUI;
+        this.importExport = importExport;
         prepareMenuBar();
     }
 
@@ -177,80 +169,14 @@ public class MenuUI extends JMenuBar {
 
             // Export canvas menu button
             if (e.getSource() == iExport) {
-                exportImage();
+                importExport.exportImage();
             }
             if (e.getSource() == iImport) {
-                 importImage();
+               importExport.importImage();
             }
         }
 
     };
-
-
-    public void exportImage(){
-
-        String userDir = System.getProperty("user.home");
-        JFileChooser fileChooser = new JFileChooser(userDir +"/Desktop");
-        fileChooser.setDialogTitle(EXPORT_CANVAS_DIALOG_TITLE);
-        int retrieval = fileChooser.showSaveDialog(null);
-
-        if (retrieval == JFileChooser.APPROVE_OPTION) {
-            File file = null;
-            //write image to a file
-            try {
-                file = new File(fileChooser.getSelectedFile() + ".png");
-                ImageIO.write(drawArea.getCanvas(), "png", file);
-            } catch (IOException exc) {
-                exc.printStackTrace();
-            }
-        }
-
-    }
-
-    public void importImage(){
-            String userDir = System.getProperty("user.home");
-            JFileChooser fileChooser = new JFileChooser(userDir +"/Desktop");
-            //fileChooser.setCurrentDirectory(workingDirectory);
-            fileChooser.setDialogTitle(IMPORT_CANVAS_DIALOG_TITLE);
-            int retrieval = fileChooser.showOpenDialog(null);
-
-            if (retrieval == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = fileChooser.getSelectedFile();
-                BufferedImage image = null;
-                File imageFile = new File(selectedFile.getAbsolutePath());
-                try {
-                    image = ImageIO.read(imageFile);
-                } catch (IOException exc) {
-                    exc.printStackTrace();
-                }
-
-                if( drawArea.isCanvasAltered() == true)   {
-
-                    //Custom button text
-                    Object[] options = {"Save",
-                            "Dont Save",
-                            "Cancel"};
-                    int userOption = JOptionPane.showOptionDialog(mainUI.getMainFrame(),
-                            "Save your work?",
-                            "",
-                            JOptionPane.YES_NO_CANCEL_OPTION,
-                            JOptionPane.QUESTION_MESSAGE,
-                            null,
-                            options,
-                            options[2]);
-
-                    if(userOption == 0){
-                        exportImage();
-                    }
-
-
-                }
-
-
-                drawArea.setImportedImage(image);
-
-            }
-        }
 
 
 

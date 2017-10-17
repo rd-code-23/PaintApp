@@ -5,6 +5,7 @@ import com.teambeta.sketcherapp.drawingTools.LineTool;
 import com.teambeta.sketcherapp.drawingTools.BrushTool;
 import com.teambeta.sketcherapp.drawingTools.RectangleTool;
 import com.teambeta.sketcherapp.drawingTools.*;
+import com.teambeta.sketcherapp.model.ImportExport;
 import javafx.stage.FileChooser;
 
 import javax.imageio.ImageIO;
@@ -158,7 +159,7 @@ public class MainUI {
         prepareGUI();
         initDrawingTools();
     }
-    
+
     /**
      * Class to listen for changes in the widthChanger slider.
      */
@@ -174,7 +175,7 @@ public class MainUI {
     }
 
 
-    public  JFrame getMainFrame() {
+    public JFrame getMainFrame() {
         return mainFrame;
     }
 
@@ -226,6 +227,9 @@ public class MainUI {
         // mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
         drawArea = new DrawArea();
+
+        ImportExport importExport = new ImportExport(drawArea,this);
+
         // ideally this should be in its own widthPanel with a proper scale, not directly to mainContent
         mainContent.add(drawArea, BorderLayout.CENTER);
 
@@ -249,7 +253,7 @@ public class MainUI {
         JButton[] buttonContainer = {clearButton, brushToolButton, lineToolButton, rectangleToolButton,
                 ellipseToolButton, eraserToolButton, textToolButton, paintBucketToolButton, fanToolButton,
                 celticKnotToolButton, dnaToolButton, eyeDropperToolButton, airBrushToolButton
-                 };
+        };
 
         JPanel canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
@@ -265,7 +269,7 @@ public class MainUI {
 
         JPanel northPanels = new JPanel();
         northPanels.setLayout(new BorderLayout());
-        MenuUI menuUI = new MenuUI(drawArea,this);
+        MenuUI menuUI = new MenuUI(drawArea, importExport);
         northPanels.add(menuUI, BorderLayout.NORTH);
 
         widthChanger = new WidthChanger();
@@ -300,7 +304,7 @@ public class MainUI {
 
     /**
      * Return the currently selected drawing tool.
-     * 
+     *
      * @return selected drawing tool.
      */
     public DrawingTool getSelectedDrawingTool() {
