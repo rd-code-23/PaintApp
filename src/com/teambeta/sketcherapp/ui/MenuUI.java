@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -21,6 +22,7 @@ public class MenuUI extends JMenuBar{
     private static final String IMAGE_MENU_BUTTON_TEXT = "Image";
     private static final String WINDOW_MENU_BUTTON_TEXT = "Window";
     private static final String HELP_MENU_BUTTON_TEXT = "Help";
+
 
 
     private JMenu fileMenu;
@@ -86,7 +88,7 @@ public class MenuUI extends JMenuBar{
     private DrawArea drawArea;
 
     private static final String EXPORT_CANVAS_DIALOG_TITLE = "Export Canvas";
-
+    public static final String IMPORT_CANVAS_DIALOG_TITLE = "Import Canvas";
 
     /**
      * constructor
@@ -165,6 +167,7 @@ public class MenuUI extends JMenuBar{
 
         // MENU ACTION LISTENERS
         iExport.addActionListener(menuActionListener);
+        iImport.addActionListener(menuActionListener);
 
     }
 
@@ -190,7 +193,34 @@ public class MenuUI extends JMenuBar{
                     }
                 }
             }
+            if (e.getSource() == iImport) {
+                JFileChooser fileChooser = new JFileChooser();
+                File workingDirectory = new File(System.getProperty("user.dir"));
+                fileChooser.setCurrentDirectory(workingDirectory);
+                fileChooser.setDialogTitle(IMPORT_CANVAS_DIALOG_TITLE);
+                int retrieval = fileChooser.showOpenDialog(null);
 
+                if (retrieval == JFileChooser.APPROVE_OPTION) {
+                    //write image to a file
+                    File selectedFile = fileChooser.getSelectedFile();
+                    System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+
+                        BufferedImage image  = null;
+                        File imageFile = new File(selectedFile.getAbsolutePath());
+                        try {
+                            image = ImageIO.read(imageFile);
+                        } catch (IOException exc) {
+                            exc.printStackTrace();
+                        }
+
+
+                        drawArea.setImportedImage(image);
+
+
+
+
+                }
+            }
         }
     };
 
