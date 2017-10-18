@@ -2,13 +2,9 @@ package com.teambeta.sketcherapp.ui;
 
 import com.teambeta.sketcherapp.model.ImportExport;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 /**
  * The MenuUI class adds a menu bar with submenus to the top of the application.
@@ -45,6 +41,7 @@ public class MenuUI extends JMenuBar {
 
     private JMenuItem eUndo;
     private JMenuItem eRedo;
+    private JMenuItem eKeybordShortCuts;
 
     private static final String EUNDO_MENU_BUTTON_TEXT = "Undo";
     private static final String EREDO_MENU_BUTTON_TEXT = "Redo";
@@ -54,6 +51,8 @@ public class MenuUI extends JMenuBar {
     private JMenuItem iColourMode;
     private JMenuItem iImport;
     private JMenuItem iExport;
+
+
 
     private static final String ICANVASSIZE_MENU_BUTTON_TEXT = "Canvas Size";
     private static final String IROTATECANVAS_MENU_BUTTON_TEXT = "Rotate Canvas";
@@ -79,16 +78,18 @@ public class MenuUI extends JMenuBar {
 
     private DrawArea drawArea;
     private ImportExport importExport;
+    private ShortcutDialog keboardShortCutPanel;
 
 
     /**
      * constructor
      */
 
-    public MenuUI(DrawArea drawArea, ImportExport importExport) {
+    public MenuUI(DrawArea drawArea, ImportExport importExport,ShortcutDialog keboardShortCutPanel) {
 
         this.drawArea = drawArea;
         this.importExport = importExport;
+        this.keboardShortCutPanel = keboardShortCutPanel;
         prepareMenuBar();
     }
 
@@ -125,9 +126,11 @@ public class MenuUI extends JMenuBar {
 
         eUndo = new JMenuItem(EUNDO_MENU_BUTTON_TEXT);
         eRedo = new JMenuItem(EREDO_MENU_BUTTON_TEXT);
+        eKeybordShortCuts = new JMenuItem("Shortcuts");
 
         editMenu.add(eUndo);
         editMenu.add(eRedo);
+        editMenu.add(eKeybordShortCuts);
 
         iCanvasSize = new JMenuItem(ICANVASSIZE_MENU_BUTTON_TEXT);
         iRotateCanvas = new JMenuItem(IROTATECANVAS_MENU_BUTTON_TEXT);
@@ -160,6 +163,7 @@ public class MenuUI extends JMenuBar {
         // MENU ACTION LISTENERS
         iExport.addActionListener(menuActionListener);
         iImport.addActionListener(menuActionListener);
+        eKeybordShortCuts.addActionListener(menuActionListener);
 
     }
 
@@ -173,6 +177,10 @@ public class MenuUI extends JMenuBar {
             }
             if (e.getSource() == iImport) {
                importExport.importImage();
+            }
+
+            if(e.getSource() == eKeybordShortCuts){
+                    keboardShortCutPanel.renderPanel();
             }
         }
 

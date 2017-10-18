@@ -6,10 +6,7 @@ import com.teambeta.sketcherapp.drawingTools.BrushTool;
 import com.teambeta.sketcherapp.drawingTools.RectangleTool;
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.ImportExport;
-import javafx.stage.FileChooser;
-import sun.font.TrueTypeFont;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -19,10 +16,6 @@ import java.awt.event.ActionListener;
 import javax.swing.KeyStroke;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 /**
  * Main UI class to wrap all GUI elements together.
@@ -83,6 +76,7 @@ public class MainUI {
     private WidthChanger widthChanger;
     private DrawArea drawArea;
     ImportExport importExport;
+    ShortcutDialog keboardShortCutPanel;
 
 
 
@@ -230,6 +224,7 @@ public class MainUI {
         drawArea = new DrawArea();
 
         importExport = new ImportExport(drawArea,this);
+        keboardShortCutPanel = new ShortcutDialog(this);
 
         // ideally this should be in its own widthPanel with a proper scale, not directly to mainContent
         mainContent.add(drawArea, BorderLayout.CENTER);
@@ -270,7 +265,7 @@ public class MainUI {
 
         JPanel northPanels = new JPanel();
         northPanels.setLayout(new BorderLayout());
-        MenuUI menuUI = new MenuUI(drawArea, importExport);
+        MenuUI menuUI = new MenuUI(drawArea, importExport,keboardShortCutPanel);
         northPanels.add(menuUI, BorderLayout.NORTH);
 
         widthChanger = new WidthChanger();
@@ -332,7 +327,7 @@ public class MainUI {
      * Display GUI.
      */
     public void showGridBagLayoutDemo() {
-        mainFrame.setLocationRelativeTo(null);  // positions GUI in center when opened
+
         mainFrame.setVisible(true);
     }
 
