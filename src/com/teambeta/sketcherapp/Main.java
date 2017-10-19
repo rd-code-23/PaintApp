@@ -13,6 +13,7 @@ public class Main {
      * @param args of user input
      */
     public static void main(String[] args) {
+        System.setProperty("sun.java2d.opengl", "True");
         MainUI mainUI = new MainUI();
         mainUI.showGridBagLayoutDemo();
     }
