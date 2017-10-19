@@ -6,9 +6,17 @@ import com.teambeta.sketcherapp.drawingTools.BrushTool;
 import com.teambeta.sketcherapp.drawingTools.RectangleTool;
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.ImportExport;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.FileChooser;
+import sun.applet.Main;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -16,9 +24,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Main UI class to wrap all GUI elements together.
@@ -62,6 +68,8 @@ public class MainUI {
     private static final int EDITOR_PANEL_HEIGHT = 300;
     public static final int CANVAS_WIDTH = 1920;
     public static final int CANVAS_HEIGHT = 1080;
+    private static final String START_SOUND_PATH = System.getProperty("user.dir") + File.separator + "src" +
+            File.separator + "res" + File.separator + "start-sound.wav";
 
 
     private JButton clearButton;
@@ -343,6 +351,25 @@ public class MainUI {
         return selectedDrawingTool;
     }
 
+    /**
+     * Play the start up sound when the application is launched or when user switches out of minimode
+     */
+    private void playStartUpSound() {
+        File startUpSound = new File(START_SOUND_PATH);
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    Clip clip = AudioSystem.getClip();
+                    clip.open(AudioSystem.getAudioInputStream(startUpSound));
+                    clip.start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
+    }
 
 
     /**
@@ -352,5 +379,8 @@ public class MainUI {
         mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         mainFrame.setLocationRelativeTo(null);  // positions GUI in center when opened
         mainFrame.setVisible(true);
+        playStartUpSound();
+
+
     }
 }
