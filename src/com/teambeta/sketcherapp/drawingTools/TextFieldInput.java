@@ -44,6 +44,11 @@ public class TextFieldInput extends JDialog {
         setVisible(true);
     }
 
+    /**
+     * Set the font name to the one selected in the font chooser drop-down.
+     *
+     * @param fontType name (or style) of the font.
+     */
     public void setFontType(String fontType) {
         font = new Font(fontType, 0, font.getSize());
         setFont(font);

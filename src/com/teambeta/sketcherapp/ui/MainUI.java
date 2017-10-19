@@ -143,6 +143,10 @@ public class MainUI {
                 widthChanger.setFill(!widthChanger.isFill());
                 selectedDrawingTool.setFillState(widthChanger.isFill());
             }
+
+            /* We can also make it so that instead of hiding tool components when another is selected,
+               have it so that components replace each other (depending on its position in the panel).
+             */
             if (e.getSource() == textToolButton) {
                 selectedDrawingTool = textTool;
                 fontSelector.setVisible(true);
