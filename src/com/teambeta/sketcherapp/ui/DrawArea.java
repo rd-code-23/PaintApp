@@ -24,7 +24,6 @@ public class DrawArea extends JComponent {
     public DrawArea() {
         backgroundColor = Color.WHITE;
         setBackground(backgroundColor);
-
         setDoubleBuffered(false);
         addMouseListener(new MouseAdapter() {
             @Override
@@ -63,7 +62,7 @@ public class DrawArea extends JComponent {
     /**
      * Clears buffer image.
      *
-     * @param bufferdImage canvas to clear.
+     * @param bufferedImage canvas to clear.
      */
     public static void clearBufferImageToTransparent(BufferedImage bufferedImage) {
         Graphics2D graphics = (Graphics2D) bufferedImage.getGraphics();
