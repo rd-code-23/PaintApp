@@ -5,7 +5,6 @@ import com.teambeta.sketcherapp.drawingTools.LineTool;
 import com.teambeta.sketcherapp.drawingTools.BrushTool;
 import com.teambeta.sketcherapp.drawingTools.RectangleTool;
 import com.teambeta.sketcherapp.drawingTools.*;
-import com.teambeta.sketcherapp.model.ImportExport;
 import javafx.stage.FileChooser;
 
 import javax.imageio.ImageIO;
@@ -77,9 +76,8 @@ public class MainUI {
     private JButton dnaToolButton;
     private JButton airBrushToolButton;
     private WidthChanger widthChanger;
+    private JComboBox<String> fontSelector;
     private DrawArea drawArea;
-
-    private ColorChooser colorChooser;
 
 
     private ActionListener actionListener = new ActionListener() {
@@ -153,8 +151,29 @@ public class MainUI {
      * Constructor.
      */
     public MainUI() {
-        prepareGUI();
+        String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+        fontSelector = new JComboBox<>(fonts);
         initDrawingTools();
+        prepareGUI();
+    }
+
+    /**
+     * Create the drawing tool objects and set the pen tool as the default selection.
+     */
+    private void initDrawingTools() {
+        lineTool = new LineTool();
+        brushTool = new BrushTool();
+        rectangleTool = new RectangleTool();
+        eraserTool = new EraserTool(drawArea); // Requires drawArea due to requiring the canvas colour.
+        ellipseTool = new EllipseTool();
+        eyeDropperTool = new EyeDropperTool(widthChanger); // Requires widthChanger UI element for direct text update.
+        textTool = new TextTool();
+        fanTool = new FanTool();
+        celticKnotTool = new CelticKnotTool();
+        paintBucketTool = new PaintBucketTool();
+        dnaTool = new DNATool();
+        airBrushTool = new AirBrushTool();
+        selectedDrawingTool = brushTool;
     }
 
     /**
@@ -171,14 +190,6 @@ public class MainUI {
         }
     }
 
-
-    public JFrame getMainFrame() {
-        return mainFrame;
-    }
-
-    public void setMainFrame(JFrame mainFrame) {
-        this.mainFrame = mainFrame;
-    }
 
     /**
      * When a new brushTool is selected this method
@@ -197,7 +208,6 @@ public class MainUI {
             widthChanger.setCurrentWidthValue(selectedDrawingTool.getToolWidth());
             widthChanger.setJLabel();
         }
-
     }
 
     /**
@@ -224,9 +234,6 @@ public class MainUI {
         // mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
         drawArea = new DrawArea();
-
-        ImportExport importExport = new ImportExport(drawArea,this);
-
         // ideally this should be in its own widthPanel with a proper scale, not directly to mainContent
         mainContent.add(drawArea, BorderLayout.CENTER);
 
@@ -250,7 +257,7 @@ public class MainUI {
         JButton[] buttonContainer = {clearButton, brushToolButton, lineToolButton, rectangleToolButton,
                 ellipseToolButton, eraserToolButton, textToolButton, paintBucketToolButton, fanToolButton,
                 celticKnotToolButton, dnaToolButton, eyeDropperToolButton, airBrushToolButton
-        };
+                 };
 
         JPanel canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
@@ -266,12 +273,20 @@ public class MainUI {
 
         JPanel northPanels = new JPanel();
         northPanels.setLayout(new BorderLayout());
-        MenuUI menuUI = new MenuUI(drawArea, importExport);
+        MenuUI menuUI = new MenuUI(drawArea);
         northPanels.add(menuUI, BorderLayout.NORTH);
 
         widthChanger = new WidthChanger();
         widthChanger.renderPanel();
         northPanels.add(widthChanger.getGUI(), BorderLayout.CENTER);
+
+        if (fontSelector != null) {
+            northPanels.add(fontSelector, BorderLayout.EAST);
+            textTool.setFont((String) fontSelector.getSelectedItem());
+        }
+
+
+
 
         MainUI.listenForSlider listenForSlider = new MainUI.listenForSlider();
         widthChanger.getSliderComponent().addChangeListener(listenForSlider);
@@ -281,43 +296,14 @@ public class MainUI {
 
         mainContent.add(canvasTools, BorderLayout.WEST);
 
-        colorChooser = new ColorChooser();
+        ColorChooser colourChooser = new ColorChooser();
         JPanel editorPanel = new JPanel();
         editorPanel.setLayout(new BorderLayout());
-        editorPanel.add(colorChooser, BorderLayout.NORTH);
+        editorPanel.add(colourChooser, BorderLayout.NORTH);
         editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
         mainContent.add(editorPanel, BorderLayout.EAST);
 
         mainContent.add(northPanels, BorderLayout.NORTH);
-
-    }
-
-    /**
-     * Return the currently selected drawing tool.
-     *
-     * @return selected drawing tool.
-     */
-    public DrawingTool getSelectedDrawingTool() {
-        return selectedDrawingTool;
-    }
-
-    /**
-     * Create the drawing tool objects and set the pen tool as the default selection.
-     */
-    private void initDrawingTools() {
-        lineTool = new LineTool();
-        brushTool = new BrushTool();
-        rectangleTool = new RectangleTool();
-        eraserTool = new EraserTool(drawArea); // Requires drawArea due to requiring the canvas colour.
-        ellipseTool = new EllipseTool();
-        eyeDropperTool = new EyeDropperTool(widthChanger, colorChooser); // Requires widthChanger UI element for direct text update.
-        textTool = new TextTool();
-        fanTool = new FanTool();
-        celticKnotTool = new CelticKnotTool();
-        paintBucketTool = new PaintBucketTool();
-        dnaTool = new DNATool();
-        airBrushTool = new AirBrushTool();
-        selectedDrawingTool = brushTool;
     }
 
     /**
