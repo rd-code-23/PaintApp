@@ -24,6 +24,7 @@ import java.io.IOException;
  * Main UI class to wrap all GUI elements together.
  */
 public class MainUI {
+    private static final String DEFAULT_FONT = "Arial";
     private static LineTool lineTool;
     private static BrushTool brushTool;
     private static RectangleTool rectangleTool;
@@ -77,6 +78,7 @@ public class MainUI {
     private JButton dnaToolButton;
     private JButton airBrushToolButton;
     private WidthChanger widthChanger;
+    private JComboBox<String> fontSelector;
     private DrawArea drawArea;
 
     private ColorChooser colorChooser;
@@ -115,8 +117,6 @@ public class MainUI {
             } else if (e.getSource() == eraserToolButton) {
                 selectedDrawingTool = eraserTool;
                 updateSizeSlider();
-            } else if (e.getSource() == textToolButton) {
-                selectedDrawingTool = textTool;
             } else if (e.getSource() == paintBucketToolButton) {
                 selectedDrawingTool = paintBucketTool;
                 updateSizeSlider();
@@ -131,19 +131,32 @@ public class MainUI {
             } else if (e.getSource() == airBrushToolButton) {
                 selectedDrawingTool = airBrushTool;
                 updateSizeSlider();
-            }
-
-            if (e.getSource() == widthChanger.getCheckBoxGlobalSizeComponent()) {
+            } else if (e.getSource() == widthChanger.getCheckBoxGlobalSizeComponent()) {
                 if (widthChanger.isGlobalSize()) {
                     widthChanger.setGlobalSize(false);
                 } else {
                     widthChanger.setGlobalSize(true);
                 }
-            }
-
-            if (e.getSource() == widthChanger.getFillBox()) {
+            } else if (e.getSource() == fontSelector) {
+                textTool.setFont((String) fontSelector.getSelectedItem());
+            } else if (e.getSource() == widthChanger.getFillBox()) {
                 widthChanger.setFill(!widthChanger.isFill());
                 selectedDrawingTool.setFillState(widthChanger.isFill());
+            }
+
+            /* We can also make it so that instead of hiding tool components when another is selected,
+               have it so that components replace each other (depending on its position in the panel).
+             */
+            if (e.getSource() == textToolButton) {
+                selectedDrawingTool = textTool;
+                fontSelector.setVisible(true);
+            } else if (e.getSource() == brushToolButton || e.getSource() == fanToolButton ||
+                    e.getSource() == lineToolButton || e.getSource() == rectangleToolButton ||
+                    e.getSource() == ellipseToolButton || e.getSource() == eraserToolButton ||
+                    e.getSource() == paintBucketToolButton || e.getSource() == eyeDropperToolButton ||
+                    e.getSource() == celticKnotToolButton || e.getSource() == dnaToolButton ||
+                    e.getSource() == airBrushToolButton) {
+                fontSelector.setVisible(false);
             }
 
         }
@@ -153,8 +166,31 @@ public class MainUI {
      * Constructor.
      */
     public MainUI() {
-        prepareGUI();
+        String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+        fontSelector = new JComboBox<>(fonts);
+        fontSelector.setSelectedItem(DEFAULT_FONT);
+        fontSelector.setVisible(false);
         initDrawingTools();
+        prepareGUI();
+    }
+
+    /**
+     * Create the drawing tool objects and set the pen tool as the default selection.
+     */
+    private void initDrawingTools() {
+        lineTool = new LineTool();
+        brushTool = new BrushTool();
+        rectangleTool = new RectangleTool();
+        eraserTool = new EraserTool(drawArea); // Requires drawArea due to requiring the canvas colour.
+        ellipseTool = new EllipseTool();
+        eyeDropperTool = new EyeDropperTool(widthChanger, colorChooser); // Requires widthChanger UI element for direct text update.
+        textTool = new TextTool();
+        fanTool = new FanTool();
+        celticKnotTool = new CelticKnotTool();
+        paintBucketTool = new PaintBucketTool();
+        dnaTool = new DNATool();
+        airBrushTool = new AirBrushTool();
+        selectedDrawingTool = brushTool;
     }
 
     /**
@@ -273,9 +309,15 @@ public class MainUI {
         widthChanger.renderPanel();
         northPanels.add(widthChanger.getGUI(), BorderLayout.CENTER);
 
+        if (fontSelector != null) {
+            northPanels.add(fontSelector, BorderLayout.EAST);
+            textTool.setFont((String) fontSelector.getSelectedItem());
+        }
+
         MainUI.listenForSlider listenForSlider = new MainUI.listenForSlider();
         widthChanger.getSliderComponent().addChangeListener(listenForSlider);
         widthChanger.getJTextFieldComponent().addActionListener(actionListener);
+        fontSelector.addActionListener(actionListener);
         widthChanger.getCheckBoxGlobalSizeComponent().addActionListener(actionListener);
         widthChanger.getFillBox().addActionListener(actionListener);
 
@@ -301,24 +343,7 @@ public class MainUI {
         return selectedDrawingTool;
     }
 
-    /**
-     * Create the drawing tool objects and set the pen tool as the default selection.
-     */
-    private void initDrawingTools() {
-        lineTool = new LineTool();
-        brushTool = new BrushTool();
-        rectangleTool = new RectangleTool();
-        eraserTool = new EraserTool(drawArea); // Requires drawArea due to requiring the canvas colour.
-        ellipseTool = new EllipseTool();
-        eyeDropperTool = new EyeDropperTool(widthChanger, colorChooser); // Requires widthChanger UI element for direct text update.
-        textTool = new TextTool();
-        fanTool = new FanTool();
-        celticKnotTool = new CelticKnotTool();
-        paintBucketTool = new PaintBucketTool();
-        dnaTool = new DNATool();
-        airBrushTool = new AirBrushTool();
-        selectedDrawingTool = brushTool;
-    }
+
 
     /**
      * Display GUI.
