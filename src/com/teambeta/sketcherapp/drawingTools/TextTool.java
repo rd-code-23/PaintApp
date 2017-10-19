@@ -18,6 +18,8 @@ public class TextTool extends DrawingTool {
     private int currentX;
     private Color color;
     private int textSize;
+    private String font;
+
     private final int DEFAULT_WIDTH_VALUE = 20;
 
     public TextTool() {
@@ -62,6 +64,15 @@ public class TextTool extends DrawingTool {
     }
 
     /**
+     * Sets font for text.
+     *
+     * @param fontType String of font type.
+     */
+    public void setFont(String fontType) {
+        font = fontType;
+    }
+
+    /**
      * Places text inputted by user on canvas.
      * @param canvas to draw text onto
      * @param layers first layer by default is layers[0]
@@ -70,12 +81,10 @@ public class TextTool extends DrawingTool {
     private void placeText(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
 
-        Font myFont = new Font("Serif", Font.PLAIN, getToolWidth());
-        layer1Graphics.setFont(myFont);
+        Font customFont = new Font(font, Font.PLAIN, getToolWidth());
+        layer1Graphics.setFont(customFont);
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         layer1Graphics.setColor(color);
-
-
 
         //draw where the mouse was clicked
         currentX = e.getX();
@@ -83,7 +92,8 @@ public class TextTool extends DrawingTool {
 
         Point location = MouseInfo.getPointerInfo().getLocation();
 
-        TextFieldInput textFieldInput = new TextFieldInput(color, (int) location.getX(), (int) location.getY(), myFont);
+        TextFieldInput textFieldInput = new TextFieldInput(color, (int) location.getX(), (int) location.getY(), customFont);
+        textFieldInput.setFontType(customFont.getFontName());
         String userInput = textFieldInput.getUserInput();
 
         if (!userInput.equals("")) {

@@ -28,7 +28,9 @@ public class EraserTool extends DrawingTool {
      * The constructor sets the properties of the tool to their default values
      */
     public EraserTool(DrawArea drawArea) {
-        color = drawArea.getBackground();
+        if (drawArea != null) {
+            color = drawArea.getBackground();
+        }
         eraserWidth = DEFAULT_WIDTH_VALUE;
         currentX = 0;
         currentY = 0;
