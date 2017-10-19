@@ -348,7 +348,8 @@ public class MainUI {
     /**
      * Display GUI.
      */
-    public void showGridBagLayoutDemo() {
+    public void displayUI() {
+        mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         mainFrame.setLocationRelativeTo(null);  // positions GUI in center when opened
         mainFrame.setVisible(true);
     }
