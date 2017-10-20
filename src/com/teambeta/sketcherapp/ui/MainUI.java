@@ -77,11 +77,11 @@ public class MainUI {
     private JButton paintBucketToolButton;
     private JButton dnaToolButton;
     private JButton airBrushToolButton;
-    private WidthChanger widthChanger;
     private JComboBox<String> fontSelector;
     private DrawArea drawArea;
 
-    private ColorChooser colorChooser;
+    private static WidthChanger widthChanger;
+    private static ColorChooser colorChooser;
 
 
     private ActionListener actionListener = new ActionListener() {
@@ -146,16 +146,14 @@ public class MainUI {
 
             /* We can also make it so that instead of hiding tool components when another is selected,
                have it so that components replace each other (depending on its position in the panel).
+
+               Review 1: Default to hiding if the tool isn't the text tool. Use direct checks to see if the current tool
+               is allowed to use the font dropdown menu.
              */
             if (e.getSource() == textToolButton) {
                 selectedDrawingTool = textTool;
                 fontSelector.setVisible(true);
-            } else if (e.getSource() == brushToolButton || e.getSource() == fanToolButton ||
-                    e.getSource() == lineToolButton || e.getSource() == rectangleToolButton ||
-                    e.getSource() == ellipseToolButton || e.getSource() == eraserToolButton ||
-                    e.getSource() == paintBucketToolButton || e.getSource() == eyeDropperToolButton ||
-                    e.getSource() == celticKnotToolButton || e.getSource() == dnaToolButton ||
-                    e.getSource() == airBrushToolButton) {
+            } else if (e.getSource() != textToolButton) {
                 fontSelector.setVisible(false);
             }
 
@@ -183,7 +181,7 @@ public class MainUI {
         rectangleTool = new RectangleTool();
         eraserTool = new EraserTool(drawArea); // Requires drawArea due to requiring the canvas colour.
         ellipseTool = new EllipseTool();
-        eyeDropperTool = new EyeDropperTool(widthChanger, colorChooser); // Requires widthChanger UI element for direct text update.
+        eyeDropperTool = new EyeDropperTool(); // Requires widthChanger UI element for direct text update.
         textTool = new TextTool();
         fanTool = new FanTool();
         celticKnotTool = new CelticKnotTool();
@@ -343,13 +341,27 @@ public class MainUI {
         return selectedDrawingTool;
     }
 
-
-
     /**
      * Display GUI.
      */
     public void showGridBagLayoutDemo() {
         mainFrame.setLocationRelativeTo(null);  // positions GUI in center when opened
         mainFrame.setVisible(true);
+    }
+
+    /**
+     * Temporary fix to allow the eyedropper tool to work no matter the order of creation.
+     * @return The UI widthChanger
+     */
+    public static WidthChanger getWidthChanger() {
+        return widthChanger;
+    }
+
+    /**
+     * Temporary fix to allow the eyedropper tool to work no matter the order of creation.
+     * @return The UI colorChooser
+     */
+    public static ColorChooser getColorChooser() {
+        return colorChooser;
     }
 }
