@@ -78,8 +78,8 @@ public class MainUI {
     private JButton dnaToolButton;
     private JButton airBrushToolButton;
     private JComboBox<String> fontSelector;
-    private DrawArea drawArea;
 
+    private static DrawArea drawArea;
     private static WidthChanger widthChanger;
     private static ColorChooser colorChooser;
 
@@ -365,5 +365,13 @@ public class MainUI {
      */
     public static ColorChooser getColorChooser() {
         return colorChooser;
+    }
+
+    /**
+     * Temprorary fix to allow the eraser tool to work no matter the order of creation.
+     * @return The UI drawArea
+     */
+    public static DrawArea getDrawArea() {
+        return drawArea;
     }
 }
