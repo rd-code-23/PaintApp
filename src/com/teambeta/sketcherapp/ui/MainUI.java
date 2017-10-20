@@ -181,7 +181,7 @@ public class MainUI {
         lineTool = new LineTool();
         brushTool = new BrushTool();
         rectangleTool = new RectangleTool();
-        eraserTool = new EraserTool(drawArea); // Requires drawArea due to requiring the canvas colour.
+        eraserTool = new EraserTool(); // Requires drawArea due to requiring the canvas colour.
         ellipseTool = new EllipseTool();
         eyeDropperTool = new EyeDropperTool(); // Requires widthChanger UI element for direct text update.
         textTool = new TextTool();

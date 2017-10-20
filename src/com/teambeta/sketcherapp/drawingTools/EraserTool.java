@@ -28,7 +28,7 @@ public class EraserTool extends DrawingTool {
     /**
      * The constructor sets the properties of the tool to their default values
      */
-    public EraserTool(DrawArea drawArea) {
+    public EraserTool() {
         eraserWidth = DEFAULT_WIDTH_VALUE;
         currentX = 0;
         currentY = 0;
