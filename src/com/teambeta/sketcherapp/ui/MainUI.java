@@ -148,12 +148,14 @@ public class MainUI {
                have it so that components replace each other (depending on its position in the panel).
 
                Review 1: Default to hiding if the tool isn't the text tool. Use direct checks to see if the current tool
-               is allowed to use the font dropdown menu.
+               is allowed to use the font dropdown menu. JButton objects currently are the only ones allowed to hide.
+               Subclass JButton if we are going to use them for other purposes. Might as well add helper methods to this
+               future subclass.
              */
             if (e.getSource() == textToolButton) {
                 selectedDrawingTool = textTool;
                 fontSelector.setVisible(true);
-            } else if (e.getSource() != textToolButton) {
+            } else if ((e.getSource() != textToolButton) && (e.getSource() instanceof JButton)) {
                 fontSelector.setVisible(false);
             }
 
