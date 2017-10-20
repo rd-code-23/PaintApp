@@ -146,6 +146,9 @@ public class MainUI {
 
             /* We can also make it so that instead of hiding tool components when another is selected,
                have it so that components replace each other (depending on its position in the panel).
+
+               Review 1: Default to hiding if the tool isn't the text tool. Use direct checks to see if the current tool
+               is allowed to use the font dropdown menu.
              */
             if (e.getSource() == textToolButton) {
                 selectedDrawingTool = textTool;
