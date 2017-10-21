@@ -1,6 +1,7 @@
 package com.teambeta.sketcherapp.drawingTools;
 
 import com.teambeta.sketcherapp.ui.DrawArea;
+import com.teambeta.sketcherapp.ui.MainUI;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -27,15 +28,13 @@ public class EraserTool extends DrawingTool {
     /**
      * The constructor sets the properties of the tool to their default values
      */
-    public EraserTool(DrawArea drawArea) {
-        if (drawArea != null) {
-            color = drawArea.getBackground();
-        }
+    public EraserTool() {
         eraserWidth = DEFAULT_WIDTH_VALUE;
         currentX = 0;
         currentY = 0;
         lastX = 0;
         lastX = 0;
+        color = Color.white; // Default color until MainUI updates to the proper color.
     }
 
 
@@ -109,6 +108,9 @@ public class EraserTool extends DrawingTool {
         layer1Graphics.setColor(color);
         layer1Graphics.setStroke(new BasicStroke(getToolWidth(), BasicStroke.CAP_ROUND,    // End-cap style
                 BasicStroke.CAP_BUTT));
+        if (MainUI.getDrawArea() != null) {
+            color = MainUI.getDrawArea().getBackground();
+        }
     }
 
     public void setFillState(boolean fillState) {

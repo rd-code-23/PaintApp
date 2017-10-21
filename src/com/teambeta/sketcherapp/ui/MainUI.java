@@ -78,8 +78,8 @@ public class MainUI {
     private JButton dnaToolButton;
     private JButton airBrushToolButton;
     private JComboBox<String> fontSelector;
-    private DrawArea drawArea;
 
+    private static DrawArea drawArea;
     private static WidthChanger widthChanger;
     private static ColorChooser colorChooser;
 
@@ -148,12 +148,14 @@ public class MainUI {
                have it so that components replace each other (depending on its position in the panel).
 
                Review 1: Default to hiding if the tool isn't the text tool. Use direct checks to see if the current tool
-               is allowed to use the font dropdown menu.
+               is allowed to use the font dropdown menu. JButton objects currently are the only ones allowed to hide.
+               Subclass JButton if we are going to use them for other purposes. Might as well add helper methods to this
+               future subclass.
              */
             if (e.getSource() == textToolButton) {
                 selectedDrawingTool = textTool;
                 fontSelector.setVisible(true);
-            } else if (e.getSource() != textToolButton) {
+            } else if ((e.getSource() != textToolButton) && (e.getSource() instanceof JButton)) {
                 fontSelector.setVisible(false);
             }
 
@@ -179,7 +181,7 @@ public class MainUI {
         lineTool = new LineTool();
         brushTool = new BrushTool();
         rectangleTool = new RectangleTool();
-        eraserTool = new EraserTool(drawArea); // Requires drawArea due to requiring the canvas colour.
+        eraserTool = new EraserTool(); // Requires drawArea due to requiring the canvas colour.
         ellipseTool = new EllipseTool();
         eyeDropperTool = new EyeDropperTool(); // Requires widthChanger UI element for direct text update.
         textTool = new TextTool();
@@ -363,5 +365,13 @@ public class MainUI {
      */
     public static ColorChooser getColorChooser() {
         return colorChooser;
+    }
+
+    /**
+     * Temprorary fix to allow the eraser tool to work no matter the order of creation.
+     * @return The UI drawArea
+     */
+    public static DrawArea getDrawArea() {
+        return drawArea;
     }
 }
