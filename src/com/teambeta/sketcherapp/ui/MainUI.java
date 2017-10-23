@@ -37,6 +37,7 @@ public class MainUI {
     private static CelticKnotTool celticKnotTool;
     private static DNATool dnaTool;
     private static AirBrushTool airBrushTool;
+    private static TriangleTool triangleTool;
     public static DrawingTool selectedDrawingTool;
 
 
@@ -53,6 +54,7 @@ public class MainUI {
     private static final String CELTIC_KNOT_TOOL_BUTTON_TEXT = "Celtic Knot";
     private static final String DNA_TOOL_BUTTON_TEXT = "DNA";
     private static final String AIR_BRUSH_TOOL_BUTTON_TEXT = "Airbrush";
+    private static final String TRIANGLE_TOOL_BUTTON_TEXT = "Triangle";
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
@@ -77,6 +79,7 @@ public class MainUI {
     private JButton paintBucketToolButton;
     private JButton dnaToolButton;
     private JButton airBrushToolButton;
+    private JButton triangleToolButton;
     private JComboBox<String> fontSelector;
 
     private static DrawArea drawArea;
@@ -142,6 +145,10 @@ public class MainUI {
             } else if (e.getSource() == widthChanger.getFillBox()) {
                 widthChanger.setFill(!widthChanger.isFill());
                 selectedDrawingTool.setFillState(widthChanger.isFill());
+            } else if (e.getSource() == triangleToolButton) {
+                selectedDrawingTool = triangleTool;
+                updateSizeSlider();
+                updateFillState();
             }
 
             /* We can also make it so that instead of hiding tool components when another is selected,
@@ -190,6 +197,7 @@ public class MainUI {
         paintBucketTool = new PaintBucketTool();
         dnaTool = new DNATool();
         airBrushTool = new AirBrushTool();
+        triangleTool = new TriangleTool();
         selectedDrawingTool = brushTool;
     }
 
@@ -281,11 +289,12 @@ public class MainUI {
         paintBucketToolButton = new JButton(PAINT_BUCKET_BUTTON_TEXT);
         dnaToolButton = new JButton(DNA_TOOL_BUTTON_TEXT);
         airBrushToolButton = new JButton(AIR_BRUSH_TOOL_BUTTON_TEXT);
+        triangleToolButton = new JButton(TRIANGLE_TOOL_BUTTON_TEXT);
 
         // Add a button to this array to register to actionListener and canvasTools
         JButton[] buttonContainer = {clearButton, brushToolButton, lineToolButton, rectangleToolButton,
                 ellipseToolButton, eraserToolButton, textToolButton, paintBucketToolButton, fanToolButton,
-                celticKnotToolButton, dnaToolButton, eyeDropperToolButton, airBrushToolButton
+                celticKnotToolButton, dnaToolButton, eyeDropperToolButton, airBrushToolButton, triangleToolButton
         };
 
         JPanel canvasTools = new JPanel();
