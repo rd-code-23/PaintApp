@@ -87,6 +87,7 @@ public class MainUI {
     private static WidthChanger widthChanger;
     private static ColorChooser colorChooser;
 
+    private static final String APPLICATION_IMAGE_DIRECTORY = "res/BPIcon.png";
 
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -258,6 +259,7 @@ public class MainUI {
      */
     private void prepareGUI() {
         mainFrame = new JFrame(APPLICATION_NAME);
+        mainFrame.setIconImage(new ImageIcon(APPLICATION_IMAGE_DIRECTORY).getImage());
         Container mainContent = mainFrame.getContentPane();
         mainContent.setLayout(new BorderLayout());
 
