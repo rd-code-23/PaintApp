@@ -1,6 +1,5 @@
 package com.teambeta.sketcherapp.ui;
 
-import com.teambeta.sketcherapp.model.GreyscaleMenu;
 import com.teambeta.sketcherapp.model.ImportExport;
 
 import javax.swing.*;
