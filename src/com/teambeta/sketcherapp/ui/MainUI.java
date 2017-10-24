@@ -6,9 +6,7 @@ import com.teambeta.sketcherapp.drawingTools.BrushTool;
 import com.teambeta.sketcherapp.drawingTools.RectangleTool;
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.ImportExport;
-import javafx.stage.FileChooser;
 
-import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.*;
@@ -17,10 +15,7 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 /**
  * Main UI class to wrap all GUI elements together.
@@ -30,6 +25,8 @@ public class MainUI {
     private static final String CANVAS_TOOLS_BORDER_TITLE = "Canvas Tools";
     private static final String BORDER_TITLE_FONT = "Arial";
     private static final int BORDER_TITLE_SIZE = 16;
+    private static final int PANEL_SECTION_SPACING = 20;
+    private static final int WEST_PANEL_WIDTH = 120;
     private static LineTool lineTool;
     private static BrushTool brushTool;
     private static RectangleTool rectangleTool;
@@ -312,17 +309,19 @@ public class MainUI {
         JPanel canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
         canvasTools.setBackground(Color.DARK_GRAY);
+        canvasTools.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
 
         // Register buttons to actionListener and canvasTools
         for (JButton button : buttonContainer) {
             button.addActionListener(actionListener);
+            button.setAlignmentX(Component.CENTER_ALIGNMENT);
             canvasTools.add(button);
+            canvasTools.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
         }
-
         canvasTools.setBorder(BorderFactory.createLineBorder(Color.GRAY));;
 
-        /* END MAINUI BUTTONS */
 
+        /* END MAINUI BUTTONS */
         JPanel northPanel = new JPanel();
         northPanel.setLayout(new BorderLayout());
         MenuUI menuUI = new MenuUI(drawArea, importExport);
@@ -347,16 +346,27 @@ public class MainUI {
         JPanel colorPanel = new JPanel();
         colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.Y_AXIS));
         colorPanel.setBackground(Color.DARK_GRAY);
+        colorPanel.setMaximumSize(canvasTools.getMaximumSize());
+        colorPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
         colorChooser = new ColorChooser();
-        colorPanel.add(colorChooser);
-        canvasTools.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+        JPanel colorChooserPanel = new JPanel();
+        colorChooserPanel.setLayout(new GridBagLayout());
+        GridBagConstraints colorChooserConstraints = new GridBagConstraints();
+        colorChooserPanel.setBackground(Color.DARK_GRAY);
+        colorChooserPanel.add(colorChooser, colorChooserConstraints);
+
+        colorPanel.add(colorChooserPanel);
+        colorPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
 
         JPanel westPanel = new JPanel();
         westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
+        westPanel.setPreferredSize(new Dimension(WEST_PANEL_WIDTH, 0));
         westPanel.setBackground(Color.DARK_GRAY);
 
         westPanel.add(canvasTools);
+        westPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
         westPanel.add(colorPanel);
 
         mainContent.add(westPanel, BorderLayout.WEST);
@@ -366,7 +376,6 @@ public class MainUI {
         editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
         mainContent.add(editorPanel, BorderLayout.EAST);
         mainContent.add(northPanel, BorderLayout.NORTH);
-
     }
 
     /**
