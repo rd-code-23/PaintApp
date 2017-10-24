@@ -1,5 +1,6 @@
 package com.teambeta.sketcherapp.ui;
 
+import com.teambeta.sketcherapp.model.GreyscaleMenu;
 import com.teambeta.sketcherapp.model.ImportExport;
 
 import javax.imageio.ImageIO;
@@ -52,12 +53,14 @@ public class MenuUI extends JMenuBar {
     private JMenuItem iCanvasSize;
     private JMenuItem iRotateCanvas;
     private JMenuItem iColourMode;
+    private JMenuItem iGreyscale;
     private JMenuItem iImport;
     private JMenuItem iExport;
 
     private static final String ICANVASSIZE_MENU_BUTTON_TEXT = "Canvas Size";
     private static final String IROTATECANVAS_MENU_BUTTON_TEXT = "Rotate Canvas";
     private static final String ICOLOURMODE_MENU_BUTTON_TEXT = "Colour Mode";
+    private static final String IGREYSCALE_MENU_BUTTON_TEXT = "Greyscale";
     private static final String IIMPORT_MENU_BUTTON_TEXT = "Import";
     private static final String IEXPORT_MENU_BUTTON_TEXT = "Export";
 
@@ -79,16 +82,18 @@ public class MenuUI extends JMenuBar {
 
     private DrawArea drawArea;
     private ImportExport importExport;
+    private GreyscaleMenu greyscaleMenu;
 
 
     /**
      * constructor
      */
 
-    public MenuUI(DrawArea drawArea, ImportExport importExport) {
+    public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu) {
 
         this.drawArea = drawArea;
         this.importExport = importExport;
+        this.greyscaleMenu = greyscaleMenu;
         prepareMenuBar();
     }
 
@@ -132,12 +137,14 @@ public class MenuUI extends JMenuBar {
         iCanvasSize = new JMenuItem(ICANVASSIZE_MENU_BUTTON_TEXT);
         iRotateCanvas = new JMenuItem(IROTATECANVAS_MENU_BUTTON_TEXT);
         iColourMode = new JMenuItem(ICOLOURMODE_MENU_BUTTON_TEXT);
+        iGreyscale = new JMenuItem(IGREYSCALE_MENU_BUTTON_TEXT);
         iImport = new JMenuItem(IIMPORT_MENU_BUTTON_TEXT);
         iExport = new JMenuItem(IEXPORT_MENU_BUTTON_TEXT);
 
         imageMenu.add(iCanvasSize);
         imageMenu.add(iRotateCanvas);
         imageMenu.add(iColourMode);
+        imageMenu.add(iGreyscale);
         imageMenu.add(iImport);
         imageMenu.add(iExport);
 
@@ -160,6 +167,7 @@ public class MenuUI extends JMenuBar {
         // MENU ACTION LISTENERS
         iExport.addActionListener(menuActionListener);
         iImport.addActionListener(menuActionListener);
+        iGreyscale.addActionListener(menuActionListener);
 
     }
 
@@ -173,6 +181,9 @@ public class MenuUI extends JMenuBar {
             }
             if (e.getSource() == iImport) {
                importExport.importImage();
+            }
+            if (e.getSource() == iGreyscale) {
+                greyscaleMenu.showWindow();
             }
         }
 
