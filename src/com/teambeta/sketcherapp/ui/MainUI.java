@@ -273,7 +273,7 @@ public class MainUI {
         mainContent.setLayout(new BorderLayout());
         drawArea = new DrawArea();
 
-        ImportExport importExport = new ImportExport(drawArea,this);
+        ImportExport importExport = new ImportExport(drawArea, this);
 
         JPanel drawAreaPanel = new JPanel();
         drawAreaPanel.setLayout(new GridBagLayout());
@@ -281,7 +281,7 @@ public class MainUI {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.ipady = CANVAS_HEIGHT;
         c.ipadx = CANVAS_WIDTH;
-        drawAreaPanel.setPreferredSize(new Dimension(400,400));
+        drawAreaPanel.setPreferredSize(new Dimension(400, 400));
         drawAreaPanel.setBackground(Color.decode("#222222"));
         drawAreaPanel.add(drawArea, c);
         mainContent.add(drawAreaPanel, BorderLayout.CENTER);
@@ -319,23 +319,21 @@ public class MainUI {
             canvasTools.add(button);
         }
 
-        canvasTools.setBorder(BorderFactory.createTitledBorder(BorderFactory.createTitledBorder(null,
-                CANVAS_TOOLS_BORDER_TITLE, 0, 0,
-                new Font(BORDER_TITLE_FONT,Font.PLAIN, BORDER_TITLE_SIZE), Color.WHITE)));
+        canvasTools.setBorder(BorderFactory.createLineBorder(Color.GRAY));;
 
         /* END MAINUI BUTTONS */
 
-        JPanel northPanels = new JPanel();
-        northPanels.setLayout(new BorderLayout());
+        JPanel northPanel = new JPanel();
+        northPanel.setLayout(new BorderLayout());
         MenuUI menuUI = new MenuUI(drawArea, importExport);
-        northPanels.add(menuUI, BorderLayout.NORTH);
+        northPanel.add(menuUI, BorderLayout.NORTH);
 
         widthChanger = new WidthChanger();
         widthChanger.renderPanel();
-        northPanels.add(widthChanger.getGUI(), BorderLayout.CENTER);
+        northPanel.add(widthChanger.getGUI(), BorderLayout.CENTER);
 
         if (fontSelector != null) {
-            northPanels.add(fontSelector, BorderLayout.EAST);
+            northPanel.add(fontSelector, BorderLayout.EAST);
             textTool.setFont((String) fontSelector.getSelectedItem());
         }
 
@@ -346,15 +344,28 @@ public class MainUI {
         widthChanger.getCheckBoxGlobalSizeComponent().addActionListener(actionListener);
         widthChanger.getFillBox().addActionListener(actionListener);
 
-        mainContent.add(canvasTools, BorderLayout.WEST);
-
+        JPanel colorPanel = new JPanel();
+        colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.Y_AXIS));
+        colorPanel.setBackground(Color.DARK_GRAY);
         colorChooser = new ColorChooser();
+        colorPanel.add(colorChooser);
+        canvasTools.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+
+        JPanel westPanel = new JPanel();
+        westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
+        westPanel.setBackground(Color.DARK_GRAY);
+
+        westPanel.add(canvasTools);
+        westPanel.add(colorPanel);
+
+        mainContent.add(westPanel, BorderLayout.WEST);
+
         JPanel editorPanel = new JPanel();
         editorPanel.setLayout(new BorderLayout());
-        editorPanel.add(colorChooser, BorderLayout.NORTH);
         editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
         mainContent.add(editorPanel, BorderLayout.EAST);
-        mainContent.add(northPanels, BorderLayout.NORTH);
+        mainContent.add(northPanel, BorderLayout.NORTH);
 
     }
 
@@ -379,6 +390,7 @@ public class MainUI {
 
     /**
      * Temporary fix to allow the eyedropper tool to work no matter the order of creation.
+     *
      * @return The UI widthChanger
      */
     public static WidthChanger getWidthChanger() {
@@ -387,6 +399,7 @@ public class MainUI {
 
     /**
      * Temporary fix to allow the eyedropper tool to work no matter the order of creation.
+     *
      * @return The UI colorChooser
      */
     public static ColorChooser getColorChooser() {
@@ -395,6 +408,7 @@ public class MainUI {
 
     /**
      * Temprorary fix to allow the eraser tool to work no matter the order of creation.
+     *
      * @return The UI drawArea
      */
     public static DrawArea getDrawArea() {

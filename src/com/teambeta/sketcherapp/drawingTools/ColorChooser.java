@@ -34,8 +34,9 @@ public class ColorChooser extends JPanel {
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
+        setSize(SQUARE_LENGTH, SQUARE_LENGTH);
         graphics.setColor(getColor());
-        graphics.fillRect(SQUARE_POS_XY, SQUARE_POS_XY, SQUARE_LENGTH, SQUARE_LENGTH);
+        graphics.fillRect(0, 0, SQUARE_LENGTH, SQUARE_LENGTH);
         graphics.dispose();
     }
 

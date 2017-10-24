@@ -8,7 +8,7 @@ public class WidthChanger {
     private static final int INITIAL_WIDTH_VALUE = 10;
     private static final int MINIMUM_SLIDER_VALUE = 0;
     private static final int MAXIMUM_SLIDER_VALUE = 100;
-    private static final int SIZE_FONT_JLABEL = 24;
+    private static final int SIZE_FONT_JLABEL = 16;
     private static final String PANEL_DESCRIPTION = "Size";
     private static final int MAX_COL_JTEXTFIELD = 3;
     private static final int HEIGHT_COMPONENT = 40;
@@ -63,8 +63,9 @@ public class WidthChanger {
         widthPanel.setBackground(Color.DARK_GRAY);
 
         panelLabel = new JLabel(PANEL_DESCRIPTION);
-        panelLabel.setForeground(Color.red);
-        panelLabel.setFont(new Font("Serif", Font.PLAIN, SIZE_FONT_JLABEL));
+        panelLabel.setForeground(Color.WHITE);
+        final String LABEL_FONT = "Arial";
+        panelLabel.setFont(new Font(LABEL_FONT, Font.PLAIN, SIZE_FONT_JLABEL));
 
         widthTextField = new JTextField("" + INITIAL_WIDTH_VALUE, MAX_COL_JTEXTFIELD);
 
