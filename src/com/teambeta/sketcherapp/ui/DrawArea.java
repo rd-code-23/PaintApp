@@ -63,7 +63,7 @@ public class DrawArea extends JComponent {
     /**
      * Clears buffer image.
      *
-     * @param bufferdImage canvas to clear.
+     * @param bufferedImage canvas to clear.
      */
     public static void clearBufferImageToTransparent(BufferedImage bufferedImage) {
         Graphics2D graphics = (Graphics2D) bufferedImage.getGraphics();
@@ -211,6 +211,27 @@ public class DrawArea extends JComponent {
      */
     public void setCanvasAltered(boolean canvasAltered) {
         isCanvasAltered = canvasAltered;
+    }
+
+    /**
+     * Redraw all canvas coordinates to the average of the coordinate's RGB values.
+     */
+    public void redrawToGreyscale() {
+        int average;
+        Color color_at_point;
+
+        // Redraw all of the layers to greyscale
+        for (BufferedImage layer : layers) {
+            for (int x = 0; x < layer.getWidth(); ++x) {
+                for (int y = 0; y < layer.getHeight(); ++y) {
+                    color_at_point = new Color(layer.getRGB(x, y));
+                    average = (color_at_point.getRed() + color_at_point.getGreen() + color_at_point.getBlue()) / 3;
+                    layer.setRGB(x, y, new Color(average, average, average).getRGB());
+                }
+            }
+        }
+        drawLayersOntoCanvas(layers, canvas);
+        repaint();
     }
 
 }

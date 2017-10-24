@@ -5,6 +5,7 @@ import com.teambeta.sketcherapp.drawingTools.LineTool;
 import com.teambeta.sketcherapp.drawingTools.BrushTool;
 import com.teambeta.sketcherapp.drawingTools.RectangleTool;
 import com.teambeta.sketcherapp.drawingTools.*;
+import com.teambeta.sketcherapp.model.GreyscaleMenu;
 import com.teambeta.sketcherapp.model.ImportExport;
 import javafx.stage.FileChooser;
 
@@ -270,6 +271,7 @@ public class MainUI {
         drawArea = new DrawArea();
 
         ImportExport importExport = new ImportExport(drawArea,this);
+        GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
 
         // ideally this should be in its own widthPanel with a proper scale, not directly to mainContent
         mainContent.add(drawArea, BorderLayout.CENTER);
@@ -311,7 +313,7 @@ public class MainUI {
 
         JPanel northPanels = new JPanel();
         northPanels.setLayout(new BorderLayout());
-        MenuUI menuUI = new MenuUI(drawArea, importExport);
+        MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu);
         northPanels.add(menuUI, BorderLayout.NORTH);
 
         widthChanger = new WidthChanger();
