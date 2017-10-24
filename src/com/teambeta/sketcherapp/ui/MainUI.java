@@ -7,19 +7,13 @@ import com.teambeta.sketcherapp.drawingTools.RectangleTool;
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.GreyscaleMenu;
 import com.teambeta.sketcherapp.model.ImportExport;
-import javafx.stage.FileChooser;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 /**
  * Main UI class to wrap all GUI elements together.
@@ -87,7 +81,7 @@ public class MainUI {
     private static WidthChanger widthChanger;
     private static ColorChooser colorChooser;
 
-    private static final String APPLICATION_IMAGE_DIRECTORY = "res/BPIcon.png";
+    private static final String APPLICATION_LOGO_IMAGE_DIRECTORY = "res/BPIcon.png";
 
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -259,7 +253,7 @@ public class MainUI {
      */
     private void prepareGUI() {
         mainFrame = new JFrame(APPLICATION_NAME);
-        mainFrame.setIconImage(new ImageIcon(APPLICATION_IMAGE_DIRECTORY).getImage());
+        mainFrame.setIconImage(new ImageIcon(APPLICATION_LOGO_IMAGE_DIRECTORY).getImage());
         Container mainContent = mainFrame.getContentPane();
         mainContent.setLayout(new BorderLayout());
 
