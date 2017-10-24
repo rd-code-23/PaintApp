@@ -2,6 +2,7 @@ package com.teambeta.sketcherapp.drawingTools;
 
 import com.teambeta.sketcherapp.model.CartesianPoint;
 import com.teambeta.sketcherapp.model.GeneralObserver;
+import com.teambeta.sketcherapp.model.GeneratorFunctions;
 import com.teambeta.sketcherapp.ui.DrawArea;
 
 import java.awt.*;
@@ -258,13 +259,13 @@ public class DNATool extends DrawingTool {
         // Set the color and brush width profiles for ATCG mode.
         layer1Graphics.setStroke(new BasicStroke((int) barBrushWidth, BasicStroke.CAP_SQUARE,
                 BasicStroke.CAP_BUTT));
-        layer1Graphics.setColor(atcg_colors[randomInt(0, atcg_colors.length - 1)]);
+        layer1Graphics.setColor(atcg_colors[GeneratorFunctions.randomInt(0, atcg_colors.length - 1)]);
 
         // Draw the lower half of the bar with a new color.
         layer1Graphics.drawLine(lowerWave.getXCurrent(), lowerWave.getYCurrent(),
                 upperWave.getXCurrent(), barMiddleY);
 
-        layer1Graphics.setColor(atcg_colors[randomInt(0, atcg_colors.length - 1)]);
+        layer1Graphics.setColor(atcg_colors[GeneratorFunctions.randomInt(0, atcg_colors.length - 1)]);
 
         // Draw the upper half of the bar with another color.
         layer1Graphics.drawLine(lowerWave.getXCurrent(), barMiddleY,
@@ -293,17 +294,6 @@ public class DNATool extends DrawingTool {
                 drawBarBetweenWaves();
             }
         }
-    }
-
-    /**
-     * Return a random integer within the closed interval of min to max.
-     *
-     * @param min The minimum number
-     * @param max The maximum number
-     * @return The random number from min to max
-     */
-    private int randomInt(int min, int max) {
-        return ThreadLocalRandom.current().nextInt(max - min + 1) + min;
     }
 
 }
