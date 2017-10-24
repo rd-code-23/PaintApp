@@ -1,5 +1,7 @@
 package com.teambeta.sketcherapp.ui;
 
+import com.teambeta.sketcherapp.model.GeneratorFunctions;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
@@ -260,24 +262,18 @@ public class DrawArea extends JComponent {
         for (BufferedImage layer : layers) {
             for (int x = 0; x < layer.getWidth(); ++x) {
                 for (int y = 0; y < layer.getHeight(); ++y) {
-                    color_at_point = new Color(randomInt(0, 255),randomInt(0, 255), randomInt(0, 255));
+                    color_at_point = new Color(
+                            GeneratorFunctions.randomInt(0, 255),
+                            GeneratorFunctions.randomInt(0, 255),
+                            GeneratorFunctions.randomInt(0, 255)
+                    );
+
                         layer.setRGB(x, y, color_at_point.getRGB());
                 }
             }
         }
         drawLayersOntoCanvas(layers, canvas);
         repaint();
-    }
-
-    /**
-     * Return a random integer within the closed interval of min to max.
-     *
-     * @param min The minimum number
-     * @param max The maximum number
-     * @return The random number from min to max
-     */
-    private int randomInt(int min, int max) {
-        return ThreadLocalRandom.current().nextInt(max - min + 1) + min;
     }
 
 }

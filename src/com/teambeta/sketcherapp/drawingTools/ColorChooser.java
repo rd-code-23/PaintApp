@@ -65,7 +65,7 @@ public class ColorChooser extends JPanel {
      * @param color The color to be set
      */
     public void setColorFromEyeDropper(Color color) {
-        this.color = color;
+        ColorChooser.color = color;
         paintComponent(getGraphics());
         notifyObservers();
     }

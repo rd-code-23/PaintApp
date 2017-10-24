@@ -1,6 +1,7 @@
 package com.teambeta.sketcherapp.drawingTools;
 
 import com.teambeta.sketcherapp.model.GeneralObserver;
+import com.teambeta.sketcherapp.model.GeneratorFunctions;
 import com.teambeta.sketcherapp.ui.DrawArea;
 
 import java.awt.*;
@@ -79,8 +80,8 @@ public class AirBrushTool extends DrawingTool {
         double dot_angle;
         double rand_radius;
         for (int i = 0; i < dotsToDraw; ++i) {
-            dot_angle = randomDouble(0, 2 * Math.PI);
-            rand_radius = randomInt(-dotDiameter / 2, dotDiameter / 2);
+            dot_angle = GeneratorFunctions.randomDouble(0, 2 * Math.PI);
+            rand_radius = GeneratorFunctions.randomInt(-dotDiameter / 2, dotDiameter / 2);
             dotX = (int) (currentX + rand_radius * Math.sin(dot_angle));
             dotY = (int) (currentY + rand_radius * Math.cos(dot_angle));
             layer1Graphics.drawLine(dotX, dotY, dotX, dotY);
@@ -149,25 +150,4 @@ public class AirBrushTool extends DrawingTool {
 
     }
 
-    /**
-     * Return a random integer within the closed interval of min to max.
-     *
-     * @param min The minimum number
-     * @param max The maximum number
-     * @return The random number from min to max
-     */
-    private int randomInt(int min, int max) {
-        return ThreadLocalRandom.current().nextInt(max - min + 1) + min;
-    }
-
-    /**
-     * Return a random double within the closed interval of min to max.
-     *
-     * @param min The minimum number
-     * @param max The maximum number
-     * @return The random number from min to max
-     */
-    private double randomDouble(double min, double max) {
-        return ThreadLocalRandom.current().nextDouble(max - min + 1.0) + min;
-    }
 }
