@@ -5,6 +5,7 @@ import com.teambeta.sketcherapp.drawingTools.LineTool;
 import com.teambeta.sketcherapp.drawingTools.BrushTool;
 import com.teambeta.sketcherapp.drawingTools.RectangleTool;
 import com.teambeta.sketcherapp.drawingTools.*;
+import com.teambeta.sketcherapp.model.ImportExport;
 import javafx.stage.FileChooser;
 
 import javax.imageio.ImageIO;
@@ -23,6 +24,7 @@ import java.io.IOException;
  * Main UI class to wrap all GUI elements together.
  */
 public class MainUI {
+    private static final String DEFAULT_FONT = "Arial";
     private static LineTool lineTool;
     private static BrushTool brushTool;
     private static RectangleTool rectangleTool;
@@ -35,6 +37,7 @@ public class MainUI {
     private static CelticKnotTool celticKnotTool;
     private static DNATool dnaTool;
     private static AirBrushTool airBrushTool;
+    private static TriangleTool triangleTool;
     public static DrawingTool selectedDrawingTool;
 
 
@@ -51,6 +54,7 @@ public class MainUI {
     private static final String CELTIC_KNOT_TOOL_BUTTON_TEXT = "Celtic Knot";
     private static final String DNA_TOOL_BUTTON_TEXT = "DNA";
     private static final String AIR_BRUSH_TOOL_BUTTON_TEXT = "Airbrush";
+    private static final String TRIANGLE_TOOL_BUTTON_TEXT = "Triangle";
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
@@ -75,9 +79,12 @@ public class MainUI {
     private JButton paintBucketToolButton;
     private JButton dnaToolButton;
     private JButton airBrushToolButton;
-    private WidthChanger widthChanger;
+    private JButton triangleToolButton;
     private JComboBox<String> fontSelector;
-    private DrawArea drawArea;
+
+    private static DrawArea drawArea;
+    private static WidthChanger widthChanger;
+    private static ColorChooser colorChooser;
 
 
     private ActionListener actionListener = new ActionListener() {
@@ -113,8 +120,6 @@ public class MainUI {
             } else if (e.getSource() == eraserToolButton) {
                 selectedDrawingTool = eraserTool;
                 updateSizeSlider();
-            } else if (e.getSource() == textToolButton) {
-                selectedDrawingTool = textTool;
             } else if (e.getSource() == paintBucketToolButton) {
                 selectedDrawingTool = paintBucketTool;
                 updateSizeSlider();
@@ -129,19 +134,36 @@ public class MainUI {
             } else if (e.getSource() == airBrushToolButton) {
                 selectedDrawingTool = airBrushTool;
                 updateSizeSlider();
-            }
-
-            if (e.getSource() == widthChanger.getCheckBoxGlobalSizeComponent()) {
+            } else if (e.getSource() == widthChanger.getCheckBoxGlobalSizeComponent()) {
                 if (widthChanger.isGlobalSize()) {
                     widthChanger.setGlobalSize(false);
                 } else {
                     widthChanger.setGlobalSize(true);
                 }
-            }
-
-            if (e.getSource() == widthChanger.getFillBox()) {
+            } else if (e.getSource() == fontSelector) {
+                textTool.setFont((String) fontSelector.getSelectedItem());
+            } else if (e.getSource() == widthChanger.getFillBox()) {
                 widthChanger.setFill(!widthChanger.isFill());
                 selectedDrawingTool.setFillState(widthChanger.isFill());
+            } else if (e.getSource() == triangleToolButton) {
+                selectedDrawingTool = triangleTool;
+                updateSizeSlider();
+                updateFillState();
+            }
+
+            /* We can also make it so that instead of hiding tool components when another is selected,
+               have it so that components replace each other (depending on its position in the panel).
+
+               Review 1: Default to hiding if the tool isn't the text tool. Use direct checks to see if the current tool
+               is allowed to use the font dropdown menu. JButton objects currently are the only ones allowed to hide.
+               Subclass JButton if we are going to use them for other purposes. Might as well add helper methods to this
+               future subclass.
+             */
+            if (e.getSource() == textToolButton) {
+                selectedDrawingTool = textTool;
+                fontSelector.setVisible(true);
+            } else if ((e.getSource() != textToolButton) && (e.getSource() instanceof JButton)) {
+                fontSelector.setVisible(false);
             }
 
         }
@@ -153,6 +175,8 @@ public class MainUI {
     public MainUI() {
         String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
         fontSelector = new JComboBox<>(fonts);
+        fontSelector.setSelectedItem(DEFAULT_FONT);
+        fontSelector.setVisible(false);
         initDrawingTools();
         prepareGUI();
     }
@@ -164,15 +188,16 @@ public class MainUI {
         lineTool = new LineTool();
         brushTool = new BrushTool();
         rectangleTool = new RectangleTool();
-        eraserTool = new EraserTool(drawArea); // Requires drawArea due to requiring the canvas colour.
+        eraserTool = new EraserTool(); // Requires drawArea due to requiring the canvas colour.
         ellipseTool = new EllipseTool();
-        eyeDropperTool = new EyeDropperTool(widthChanger); // Requires widthChanger UI element for direct text update.
+        eyeDropperTool = new EyeDropperTool(); // Requires widthChanger UI element for direct text update.
         textTool = new TextTool();
         fanTool = new FanTool();
         celticKnotTool = new CelticKnotTool();
         paintBucketTool = new PaintBucketTool();
         dnaTool = new DNATool();
         airBrushTool = new AirBrushTool();
+        triangleTool = new TriangleTool();
         selectedDrawingTool = brushTool;
     }
 
@@ -191,6 +216,14 @@ public class MainUI {
     }
 
 
+    public JFrame getMainFrame() {
+        return mainFrame;
+    }
+
+    public void setMainFrame(JFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
     /**
      * When a new brushTool is selected this method
      * will update the size panel to the current brush tool
@@ -208,6 +241,7 @@ public class MainUI {
             widthChanger.setCurrentWidthValue(selectedDrawingTool.getToolWidth());
             widthChanger.setJLabel();
         }
+
     }
 
     /**
@@ -234,6 +268,9 @@ public class MainUI {
         // mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
         drawArea = new DrawArea();
+
+        ImportExport importExport = new ImportExport(drawArea,this);
+
         // ideally this should be in its own widthPanel with a proper scale, not directly to mainContent
         mainContent.add(drawArea, BorderLayout.CENTER);
 
@@ -252,12 +289,13 @@ public class MainUI {
         paintBucketToolButton = new JButton(PAINT_BUCKET_BUTTON_TEXT);
         dnaToolButton = new JButton(DNA_TOOL_BUTTON_TEXT);
         airBrushToolButton = new JButton(AIR_BRUSH_TOOL_BUTTON_TEXT);
+        triangleToolButton = new JButton(TRIANGLE_TOOL_BUTTON_TEXT);
 
         // Add a button to this array to register to actionListener and canvasTools
         JButton[] buttonContainer = {clearButton, brushToolButton, lineToolButton, rectangleToolButton,
                 ellipseToolButton, eraserToolButton, textToolButton, paintBucketToolButton, fanToolButton,
-                celticKnotToolButton, dnaToolButton, eyeDropperToolButton, airBrushToolButton
-                 };
+                celticKnotToolButton, dnaToolButton, eyeDropperToolButton, airBrushToolButton, triangleToolButton
+        };
 
         JPanel canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
@@ -273,7 +311,7 @@ public class MainUI {
 
         JPanel northPanels = new JPanel();
         northPanels.setLayout(new BorderLayout());
-        MenuUI menuUI = new MenuUI(drawArea);
+        MenuUI menuUI = new MenuUI(drawArea, importExport);
         northPanels.add(menuUI, BorderLayout.NORTH);
 
         widthChanger = new WidthChanger();
@@ -285,25 +323,33 @@ public class MainUI {
             textTool.setFont((String) fontSelector.getSelectedItem());
         }
 
-
-
-
         MainUI.listenForSlider listenForSlider = new MainUI.listenForSlider();
         widthChanger.getSliderComponent().addChangeListener(listenForSlider);
         widthChanger.getJTextFieldComponent().addActionListener(actionListener);
+        fontSelector.addActionListener(actionListener);
         widthChanger.getCheckBoxGlobalSizeComponent().addActionListener(actionListener);
         widthChanger.getFillBox().addActionListener(actionListener);
 
         mainContent.add(canvasTools, BorderLayout.WEST);
 
-        ColorChooser colourChooser = new ColorChooser();
+        colorChooser = new ColorChooser();
         JPanel editorPanel = new JPanel();
         editorPanel.setLayout(new BorderLayout());
-        editorPanel.add(colourChooser, BorderLayout.NORTH);
+        editorPanel.add(colorChooser, BorderLayout.NORTH);
         editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
         mainContent.add(editorPanel, BorderLayout.EAST);
 
         mainContent.add(northPanels, BorderLayout.NORTH);
+
+    }
+
+    /**
+     * Return the currently selected drawing tool.
+     *
+     * @return selected drawing tool.
+     */
+    public DrawingTool getSelectedDrawingTool() {
+        return selectedDrawingTool;
     }
 
     /**
@@ -312,5 +358,29 @@ public class MainUI {
     public void showGridBagLayoutDemo() {
         mainFrame.setLocationRelativeTo(null);  // positions GUI in center when opened
         mainFrame.setVisible(true);
+    }
+
+    /**
+     * Temporary fix to allow the eyedropper tool to work no matter the order of creation.
+     * @return The UI widthChanger
+     */
+    public static WidthChanger getWidthChanger() {
+        return widthChanger;
+    }
+
+    /**
+     * Temporary fix to allow the eyedropper tool to work no matter the order of creation.
+     * @return The UI colorChooser
+     */
+    public static ColorChooser getColorChooser() {
+        return colorChooser;
+    }
+
+    /**
+     * Temprorary fix to allow the eraser tool to work no matter the order of creation.
+     * @return The UI drawArea
+     */
+    public static DrawArea getDrawArea() {
+        return drawArea;
     }
 }
