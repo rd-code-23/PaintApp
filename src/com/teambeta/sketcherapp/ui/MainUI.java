@@ -9,6 +9,8 @@ import com.teambeta.sketcherapp.model.ImportExport;
 import javafx.stage.FileChooser;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -25,6 +27,9 @@ import java.io.IOException;
  */
 public class MainUI {
     private static final String DEFAULT_FONT = "Arial";
+    private static final String CANVAS_TOOLS_BORDER_TITLE = "Canvas Tools";
+    private static final String BORDER_TITLE_FONT = "Arial";
+    private static final int BORDER_TITLE_SIZE = 16;
     private static LineTool lineTool;
     private static BrushTool brushTool;
     private static RectangleTool rectangleTool;
@@ -57,14 +62,15 @@ public class MainUI {
     private static final String TRIANGLE_TOOL_BUTTON_TEXT = "Triangle";
     private JFrame mainFrame;
 
-    private static final String APPLICATION_NAME = "Beta Sketcher";
+    private static final String APPLICATION_NAME = "Beta Paint";
     private static final int APPLICATION_WIDTH = 1920;
     private static final int APPLICATION_HEIGHT = 1080;
     private static final int EDITOR_PANEL_WIDTH = 100;
     private static final int EDITOR_PANEL_HEIGHT = 300;
-    public static final int CANVAS_WIDTH = 1920;
-    public static final int CANVAS_HEIGHT = 1080;
-
+    public static final int CANVAS_WIDTH = 1600;
+    public static final int CANVAS_HEIGHT = 900;
+    private static final String START_SOUND_PATH = System.getProperty("user.dir") + File.separator + "src" +
+            File.separator + "res" + File.separator + "start-sound.wav";
 
     private JButton clearButton;
     private JButton brushToolButton;
@@ -257,22 +263,28 @@ public class MainUI {
      */
     private void prepareGUI() {
         mainFrame = new JFrame(APPLICATION_NAME);
-        Container mainContent = mainFrame.getContentPane();
-        mainContent.setLayout(new BorderLayout());
-
         mainFrame.setSize(APPLICATION_WIDTH, APPLICATION_HEIGHT);
         mainFrame.getContentPane().setBackground(Color.DARK_GRAY);
 
         mainFrame.setLocationByPlatform(true);
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        // mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
+        Container mainContent = mainFrame.getContentPane();
+        mainContent.setLayout(new BorderLayout());
         drawArea = new DrawArea();
 
         ImportExport importExport = new ImportExport(drawArea,this);
 
-        // ideally this should be in its own widthPanel with a proper scale, not directly to mainContent
-        mainContent.add(drawArea, BorderLayout.CENTER);
+        JPanel drawAreaPanel = new JPanel();
+        drawAreaPanel.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.ipady = CANVAS_HEIGHT;
+        c.ipadx = CANVAS_WIDTH;
+        drawAreaPanel.setPreferredSize(new Dimension(400,400));
+        drawAreaPanel.setBackground(Color.decode("#222222"));
+        drawAreaPanel.add(drawArea, c);
+        mainContent.add(drawAreaPanel, BorderLayout.CENTER);
 
         /* START MAINUI BUTTONS */
 
@@ -307,6 +319,10 @@ public class MainUI {
             canvasTools.add(button);
         }
 
+        canvasTools.setBorder(BorderFactory.createTitledBorder(BorderFactory.createTitledBorder(null,
+                CANVAS_TOOLS_BORDER_TITLE, 0, 0,
+                new Font(BORDER_TITLE_FONT,Font.PLAIN, BORDER_TITLE_SIZE), Color.WHITE)));
+
         /* END MAINUI BUTTONS */
 
         JPanel northPanels = new JPanel();
@@ -338,7 +354,6 @@ public class MainUI {
         editorPanel.add(colorChooser, BorderLayout.NORTH);
         editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
         mainContent.add(editorPanel, BorderLayout.EAST);
-
         mainContent.add(northPanels, BorderLayout.NORTH);
 
     }
@@ -355,9 +370,11 @@ public class MainUI {
     /**
      * Display GUI.
      */
-    public void showGridBagLayoutDemo() {
+    public void displayUI() {
+        mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         mainFrame.setLocationRelativeTo(null);  // positions GUI in center when opened
         mainFrame.setVisible(true);
+        playStartUpSound();
     }
 
     /**
@@ -383,4 +400,25 @@ public class MainUI {
     public static DrawArea getDrawArea() {
         return drawArea;
     }
+
+    /**
+     * Play the start up sound when the application is launched or when user switches out of minimode
+     */
+    private void playStartUpSound() {
+        File startUpSound = new File(START_SOUND_PATH);
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    Clip clip = AudioSystem.getClip();
+                    clip.open(AudioSystem.getAudioInputStream(startUpSound));
+                    clip.start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
+    }
+
 }
