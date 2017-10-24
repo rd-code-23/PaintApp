@@ -225,8 +225,20 @@ public class DrawArea extends JComponent {
             for (int x = 0; x < layer.getWidth(); ++x) {
                 for (int y = 0; y < layer.getHeight(); ++y) {
                     color_at_point = new Color(layer.getRGB(x, y));
-                    average = (color_at_point.getRed() + color_at_point.getGreen() + color_at_point.getBlue()) / 3;
-                    layer.setRGB(x, y, new Color(average, average, average).getRGB());
+                    if (color_at_point.getRGB() != -1) {
+                        average = (int) (0.2126 * color_at_point.getRed()
+                                + 0.7152 * color_at_point.getGreen()
+                                + 0.0722 * color_at_point.getBlue()
+                        );
+
+                        if (average > 255) {
+                            average = 255;
+                        } else if (average < 0) {
+                            average = 0;
+                        }
+
+                        layer.setRGB(x, y, new Color(average, average, average).getRGB());
+                    }
                 }
             }
         }
