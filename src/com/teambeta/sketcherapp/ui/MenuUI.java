@@ -81,18 +81,22 @@ public class MenuUI extends JMenuBar {
     private DrawArea drawArea;
     private ImportExport importExport;
     private GreyscaleMenu greyscaleMenu;
+    private NoiseGeneratorMenu noiseGeneratorMenu;
 
 
     /**
      * constructor
      */
 
-    public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu) {
+    public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu,
+                  NoiseGeneratorMenu noiseGeneratorMenu) {
 
         this.drawArea = drawArea;
         this.importExport = importExport;
         this.greyscaleMenu = greyscaleMenu;
+        this.noiseGeneratorMenu = noiseGeneratorMenu;
         prepareMenuBar();
+
     }
 
     /**
@@ -187,7 +191,7 @@ public class MenuUI extends JMenuBar {
                 greyscaleMenu.showWindow();
             }
             if (e.getSource() == iGenerateNoise) {
-                drawArea.colouredNoiseGenerator();
+                noiseGeneratorMenu.showWindow();
             }
         }
 
