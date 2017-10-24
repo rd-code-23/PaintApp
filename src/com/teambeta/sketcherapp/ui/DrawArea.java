@@ -217,7 +217,7 @@ public class DrawArea extends JComponent {
      * Redraw all canvas coordinates to the average of the coordinate's RGB values.
      */
     public void redrawToGreyscale() {
-        int average;
+        int lumaValue;
         Color color_at_point;
 
         // Redraw all of the layers to greyscale
@@ -226,18 +226,18 @@ public class DrawArea extends JComponent {
                 for (int y = 0; y < layer.getHeight(); ++y) {
                     color_at_point = new Color(layer.getRGB(x, y));
                     if (color_at_point.getRGB() != -1) {
-                        average = (int) (0.2126 * color_at_point.getRed()
+                        lumaValue = (int) (0.2126 * color_at_point.getRed()
                                 + 0.7152 * color_at_point.getGreen()
                                 + 0.0722 * color_at_point.getBlue()
                         );
 
-                        if (average > 255) {
-                            average = 255;
-                        } else if (average < 0) {
-                            average = 0;
+                        if (lumaValue > 255) {
+                            lumaValue = 255;
+                        } else if (lumaValue < 0) {
+                            lumaValue = 0;
                         }
 
-                        layer.setRGB(x, y, new Color(average, average, average).getRGB());
+                        layer.setRGB(x, y, new Color(lumaValue, lumaValue, lumaValue).getRGB());
                     }
                 }
             }
