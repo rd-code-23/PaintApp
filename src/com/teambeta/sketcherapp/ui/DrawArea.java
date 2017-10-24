@@ -18,6 +18,10 @@ public class DrawArea extends JComponent {
     private Color backgroundColor;
     private boolean isCanvasAltered = false;
 
+    private static final double RED_LUMA_COEFFICIENT = 0.2126;
+    private static final double GREEN_LUMA_COEFFICIENT = 0.7152;
+    private static final double BLUE_LUMA_COEFFICIENT  = 0.0722;
+
     /**
      * Constructor. Set actions upon mouse press events.
      */
@@ -226,9 +230,10 @@ public class DrawArea extends JComponent {
                 for (int y = 0; y < layer.getHeight(); ++y) {
                     color_at_point = new Color(layer.getRGB(x, y));
                     if (color_at_point.getRGB() != -1) {
-                        lumaValue = (int) (0.2126 * color_at_point.getRed()
-                                + 0.7152 * color_at_point.getGreen()
-                                + 0.0722 * color_at_point.getBlue()
+                        lumaValue = (int) (
+                                RED_LUMA_COEFFICIENT * color_at_point.getRed()
+                                + GREEN_LUMA_COEFFICIENT * color_at_point.getGreen()
+                                + BLUE_LUMA_COEFFICIENT * color_at_point.getBlue()
                         );
 
                         if (lumaValue > 255) {
