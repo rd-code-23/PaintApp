@@ -255,9 +255,8 @@ public class DrawArea extends JComponent {
     /**
      * Draw random colourful noise on the canvas.
      */
-    public void randomizer() {
+    public void colouredNoiseGenerator() {
         Color color_at_point;
-        int lumaValue;
         for (BufferedImage layer : layers) {
             for (int x = 0; x < layer.getWidth(); ++x) {
                 for (int y = 0; y < layer.getHeight(); ++y) {

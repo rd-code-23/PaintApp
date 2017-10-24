@@ -3,13 +3,9 @@ package com.teambeta.sketcherapp.ui;
 import com.teambeta.sketcherapp.model.GreyscaleMenu;
 import com.teambeta.sketcherapp.model.ImportExport;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 /**
  * The MenuUI class adds a menu bar with submenus to the top of the application.
@@ -191,7 +187,7 @@ public class MenuUI extends JMenuBar {
                 greyscaleMenu.showWindow();
             }
             if (e.getSource() == iGenerateNoise) {
-                drawArea.randomizer();
+                drawArea.colouredNoiseGenerator();
             }
         }
 
