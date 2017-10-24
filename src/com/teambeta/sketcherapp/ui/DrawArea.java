@@ -18,6 +18,10 @@ public class DrawArea extends JComponent {
     private Color backgroundColor;
     private boolean isCanvasAltered = false;
 
+    private static final double RED_LUMA_COEFFICIENT = 0.2126;
+    private static final double GREEN_LUMA_COEFFICIENT = 0.7152;
+    private static final double BLUE_LUMA_COEFFICIENT  = 0.0722;
+
     /**
      * Constructor. Set actions upon mouse press events.
      */
@@ -217,7 +221,7 @@ public class DrawArea extends JComponent {
      * Redraw all canvas coordinates to the average of the coordinate's RGB values.
      */
     public void redrawToGreyscale() {
-        int average;
+        int lumaValue;
         Color color_at_point;
 
         // Redraw all of the layers to greyscale
@@ -225,8 +229,21 @@ public class DrawArea extends JComponent {
             for (int x = 0; x < layer.getWidth(); ++x) {
                 for (int y = 0; y < layer.getHeight(); ++y) {
                     color_at_point = new Color(layer.getRGB(x, y));
-                    average = (color_at_point.getRed() + color_at_point.getGreen() + color_at_point.getBlue()) / 3;
-                    layer.setRGB(x, y, new Color(average, average, average).getRGB());
+                    if (color_at_point.getRGB() != -1) {
+                        lumaValue = (int) (
+                                RED_LUMA_COEFFICIENT * color_at_point.getRed()
+                                + GREEN_LUMA_COEFFICIENT * color_at_point.getGreen()
+                                + BLUE_LUMA_COEFFICIENT * color_at_point.getBlue()
+                        );
+
+                        if (lumaValue > 255) {
+                            lumaValue = 255;
+                        } else if (lumaValue < 0) {
+                            lumaValue = 0;
+                        }
+
+                        layer.setRGB(x, y, new Color(lumaValue, lumaValue, lumaValue).getRGB());
+                    }
                 }
             }
         }
