@@ -20,7 +20,7 @@ public class NoiseGeneratorMenu {
     }
 
     /**
-     * Show the dialog window to confirm current canvas greyscale conversion.
+     * Show the dialog window to confirm current noise generation.
      */
     public void showWindow() {
         int dialogWindow = JOptionPane.YES_NO_OPTION;
