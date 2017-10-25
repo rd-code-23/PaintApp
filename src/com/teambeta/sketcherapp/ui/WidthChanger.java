@@ -51,7 +51,7 @@ public class WidthChanger {
     /**
      * Sets up the panel to change width.
      */
-    public void renderPanel() {
+    private void renderPanel() {
         currentWidthValue = INITIAL_WIDTH_VALUE;
         textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.X_AXIS));
         textPanel.setBackground(Color.DARK_GRAY);

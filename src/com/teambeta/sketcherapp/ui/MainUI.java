@@ -320,8 +320,7 @@ public class MainUI {
             canvasTools.add(button);
             canvasTools.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
         }
-        canvasTools.setBorder(BorderFactory.createLineBorder(Color.GRAY));;
-
+        canvasTools.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
         /* END MAINUI BUTTONS */
         JPanel northPanel = new JPanel();
@@ -332,7 +331,7 @@ public class MainUI {
         JPanel toolSettings = new JPanel();
         toolSettings.setLayout(new BoxLayout(toolSettings, BoxLayout.X_AXIS));
         toolSettings.setBackground(Color.DARK_GRAY);
-        toolSettings.add(Box.createRigidArea(new Dimension(WEST_PANEL_WIDTH,0)));
+        toolSettings.add(Box.createRigidArea(new Dimension(WEST_PANEL_WIDTH, 0)));
         widthChanger = new WidthChanger();
         toolSettings.add(widthChanger.getGUI());
         northPanel.add(toolSettings, BorderLayout.CENTER);

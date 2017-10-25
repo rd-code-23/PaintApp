@@ -17,7 +17,7 @@ public class ColorChooser extends JPanel {
     private static Color color;
     private static final int SQUARE_LENGTH = 50;
     private static final int PANEL_LENGTH = 50;
-    private static List<GeneralObserver> observers = new ArrayList<>();;
+    private static List<GeneralObserver> observers = new ArrayList<>();
 
     // Constructor that displays default color as a square panel (graphic selector).
     public ColorChooser() {
@@ -64,6 +64,7 @@ public class ColorChooser extends JPanel {
 
     /**
      * Used by the eye dropper tool to directly update the color of the color chooser.
+     *
      * @param color The color to be set
      */
     public void setColorFromEyeDropper(Color color) {

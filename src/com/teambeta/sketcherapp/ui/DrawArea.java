@@ -314,7 +314,5 @@ public class DrawArea extends JComponent {
                 layer.setRGB(x, y, color_at_point.getRGB());
             }
         }
-        drawLayersOntoCanvas(layers, canvas);
-        repaint();
     }
 }
