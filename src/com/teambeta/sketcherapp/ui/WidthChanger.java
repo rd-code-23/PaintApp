@@ -3,8 +3,10 @@ package com.teambeta.sketcherapp.ui;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Class that changes width of tools.
+ */
 public class WidthChanger {
-
     private static final int INITIAL_WIDTH_VALUE = 10;
     private static final int MINIMUM_SLIDER_VALUE = 0;
     private static final int MAXIMUM_SLIDER_VALUE = 100;
@@ -22,6 +24,7 @@ public class WidthChanger {
     private static final int MAJOR_TICK_SPACE_SLIDER = 25;
     private static final String FILL_CHECKBOX_TEXT = "Fill Shape";
     private static final String GLOBAL_WIDTH_CHECKBOX_TEXT = "Global";
+    private static final String FONT_TYPE = "Arial";
 
 
     private JPanel sliderPanel = new JPanel();
@@ -38,11 +41,10 @@ public class WidthChanger {
     private boolean isFill = false;
 
     /**
-     * sets up the panel to change width
+     * Sets up the panel to change width.
      */
     public void renderPanel() {
         currentWidthValue = INITIAL_WIDTH_VALUE;
-
         sliderPanel.setLayout(new BoxLayout(sliderPanel, BoxLayout.X_AXIS));
         sliderPanel.setPreferredSize(new Dimension(WIDTH_PANEL, HEIGHT_PANEL));
         sliderPanel.setBackground(Color.DARK_GRAY);
@@ -52,12 +54,13 @@ public class WidthChanger {
 
         panelLabel = new JLabel(PANEL_DESCRIPTION);
         panelLabel.setForeground(Color.WHITE);
-        final String LABEL_FONT = "Arial";
+        final String LABEL_FONT = FONT_TYPE;
         panelLabel.setFont(new Font(LABEL_FONT, Font.PLAIN, SIZE_FONT_JLABEL));
 
         widthTextField = new JTextField("" + INITIAL_WIDTH_VALUE, MAX_COL_JTEXTFIELD);
 
         widthSlider = new JSlider(JSlider.HORIZONTAL, MINIMUM_SLIDER_VALUE, MAXIMUM_SLIDER_VALUE, INITIAL_WIDTH_VALUE);
+        widthSlider.setBackground(Color.DARK_GRAY);
         widthSlider.setMinorTickSpacing(MINOT_TICK_SPACE_SLIDER);
         widthSlider.setPaintLabels(true);
         widthSlider.setMajorTickSpacing(MAJOR_TICK_SPACE_SLIDER);

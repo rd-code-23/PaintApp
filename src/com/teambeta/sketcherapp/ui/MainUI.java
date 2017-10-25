@@ -42,7 +42,6 @@ public class MainUI {
     private static DrawingTool selectedDrawingTool;
     private static EyeDropperStats eyeDropperStats;
 
-
     private static final String CLEAR_BUTTON_TEXT = "Clear";
     private static final String BRUSH_BUTTON_TEXT = "Brush";
     private static final String RECTANGLE_TOOL_BUTTON_TEXT = "Rectangle";
