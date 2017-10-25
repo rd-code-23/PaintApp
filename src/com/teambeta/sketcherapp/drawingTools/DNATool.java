@@ -9,6 +9,7 @@ import com.teambeta.sketcherapp.ui.DrawArea;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
 /**
  * The DNATool class implements the drawing behavior for when the DNATool has been selected.
@@ -85,7 +86,7 @@ public class DNATool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(BufferedImage canvas, ImageLayer currentlySelectedLayer, BufferedImage[] layers, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers, BufferedImage[] layers, MouseEvent e) {
         currentX = e.getX();
         currentY = e.getY();
         xDifferenceToOrigin += (currentX - lastX);
@@ -156,7 +157,7 @@ public class DNATool extends DrawingTool {
     }
 
     @Override
-    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, ImageLayer currentlySelectedLayer) {
+    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         xDifferenceToOrigin = 0;
 
         for (int i = 0; i < periodBars.length; ++i) {
@@ -165,11 +166,11 @@ public class DNATool extends DrawingTool {
     }
 
     @Override
-    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, ImageLayer currentlySelectedLayer) {
+    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
     }
 
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, ImageLayer currentlySelectedLayer) {
+    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         // Initialize canvas settings that the tool will require.
         initLayer1Graphics(canvas, layers, e);
         currentX = e.getX();

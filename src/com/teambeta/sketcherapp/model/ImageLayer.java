@@ -8,10 +8,12 @@ import java.awt.image.BufferedImage;
 public class ImageLayer {
     private boolean isVisible;
     private BufferedImage bufferedImage;
+    private boolean isSelected;
 
     public ImageLayer(BufferedImage bufferedImage) {
         this.bufferedImage = bufferedImage;
         isVisible = false;
+        isSelected = false;
     }
 
     public BufferedImage getBufferedImage() {
@@ -24,5 +26,13 @@ public class ImageLayer {
 
     public void setVisible(boolean visible) {
         isVisible = visible;
+    }
+
+    public void setSelected(boolean selected) {
+        this.isSelected = selected;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
     }
 }

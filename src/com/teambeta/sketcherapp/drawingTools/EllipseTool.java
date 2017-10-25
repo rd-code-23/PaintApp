@@ -7,6 +7,7 @@ import com.teambeta.sketcherapp.ui.DrawArea;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
 /**
  * The EllipseTool class implements the drawing behavior for when the Ellipse tool has been selected
@@ -52,7 +53,7 @@ public class EllipseTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(BufferedImage canvas, ImageLayer currentlySelectedLayer, BufferedImage[] layers, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers, BufferedImage[] layers, MouseEvent e) {
         if (previewLayer == null) {
             //previewLayer = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
             previewLayer = DrawArea.getPreviewBufferedImage();
@@ -88,7 +89,7 @@ public class EllipseTool extends DrawingTool {
     }
 
     @Override
-    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, ImageLayer currentlySelectedLayer) {
+    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         calcEllipseCoordinateData(e, layers, canvas);
 
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
@@ -136,11 +137,11 @@ public class EllipseTool extends DrawingTool {
     }
 
     @Override
-    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, ImageLayer currentlySelectedLayer) {
+    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
     }
 
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, ImageLayer currentlySelectedLayer) {
+    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         canvas.getGraphics().setColor(color);
         currentX = e.getX();
         currentY = e.getY();

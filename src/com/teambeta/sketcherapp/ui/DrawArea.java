@@ -17,7 +17,7 @@ import javax.swing.JComponent;
 public class DrawArea extends JComponent {
     private BufferedImage canvasBufferedImage;
     private BufferedImage[] layers;
-    private LinkedList<ImageLayer> canvasLayers;
+    private LinkedList<ImageLayer> drawingLayers;
     private ImageLayer currentlySelectedLayer;
     private static BufferedImage previewBufferedImage;
     private Graphics2D graphics;
@@ -40,7 +40,7 @@ public class DrawArea extends JComponent {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                MainUI.selectedDrawingTool.onClick(canvasBufferedImage, layers, e, currentlySelectedLayer);
+                MainUI.selectedDrawingTool.onClick(canvasBufferedImage, layers, e, drawingLayers);
                 isCanvasAltered = true;
                 repaint();
             }
@@ -48,7 +48,7 @@ public class DrawArea extends JComponent {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                MainUI.selectedDrawingTool.onPress(canvasBufferedImage, layers, e, currentlySelectedLayer);
+                MainUI.selectedDrawingTool.onPress(canvasBufferedImage, layers, e, drawingLayers);
                 isCanvasAltered = true;
                 repaint();
             }
@@ -56,7 +56,7 @@ public class DrawArea extends JComponent {
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
-                MainUI.selectedDrawingTool.onRelease(canvasBufferedImage, layers, e, currentlySelectedLayer);
+                MainUI.selectedDrawingTool.onRelease(canvasBufferedImage, layers, e, drawingLayers);
                 isCanvasAltered = true;
                 repaint();
             }
@@ -64,13 +64,13 @@ public class DrawArea extends JComponent {
 
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
-                MainUI.selectedDrawingTool.onDrag(canvasBufferedImage, currentlySelectedLayer, layers, e);
+                MainUI.selectedDrawingTool.onDrag(canvasBufferedImage, drawingLayers, layers, e);
                 repaint();
             }
         });
 
         layers = new BufferedImage[1];
-        canvasLayers = new LinkedList<>();
+        drawingLayers = new LinkedList<>();
     }
 
     /**
@@ -109,10 +109,10 @@ public class DrawArea extends JComponent {
         }
     }
 
-    public static void drawLayersOntoCanvas(ImageLayer[] layers, BufferedImage canvas) {
-        BufferedImage[] bufferedImages = new BufferedImage[layers.length];
+    public static void drawLayersOntoCanvas(LinkedList<ImageLayer> layers, BufferedImage canvas) {
+        BufferedImage[] bufferedImages = new BufferedImage[layers.size()];
         for (int i = 0; i < bufferedImages.length; i++) {
-            bufferedImages[i] = layers[i].getBufferedImage();
+            bufferedImages[i] = layers.get(i).getBufferedImage();
         }
         drawLayersOntoCanvas(bufferedImages, canvas);
     }
@@ -136,9 +136,10 @@ public class DrawArea extends JComponent {
             // clear draw area
             clear();
         }
-        if (canvasLayers.isEmpty()) {
-            canvasLayers.add(new ImageLayer(new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB)));
-            currentlySelectedLayer = canvasLayers.get(0);
+        if (drawingLayers.isEmpty()) {
+            drawingLayers.add(new ImageLayer(new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB)));
+            currentlySelectedLayer = drawingLayers.get(0);
+            currentlySelectedLayer.setSelected(true);
         }
         canvasGraphics.drawImage(canvasBufferedImage, 0, 0, null);
     }

@@ -8,6 +8,7 @@ import com.teambeta.sketcherapp.ui.DrawArea;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
 /**
  * The BrushTool class implements the drawing behavior for when the Brush tool has been selected
@@ -42,25 +43,25 @@ public class AirBrushTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(BufferedImage canvas, ImageLayer currentlySelectedLayer, BufferedImage[] layers, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers, BufferedImage[] layers, MouseEvent e) {
         currentX = e.getX();
         currentY = e.getY();
-        drawDotsAroundPoint(canvas, layers);
+        drawDotsAroundPoint(canvas, layers, drawingLayers);
     }
 
     @Override
-    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, ImageLayer currentlySelectedLayer) {
+    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
     }
 
     @Override
-    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, ImageLayer currentlySelectedLayer) {
+    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         currentX = e.getX();
         currentY = e.getY();
-        drawDotsAroundPoint(canvas, layers);
+        drawDotsAroundPoint(canvas, layers, drawingLayers);
     }
 
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, ImageLayer currentlySelectedLayer) {
+    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         // Initialize canvas settings that the tool will require.
         initLayer1Graphics(canvas, layers, e);
 
@@ -72,17 +73,46 @@ public class AirBrushTool extends DrawingTool {
     /**
      * Generate random dots within the area of the unit circle bounded by the radius to the mouse cursor.
      */
-    private void drawDotsAroundPoint(BufferedImage canvas, BufferedImage[] layers) {
+    private void drawDotsAroundPoint(BufferedImage canvas, BufferedImage[] layers, LinkedList<ImageLayer> drawingLayers) {
         double dot_angle;
         double rand_radius;
-        for (int i = 0; i < dotsToDraw; ++i) {
-            dot_angle = GeneratorFunctions.randomDouble(0, 2 * Math.PI);
-            rand_radius = GeneratorFunctions.randomInt(-dotDiameter / 2, dotDiameter / 2);
-            dotX = (int) (currentX + rand_radius * Math.sin(dot_angle));
-            dotY = (int) (currentY + rand_radius * Math.cos(dot_angle));
-            layer1Graphics.drawLine(dotX, dotY, dotX, dotY);
+
+        //get the selected layer, this assumes there is only one selected layer.
+        ImageLayer selectedLayer = null;
+        for (int i = 0; i < drawingLayers.size(); i++) {
+            ImageLayer drawingLayer = drawingLayers.get(i);
+            if (drawingLayer.isSelected()) {
+                selectedLayer = drawingLayer;
+                break;
+            }
         }
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
+
+        Graphics2D selectedLayerGraphics = null;
+        if (selectedLayer != null) {
+            selectedLayerGraphics = getGraphics2D(selectedLayer);
+
+            for (int i = 0; i < dotsToDraw; ++i) {
+                dot_angle = GeneratorFunctions.randomDouble(0, 2 * Math.PI);
+                rand_radius = GeneratorFunctions.randomInt(-dotDiameter / 2, dotDiameter / 2);
+                dotX = (int) (currentX + rand_radius * Math.sin(dot_angle));
+                dotY = (int) (currentY + rand_radius * Math.cos(dot_angle));
+                layer1Graphics.drawLine(dotX, dotY, dotX, dotY);
+                selectedLayerGraphics.drawLine(dotX, dotY, dotX, dotY);
+            }
+            DrawArea.drawLayersOntoCanvas(layers, canvas);
+            //DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+        }
+    }
+
+    private Graphics2D getGraphics2D(ImageLayer selectedLayer) {
+        Graphics2D selectedLayerGraphics;
+        selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
+        selectedLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        selectedLayerGraphics.setColor(color);
+        selectedLayerGraphics.setStroke(new BasicStroke((int) (DEFAULT_STOKE_VALUE * DOT_WIDTH_RATIO),
+                BasicStroke.CAP_ROUND,    // End-cap style
+                BasicStroke.CAP_BUTT));
+        return selectedLayerGraphics;
     }
 
     /**
