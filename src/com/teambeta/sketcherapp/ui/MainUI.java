@@ -306,9 +306,11 @@ public class MainUI {
         triangleToolButton = new JButton(TRIANGLE_TOOL_BUTTON_TEXT);
 
         // Add a button to this array to register to actionListener and canvasTools
-        JButton[] buttonContainer = {clearButton, brushToolButton, lineToolButton, rectangleToolButton,
-                ellipseToolButton, eraserToolButton, textToolButton, paintBucketToolButton, fanToolButton,
-                celticKnotToolButton, dnaToolButton, eyeDropperToolButton, airBrushToolButton, triangleToolButton
+        // The order of this list determines the order of the buttons in the generated UI. Index -> 0 = Position -> First
+        JButton[] buttonContainer = {
+                clearButton, brushToolButton, airBrushToolButton, eraserToolButton, lineToolButton,
+                fanToolButton, rectangleToolButton, ellipseToolButton, triangleToolButton, paintBucketToolButton,
+                celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton,
         };
 
         JPanel canvasTools = new JPanel();
