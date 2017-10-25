@@ -16,7 +16,7 @@ import javax.swing.JComponent;
  */
 public class DrawArea extends JComponent {
     private BufferedImage canvasBufferedImage;
-    private BufferedImage[] layers = new BufferedImage[1];
+    private BufferedImage[] layers;
     private LinkedList<ImageLayer> drawingLayers;
     private ImageLayer currentlySelectedLayer;
     private static BufferedImage previewBufferedImage;
@@ -69,7 +69,8 @@ public class DrawArea extends JComponent {
             }
         });
 
-        drawingLayers = new LinkedList<ImageLayer>();
+        layers = new BufferedImage[1];
+        drawingLayers = new LinkedList<>();
     }
 
     /**
@@ -139,7 +140,6 @@ public class DrawArea extends JComponent {
             drawingLayers.add(new ImageLayer(new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB)));
             currentlySelectedLayer = drawingLayers.get(0);
         }
-
         canvasGraphics.drawImage(canvasBufferedImage, 0, 0, null);
     }
 
@@ -175,7 +175,6 @@ public class DrawArea extends JComponent {
     public void setColor(Color color) {
         graphics.setPaint(color);
     }
-
 
     /**
      * Get the background color of the canvasBufferedImage area.
@@ -255,9 +254,6 @@ public class DrawArea extends JComponent {
      * Redraw all canvasBufferedImage coordinates to the average of the coordinate's RGB values.
      */
     public void redrawToGreyscale() {
-        int lumaValue;
-        Color color_at_point;
-
         // Redraw all of the layers to greyscale
         for (BufferedImage layer : layers) {
             makeBufferedImageGrayscale(layer);

@@ -118,7 +118,6 @@ public class WidthChanger {
         eyeDropperTextField.setFont(new Font("Serif", Font.BOLD, TEXTFIELD_EYEDROPPER_FONTSIZE));
         eyeDropperTextField.setEditable(false);
         widthPanel.add(eyeDropperTextField);
-
     }
 
     /**

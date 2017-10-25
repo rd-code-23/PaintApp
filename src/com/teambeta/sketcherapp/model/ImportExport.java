@@ -28,6 +28,7 @@ public class ImportExport {
 
     /**
      * Constructor so we can can access methods from other classes
+     *
      * @param drawArea
      * @param mainUI
      */
@@ -55,7 +56,6 @@ public class ImportExport {
                 exc.printStackTrace();
             }
         }
-
         drawArea.setCanvasAltered(false);
     }
 
@@ -97,12 +97,10 @@ public class ImportExport {
                 if (userOption == 0) {
                     exportImage();
                 }
-
             }
 
             drawArea.setImportedImage(image);
 
         }
     }
-
 }

@@ -160,7 +160,6 @@ public class MainUI {
             } else if ((e.getSource() != textToolButton) && (e.getSource() instanceof JButton)) {
                 fontSelector.setVisible(false);
             }
-
         }
     };
 
@@ -236,7 +235,6 @@ public class MainUI {
             widthChanger.setCurrentWidthValue(selectedDrawingTool.getToolWidth());
             widthChanger.setJLabel();
         }
-
     }
 
     /**
@@ -265,7 +263,7 @@ public class MainUI {
 
         drawArea = new DrawArea();
 
-        ImportExport importExport = new ImportExport(drawArea,this);
+        ImportExport importExport = new ImportExport(drawArea, this);
         GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
         NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
 
@@ -273,7 +271,6 @@ public class MainUI {
         mainContent.add(drawArea, BorderLayout.CENTER);
 
         /* START MAINUI BUTTONS */
-
         clearButton = new JButton(CLEAR_BUTTON_TEXT);
         brushToolButton = new JButton(BRUSH_BUTTON_TEXT);
         lineToolButton = new JButton(LINE_TOOL_BUTTON_TEXT);
@@ -306,7 +303,6 @@ public class MainUI {
         }
 
         /* END MAINUI BUTTONS */
-
         JPanel northPanels = new JPanel();
         northPanels.setLayout(new BorderLayout());
         MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, noiseGeneratorMenu);
@@ -360,6 +356,7 @@ public class MainUI {
 
     /**
      * Temporary fix to allow the eyedropper tool to work no matter the order of creation.
+     *
      * @return The UI widthChanger
      */
     public static WidthChanger getWidthChanger() {
@@ -368,6 +365,7 @@ public class MainUI {
 
     /**
      * Temporary fix to allow the eyedropper tool to work no matter the order of creation.
+     *
      * @return The UI colorChooser
      */
     public static ColorChooser getColorChooser() {
@@ -376,6 +374,7 @@ public class MainUI {
 
     /**
      * Temprorary fix to allow the eraser tool to work no matter the order of creation.
+     *
      * @return The UI drawArea
      */
     public static DrawArea getDrawArea() {
