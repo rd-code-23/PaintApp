@@ -42,7 +42,7 @@ public class EyeDropperTool extends DrawingTool {
     @Override
     public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         Color colorAtPoint = new Color(layers[0].getRGB(e.getX(), e.getY())); // Pull from layer 0 by default.
-        MainUI.getWidthChanger().updateEyeDropperTextField(colorAtPoint); // Update directly to UI element.
+        MainUI.getEyeDropperStats().updateEyeDropperTextField(colorAtPoint); // Update directly to UI element.
         MainUI.getColorChooser().setColorFromEyeDropper(colorAtPoint); // Update to the color chooser.
     }
 

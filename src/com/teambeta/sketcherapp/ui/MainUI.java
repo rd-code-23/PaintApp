@@ -38,7 +38,8 @@ public class MainUI {
     private static DNATool dnaTool;
     private static AirBrushTool airBrushTool;
     private static TriangleTool triangleTool;
-    public static DrawingTool selectedDrawingTool;
+    private static DrawingTool selectedDrawingTool;
+    private static EyeDropperStats eyeDropperStats;
 
 
     private static final String CLEAR_BUTTON_TEXT = "Clear";
@@ -362,9 +363,11 @@ public class MainUI {
         colorChooserPanel.setBackground(Color.DARK_GRAY);
         colorChooserPanel.add(colorChooser, colorChooserConstraints);
 
+        eyeDropperStats = new EyeDropperStats();
+        colorPanel.add(eyeDropperStats);
+
         colorPanel.add(colorChooserPanel);
         colorPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-
 
         JPanel westPanel = new JPanel();
         westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
@@ -389,7 +392,7 @@ public class MainUI {
      *
      * @return selected drawing tool.
      */
-    public DrawingTool getSelectedDrawingTool() {
+    public static DrawingTool getSelectedDrawingTool() {
         return selectedDrawingTool;
     }
 
@@ -417,9 +420,19 @@ public class MainUI {
      *
      * @return The UI colorChooser
      */
+    public static EyeDropperStats getEyeDropperStats() {
+        return eyeDropperStats;
+    }
+
+    /**
+     * Returns eyedropper stats object.
+     *
+     * @return eyedropper stats object
+     */
     public static ColorChooser getColorChooser() {
         return colorChooser;
     }
+
 
     /**
      * Temprorary fix to allow the eraser tool to work no matter the order of creation.

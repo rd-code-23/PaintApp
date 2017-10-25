@@ -33,6 +33,8 @@ public class ColorChooser extends JPanel {
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setBackground(Color.DARK_GRAY);
         setSize(SQUARE_LENGTH, SQUARE_LENGTH);
         graphics.setColor(getColor());
         graphics.fillRect(0, 0, SQUARE_LENGTH, SQUARE_LENGTH);
@@ -69,7 +71,6 @@ public class ColorChooser extends JPanel {
         paintComponent(getGraphics());
         notifyObservers();
     }
-
 
     /**
      * Gets the color of the graphic selector.

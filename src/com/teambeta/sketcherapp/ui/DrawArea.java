@@ -36,7 +36,7 @@ public class DrawArea extends JComponent {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                MainUI.selectedDrawingTool.onClick(canvas, layers, e);
+                MainUI.getSelectedDrawingTool().onClick(canvas, layers, e);
                 isCanvasAltered = true;
                 repaint();
             }
@@ -44,7 +44,7 @@ public class DrawArea extends JComponent {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                MainUI.selectedDrawingTool.onPress(canvas, layers, e);
+                MainUI.getSelectedDrawingTool().onPress(canvas, layers, e);
                 isCanvasAltered = true;
                 repaint();
             }
@@ -52,7 +52,7 @@ public class DrawArea extends JComponent {
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
-                MainUI.selectedDrawingTool.onRelease(canvas, layers, e);
+                MainUI.getSelectedDrawingTool().onRelease(canvas, layers, e);
                 isCanvasAltered = true;
                 repaint();
             }
@@ -60,7 +60,7 @@ public class DrawArea extends JComponent {
 
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
-                MainUI.selectedDrawingTool.onDrag(canvas, layers, e);
+                MainUI.getSelectedDrawingTool().onDrag(canvas, layers, e);
                 repaint();
             }
         });
