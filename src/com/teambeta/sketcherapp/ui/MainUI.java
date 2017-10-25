@@ -8,18 +8,24 @@ import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.GeneratorFunctions;
 import com.teambeta.sketcherapp.model.ImportExport;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 /**
  * Main UI class to wrap all GUI elements together.
  */
 public class MainUI {
     private static final String DEFAULT_FONT = "Arial";
+    private static final int PANEL_SECTION_SPACING = 20;
+    private static final int WEST_PANEL_WIDTH = 120;
+    private static final int COLOR_PANEL_HEIGHT = 200;
     private static LineTool lineTool;
     private static BrushTool brushTool;
     private static RectangleTool rectangleTool;
@@ -33,8 +39,8 @@ public class MainUI {
     private static DNATool dnaTool;
     private static AirBrushTool airBrushTool;
     private static TriangleTool triangleTool;
-    public static DrawingTool selectedDrawingTool;
-
+    private static DrawingTool selectedDrawingTool;
+    private static EyeDropperStats eyeDropperStats;
 
     private static final String CLEAR_BUTTON_TEXT = "Clear";
     private static final String BRUSH_BUTTON_TEXT = "Brush";
@@ -52,14 +58,15 @@ public class MainUI {
     private static final String TRIANGLE_TOOL_BUTTON_TEXT = "Triangle";
     private JFrame mainFrame;
 
-    private static final String APPLICATION_NAME = "Beta Sketcher";
+    private static final String APPLICATION_NAME = "Beta Paint";
     private static final int APPLICATION_WIDTH = 1920;
     private static final int APPLICATION_HEIGHT = 1080;
-    private static final int EDITOR_PANEL_WIDTH = 100;
+    private static final int EDITOR_PANEL_WIDTH = 300;
     private static final int EDITOR_PANEL_HEIGHT = 300;
-    public static final int CANVAS_WIDTH = 1920;
-    public static final int CANVAS_HEIGHT = 1080;
-
+    public static final int CANVAS_WIDTH = 1600;
+    public static final int CANVAS_HEIGHT = 900;
+    private static final String START_SOUND_PATH = System.getProperty("user.dir") + File.separator + "src" +
+            File.separator + "res" + File.separator + "start-sound.wav";
 
     private JButton clearButton;
     private JButton brushToolButton;
@@ -78,8 +85,8 @@ public class MainUI {
     private JComboBox<String> fontSelector;
 
     private static DrawArea drawArea;
-    private static WidthChanger widthChanger;
     private static ColorChooser colorChooser;
+    private WidthChanger widthChanger;
 
     private static final String APPLICATION_LOGO_IMAGE_DIRECTORY = "res/BPIcon.png";
 
@@ -254,24 +261,32 @@ public class MainUI {
     private void prepareGUI() {
         mainFrame = new JFrame(APPLICATION_NAME);
         mainFrame.setIconImage(new ImageIcon(APPLICATION_LOGO_IMAGE_DIRECTORY).getImage());
-        Container mainContent = mainFrame.getContentPane();
-        mainContent.setLayout(new BorderLayout());
+        mainFrame.setSize(APPLICATION_WIDTH, APPLICATION_HEIGHT);
+        mainFrame.getContentPane().setBackground(Color.DARK_GRAY);
 
         mainFrame.setSize(APPLICATION_WIDTH, APPLICATION_HEIGHT);
         mainFrame.getContentPane().setBackground(Color.DARK_GRAY);
 
         mainFrame.setLocationByPlatform(true);
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        // mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
+        Container mainContent = mainFrame.getContentPane();
+        mainContent.setLayout(new BorderLayout());
         drawArea = new DrawArea();
 
         ImportExport importExport = new ImportExport(drawArea,this);
         GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
         NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
 
-        // ideally this should be in its own widthPanel with a proper scale, not directly to mainContent
-        mainContent.add(drawArea, BorderLayout.CENTER);
+        JPanel drawAreaPanel = new JPanel();
+        drawAreaPanel.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.ipady = CANVAS_HEIGHT;
+        c.ipadx = CANVAS_WIDTH;
+        drawAreaPanel.setBackground(Color.decode("#222222"));
+        drawAreaPanel.add(drawArea, c);
+        mainContent.add(drawAreaPanel, BorderLayout.CENTER);
 
         /* START MAINUI BUTTONS */
 
@@ -299,26 +314,34 @@ public class MainUI {
         JPanel canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
         canvasTools.setBackground(Color.DARK_GRAY);
+        canvasTools.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
 
         // Register buttons to actionListener and canvasTools
         for (JButton button : buttonContainer) {
             button.addActionListener(actionListener);
+            button.setAlignmentX(Component.CENTER_ALIGNMENT);
             canvasTools.add(button);
+            canvasTools.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
         }
+        canvasTools.setBorder(BorderFactory.createLineBorder(Color.GRAY));;
+
 
         /* END MAINUI BUTTONS */
-
-        JPanel northPanels = new JPanel();
-        northPanels.setLayout(new BorderLayout());
+        JPanel northPanel = new JPanel();
+        northPanel.setLayout(new BorderLayout());
         MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, noiseGeneratorMenu);
-        northPanels.add(menuUI, BorderLayout.NORTH);
+        northPanel.add(menuUI, BorderLayout.NORTH);
 
+        JPanel toolSettings = new JPanel();
+        toolSettings.setLayout(new BoxLayout(toolSettings, BoxLayout.X_AXIS));
+        toolSettings.setBackground(Color.DARK_GRAY);
+        toolSettings.add(Box.createRigidArea(new Dimension(WEST_PANEL_WIDTH,0)));
         widthChanger = new WidthChanger();
-        widthChanger.renderPanel();
-        northPanels.add(widthChanger.getGUI(), BorderLayout.CENTER);
+        toolSettings.add(widthChanger.getGUI());
+        northPanel.add(toolSettings, BorderLayout.CENTER);
 
         if (fontSelector != null) {
-            northPanels.add(fontSelector, BorderLayout.EAST);
+            northPanel.add(fontSelector, BorderLayout.EAST);
             textTool.setFont((String) fontSelector.getSelectedItem());
         }
 
@@ -329,17 +352,44 @@ public class MainUI {
         widthChanger.getCheckBoxGlobalSizeComponent().addActionListener(actionListener);
         widthChanger.getFillBox().addActionListener(actionListener);
 
-        mainContent.add(canvasTools, BorderLayout.WEST);
-
+        JPanel colorPanel = new JPanel();
+        colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.Y_AXIS));
+        colorPanel.setBackground(Color.DARK_GRAY);
+        final Dimension CANVAS_TOOLS_MAX_SIZE = canvasTools.getMaximumSize();
+        colorPanel.setMaximumSize(new Dimension((int) CANVAS_TOOLS_MAX_SIZE.getWidth(), COLOR_PANEL_HEIGHT));
+        colorPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
         colorChooser = new ColorChooser();
+
+        JPanel colorChooserPanel = new JPanel();
+        colorChooserPanel.setLayout(new GridBagLayout());
+        GridBagConstraints colorChooserConstraints = new GridBagConstraints();
+        colorChooserPanel.setBackground(Color.DARK_GRAY);
+        colorChooserPanel.add(colorChooser, colorChooserConstraints);
+        eyeDropperStats = new EyeDropperStats();
+        colorChooserConstraints.gridx = 0;
+        colorChooserConstraints.gridy = 1;
+        colorChooserConstraints.insets = new Insets(PANEL_SECTION_SPACING, 0, 0, 0);
+        colorChooserPanel.add(eyeDropperStats, colorChooserConstraints);
+        colorPanel.add(colorChooserPanel);
+
+        colorPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+        JPanel westPanel = new JPanel();
+        westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
+        westPanel.setPreferredSize(new Dimension(WEST_PANEL_WIDTH, 0));
+        westPanel.setBackground(Color.DARK_GRAY);
+
+        westPanel.add(canvasTools);
+        westPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
+        westPanel.add(colorPanel);
+
+        mainContent.add(westPanel, BorderLayout.WEST);
+
         JPanel editorPanel = new JPanel();
         editorPanel.setLayout(new BorderLayout());
-        editorPanel.add(colorChooser, BorderLayout.NORTH);
         editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
         mainContent.add(editorPanel, BorderLayout.EAST);
-
-        mainContent.add(northPanels, BorderLayout.NORTH);
-
+        mainContent.add(northPanel, BorderLayout.NORTH);
     }
 
     /**
@@ -347,39 +397,57 @@ public class MainUI {
      *
      * @return selected drawing tool.
      */
-    public DrawingTool getSelectedDrawingTool() {
+    public static DrawingTool getSelectedDrawingTool() {
         return selectedDrawingTool;
     }
 
     /**
      * Display GUI.
      */
-    public void showGridBagLayoutDemo() {
+    public void displayUI() {
+        mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         mainFrame.setLocationRelativeTo(null);  // positions GUI in center when opened
         mainFrame.setVisible(true);
+        playStartUpSound();
     }
 
     /**
-     * Temporary fix to allow the eyedropper tool to work no matter the order of creation.
-     * @return The UI widthChanger
-     */
-    public static WidthChanger getWidthChanger() {
-        return widthChanger;
-    }
-
-    /**
-     * Temporary fix to allow the eyedropper tool to work no matter the order of creation.
-     * @return The UI colorChooser
+     * Returns eyedropper stats object.
+     *
+     * @return eyedropper stats object
      */
     public static ColorChooser getColorChooser() {
         return colorChooser;
     }
 
+
     /**
      * Temprorary fix to allow the eraser tool to work no matter the order of creation.
+     *
      * @return The UI drawArea
      */
     public static DrawArea getDrawArea() {
         return drawArea;
     }
+
+    /**
+     * Play the start up sound when the application is launched or when user switches out of minimode
+     */
+    private void playStartUpSound() {
+        File startUpSound = new File(START_SOUND_PATH);
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    Clip clip = AudioSystem.getClip();
+                    clip.open(AudioSystem.getAudioInputStream(startUpSound));
+                    clip.start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
+    }
+
 }
