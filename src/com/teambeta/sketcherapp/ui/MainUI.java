@@ -26,7 +26,6 @@ public class MainUI {
     private static final int PANEL_SECTION_SPACING = 20;
     private static final int WEST_PANEL_WIDTH = 120;
     private static final int COLOR_PANEL_HEIGHT = 200;
-    private static final String CUSTOM_DARK_GREY = "#222222";
     private static LineTool lineTool;
     private static BrushTool brushTool;
     private static RectangleTool rectangleTool;
@@ -62,7 +61,7 @@ public class MainUI {
     private static final String APPLICATION_NAME = "Beta Paint";
     private static final int APPLICATION_WIDTH = 1920;
     private static final int APPLICATION_HEIGHT = 1080;
-    private static final int EDITOR_PANEL_WIDTH = 100;
+    private static final int EDITOR_PANEL_WIDTH = 300;
     private static final int EDITOR_PANEL_HEIGHT = 300;
     public static final int CANVAS_WIDTH = 1600;
     public static final int CANVAS_HEIGHT = 900;
@@ -86,8 +85,8 @@ public class MainUI {
     private JComboBox<String> fontSelector;
 
     private static DrawArea drawArea;
-    private static WidthChanger widthChanger;
     private static ColorChooser colorChooser;
+    private WidthChanger widthChanger;
 
     private static final String APPLICATION_LOGO_IMAGE_DIRECTORY = "res/BPIcon.png";
 
@@ -285,8 +284,7 @@ public class MainUI {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.ipady = CANVAS_HEIGHT;
         c.ipadx = CANVAS_WIDTH;
-        drawAreaPanel.setPreferredSize(new Dimension(400, 400));
-        drawAreaPanel.setBackground(Color.decode(CUSTOM_DARK_GREY));
+        drawAreaPanel.setBackground(Color.decode("#222222"));
         drawAreaPanel.add(drawArea, c);
         mainContent.add(drawAreaPanel, BorderLayout.CENTER);
 
@@ -329,18 +327,21 @@ public class MainUI {
 
 
         /* END MAINUI BUTTONS */
-
-        JPanel northPanels = new JPanel();
-        northPanels.setLayout(new BorderLayout());
+        JPanel northPanel = new JPanel();
+        northPanel.setLayout(new BorderLayout());
         MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, noiseGeneratorMenu);
-        northPanels.add(menuUI, BorderLayout.NORTH);
+        northPanel.add(menuUI, BorderLayout.NORTH);
 
+        JPanel toolSettings = new JPanel();
+        toolSettings.setLayout(new BoxLayout(toolSettings, BoxLayout.X_AXIS));
+        toolSettings.setBackground(Color.DARK_GRAY);
+        toolSettings.add(Box.createRigidArea(new Dimension(WEST_PANEL_WIDTH,0)));
         widthChanger = new WidthChanger();
-        widthChanger.renderPanel();
-        northPanels.add(widthChanger.getGUI(), BorderLayout.CENTER);
+        toolSettings.add(widthChanger.getGUI());
+        northPanel.add(toolSettings, BorderLayout.CENTER);
 
         if (fontSelector != null) {
-            northPanels.add(fontSelector, BorderLayout.EAST);
+            northPanel.add(fontSelector, BorderLayout.EAST);
             textTool.setFont((String) fontSelector.getSelectedItem());
         }
 
@@ -388,7 +389,7 @@ public class MainUI {
         editorPanel.setLayout(new BorderLayout());
         editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
         mainContent.add(editorPanel, BorderLayout.EAST);
-        mainContent.add(northPanels, BorderLayout.NORTH);
+        mainContent.add(northPanel, BorderLayout.NORTH);
     }
 
     /**
@@ -408,24 +409,6 @@ public class MainUI {
         mainFrame.setLocationRelativeTo(null);  // positions GUI in center when opened
         mainFrame.setVisible(true);
         playStartUpSound();
-    }
-
-    /**
-     * Temporary fix to allow the eyedropper tool to work no matter the order of creation.
-     *
-     * @return The UI widthChanger
-     */
-    public static WidthChanger getWidthChanger() {
-        return widthChanger;
-    }
-
-    /**
-     * Temporary fix to allow the eyedropper tool to work no matter the order of creation.
-     *
-     * @return The UI colorChooser
-     */
-    public static EyeDropperStats getEyeDropperStats() {
-        return eyeDropperStats;
     }
 
     /**
