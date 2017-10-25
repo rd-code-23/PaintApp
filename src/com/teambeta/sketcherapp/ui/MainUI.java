@@ -5,6 +5,7 @@ import com.teambeta.sketcherapp.drawingTools.LineTool;
 import com.teambeta.sketcherapp.drawingTools.BrushTool;
 import com.teambeta.sketcherapp.drawingTools.RectangleTool;
 import com.teambeta.sketcherapp.drawingTools.*;
+import com.teambeta.sketcherapp.model.GeneratorFunctions;
 import com.teambeta.sketcherapp.model.ImportExport;
 
 import javax.sound.sampled.AudioSystem;
@@ -89,6 +90,7 @@ public class MainUI {
     private static WidthChanger widthChanger;
     private static ColorChooser colorChooser;
 
+    private static final String APPLICATION_LOGO_IMAGE_DIRECTORY = "res/BPIcon.png";
 
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -260,6 +262,10 @@ public class MainUI {
      */
     private void prepareGUI() {
         mainFrame = new JFrame(APPLICATION_NAME);
+        mainFrame.setIconImage(new ImageIcon(APPLICATION_LOGO_IMAGE_DIRECTORY).getImage());
+        mainFrame.setSize(APPLICATION_WIDTH, APPLICATION_HEIGHT);
+        mainFrame.getContentPane().setBackground(Color.DARK_GRAY);
+
         mainFrame.setSize(APPLICATION_WIDTH, APPLICATION_HEIGHT);
         mainFrame.getContentPane().setBackground(Color.DARK_GRAY);
 
@@ -270,7 +276,9 @@ public class MainUI {
         mainContent.setLayout(new BorderLayout());
         drawArea = new DrawArea();
 
-        ImportExport importExport = new ImportExport(drawArea, this);
+        ImportExport importExport = new ImportExport(drawArea,this);
+        GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
+        NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
 
         JPanel drawAreaPanel = new JPanel();
         drawAreaPanel.setLayout(new GridBagLayout());
@@ -322,17 +330,18 @@ public class MainUI {
 
 
         /* END MAINUI BUTTONS */
-        JPanel northPanel = new JPanel();
-        northPanel.setLayout(new BorderLayout());
-        MenuUI menuUI = new MenuUI(drawArea, importExport);
-        northPanel.add(menuUI, BorderLayout.NORTH);
+
+        JPanel northPanels = new JPanel();
+        northPanels.setLayout(new BorderLayout());
+        MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, noiseGeneratorMenu);
+        northPanels.add(menuUI, BorderLayout.NORTH);
 
         widthChanger = new WidthChanger();
         widthChanger.renderPanel();
-        northPanel.add(widthChanger.getGUI(), BorderLayout.CENTER);
+        northPanels.add(widthChanger.getGUI(), BorderLayout.CENTER);
 
         if (fontSelector != null) {
-            northPanel.add(fontSelector, BorderLayout.EAST);
+            northPanels.add(fontSelector, BorderLayout.EAST);
             textTool.setFont((String) fontSelector.getSelectedItem());
         }
 
@@ -373,9 +382,10 @@ public class MainUI {
 
         JPanel editorPanel = new JPanel();
         editorPanel.setLayout(new BorderLayout());
+        editorPanel.add(colorChooser, BorderLayout.NORTH);
         editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
         mainContent.add(editorPanel, BorderLayout.EAST);
-        mainContent.add(northPanel, BorderLayout.NORTH);
+        mainContent.add(northPanels, BorderLayout.NORTH);
     }
 
     /**

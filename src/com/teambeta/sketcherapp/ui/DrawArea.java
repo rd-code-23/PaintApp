@@ -1,8 +1,11 @@
 package com.teambeta.sketcherapp.ui;
 
+import com.teambeta.sketcherapp.model.GeneratorFunctions;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.util.concurrent.ThreadLocalRandom;
 import javax.swing.JComponent;
 
 /**
@@ -17,6 +20,10 @@ public class DrawArea extends JComponent {
     private Graphics2D graphics;
     private Color backgroundColor;
     private boolean isCanvasAltered = false;
+
+    private static final double RED_LUMA_COEFFICIENT = 0.2126;
+    private static final double GREEN_LUMA_COEFFICIENT = 0.7152;
+    private static final double BLUE_LUMA_COEFFICIENT  = 0.0722;
 
     /**
      * Constructor. Set actions upon mouse press events.
@@ -210,6 +217,62 @@ public class DrawArea extends JComponent {
      */
     public void setCanvasAltered(boolean canvasAltered) {
         isCanvasAltered = canvasAltered;
+    }
+
+    /**
+     * Redraw all canvas coordinates to the average of the coordinate's RGB values.
+     */
+    public void redrawToGreyscale() {
+        int lumaValue;
+        Color color_at_point;
+
+        // Redraw all of the layers to greyscale
+        for (BufferedImage layer : layers) {
+            for (int x = 0; x < layer.getWidth(); ++x) {
+                for (int y = 0; y < layer.getHeight(); ++y) {
+                    color_at_point = new Color(layer.getRGB(x, y));
+                    if (color_at_point.getRGB() != -1) {
+                        lumaValue = (int) (
+                                RED_LUMA_COEFFICIENT * color_at_point.getRed()
+                                + GREEN_LUMA_COEFFICIENT * color_at_point.getGreen()
+                                + BLUE_LUMA_COEFFICIENT * color_at_point.getBlue()
+                        );
+
+                        if (lumaValue > 255) {
+                            lumaValue = 255;
+                        } else if (lumaValue < 0) {
+                            lumaValue = 0;
+                        }
+
+                        layer.setRGB(x, y, new Color(lumaValue, lumaValue, lumaValue).getRGB());
+                    }
+                }
+            }
+        }
+        drawLayersOntoCanvas(layers, canvas);
+        repaint();
+    }
+
+    /**
+     * Draw random colourful noise on the canvas.
+     */
+    public void colouredNoiseGenerator() {
+        Color color_at_point;
+        for (BufferedImage layer : layers) {
+            for (int x = 0; x < layer.getWidth(); ++x) {
+                for (int y = 0; y < layer.getHeight(); ++y) {
+                    color_at_point = new Color(
+                            GeneratorFunctions.randomInt(0, 255),
+                            GeneratorFunctions.randomInt(0, 255),
+                            GeneratorFunctions.randomInt(0, 255)
+                    );
+
+                        layer.setRGB(x, y, color_at_point.getRGB());
+                }
+            }
+        }
+        drawLayersOntoCanvas(layers, canvas);
+        repaint();
     }
 
 }
