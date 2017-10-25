@@ -2,13 +2,13 @@ package com.teambeta.sketcherapp.drawingTools;
 
 import com.teambeta.sketcherapp.model.GeneralObserver;
 import com.teambeta.sketcherapp.model.GeneratorFunctions;
+import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.ui.DrawArea;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.LinkedList;
 
 /**
  * The BrushTool class implements the drawing behavior for when the Brush tool has been selected
@@ -28,7 +28,6 @@ public class AirBrushTool extends DrawingTool {
     private final int DEFAULT_DOTS_TO_DRAW = 10;
     private final int DEFAULT_STOKE_VALUE = 10;
 
-
     /**
      * The constructor sets the properties of the tool to their default values.
      */
@@ -44,26 +43,25 @@ public class AirBrushTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        currentX = e.getX();
-        currentY = e.getY();
-
-        drawDotsAroundPoint(canvas, layers);
-    }
-
-    @Override
-    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-    }
-
-    @Override
-    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, LinkedList<ImageLayer> canvasLayers, BufferedImage[] layers, MouseEvent e) {
         currentX = e.getX();
         currentY = e.getY();
         drawDotsAroundPoint(canvas, layers);
     }
 
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> canvasLayers) {
+    }
+
+    @Override
+    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> canvasLayers) {
+        currentX = e.getX();
+        currentY = e.getY();
+        drawDotsAroundPoint(canvas, layers);
+    }
+
+    @Override
+    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> canvasLayers) {
         // Initialize canvas settings that the tool will require.
         initLayer1Graphics(canvas, layers, e);
 
@@ -71,7 +69,6 @@ public class AirBrushTool extends DrawingTool {
         currentX = e.getX();
         currentY = e.getY();
     }
-
 
     /**
      * Generate random dots within the area of the unit circle bounded by the radius to the mouse cursor.
@@ -88,7 +85,6 @@ public class AirBrushTool extends DrawingTool {
         }
         DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
-
 
     /**
      * getColor returns the current color the brush tool is set to.

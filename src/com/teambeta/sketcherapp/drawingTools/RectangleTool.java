@@ -1,11 +1,13 @@
 package com.teambeta.sketcherapp.drawingTools;
 
 import com.teambeta.sketcherapp.model.GeneralObserver;
+import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.ui.DrawArea;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
 /**
  * The RectangleTool class implements the drawing behavior for when the Rectangle tool has been selected
@@ -54,7 +56,7 @@ public class RectangleTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, LinkedList<ImageLayer> canvasLayers, BufferedImage[] layers, MouseEvent e) {
         if (previewLayer == null) {
             previewLayer = DrawArea.getPreviewBufferedImage();
         }
@@ -90,7 +92,7 @@ public class RectangleTool extends DrawingTool {
     }
 
     @Override
-    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> canvasLayers) {
         calcSquareCoordinateData(e, layers, canvas);
 
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
@@ -141,11 +143,11 @@ public class RectangleTool extends DrawingTool {
     }
 
     @Override
-    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> canvasLayers) {
     }
 
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> canvasLayers) {
         canvas.getGraphics().setColor(color);
         currentX = e.getX();
         currentY = e.getY();

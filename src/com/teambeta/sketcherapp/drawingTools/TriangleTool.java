@@ -1,11 +1,13 @@
 package com.teambeta.sketcherapp.drawingTools;
 
 import com.teambeta.sketcherapp.model.GeneralObserver;
+import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.ui.DrawArea;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
 /**
  * The TriangleTool class implements the drawing behavior for when the Line tool has been selected
@@ -43,7 +45,7 @@ public class TriangleTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, LinkedList<ImageLayer> canvasLayers, BufferedImage[] layers, MouseEvent e) {
         if (previewLayer == null) {
             previewLayer = DrawArea.getPreviewBufferedImage();
         }
@@ -83,7 +85,7 @@ public class TriangleTool extends DrawingTool {
     }
 
     @Override
-    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> canvasLayers) {
         int [] x ={initX,currentX,currentX};
         int [] y ={currentY,initY,currentY};
 //        int [] x = {initX,Math.abs(currentX-initX),currentX};
@@ -122,11 +124,11 @@ public class TriangleTool extends DrawingTool {
     }
 
     @Override
-    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> canvasLayers) {
     }
 
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> canvasLayers) {
         //set the coordinates to the current pixel clicked
         currentX = e.getX();
         currentY = e.getY();
