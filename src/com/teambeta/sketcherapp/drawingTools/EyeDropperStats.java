@@ -9,17 +9,15 @@ import java.awt.*;
  * Panel which displays RGB values based on ColorChooser.
  */
 public class EyeDropperStats extends JPanel {
-    private static final String TEXTFIELD_EYEDROPPER_DEFAULT_STRING = "R: N/A\nG: N/A\nB: N/A";
     private static final int TEXTFIELD_EYEDROPPER_FONTSIZE = 16;
-    private static final String EYEDROPPER_TEXTFIELD_RED_PREFIX = "R: ";
-    private static final String EYEDROPPER_TEXTFIELD_GREEN_PREFIX = "G: ";
-    private static final String EYEDROPPER_TEXTFIELD_BLUE_PREFIX = "B: ";
+    private static final String EYEDROPPER_TEXTFIELD_RED_PREFIX = "R:    ";
+    private static final String EYEDROPPER_TEXTFIELD_GREEN_PREFIX = "G:    ";
+    private static final String EYEDROPPER_TEXTFIELD_BLUE_PREFIX = "B:    ";
     private static final String EYEDROPPER_TEXTFIELD_SPACE = "\n";
     private static final String FONT_TYPE = "Arial";
 
     private Color color;
     private JTextArea eyeDropperTextField;
-    private JLabel eyeDropperTextFieldLabel;
 
     /**
      * Constructor.
@@ -29,7 +27,7 @@ public class EyeDropperStats extends JPanel {
         registerObservers();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.DARK_GRAY);
-        eyeDropperTextField = new JTextArea(TEXTFIELD_EYEDROPPER_DEFAULT_STRING);
+        eyeDropperTextField = new JTextArea();
         eyeDropperTextField.setBackground(Color.DARK_GRAY);
         eyeDropperTextField.setForeground(Color.WHITE);
         eyeDropperTextField.setFont(new Font(FONT_TYPE, Font.BOLD, TEXTFIELD_EYEDROPPER_FONTSIZE));

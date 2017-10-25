@@ -25,6 +25,7 @@ public class MainUI {
     private static final String DEFAULT_FONT = "Arial";
     private static final int PANEL_SECTION_SPACING = 20;
     private static final int WEST_PANEL_WIDTH = 120;
+    private static final int COLOR_PANEL_HEIGHT = 200;
     private static LineTool lineTool;
     private static BrushTool brushTool;
     private static RectangleTool rectangleTool;
@@ -353,7 +354,8 @@ public class MainUI {
         JPanel colorPanel = new JPanel();
         colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.Y_AXIS));
         colorPanel.setBackground(Color.DARK_GRAY);
-        colorPanel.setMaximumSize(canvasTools.getMaximumSize());
+        final Dimension CANVAS_TOOLS_MAX_SIZE = canvasTools.getMaximumSize();
+        colorPanel.setMaximumSize(new Dimension((int) CANVAS_TOOLS_MAX_SIZE.getWidth(), COLOR_PANEL_HEIGHT));
         colorPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
         colorChooser = new ColorChooser();
 
@@ -362,11 +364,13 @@ public class MainUI {
         GridBagConstraints colorChooserConstraints = new GridBagConstraints();
         colorChooserPanel.setBackground(Color.DARK_GRAY);
         colorChooserPanel.add(colorChooser, colorChooserConstraints);
-
         eyeDropperStats = new EyeDropperStats();
-        colorPanel.add(eyeDropperStats);
-
+        colorChooserConstraints.gridx = 0;
+        colorChooserConstraints.gridy = 1;
+        colorChooserConstraints.insets = new Insets(PANEL_SECTION_SPACING, 0, 0, 0);
+        colorChooserPanel.add(eyeDropperStats, colorChooserConstraints);
         colorPanel.add(colorChooserPanel);
+
         colorPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
         JPanel westPanel = new JPanel();
