@@ -7,7 +7,6 @@ import com.teambeta.sketcherapp.ui.MainUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.LinkedList;
 
 /**
  * NOTE:
@@ -41,7 +40,7 @@ public class EraserTool extends DrawingTool {
 
 
     @Override
-    public void onDrag(BufferedImage canvas, LinkedList<ImageLayer> canvasLayers, BufferedImage[] layers, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, ImageLayer currentlySelectedLayer, BufferedImage[] layers, MouseEvent e) {
         //draw a path that follows your mouse while the mouse is being dragged
         currentX = e.getX();
         currentY = e.getY();
@@ -54,11 +53,11 @@ public class EraserTool extends DrawingTool {
     }
 
     @Override
-    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> canvasLayers) {
+    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, ImageLayer currentlySelectedLayer) {
     }
 
     @Override
-    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> canvasLayers) {
+    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, ImageLayer currentlySelectedLayer) {
         currentX = e.getX();
         currentY = e.getY();
 
@@ -67,7 +66,7 @@ public class EraserTool extends DrawingTool {
     }
 
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> canvasLayers) {
+    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, ImageLayer currentlySelectedLayer) {
         initLayer1Graphics(canvas, layers, e);
         //set the coordinates to the current point when the mouse is pressed
         currentX = e.getX();
