@@ -26,6 +26,7 @@ public class MainUI {
     private static final int PANEL_SECTION_SPACING = 20;
     private static final int WEST_PANEL_WIDTH = 120;
     private static final int COLOR_PANEL_HEIGHT = 200;
+    private static final String CUSTOM_DARK_GREY = "#222222";
     private static LineTool lineTool;
     private static BrushTool brushTool;
     private static RectangleTool rectangleTool;
@@ -285,7 +286,7 @@ public class MainUI {
         c.ipady = CANVAS_HEIGHT;
         c.ipadx = CANVAS_WIDTH;
         drawAreaPanel.setPreferredSize(new Dimension(400, 400));
-        drawAreaPanel.setBackground(Color.decode("#222222"));
+        drawAreaPanel.setBackground(Color.decode(CUSTOM_DARK_GREY));
         drawAreaPanel.add(drawArea, c);
         mainContent.add(drawAreaPanel, BorderLayout.CENTER);
 
