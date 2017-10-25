@@ -24,7 +24,7 @@ public class WidthChanger {
     private static final String FONT_TYPE = "Arial";
     private static final String CUSTOM_DARK_GREY = "#343434";
     private static final int MINOR_TICK_SPACING = 100;
-    private static final int TEXT_PANEL_SPACING = 100;
+    private static final int TEXT_PANEL_SPACING = 225;
 
 
     private JPanel textPanel = new JPanel();
