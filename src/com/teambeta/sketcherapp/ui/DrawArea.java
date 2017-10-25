@@ -34,13 +34,12 @@ public class DrawArea extends JComponent {
     public DrawArea() {
         backgroundColor = Color.WHITE;
         setBackground(backgroundColor);
-
         setDoubleBuffered(false);
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                MainUI.selectedDrawingTool.onClick(canvasBufferedImage, layers, e, drawingLayers);
+                MainUI.getSelectedDrawingTool().onClick(canvasBufferedImage, layers, e, drawingLayers);
                 isCanvasAltered = true;
                 repaint();
             }
@@ -48,7 +47,7 @@ public class DrawArea extends JComponent {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                MainUI.selectedDrawingTool.onPress(canvasBufferedImage, layers, e, drawingLayers);
+                MainUI.getSelectedDrawingTool().onPress(canvasBufferedImage, layers, e, drawingLayers);
                 isCanvasAltered = true;
                 repaint();
             }
@@ -56,7 +55,7 @@ public class DrawArea extends JComponent {
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
-                MainUI.selectedDrawingTool.onRelease(canvasBufferedImage, layers, e, drawingLayers);
+                MainUI.getSelectedDrawingTool().onRelease(canvasBufferedImage, layers, e, drawingLayers);
                 isCanvasAltered = true;
                 repaint();
             }
@@ -64,7 +63,7 @@ public class DrawArea extends JComponent {
 
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
-                MainUI.selectedDrawingTool.onDrag(canvasBufferedImage, drawingLayers, layers, e);
+                MainUI.getSelectedDrawingTool().onDrag(canvasBufferedImage, drawingLayers, layers, e);
                 repaint();
             }
         });
@@ -315,5 +314,7 @@ public class DrawArea extends JComponent {
                 layer.setRGB(x, y, color_at_point.getRGB());
             }
         }
+        drawLayersOntoCanvas(layers, canvas);
+        repaint();
     }
 }

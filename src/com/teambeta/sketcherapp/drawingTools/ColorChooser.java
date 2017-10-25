@@ -15,10 +15,9 @@ import java.util.List;
  */
 public class ColorChooser extends JPanel {
     private static Color color;
-    private static final int SQUARE_POS_XY = 10;
     private static final int SQUARE_LENGTH = 50;
     private static final int PANEL_LENGTH = 50;
-    private static List<GeneralObserver> observers = new ArrayList<>();
+    private static List<GeneralObserver> observers = new ArrayList<>();;
 
     // Constructor that displays default color as a square panel (graphic selector).
     public ColorChooser() {
@@ -34,8 +33,11 @@ public class ColorChooser extends JPanel {
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setBackground(Color.DARK_GRAY);
+        setSize(SQUARE_LENGTH, SQUARE_LENGTH);
         graphics.setColor(getColor());
-        graphics.fillRect(SQUARE_POS_XY, SQUARE_POS_XY, SQUARE_LENGTH, SQUARE_LENGTH);
+        graphics.fillRect(0, 0, SQUARE_LENGTH, SQUARE_LENGTH);
         graphics.dispose();
     }
 
@@ -69,7 +71,6 @@ public class ColorChooser extends JPanel {
         paintComponent(getGraphics());
         notifyObservers();
     }
-
 
     /**
      * Gets the color of the graphic selector.
