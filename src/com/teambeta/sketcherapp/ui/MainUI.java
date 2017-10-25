@@ -23,9 +23,6 @@ import java.io.File;
  */
 public class MainUI {
     private static final String DEFAULT_FONT = "Arial";
-    private static final String CANVAS_TOOLS_BORDER_TITLE = "Canvas Tools";
-    private static final String BORDER_TITLE_FONT = "Arial";
-    private static final int BORDER_TITLE_SIZE = 16;
     private static final int PANEL_SECTION_SPACING = 20;
     private static final int WEST_PANEL_WIDTH = 120;
     private static LineTool lineTool;
@@ -382,7 +379,6 @@ public class MainUI {
 
         JPanel editorPanel = new JPanel();
         editorPanel.setLayout(new BorderLayout());
-        editorPanel.add(colorChooser, BorderLayout.NORTH);
         editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
         mainContent.add(editorPanel, BorderLayout.EAST);
         mainContent.add(northPanels, BorderLayout.NORTH);
