@@ -54,7 +54,7 @@ public class EllipseTool extends DrawingTool {
     public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         if (previewLayer == null) {
             //previewLayer = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            previewLayer = DrawArea.getPreviewLayer();
+            previewLayer = DrawArea.getPreviewBufferedImage();
         }
         //clear preview layer
         DrawArea.clearBufferImageToTransparent(previewLayer);

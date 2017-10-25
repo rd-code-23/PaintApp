@@ -1,6 +1,5 @@
 package com.teambeta.sketcherapp.model;
 
-import com.teambeta.sketcherapp.Main;
 import com.teambeta.sketcherapp.ui.DrawArea;
 import com.teambeta.sketcherapp.ui.MainUI;
 
@@ -51,7 +50,7 @@ public class ImportExport {
             //write image to a file
             try {
                 file = new File(fileChooser.getSelectedFile() + PNG_EXTENSION);
-                ImageIO.write(drawArea.getCanvas(), PNG, file);
+                ImageIO.write(drawArea.getCanvasBufferedImage(), PNG, file);
             } catch (IOException exc) {
                 exc.printStackTrace();
             }

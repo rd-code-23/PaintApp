@@ -1,29 +1,32 @@
 package com.teambeta.sketcherapp.ui;
 
 import com.teambeta.sketcherapp.model.GeneratorFunctions;
+import com.teambeta.sketcherapp.model.ImageLayer;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.LinkedList;
 import javax.swing.JComponent;
 
 /**
- * Class for drawable canvas.
+ * Class for drawable canvasBufferedImage.
  * Taken from "[Java] How to make a Swing Paint and Drawing application", Sylvain Saurel -
  * https://www.youtube.com/watch?v=OOb1eil4PCo
  */
 public class DrawArea extends JComponent {
-    private BufferedImage canvas;
+    private BufferedImage canvasBufferedImage;
     private BufferedImage[] layers = new BufferedImage[1];
-    private static BufferedImage previewLayer;
+    private LinkedList<ImageLayer> drawingLayers;
+    private ImageLayer currentlySelectedLayer;
+    private static BufferedImage previewBufferedImage;
     private Graphics2D graphics;
     private Color backgroundColor;
     private boolean isCanvasAltered = false;
 
     private static final double RED_LUMA_COEFFICIENT = 0.2126;
     private static final double GREEN_LUMA_COEFFICIENT = 0.7152;
-    private static final double BLUE_LUMA_COEFFICIENT  = 0.0722;
+    private static final double BLUE_LUMA_COEFFICIENT = 0.0722;
 
     /**
      * Constructor. Set actions upon mouse press events.
@@ -37,7 +40,7 @@ public class DrawArea extends JComponent {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                MainUI.selectedDrawingTool.onClick(canvas, layers, e);
+                MainUI.selectedDrawingTool.onClick(canvasBufferedImage, layers, e);
                 isCanvasAltered = true;
                 repaint();
             }
@@ -45,7 +48,7 @@ public class DrawArea extends JComponent {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                MainUI.selectedDrawingTool.onPress(canvas, layers, e);
+                MainUI.selectedDrawingTool.onPress(canvasBufferedImage, layers, e);
                 isCanvasAltered = true;
                 repaint();
             }
@@ -53,7 +56,7 @@ public class DrawArea extends JComponent {
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
-                MainUI.selectedDrawingTool.onRelease(canvas, layers, e);
+                MainUI.selectedDrawingTool.onRelease(canvasBufferedImage, layers, e);
                 isCanvasAltered = true;
                 repaint();
             }
@@ -61,16 +64,18 @@ public class DrawArea extends JComponent {
 
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
-                MainUI.selectedDrawingTool.onDrag(canvas, layers, e);
+                MainUI.selectedDrawingTool.onDrag(canvasBufferedImage, layers, e);
                 repaint();
             }
         });
+
+        drawingLayers = new LinkedList<ImageLayer>();
     }
 
     /**
      * Clears buffer image.
      *
-     * @param bufferedImage canvas to clear.
+     * @param bufferedImage canvasBufferedImage to clear.
      */
     public static void clearBufferImageToTransparent(BufferedImage bufferedImage) {
         Graphics2D graphics = (Graphics2D) bufferedImage.getGraphics();
@@ -82,15 +87,15 @@ public class DrawArea extends JComponent {
     }
 
     /**
-     * Draws the provided layers onto the provided canvas.
+     * Draws the provided layers onto the provided canvasBufferedImage.
      *
      * @param layers the layers to draw
-     * @param canvas the canvas to draw to
+     * @param canvas the canvasBufferedImage to draw to
      */
     public static void drawLayersOntoCanvas(BufferedImage[] layers, BufferedImage canvas) {
         Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
         //TODO:change to get actual color
-        //clear the canvas to its default color
+        //clear the canvasBufferedImage to its default color
         canvasGraphics.setColor(Color.WHITE);
         canvasGraphics.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
@@ -103,30 +108,43 @@ public class DrawArea extends JComponent {
         }
     }
 
+    public static void drawLayersOntoCanvas(ImageLayer[] layers, BufferedImage canvas) {
+        BufferedImage[] bufferedImages = new BufferedImage[layers.length];
+        for (int i = 0; i < bufferedImages.length; i++) {
+            bufferedImages[i] = layers[i].getBufferedImage();
+        }
+        drawLayersOntoCanvas(bufferedImages, canvas);
+    }
+
     /**
-     * Creates a canvas for drawable elements.
+     * Creates a canvasBufferedImage for drawable elements.
      *
-     * @param canvasGraphics graphics for canvas
+     * @param canvasGraphics graphics for canvasBufferedImage
      */
     protected void paintComponent(Graphics canvasGraphics) {
-        if (canvas == null) {
-            // create a canvas to draw on
-            canvas = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+        if (canvasBufferedImage == null) {
+            // create a canvasBufferedImage to draw on
+            canvasBufferedImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
             for (int i = 0; i < layers.length; i++) {
                 layers[i] = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
             }
-            previewLayer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-            graphics = (Graphics2D) canvas.getGraphics();
+            previewBufferedImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+            graphics = (Graphics2D) canvasBufferedImage.getGraphics();
             // enable antialiasing
             graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             // clear draw area
             clear();
         }
-        canvasGraphics.drawImage(canvas, 0, 0, null);
+        if (drawingLayers.isEmpty()) {
+            drawingLayers.add(new ImageLayer(new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB)));
+            currentlySelectedLayer = drawingLayers.get(0);
+        }
+
+        canvasGraphics.drawImage(canvasBufferedImage, 0, 0, null);
     }
 
     /**
-     * Clears written elements on canvas.
+     * Clears written elements on canvasBufferedImage.
      */
     public void clear() {
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
@@ -137,6 +155,14 @@ public class DrawArea extends JComponent {
         layer1Graphics.fillRect(0, 0, MainUI.CANVAS_WIDTH, MainUI.CANVAS_HEIGHT);
         graphics.setPaint(Color.black);
         layer1Graphics.setPaint(Color.black);
+
+        if (currentlySelectedLayer != null) {
+            Graphics2D currentlySelectedLayersGraphics =
+                    (Graphics2D) currentlySelectedLayer.getBufferedImage().getGraphics();
+            currentlySelectedLayersGraphics.setPaint(Color.white);
+            currentlySelectedLayersGraphics.fillRect(0, 0, MainUI.CANVAS_WIDTH, MainUI.CANVAS_HEIGHT);
+            currentlySelectedLayersGraphics.setPaint(Color.black);
+        }
         isCanvasAltered = false;
         repaint();
     }
@@ -152,7 +178,7 @@ public class DrawArea extends JComponent {
 
 
     /**
-     * Get the background color of the canvas area.
+     * Get the background color of the canvasBufferedImage area.
      *
      * @return The color of the background area
      */
@@ -166,26 +192,26 @@ public class DrawArea extends JComponent {
      *
      * @return preview layer.
      */
-    public static BufferedImage getPreviewLayer() {
-        return previewLayer;
+    public static BufferedImage getPreviewBufferedImage() {
+        return previewBufferedImage;
     }
 
     /**
-     * Get canvas.
+     * Get canvasBufferedImage.
      *
-     * @return canvas.
+     * @return canvasBufferedImage.
      */
-    public BufferedImage getCanvas() {
-        return canvas;
+    public BufferedImage getCanvasBufferedImage() {
+        return canvasBufferedImage;
     }
 
     /**
-     * Set class specified canvas.
+     * Set class specified canvasBufferedImage.
      *
-     * @param canvas to set class to.
+     * @param canvasBufferedImage to set class to.
      */
-    public void setCanvas(BufferedImage canvas) {
-        this.canvas = canvas;
+    public void setCanvasBufferedImage(BufferedImage canvasBufferedImage) {
+        this.canvasBufferedImage = canvasBufferedImage;
     }
 
     /**
@@ -196,6 +222,11 @@ public class DrawArea extends JComponent {
     public void setImportedImage(BufferedImage image) {
         Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
         layer1Graphics.drawImage(image, 0, 0, this);
+
+        Graphics2D currentlySelectedLayersGraphics =
+                (Graphics2D) currentlySelectedLayer.getBufferedImage().getGraphics();
+        currentlySelectedLayersGraphics.drawImage(image, 0, 0, this);
+
         graphics.drawImage(image, 0, 0, this);
         graphics.finalize();
         isCanvasAltered = false;
@@ -203,7 +234,7 @@ public class DrawArea extends JComponent {
     }
 
     /**
-     * checks to see if the user has altered the canvas
+     * checks to see if the user has altered the canvasBufferedImage
      *
      * @return
      */
@@ -212,7 +243,7 @@ public class DrawArea extends JComponent {
     }
 
     /**
-     * sets whether the canvas has been altered
+     * sets whether the canvasBufferedImage has been altered
      *
      * @param canvasAltered
      */
@@ -221,7 +252,7 @@ public class DrawArea extends JComponent {
     }
 
     /**
-     * Redraw all canvas coordinates to the average of the coordinate's RGB values.
+     * Redraw all canvasBufferedImage coordinates to the average of the coordinate's RGB values.
      */
     public void redrawToGreyscale() {
         int lumaValue;
@@ -229,51 +260,63 @@ public class DrawArea extends JComponent {
 
         // Redraw all of the layers to greyscale
         for (BufferedImage layer : layers) {
-            for (int x = 0; x < layer.getWidth(); ++x) {
-                for (int y = 0; y < layer.getHeight(); ++y) {
-                    color_at_point = new Color(layer.getRGB(x, y));
-                    if (color_at_point.getRGB() != -1) {
-                        lumaValue = (int) (
-                                RED_LUMA_COEFFICIENT * color_at_point.getRed()
-                                + GREEN_LUMA_COEFFICIENT * color_at_point.getGreen()
-                                + BLUE_LUMA_COEFFICIENT * color_at_point.getBlue()
-                        );
+            makeBufferedImageGrayscale(layer);
+        }
 
-                        if (lumaValue > 255) {
-                            lumaValue = 255;
-                        } else if (lumaValue < 0) {
-                            lumaValue = 0;
-                        }
+        // Redraw current imageLayer to greyscale
+        BufferedImage currentlySelectedLayerBufferedImage = currentlySelectedLayer.getBufferedImage();
+        makeBufferedImageGrayscale(currentlySelectedLayerBufferedImage);
+        drawLayersOntoCanvas(layers, canvasBufferedImage);
+        repaint();
+    }
 
-                        layer.setRGB(x, y, new Color(lumaValue, lumaValue, lumaValue).getRGB());
+    private void makeBufferedImageGrayscale(BufferedImage layer) {
+        Color color_at_point;
+        int lumaValue;
+        for (int x = 0; x < layer.getWidth(); ++x) {
+            for (int y = 0; y < layer.getHeight(); ++y) {
+                color_at_point = new Color(layer.getRGB(x, y));
+                if (color_at_point.getRGB() != -1) {
+                    lumaValue = (int) (
+                            RED_LUMA_COEFFICIENT * color_at_point.getRed()
+                                    + GREEN_LUMA_COEFFICIENT * color_at_point.getGreen()
+                                    + BLUE_LUMA_COEFFICIENT * color_at_point.getBlue()
+                    );
+
+                    if (lumaValue > 255) {
+                        lumaValue = 255;
+                    } else if (lumaValue < 0) {
+                        lumaValue = 0;
                     }
+                    layer.setRGB(x, y, new Color(lumaValue, lumaValue, lumaValue).getRGB());
                 }
             }
         }
-        drawLayersOntoCanvas(layers, canvas);
-        repaint();
     }
 
     /**
-     * Draw random colourful noise on the canvas.
+     * Draw random colourful noise on the canvasBufferedImage.
      */
     public void colouredNoiseGenerator() {
-        Color color_at_point;
         for (BufferedImage layer : layers) {
-            for (int x = 0; x < layer.getWidth(); ++x) {
-                for (int y = 0; y < layer.getHeight(); ++y) {
-                    color_at_point = new Color(
-                            GeneratorFunctions.randomInt(0, 255),
-                            GeneratorFunctions.randomInt(0, 255),
-                            GeneratorFunctions.randomInt(0, 255)
-                    );
-
-                        layer.setRGB(x, y, color_at_point.getRGB());
-                }
-            }
+            fillWithColouredNoise(layer);
         }
-        drawLayersOntoCanvas(layers, canvas);
+        drawLayersOntoCanvas(layers, canvasBufferedImage);
         repaint();
     }
 
+    private void fillWithColouredNoise(BufferedImage layer) {
+        Color color_at_point;
+        for (int x = 0; x < layer.getWidth(); ++x) {
+            for (int y = 0; y < layer.getHeight(); ++y) {
+                color_at_point = new Color(
+                        GeneratorFunctions.randomInt(0, 255),
+                        GeneratorFunctions.randomInt(0, 255),
+                        GeneratorFunctions.randomInt(0, 255)
+                );
+
+                layer.setRGB(x, y, color_at_point.getRGB());
+            }
+        }
+    }
 }

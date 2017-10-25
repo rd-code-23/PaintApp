@@ -45,7 +45,7 @@ public class TriangleTool extends DrawingTool {
     @Override
     public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
         if (previewLayer == null) {
-            previewLayer = DrawArea.getPreviewLayer();
+            previewLayer = DrawArea.getPreviewBufferedImage();
         }
         //clear preview layer
         DrawArea.clearBufferImageToTransparent(previewLayer);
