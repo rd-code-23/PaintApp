@@ -318,19 +318,27 @@ public class DrawArea extends JComponent {
         }
     }
 
-    private void repeatCheckerPattern(BufferedImage layer, int horizontal_count, int vertical_count) {
-        int square_width = layer.getWidth() / horizontal_count;
-        int square_height = layer.getHeight() / vertical_count;
+    /**
+     * Fill in a black and white checkerboard pattern to the layer.
+     *
+     * @param layer The BufferedImage layer to write on
+     * @param horizontal_count The amount of squares horizontally
+     * @param vertical_count The amount of squares vertically
+     */
+    private void fillCheckerPattern(BufferedImage layer, int horizontal_count, int vertical_count) {
 
         Graphics2D layerGraphics = (Graphics2D) layer.getGraphics();
         Color old_color = layerGraphics.getColor();
-        int row = 1;
 
+        int square_width = layer.getWidth() / horizontal_count;
+        int square_height = layer.getHeight() / vertical_count;
+        int row = 1;
         boolean isBlack = false;
 
         for (int y = 0; y < layer.getHeight(); y += square_height) {
             if (y >= layer.getHeight()) y = layer.getHeight() - 1;
 
+            // Alternate start colour for each row
             if (row % 2 == 0) {
                 isBlack = true;
                 layerGraphics.setColor(Color.BLACK);
@@ -342,6 +350,7 @@ public class DrawArea extends JComponent {
             for (int x = 0; x < layer.getWidth(); x += square_width) {
                 if (x >= layer.getWidth()) x = layer.getWidth() - 1;
 
+                // TODO: The bottom and right edges aren't drawing properly.
                 layerGraphics.fillRect(x, y, square_width, square_height);
 
                 if (isBlack) {
@@ -355,18 +364,18 @@ public class DrawArea extends JComponent {
             ++row;
         }
 
-//        for (int y = 0; y < layer.getHeight(); y += square_height) {
-//            for (int x = 0; x < layer.getWidth(); x += square_width) {
-//
-//            }
-//        }
         layerGraphics.setColor(old_color);
     }
 
-
+    /**
+     * Draw a black and white checkerboard pattern to all layers.
+     *
+     * @param horizontalCount The amount of squares horizontally
+     * @param verticalCount The amount of squares vertically
+     */
     public void drawCheckerPattern(int horizontalCount, int verticalCount) {
         for (BufferedImage layer : layers) {
-            repeatCheckerPattern(layer, horizontalCount, verticalCount);
+            fillCheckerPattern(layer, horizontalCount, verticalCount);
         }
         drawLayersOntoCanvas(layers, canvasBufferedImage);
         repaint();

@@ -47,6 +47,7 @@ public class MenuUI extends JMenuBar {
     private JMenuItem iCanvasSize;
     private JMenuItem iRotateCanvas;
     private JMenuItem iColourMode;
+    private JMenuItem iCheckerBoard;
     private JMenuItem iGreyscale;
     private JMenuItem iGenerateNoise;
     private JMenuItem iImport;
@@ -55,6 +56,7 @@ public class MenuUI extends JMenuBar {
     private static final String ICANVASSIZE_MENU_BUTTON_TEXT = "Canvas Size";
     private static final String IROTATECANVAS_MENU_BUTTON_TEXT = "Rotate Canvas";
     private static final String ICOLOURMODE_MENU_BUTTON_TEXT = "Colour Mode";
+    private static final String ICHECKERBOARD_MENU_BUTTON_TEXT = "Checkerboard";
     private static final String IGREYSCALE_MENU_BUTTON_TEXT = "Greyscale";
     private static final String IGENERATENOISE_MENU_BUTTON_TEXT = "Generate Noise";
     private static final String IIMPORT_MENU_BUTTON_TEXT = "Import";
@@ -80,16 +82,18 @@ public class MenuUI extends JMenuBar {
     private ImportExport importExport;
     private GreyscaleMenu greyscaleMenu;
     private NoiseGeneratorMenu noiseGeneratorMenu;
+    private CheckerboardMenu checkerboardMenu;
 
     /**
      * constructor
      */
     public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu,
-                  NoiseGeneratorMenu noiseGeneratorMenu) {
+                  NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu) {
         this.drawArea = drawArea;
         this.importExport = importExport;
         this.greyscaleMenu = greyscaleMenu;
         this.noiseGeneratorMenu = noiseGeneratorMenu;
+        this.checkerboardMenu = checkerboardMenu;
         prepareMenuBar();
     }
 
@@ -132,6 +136,7 @@ public class MenuUI extends JMenuBar {
         iCanvasSize = new JMenuItem(ICANVASSIZE_MENU_BUTTON_TEXT);
         iRotateCanvas = new JMenuItem(IROTATECANVAS_MENU_BUTTON_TEXT);
         iColourMode = new JMenuItem(ICOLOURMODE_MENU_BUTTON_TEXT);
+        iCheckerBoard = new JMenuItem(ICHECKERBOARD_MENU_BUTTON_TEXT);
         iGreyscale = new JMenuItem(IGREYSCALE_MENU_BUTTON_TEXT);
         iGenerateNoise = new JMenuItem(IGENERATENOISE_MENU_BUTTON_TEXT);
         iImport = new JMenuItem(IIMPORT_MENU_BUTTON_TEXT);
@@ -140,6 +145,7 @@ public class MenuUI extends JMenuBar {
         imageMenu.add(iCanvasSize);
         imageMenu.add(iRotateCanvas);
         imageMenu.add(iColourMode);
+        imageMenu.add(iCheckerBoard);
         imageMenu.add(iGreyscale);
         imageMenu.add(iGenerateNoise);
         imageMenu.add(iImport);
@@ -166,6 +172,7 @@ public class MenuUI extends JMenuBar {
         iImport.addActionListener(menuActionListener);
         iGreyscale.addActionListener(menuActionListener);
         iGenerateNoise.addActionListener(menuActionListener);
+        iCheckerBoard.addActionListener(menuActionListener);
     }
 
     private ActionListener menuActionListener = new ActionListener() {
@@ -183,6 +190,9 @@ public class MenuUI extends JMenuBar {
             }
             if (e.getSource() == iGenerateNoise) {
                 noiseGeneratorMenu.showWindow();
+            }
+            if (e.getSource() == iCheckerBoard) {
+                checkerboardMenu.showWindow();
             }
         }
     };
