@@ -350,7 +350,8 @@ public class DrawArea extends JComponent {
             for (int x = 0; x < layer.getWidth(); x += square_width) {
                 if (x >= layer.getWidth()) x = layer.getWidth() - 1;
 
-                // TODO: The bottom and right edges aren't drawing properly.
+                // TODO: The bottom and right edges aren't drawing properly due to integer division data loss
+                // Maybe just draw the bottom and right edge squares up to their respective sides
                 layerGraphics.fillRect(x, y, square_width, square_height);
 
                 if (isBlack) {
