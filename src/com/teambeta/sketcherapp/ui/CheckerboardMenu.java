@@ -5,7 +5,7 @@ import javax.swing.*;
 public class CheckerboardMenu {
 
     private DrawArea drawArea;
-    private static final String DIALOG_MESSAGE = "Draw checkerboard pattern? \n\n" +
+    private static final String DIALOG_MESSAGE = "Draw checkerboard pattern?\n\n" +
             "This will overwrite the entire canvas";
     private static final String DIALOG_WINDOW_TITLE = "Confirm Checkerboard";
     private static final String DIALOG_HORIZONTAL = "Horizontal amount";

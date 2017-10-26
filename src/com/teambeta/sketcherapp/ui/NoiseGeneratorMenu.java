@@ -1,15 +1,11 @@
 package com.teambeta.sketcherapp.ui;
 
-import com.teambeta.sketcherapp.Main;
-import com.teambeta.sketcherapp.ui.DrawArea;
-import com.teambeta.sketcherapp.ui.MainUI;
-
 import javax.swing.*;
 
 public class NoiseGeneratorMenu {
 
     private DrawArea drawArea;
-    private static final String DIALOG_MESSAGE = "Generate random noise on the canvas? \n\n" +
+    private static final String DIALOG_MESSAGE = "Generate random noise?\n\n" +
             "This will overwrite the entire canvas";
     private static final String DIALOG_WINDOW_TITLE = "Confirm Noise";
 

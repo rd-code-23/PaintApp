@@ -1,11 +1,6 @@
 package com.teambeta.sketcherapp.ui;
 
-import com.teambeta.sketcherapp.drawingTools.DrawingTool;
-import com.teambeta.sketcherapp.drawingTools.LineTool;
-import com.teambeta.sketcherapp.drawingTools.BrushTool;
-import com.teambeta.sketcherapp.drawingTools.RectangleTool;
 import com.teambeta.sketcherapp.drawingTools.*;
-import com.teambeta.sketcherapp.model.GeneratorFunctions;
 import com.teambeta.sketcherapp.model.ImportExport;
 
 import javax.sound.sampled.AudioSystem;

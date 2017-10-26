@@ -7,7 +7,8 @@ import com.teambeta.sketcherapp.ui.DrawArea;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * The PaintBucket class implements the drawing behavior for when the PaintBucket tool has been selected

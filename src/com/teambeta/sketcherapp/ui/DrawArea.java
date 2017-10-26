@@ -3,11 +3,13 @@ package com.teambeta.sketcherapp.ui;
 import com.teambeta.sketcherapp.model.GeneratorFunctions;
 import com.teambeta.sketcherapp.model.ImageLayer;
 
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
-import javax.swing.JComponent;
 
 import static java.awt.Color.black;
 
