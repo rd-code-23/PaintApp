@@ -2,13 +2,13 @@ package com.teambeta.sketcherapp.drawingTools;
 
 
 import com.teambeta.sketcherapp.model.GeneralObserver;
+import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.ui.DrawArea;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
+import java.util.LinkedList;
 
 /**
  * Text tool class that places text inputted by user onto canvas.
@@ -36,21 +36,21 @@ public class TextTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers, BufferedImage[] layers, MouseEvent e) {
     }
 
     @Override
-    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
     }
 
     @Override
-    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         placeText(canvas, layers, e);
     }
 
 
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
     }
 
     @Override

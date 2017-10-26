@@ -33,7 +33,7 @@ public class GeneratorFunctions {
      * @param c The character to convert
      * @return The morse code string of the character
      */
-    public static String getCharToMorse(char c) {
+    private static String getCharToMorse(char c) {
         String ret = null;
         switch (c) {
             case 'a': case 'A':
@@ -160,11 +160,11 @@ public class GeneratorFunctions {
      * @return The morse code string of the input
      */
     public static String getStringToMorse(String input) {
-        String output = "";
+        StringBuilder output = new StringBuilder();
         for (char c : input.toCharArray()) {
-            output += getCharToMorse(c) + " ";
+            output.append(getCharToMorse(c)).append(" ");
         }
-        return output;
+        return output.toString();
     }
 
 }

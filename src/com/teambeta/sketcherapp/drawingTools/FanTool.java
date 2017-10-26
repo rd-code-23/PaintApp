@@ -1,11 +1,13 @@
 package com.teambeta.sketcherapp.drawingTools;
 
 import com.teambeta.sketcherapp.model.GeneralObserver;
+import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.ui.DrawArea;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
 /**
  * The FanTool class implements the drawing behavior for when the Fan tool has been selected
@@ -42,7 +44,7 @@ public class FanTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers, BufferedImage[] layers, MouseEvent e) {
         x_current = e.getX();
         y_current = e.getY();
         layer1Graphics.drawLine(x_start, y_start, x_current, y_current);
@@ -50,17 +52,17 @@ public class FanTool extends DrawingTool {
     }
 
     @Override
-    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
 
     }
 
     @Override
-    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
 
     }
 
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         initLayer1Graphics(canvas, layers, e);
         x_start = e.getX();
         y_start = e.getY();

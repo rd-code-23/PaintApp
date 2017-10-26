@@ -1,11 +1,13 @@
 package com.teambeta.sketcherapp.drawingTools;
 
 import com.teambeta.sketcherapp.model.GeneralObserver;
+import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.ui.DrawArea;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
 /**
  * The BrushTool class implements the drawing behavior for when the Brush tool has been selected
@@ -19,7 +21,7 @@ public class BrushTool extends DrawingTool {
     private Color color;
     private int brushWidth;
     private Graphics2D layer1Graphics;
-    private final int DEFAULT_STOKE_VALUE = 10;
+    private final static int DEFAULT_STOKE_VALUE = 10;
 
 
     /**
@@ -36,7 +38,7 @@ public class BrushTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers, BufferedImage[] layers, MouseEvent e) {
         currentX = e.getX();
         currentY = e.getY();
 
@@ -48,11 +50,11 @@ public class BrushTool extends DrawingTool {
     }
 
     @Override
-    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
     }
 
     @Override
-    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         currentX = e.getX();
         currentY = e.getY();
 
@@ -61,7 +63,7 @@ public class BrushTool extends DrawingTool {
     }
 
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         // Initialize canvas settings that the tool will require.
         initLayer1Graphics(canvas, layers, e);
 

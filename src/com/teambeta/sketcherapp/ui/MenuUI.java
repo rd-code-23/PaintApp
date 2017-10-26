@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
  * The MenuUI class adds a menu bar with submenus to the top of the application.
  */
 
-
 public class MenuUI extends JMenuBar {
 
     private static final String FILE_MENU_BUTTON_TEXT = "File";
@@ -82,27 +81,22 @@ public class MenuUI extends JMenuBar {
     private GreyscaleMenu greyscaleMenu;
     private NoiseGeneratorMenu noiseGeneratorMenu;
 
-
     /**
      * constructor
      */
-
     public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu,
                   NoiseGeneratorMenu noiseGeneratorMenu) {
-
         this.drawArea = drawArea;
         this.importExport = importExport;
         this.greyscaleMenu = greyscaleMenu;
         this.noiseGeneratorMenu = noiseGeneratorMenu;
         prepareMenuBar();
-
     }
 
     /**
      * The prepareMenuBar function builds the menu and adds submenus.
      */
     public void prepareMenuBar() {
-
         fileMenu = new JMenu(FILE_MENU_BUTTON_TEXT);
         editMenu = new JMenu(EDIT_MENU_BUTTON_TEXT);
         imageMenu = new JMenu(IMAGE_MENU_BUTTON_TEXT);
@@ -172,19 +166,17 @@ public class MenuUI extends JMenuBar {
         iImport.addActionListener(menuActionListener);
         iGreyscale.addActionListener(menuActionListener);
         iGenerateNoise.addActionListener(menuActionListener);
-
     }
 
     private ActionListener menuActionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-
             // Export canvas menu button
             if (e.getSource() == iExport) {
                 importExport.exportImage();
             }
             if (e.getSource() == iImport) {
-               importExport.importImage();
+                importExport.importImage();
             }
             if (e.getSource() == iGreyscale) {
                 greyscaleMenu.showWindow();
@@ -193,10 +185,5 @@ public class MenuUI extends JMenuBar {
                 noiseGeneratorMenu.showWindow();
             }
         }
-
     };
-
-
-
 }
-
