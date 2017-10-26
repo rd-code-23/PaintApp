@@ -9,6 +9,8 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import javax.swing.JComponent;
 
+import static java.awt.Color.black;
+
 /**
  * Class for drawable canvasBufferedImage.
  * Taken from "[Java] How to make a Swing Paint and Drawing application", Sylvain Saurel -
@@ -153,15 +155,15 @@ public class DrawArea extends JComponent {
         // draw white on entire draw area to clear
         graphics.fillRect(0, 0, MainUI.CANVAS_WIDTH, MainUI.CANVAS_HEIGHT);
         layer1Graphics.fillRect(0, 0, MainUI.CANVAS_WIDTH, MainUI.CANVAS_HEIGHT);
-        graphics.setPaint(Color.black);
-        layer1Graphics.setPaint(Color.black);
+        graphics.setPaint(black);
+        layer1Graphics.setPaint(black);
 
         if (currentlySelectedLayer != null) {
             Graphics2D currentlySelectedLayersGraphics =
                     (Graphics2D) currentlySelectedLayer.getBufferedImage().getGraphics();
             currentlySelectedLayersGraphics.setPaint(Color.white);
             currentlySelectedLayersGraphics.fillRect(0, 0, MainUI.CANVAS_WIDTH, MainUI.CANVAS_HEIGHT);
-            currentlySelectedLayersGraphics.setPaint(Color.black);
+            currentlySelectedLayersGraphics.setPaint(black);
         }
         isCanvasAltered = false;
         repaint();
@@ -315,4 +317,59 @@ public class DrawArea extends JComponent {
             }
         }
     }
+
+    private void repeatCheckerPattern(BufferedImage layer, int horizontal_count, int vertical_count) {
+        int square_width = layer.getWidth() / horizontal_count;
+        int square_height = layer.getHeight() / vertical_count;
+
+        Graphics2D layerGraphics = (Graphics2D) layer.getGraphics();
+        Color old_color = layerGraphics.getColor();
+        int row = 1;
+
+        boolean isBlack = false;
+
+        for (int y = 0; y < layer.getHeight(); y += square_height) {
+            if (y >= layer.getHeight()) y = layer.getHeight() - 1;
+
+            if (row % 2 == 0) {
+                isBlack = true;
+                layerGraphics.setColor(Color.BLACK);
+            } else {
+                isBlack = false;
+                layerGraphics.setColor(Color.WHITE);
+            }
+
+            for (int x = 0; x < layer.getWidth(); x += square_width) {
+                if (x >= layer.getWidth()) x = layer.getWidth() - 1;
+
+                layerGraphics.fillRect(x, y, square_width, square_height);
+
+                if (isBlack) {
+                    layerGraphics.setColor(Color.WHITE);
+                } else {
+                    layerGraphics.setColor(Color.BLACK);
+                }
+                isBlack = !isBlack;
+            }
+
+            ++row;
+        }
+
+//        for (int y = 0; y < layer.getHeight(); y += square_height) {
+//            for (int x = 0; x < layer.getWidth(); x += square_width) {
+//
+//            }
+//        }
+        layerGraphics.setColor(old_color);
+    }
+
+
+    public void drawCheckerPattern(int horizontalCount, int verticalCount) {
+        for (BufferedImage layer : layers) {
+            repeatCheckerPattern(layer, horizontalCount, verticalCount);
+        }
+        drawLayersOntoCanvas(layers, canvasBufferedImage);
+        repaint();
+    }
+
 }

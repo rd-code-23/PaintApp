@@ -4,6 +4,7 @@ import com.teambeta.sketcherapp.model.GeneralObserver;
 import com.teambeta.sketcherapp.model.GeneratorFunctions;
 import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.ui.DrawArea;
+import com.teambeta.sketcherapp.ui.MainUI;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
