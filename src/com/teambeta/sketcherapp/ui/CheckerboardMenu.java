@@ -2,6 +2,9 @@ package com.teambeta.sketcherapp.ui;
 
 import javax.swing.*;
 
+/**
+ * Generate a checkerboard pattern on canvas.
+ */ 
 public class CheckerboardMenu {
 
     private DrawArea drawArea;
