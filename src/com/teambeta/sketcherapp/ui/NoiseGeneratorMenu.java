@@ -9,7 +9,7 @@ import javax.swing.*;
 public class NoiseGeneratorMenu {
 
     private DrawArea drawArea;
-    private static final String DIALOG_MESSAGE = "Generate random noise on the canvas? \n\n WARNING: " +
+    private static final String DIALOG_MESSAGE = "Generate random noise on the canvas? \n\n" +
             "This will overwrite the entire canvas";
     private static final String DIALOG_WINDOW_TITLE = "Confirm Noise";
 

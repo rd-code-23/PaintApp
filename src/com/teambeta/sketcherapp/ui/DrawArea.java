@@ -332,7 +332,7 @@ public class DrawArea extends JComponent {
 
         int square_width = layer.getWidth() / horizontal_count;
         int square_height = layer.getHeight() / vertical_count;
-        int row = 1;
+        int row = 0;
         boolean isBlack = false;
 
         for (int y = 0; y < layer.getHeight(); y += square_height) {

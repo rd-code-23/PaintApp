@@ -8,8 +8,8 @@ public class CheckerboardMenu {
     private static final String DIALOG_MESSAGE = "Draw checkerboard pattern? \n\n" +
             "This will overwrite the entire canvas";
     private static final String DIALOG_WINDOW_TITLE = "Confirm Checkerboard";
-    private static final String DIALOG_HORIZONTAL = "Horizontal amount:";
-    private static final String DIALOG_VERTICAL = "Vertical amount:";
+    private static final String DIALOG_HORIZONTAL = "Horizontal amount";
+    private static final String DIALOG_VERTICAL = "Vertical amount";
     private static final String DIALOG_WARNING = "You cannot input a non-integer";
 
     /*
