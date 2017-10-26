@@ -3,11 +3,15 @@ package com.teambeta.sketcherapp.ui;
 import com.teambeta.sketcherapp.model.GeneratorFunctions;
 import com.teambeta.sketcherapp.model.ImageLayer;
 
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
-import javax.swing.JComponent;
+
+import static java.awt.Color.black;
 
 /**
  * Class for drawable canvasBufferedImage.
@@ -153,15 +157,15 @@ public class DrawArea extends JComponent {
         // draw white on entire draw area to clear
         graphics.fillRect(0, 0, MainUI.CANVAS_WIDTH, MainUI.CANVAS_HEIGHT);
         layer1Graphics.fillRect(0, 0, MainUI.CANVAS_WIDTH, MainUI.CANVAS_HEIGHT);
-        graphics.setPaint(Color.black);
-        layer1Graphics.setPaint(Color.black);
+        graphics.setPaint(black);
+        layer1Graphics.setPaint(black);
 
         if (currentlySelectedLayer != null) {
             Graphics2D currentlySelectedLayersGraphics =
                     (Graphics2D) currentlySelectedLayer.getBufferedImage().getGraphics();
             currentlySelectedLayersGraphics.setPaint(Color.white);
             currentlySelectedLayersGraphics.fillRect(0, 0, MainUI.CANVAS_WIDTH, MainUI.CANVAS_HEIGHT);
-            currentlySelectedLayersGraphics.setPaint(Color.black);
+            currentlySelectedLayersGraphics.setPaint(black);
         }
         isCanvasAltered = false;
         repaint();
@@ -315,4 +319,69 @@ public class DrawArea extends JComponent {
             }
         }
     }
+
+    /**
+     * Fill in a black and white checkerboard pattern to the layer.
+     *
+     * @param layer The BufferedImage layer to write on
+     * @param horizontal_count The amount of squares horizontally
+     * @param vertical_count The amount of squares vertically
+     */
+    private void fillCheckerPattern(BufferedImage layer, int horizontal_count, int vertical_count) {
+
+        Graphics2D layerGraphics = (Graphics2D) layer.getGraphics();
+        Color old_color = layerGraphics.getColor();
+
+        int square_width = layer.getWidth() / horizontal_count;
+        int square_height = layer.getHeight() / vertical_count;
+        int row = 0;
+        boolean isBlack = false;
+
+        for (int y = 0; y < layer.getHeight(); y += square_height) {
+            if (y >= layer.getHeight()) y = layer.getHeight() - 1;
+
+            // Alternate start colour for each row
+            if (row % 2 == 0) {
+                isBlack = true;
+                layerGraphics.setColor(Color.BLACK);
+            } else {
+                isBlack = false;
+                layerGraphics.setColor(Color.WHITE);
+            }
+
+            for (int x = 0; x < layer.getWidth(); x += square_width) {
+                if (x >= layer.getWidth()) x = layer.getWidth() - 1;
+
+                // TODO: The bottom and right edges aren't drawing properly due to integer division data loss
+                // Maybe just draw the bottom and right edge squares up to their respective sides
+                layerGraphics.fillRect(x, y, square_width, square_height);
+
+                if (isBlack) {
+                    layerGraphics.setColor(Color.WHITE);
+                } else {
+                    layerGraphics.setColor(Color.BLACK);
+                }
+                isBlack = !isBlack;
+            }
+
+            ++row;
+        }
+
+        layerGraphics.setColor(old_color);
+    }
+
+    /**
+     * Draw a black and white checkerboard pattern to all layers.
+     *
+     * @param horizontalCount The amount of squares horizontally
+     * @param verticalCount The amount of squares vertically
+     */
+    public void drawCheckerPattern(int horizontalCount, int verticalCount) {
+        for (BufferedImage layer : layers) {
+            fillCheckerPattern(layer, horizontalCount, verticalCount);
+        }
+        drawLayersOntoCanvas(layers, canvasBufferedImage);
+        repaint();
+    }
+
 }

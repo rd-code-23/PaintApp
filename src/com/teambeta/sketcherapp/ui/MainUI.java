@@ -1,11 +1,6 @@
 package com.teambeta.sketcherapp.ui;
 
-import com.teambeta.sketcherapp.drawingTools.DrawingTool;
-import com.teambeta.sketcherapp.drawingTools.LineTool;
-import com.teambeta.sketcherapp.drawingTools.BrushTool;
-import com.teambeta.sketcherapp.drawingTools.RectangleTool;
 import com.teambeta.sketcherapp.drawingTools.*;
-import com.teambeta.sketcherapp.model.GeneratorFunctions;
 import com.teambeta.sketcherapp.model.ImportExport;
 
 import javax.sound.sampled.AudioSystem;
@@ -275,6 +270,7 @@ public class MainUI {
         ImportExport importExport = new ImportExport(drawArea, this);
         GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
         NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
+        CheckerboardMenu checkerboardMenu = new CheckerboardMenu(drawArea);
 
         JPanel drawAreaPanel = new JPanel();
         drawAreaPanel.setLayout(new GridBagLayout());
@@ -327,7 +323,7 @@ public class MainUI {
         /* END MAINUI BUTTONS */
         JPanel northPanel = new JPanel();
         northPanel.setLayout(new BorderLayout());
-        MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, noiseGeneratorMenu);
+        MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, noiseGeneratorMenu, checkerboardMenu);
         northPanel.add(menuUI, BorderLayout.NORTH);
 
         JPanel toolSettings = new JPanel();
