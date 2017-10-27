@@ -46,7 +46,6 @@ public class ColorChooser extends JPanel {
         return new Dimension(PANEL_LENGTH, PANEL_LENGTH);
     }
 
-
     /**
      * Changes color for the graphic selector.
      */
@@ -68,7 +67,7 @@ public class ColorChooser extends JPanel {
      * @param color The color to be set
      */
     public void setColorFromEyeDropper(Color color) {
-        this.color = color;
+        ColorChooser.color = color;
         paintComponent(getGraphics());
         notifyObservers();
     }

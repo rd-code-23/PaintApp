@@ -42,8 +42,6 @@ public class BrushTool extends DrawingTool {
 
         ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
         if (selectedLayer != null) {
-            selectedLayer.getBufferedImage().getGraphics().drawLine(lastX, lastY, currentX, currentY);
-            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
             Graphics2D selectedLayerGraphics = initLayerGraphics(selectedLayer.getBufferedImage());
             selectedLayerGraphics.drawLine(lastX, lastY, currentX, currentY);
             DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
