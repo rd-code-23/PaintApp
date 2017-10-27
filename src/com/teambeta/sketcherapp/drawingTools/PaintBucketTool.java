@@ -42,30 +42,46 @@ public class PaintBucketTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers, BufferedImage[] layers, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers,
+                       BufferedImage[] layers, MouseEvent e) {
     }
 
     @Override
-    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e,
+                          LinkedList<ImageLayer> drawingLayers) {
     }
 
     @Override
-    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
-        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
-        layer1Graphics.setColor(this.getColor());
-        //get the coordinates of where the user clicked the mouse
-        int currentX = e.getX();
-        int currentY = e.getY();
-        //get the color of the pixel clicked
-        Color colorToReplace = new Color(layers[0].getRGB(currentX, currentY));
+    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e,
+                        LinkedList<ImageLayer> drawingLayers) {
+        ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
+        if (selectedLayer != null) {
+            Graphics2D selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
+            selectedLayerGraphics.setColor(this.getColor());
+            //get the coordinates of where the user clicked the mouse
+            int currentX = e.getX();
+            int currentY = e.getY();
+            //get the color of the pixel clicked
+            Color colorToReplace = new Color(selectedLayer.getBufferedImage().getRGB(currentX, currentY));
+            //fill the connected area of the clicked pixels color with the paint buckets color.
+            floodFill(selectedLayer.getBufferedImage(), currentX, currentY, colorToReplace);
+            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+        }
+    }
 
-        //fill the connected area of the clicked pixels color with the paint buckets color.
-        floodFill(layers[0], currentX, currentY, colorToReplace);
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
+    private ImageLayer getSelectedLayer(LinkedList<ImageLayer> drawingLayers) {
+        //get the selected layer, this assumes there is only one selected layer.
+        for (int i = 0; i < drawingLayers.size(); i++) {
+            ImageLayer drawingLayer = drawingLayers.get(i);
+            if (drawingLayer.isSelected()) {
+                return drawingLayer;
+            }
+        }
+        return null;
     }
 
     private void floodFill(BufferedImage layer, int x, int y, Color colorToReplace) {
-        //TODO:fix problem with anti-aliasing causing gaps in the fill
+        //TODO: fix problem with anti-aliasing causing gaps in the fill
         Queue<Integer> xCoordsOfPixelsToColor = new LinkedList<>();
         Queue<Integer> yCoordsOfPixelsToColor = new LinkedList<>();
         int xOfCurrentPixel = x;
@@ -73,7 +89,9 @@ public class PaintBucketTool extends DrawingTool {
         xCoordsOfPixelsToColor.add(xOfCurrentPixel);
         yCoordsOfPixelsToColor.add(yOfCurrentPixel);
         int replacementColorRGB = this.color.getRGB();
+        int replacementColorAlpha = this.color.getAlpha();
         int colorToReplaceRGB = colorToReplace.getRGB();
+        int colorToReplaceAlpha = colorToReplace.getAlpha();
         if (replacementColorRGB == colorToReplaceRGB) {
             //early exit
             return;
@@ -82,8 +100,8 @@ public class PaintBucketTool extends DrawingTool {
         int downPixelY;
         int upPixelY;
         int westMostXCoord;
-        Graphics2D layer1Graphics = (Graphics2D) layer.getGraphics();
-        layer1Graphics.setColor(this.color);
+        Graphics2D layerGraphics = (Graphics2D) layer.getGraphics();
+        layerGraphics.setColor(this.color);
 
         while (!xCoordsOfPixelsToColor.isEmpty() || !yCoordsOfPixelsToColor.isEmpty()) {
             xOfCurrentPixel = xCoordsOfPixelsToColor.remove();
@@ -123,15 +141,15 @@ public class PaintBucketTool extends DrawingTool {
                 westMostXCoord--;
             }
             if (westMostXCoord != eastMostXCoord) {
-                layer1Graphics.drawRect
+                layerGraphics.drawRect
                         (westMostXCoord, yOfCurrentPixel, eastMostXCoord - westMostXCoord, 1);
             }
         }
     }
 
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
-
+    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e,
+                        LinkedList<ImageLayer> drawingLayers) {
     }
 
     @Override
@@ -141,11 +159,9 @@ public class PaintBucketTool extends DrawingTool {
 
     @Override
     public void setToolWidth(int width) {
-
     }
 
     @Override
     public void setFillState(boolean fillState) {
-
     }
 }
