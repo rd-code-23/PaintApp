@@ -23,10 +23,10 @@ public class AirBrushTool extends DrawingTool {
     private int dotDiameter;
     private int dotX;
     private int dotY;
-    private final double DOT_WIDTH_RATIO = 0.50;
-    private final int DEFAULT_DOT_DIAMETER = 20;
-    private final int DEFAULT_DOTS_TO_DRAW = 10;
-    private final int DEFAULT_STOKE_VALUE = 10;
+    private static final double DOT_WIDTH_RATIO = 0.50;
+    private static final int DEFAULT_DOT_DIAMETER = 20;
+    private static final int DEFAULT_DOTS_TO_DRAW = 10;
+    private static final int DEFAULT_STOKE_VALUE = 10;
 
     /**
      * The constructor sets the properties of the tool to their default values.
@@ -46,7 +46,7 @@ public class AirBrushTool extends DrawingTool {
     public void onDrag(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers, BufferedImage[] layers, MouseEvent e) {
         currentX = e.getX();
         currentY = e.getY();
-        drawDotsAroundPoint(canvas, layers, drawingLayers);
+        drawDotsAroundPoint(canvas, drawingLayers);
     }
 
     @Override
@@ -57,14 +57,11 @@ public class AirBrushTool extends DrawingTool {
     public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         currentX = e.getX();
         currentY = e.getY();
-        drawDotsAroundPoint(canvas, layers, drawingLayers);
+        drawDotsAroundPoint(canvas, drawingLayers);
     }
 
     @Override
     public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
-        // Initialize canvas settings that the tool will require.
-        initLayer1Graphics(canvas, layers, e);
-
         // Set the coordinates to the current point when the mouse is pressed.
         currentX = e.getX();
         currentY = e.getY();
@@ -73,7 +70,7 @@ public class AirBrushTool extends DrawingTool {
     /**
      * Generate random dots within the area of the unit circle bounded by the radius to the mouse cursor.
      */
-    private void drawDotsAroundPoint(BufferedImage canvas, BufferedImage[] layers, LinkedList<ImageLayer> drawingLayers) {
+    private void drawDotsAroundPoint(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers) {
         double dot_angle;
         double rand_radius;
 
@@ -87,20 +84,17 @@ public class AirBrushTool extends DrawingTool {
             }
         }
 
-        Graphics2D selectedLayerGraphics = null;
+        Graphics2D selectedLayerGraphics;
         if (selectedLayer != null) {
             selectedLayerGraphics = getGraphics2D(selectedLayer);
-
             for (int i = 0; i < dotsToDraw; ++i) {
                 dot_angle = GeneratorFunctions.randomDouble(0, 2 * Math.PI);
                 rand_radius = GeneratorFunctions.randomInt(-dotDiameter / 2, dotDiameter / 2);
                 dotX = (int) (currentX + rand_radius * Math.sin(dot_angle));
                 dotY = (int) (currentY + rand_radius * Math.cos(dot_angle));
-                layer1Graphics.drawLine(dotX, dotY, dotX, dotY);
                 selectedLayerGraphics.drawLine(dotX, dotY, dotX, dotY);
             }
-            DrawArea.drawLayersOntoCanvas(layers, canvas);
-            //DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
         }
     }
 
@@ -166,13 +160,12 @@ public class AirBrushTool extends DrawingTool {
         layer1Graphics = (Graphics2D) layers[0].getGraphics();
         layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         layer1Graphics.setColor(color);
-        layer1Graphics.setStroke(new BasicStroke((int) (DEFAULT_STOKE_VALUE * DOT_WIDTH_RATIO), BasicStroke.CAP_ROUND,    // End-cap style
+        layer1Graphics.setStroke(new BasicStroke((int) (DEFAULT_STOKE_VALUE * DOT_WIDTH_RATIO),
+                BasicStroke.CAP_ROUND,    // End-cap style
                 BasicStroke.CAP_BUTT));
     }
 
     @Override
     public void setFillState(boolean fillState) {
-
     }
-
 }

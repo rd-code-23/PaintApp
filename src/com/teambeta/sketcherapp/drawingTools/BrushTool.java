@@ -1,6 +1,7 @@
 package com.teambeta.sketcherapp.drawingTools;
 
 import com.teambeta.sketcherapp.model.GeneralObserver;
+import com.teambeta.sketcherapp.model.GeneratorFunctions;
 import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.ui.DrawArea;
 
@@ -23,7 +24,6 @@ public class BrushTool extends DrawingTool {
     private Graphics2D layer1Graphics;
     private final static int DEFAULT_STOKE_VALUE = 10;
 
-
     /**
      * The constructor sets the properties of the tool to their default values
      */
@@ -42,11 +42,34 @@ public class BrushTool extends DrawingTool {
         currentX = e.getX();
         currentY = e.getY();
 
-        layer1Graphics.drawLine(lastX, lastY, currentX, currentY);
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
+        ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
+        if (selectedLayer != null) {
+            selectedLayer.getBufferedImage().getGraphics().drawLine(lastX, lastY, currentX, currentY);
+            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
 
+            Graphics2D selectedLayerGraphics;
+            selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
+            selectedLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            selectedLayerGraphics.setColor(color);
+            selectedLayerGraphics.setStroke(new BasicStroke(brushWidth,
+                    BasicStroke.CAP_ROUND,    // End-cap style
+                    BasicStroke.CAP_BUTT));
+            selectedLayerGraphics.drawLine(lastX, lastY, currentX, currentY);
+            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+        }
         lastX = currentX;
         lastY = currentY;
+    }
+
+    private ImageLayer getSelectedLayer(LinkedList<ImageLayer> drawingLayers) {
+        //get the selected layer, this assumes there is only one selected layer.
+        for (int i = 0; i < drawingLayers.size(); i++) {
+            ImageLayer drawingLayer = drawingLayers.get(i);
+            if (drawingLayer.isSelected()) {
+                return drawingLayer;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -57,16 +80,20 @@ public class BrushTool extends DrawingTool {
     public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         currentX = e.getX();
         currentY = e.getY();
-
-        layer1Graphics.fillOval(currentX - (brushWidth / 2), currentY - (brushWidth / 2), brushWidth, brushWidth);
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
+        ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
+        if (selectedLayer != null) {
+            Graphics2D selectedLayerGraphics;
+            selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
+            selectedLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            selectedLayerGraphics.setColor(color);
+            selectedLayerGraphics.fillOval(currentX - (brushWidth / 2), currentY - (brushWidth / 2),
+                    brushWidth, brushWidth);
+            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+        }
     }
 
     @Override
     public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
-        // Initialize canvas settings that the tool will require.
-        initLayer1Graphics(canvas, layers, e);
-
         // Set the coordinates to the current point when the mouse is pressed.
         currentX = e.getX();
         currentY = e.getY();
@@ -121,6 +148,5 @@ public class BrushTool extends DrawingTool {
 
     @Override
     public void setFillState(boolean fillState) {
-
     }
 }
