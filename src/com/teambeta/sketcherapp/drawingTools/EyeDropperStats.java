@@ -48,7 +48,6 @@ public class EyeDropperStats extends JPanel {
                 + EYEDROPPER_TEXTFIELD_BLUE_PREFIX + color.getBlue());
     }
 
-
     /**
      * Add a new observer to ColorChooser. Selecting a color in ColorChooser will update the color in this class.
      */
