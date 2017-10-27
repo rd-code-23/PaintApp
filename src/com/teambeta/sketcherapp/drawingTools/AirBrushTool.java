@@ -18,7 +18,6 @@ public class AirBrushTool extends DrawingTool {
     private int currentY;
     private int currentX;
     private Color color;
-    private Graphics2D layer1Graphics;
     private int dotsToDraw;
     private int dotDiameter;
     private int dotX;
@@ -86,7 +85,7 @@ public class AirBrushTool extends DrawingTool {
 
         Graphics2D selectedLayerGraphics;
         if (selectedLayer != null) {
-            selectedLayerGraphics = getGraphics2D(selectedLayer);
+            selectedLayerGraphics = initLayerGraphics(selectedLayer.getBufferedImage());
             for (int i = 0; i < dotsToDraw; ++i) {
                 dot_angle = GeneratorFunctions.randomDouble(0, 2 * Math.PI);
                 rand_radius = GeneratorFunctions.randomInt(-dotDiameter / 2, dotDiameter / 2);
@@ -98,16 +97,6 @@ public class AirBrushTool extends DrawingTool {
         }
     }
 
-    private Graphics2D getGraphics2D(ImageLayer selectedLayer) {
-        Graphics2D selectedLayerGraphics;
-        selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
-        selectedLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        selectedLayerGraphics.setColor(color);
-        selectedLayerGraphics.setStroke(new BasicStroke((int) (DEFAULT_STOKE_VALUE * DOT_WIDTH_RATIO),
-                BasicStroke.CAP_ROUND,    // End-cap style
-                BasicStroke.CAP_BUTT));
-        return selectedLayerGraphics;
-    }
 
     /**
      * getColor returns the current color the brush tool is set to.
@@ -151,18 +140,15 @@ public class AirBrushTool extends DrawingTool {
 
     /**
      * Initialize the parameters required for layer1Graphics.
-     *
-     * @param canvas for drawing the line onto.
-     * @param layers first layer by default is layers[0]
-     * @param e      MouseEvent
      */
-    private void initLayer1Graphics(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        layer1Graphics = (Graphics2D) layers[0].getGraphics();
-        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        layer1Graphics.setColor(color);
-        layer1Graphics.setStroke(new BasicStroke((int) (DEFAULT_STOKE_VALUE * DOT_WIDTH_RATIO),
+    private Graphics2D initLayerGraphics(BufferedImage layer) {
+        Graphics2D layerGraphics = (Graphics2D) layer.getGraphics();
+        layerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        layerGraphics.setColor(color);
+        layerGraphics.setStroke(new BasicStroke((int) (DEFAULT_STOKE_VALUE * DOT_WIDTH_RATIO),
                 BasicStroke.CAP_ROUND,    // End-cap style
                 BasicStroke.CAP_BUTT));
+        return layerGraphics;
     }
 
     @Override

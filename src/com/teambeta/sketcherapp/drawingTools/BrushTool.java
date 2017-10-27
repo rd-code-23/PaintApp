@@ -1,7 +1,6 @@
 package com.teambeta.sketcherapp.drawingTools;
 
 import com.teambeta.sketcherapp.model.GeneralObserver;
-import com.teambeta.sketcherapp.model.GeneratorFunctions;
 import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.ui.DrawArea;
 
@@ -21,7 +20,6 @@ public class BrushTool extends DrawingTool {
     private int lastY;
     private Color color;
     private int brushWidth;
-    private Graphics2D layer1Graphics;
     private final static int DEFAULT_STOKE_VALUE = 10;
 
     /**
@@ -46,14 +44,7 @@ public class BrushTool extends DrawingTool {
         if (selectedLayer != null) {
             selectedLayer.getBufferedImage().getGraphics().drawLine(lastX, lastY, currentX, currentY);
             DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
-
-            Graphics2D selectedLayerGraphics;
-            selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
-            selectedLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            selectedLayerGraphics.setColor(color);
-            selectedLayerGraphics.setStroke(new BasicStroke(brushWidth,
-                    BasicStroke.CAP_ROUND,    // End-cap style
-                    BasicStroke.CAP_BUTT));
+            Graphics2D selectedLayerGraphics = initLayerGraphics(selectedLayer.getBufferedImage());
             selectedLayerGraphics.drawLine(lastX, lastY, currentX, currentY);
             DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
         }
@@ -82,10 +73,7 @@ public class BrushTool extends DrawingTool {
         currentY = e.getY();
         ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
         if (selectedLayer != null) {
-            Graphics2D selectedLayerGraphics;
-            selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
-            selectedLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            selectedLayerGraphics.setColor(color);
+            Graphics2D selectedLayerGraphics = initLayerGraphics(selectedLayer.getBufferedImage());
             selectedLayerGraphics.fillOval(currentX - (brushWidth / 2), currentY - (brushWidth / 2),
                     brushWidth, brushWidth);
             DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
@@ -133,17 +121,15 @@ public class BrushTool extends DrawingTool {
 
     /**
      * Initialize the parameters required for layer1Graphics.
-     *
-     * @param canvas for drawing the line onto.
-     * @param layers first layer by default is layers[0]
-     * @param e      MouseEvent
      */
-    private void initLayer1Graphics(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        layer1Graphics = (Graphics2D) layers[0].getGraphics();
-        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        layer1Graphics.setColor(color);
-        layer1Graphics.setStroke(new BasicStroke(getToolWidth(), BasicStroke.CAP_ROUND,    // End-cap style
+    private Graphics2D initLayerGraphics(BufferedImage layer) {
+        Graphics2D layerGraphics;
+        layerGraphics = (Graphics2D) layer.getGraphics();
+        layerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        layerGraphics.setColor(color);
+        layerGraphics.setStroke(new BasicStroke(getToolWidth(), BasicStroke.CAP_ROUND,    // End-cap style
                 BasicStroke.CAP_BUTT));
+        return layerGraphics;
     }
 
     @Override
