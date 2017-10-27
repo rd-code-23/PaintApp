@@ -62,7 +62,7 @@ public class PaintBucketTool extends DrawingTool {
             int currentX = e.getX();
             int currentY = e.getY();
             //get the color of the pixel clicked
-            Color colorToReplace = new Color(selectedLayer.getBufferedImage().getRGB(currentX, currentY));
+            Color colorToReplace = new Color(selectedLayer.getBufferedImage().getRGB(currentX, currentY), true);
             //fill the connected area of the clicked pixels color with the paint buckets color.
             floodFill(selectedLayer.getBufferedImage(), currentX, currentY, colorToReplace);
             DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
@@ -114,8 +114,8 @@ public class PaintBucketTool extends DrawingTool {
             upPixelY = yOfCurrentPixel + 2;
             while (eastMostXCoord < layer.getWidth() &&
                     layer.getRGB(eastMostXCoord, yOfCurrentPixel) == colorToReplaceRGB) {
-                if (downPixelY < layer.getHeight() && (downPixelY >= 0) &&
-                        (layer.getRGB(eastMostXCoord, downPixelY) - colorToReplaceRGB) == 0) {
+                if (downPixelY < layer.getHeight() && (downPixelY >= 0)
+                        && ((layer.getRGB(eastMostXCoord, downPixelY) - colorToReplaceRGB) == 0)) {
                     xCoordsOfPixelsToColor.add(eastMostXCoord);
                     yCoordsOfPixelsToColor.add(downPixelY);
                 }
