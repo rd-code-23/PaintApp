@@ -15,7 +15,7 @@ public class ShortcutDialog {
     MainUI mainUI;
     Shortcuts sc;
     JButton setDefaultShortcuts;
-
+    JDialog shortcutsDialog;
     public ShortcutDialog(MainUI mainUI, Shortcuts shortcuts) {
         this.mainUI = mainUI;
         this.sc = shortcuts;
@@ -44,20 +44,20 @@ public class ShortcutDialog {
         JScrollPane scroll = new JScrollPane(table);
 
         // setColumnWidths(table, 450,200);
-        JDialog dialog;
+
         JDialog.setDefaultLookAndFeelDecorated(true);
-        dialog = new JDialog(mainUI.getMainFrame(), "Keyboard Shortcuts", true);
-        dialog.setLocationRelativeTo(null);
-        dialog.setSize(700, 900);
+        shortcutsDialog = new JDialog(mainUI.getMainFrame(), "Keyboard Shortcuts", true);
+        shortcutsDialog.setLocationRelativeTo(null);
+        shortcutsDialog.setSize(700, 900);
         //dialog.setLayout(new GridLayout(1, 0));
-        dialog.setLayout(new GridBagLayout());
+        shortcutsDialog.setLayout(new GridBagLayout());
 
         setDefaultShortcuts = new JButton("Default");
         ActionListener actionListener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if(e.getSource() == setDefaultShortcuts){
                     sc.removeAllBindings();
-                    dialog.dispose();
+                    shortcutsDialog.dispose();
                     renderPanel();
                 }
             }
@@ -74,12 +74,12 @@ public class ShortcutDialog {
 
 
 
-        dialog.add(scroll,c);
-        dialog.add(Box.createRigidArea(new Dimension(15, 25)),c);
+        shortcutsDialog.add(scroll,c);
+        shortcutsDialog.add(Box.createRigidArea(new Dimension(15, 25)),c);
         c.gridx = 0;
         c.gridy = 3;
-        dialog.add(setDefaultShortcuts);
-        dialog.setVisible(true);
+        shortcutsDialog.add(setDefaultShortcuts);
+        shortcutsDialog.setVisible(true);
 
 
     }
@@ -137,7 +137,7 @@ public class ShortcutDialog {
     class ButtonEditor extends DefaultCellEditor {
         protected JButton button;
         private int keyCode;
-        private int newKeyCode;
+        private int newKeyCode = -1;
         private JToggleButton ctrlKey;
         private JToggleButton altKey;
         private JToggleButton shiftKey;
@@ -150,6 +150,7 @@ public class ShortcutDialog {
         boolean isValid = false;
         private String label;
 
+        int theRow;
         private boolean isPushed;
 
         public ButtonEditor(JCheckBox checkBox) {
@@ -166,6 +167,8 @@ public class ShortcutDialog {
         public Component getTableCellEditorComponent(JTable table, Object value,
                                                      boolean isSelected, int row, int column) {
 
+            theRow = row;
+
             if (isSelected) {
                 button.setForeground(table.getSelectionForeground());
                 button.setBackground(table.getSelectionBackground());
@@ -176,7 +179,6 @@ public class ShortcutDialog {
 
            label = (value == null) ? "" : value.toString();
             button.setText(label);
-            label = (value == null) ? "" : value.toString() + "/" + row;
             isPushed = true;
 
             return button;
@@ -212,7 +214,7 @@ public class ShortcutDialog {
             ctrlKey = new JToggleButton("ctrl");
             altKey = new JToggleButton("alt");
             shiftKey = new JToggleButton("shift");
-            instructions = new JLabel("Click a combination of ctrl,alt and shift\n and type letter");
+            instructions = new JLabel("Toggle ctrl,alt and shift.Then type a letter");
 
             ctrlKey.setFocusable(false);
             shiftKey.setFocusable(false);
@@ -220,6 +222,18 @@ public class ShortcutDialog {
             saveButton.setFocusable(false);
             exitButton.setFocusable(false);
             strokeKey.setFocusable(false);
+
+            saveButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                  //  if(e.getSource() == saveButton){
+                    //    System.out.println("saved");
+                        changeShortcut();
+                        dialog.dispose();
+                        shortcutsDialog.dispose();
+                        renderPanel();
+                    //}
+                }
+            });
 
             if (isPushed) {
                 dialog.setLocationRelativeTo(null);
@@ -237,6 +251,7 @@ public class ShortcutDialog {
                 listPane.add(altKey);
                 listPane.add(shiftKey);
                 listPane.add(strokeKey);
+                listPane.add(saveButton);
                 c.gridx = 0;
                 c.gridy = 25;
 
@@ -248,18 +263,19 @@ public class ShortcutDialog {
                 dialog.setVisible(true);
             }
             isPushed = false;
-            label = changeShortcut(Integer.parseInt(tokens[1]), strokeKey, keyCode);
+            if(newKeyCode != -1)
+            label = changeShortcut();
 
             return new String(label);
         }
 
-        public String changeShortcut(int row, JButton stroke, int code) {
+        public String changeShortcut() {
 
             boolean isCtrl = ctrlKey.isSelected();
             boolean isAlt = altKey.isSelected();
             boolean isShift = shiftKey.isSelected();
 
-            switch (row) {
+            switch (theRow) {
                 case 0:
                     if (sc.isValidKeyBinding(newKeyCode, isCtrl, isShift, isAlt)) {
                         sc.removeBinding(sc.getClearToolKeyCode(), sc.isIsCtrl_lineTool(), sc.isIsShift_lineTool(), sc.isIsAlt_lineTool());

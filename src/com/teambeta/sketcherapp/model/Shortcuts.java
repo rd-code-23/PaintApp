@@ -56,7 +56,7 @@ public class Shortcuts {
     ActionMap actionMap;
     InputMap im;
 
-    // It would be much be
+
     public void addKeyBinding(int keyCode, boolean useControl, boolean useShift, boolean useAlt, String id, ActionListener actionListener) {
 
 
