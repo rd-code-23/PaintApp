@@ -285,8 +285,8 @@ public class ShortcutDialog {
                 dialog.setVisible(true);
             }
             isPushed = false;
-            if(newKeyCode != -1)
-            label = changeShortcut();
+          //  if(newKeyCode != -1)
+           // label = changeShortcut();
 
             return new String(label);
         }
