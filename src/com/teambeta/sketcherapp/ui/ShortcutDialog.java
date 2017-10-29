@@ -10,11 +10,12 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 
-//todo add a reset to defaults button
+
 public class ShortcutDialog {
     MainUI mainUI;
     Shortcuts sc;
     JButton setDefaultShortcuts;
+    JButton applyButton;
     JDialog shortcutsDialog;
     public ShortcutDialog(MainUI mainUI, Shortcuts shortcuts) {
         this.mainUI = mainUI;
@@ -63,10 +64,20 @@ public class ShortcutDialog {
             }
         };
 
+        applyButton  = new JButton("Apply");
+        ActionListener actionListener2 = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if(e.getSource() == applyButton){
+                   shortcutsDialog.dispose();
+                }
+            }
+        };
+
         setDefaultShortcuts.addActionListener(actionListener);
+        applyButton.addActionListener(actionListener2);
       //  widthSlider.setMaximumSize(new Dimension(WIDTH_SLIDER, HEIGHT_COMPONENT));
       //  widthSlider.setPreferredSize(new Dimension(WIDTH_SLIDER, HEIGHT_COMPONENT));
-        scroll.setMinimumSize(new Dimension(5000, 5000));
+        //scroll.setMinimumSize(new Dimension(5000, 5000));
         GridBagConstraints c = new GridBagConstraints();
 
         c.gridx = 0;
@@ -75,11 +86,23 @@ public class ShortcutDialog {
 
 
         shortcutsDialog.add(scroll,c);
-        shortcutsDialog.add(Box.createRigidArea(new Dimension(15, 25)),c);
-        c.gridx = 0;
+
+        c.anchor = GridBagConstraints.LINE_START;
+        c.gridx = -1;
         c.gridy = 3;
-        shortcutsDialog.add(setDefaultShortcuts);
+        shortcutsDialog.add(setDefaultShortcuts,c);
+       c.gridx = -1;
+       c.gridy = 3;
+        c.anchor = GridBagConstraints.CENTER;
+      //  shortcutsDialog.add(Box.createRigidArea(new Dimension(0, 0)),c);
+        c.gridx = 1;
+        c.gridy = 3;
+        c.anchor = GridBagConstraints.LINE_START;
+        shortcutsDialog.add(applyButton,c);
+
         shortcutsDialog.setVisible(true);
+
+
 
 
     }
