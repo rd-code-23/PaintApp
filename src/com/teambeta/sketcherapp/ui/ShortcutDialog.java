@@ -83,10 +83,7 @@ public class ShortcutDialog {
 
 
     }
-    public void updateShortcuts() {
 
-
-    }
 
 
     String printShortcut(int keyCode, boolean useControl, boolean useShift, boolean useAlt) {
@@ -233,12 +230,16 @@ public class ShortcutDialog {
                     boolean isCtrl = ctrlKey.isSelected();
                     boolean isAlt = altKey.isSelected();
                     boolean isShift = shiftKey.isSelected();
-                    if(!sc.isValidKeyBinding(newKeyCode, isCtrl, isShift, isAlt)){
+                    if(!sc.isValidKeyBinding(newKeyCode, isCtrl, isShift, isAlt)) {
                         notValidShortcut.setForeground(Color.red);
                         //notValidShortcut.setBackground(Color.blue);
                         notValidShortcut.setOpaque(true);
                         notValidShortcut.setText("That Binding is Already Taken!");
 
+                    } else if(newKeyCode == -1){
+                        notValidShortcut.setForeground(Color.red);
+                        notValidShortcut.setOpaque(true);
+                        notValidShortcut.setText("You need to enter a letter!");
                     } else {
 
                         changeShortcut();
