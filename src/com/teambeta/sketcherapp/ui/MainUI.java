@@ -6,6 +6,7 @@ import com.teambeta.sketcherapp.drawingTools.BrushTool;
 import com.teambeta.sketcherapp.drawingTools.RectangleTool;
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.ImportExport;
+import com.teambeta.sketcherapp.model.Shortcuts;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -77,8 +78,7 @@ public class MainUI {
     private DrawArea drawArea;
     ImportExport importExport;
     ShortcutDialog keboardShortCutPanel;
-
-
+    Shortcuts shortcuts;
 
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -223,8 +223,10 @@ public class MainUI {
 
         drawArea = new DrawArea();
 
-        importExport = new ImportExport(drawArea,this);
-        keboardShortCutPanel = new ShortcutDialog(this);
+        importExport = new ImportExport(drawArea, this);
+        JPanel canvasTools = new JPanel();
+        shortcuts = new Shortcuts(canvasTools,this);
+        keboardShortCutPanel = new ShortcutDialog(this,shortcuts);
 
         // ideally this should be in its own widthPanel with a proper scale, not directly to mainContent
         mainContent.add(drawArea, BorderLayout.CENTER);
@@ -251,7 +253,7 @@ public class MainUI {
                 celticKnotToolButton, dnaToolButton, eyeDropperToolButton, airBrushToolButton
         };
 
-        JPanel canvasTools = new JPanel();
+
         canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
         canvasTools.setBackground(Color.DARK_GRAY);
 
@@ -265,7 +267,7 @@ public class MainUI {
 
         JPanel northPanels = new JPanel();
         northPanels.setLayout(new BorderLayout());
-        MenuUI menuUI = new MenuUI(drawArea, importExport,keboardShortCutPanel);
+        MenuUI menuUI = new MenuUI(drawArea, importExport, keboardShortCutPanel);
         northPanels.add(menuUI, BorderLayout.NORTH);
 
         widthChanger = new WidthChanger();
@@ -279,7 +281,6 @@ public class MainUI {
         widthChanger.getFillBox().addActionListener(actionListener);
 
 
-
         mainContent.add(canvasTools, BorderLayout.WEST);
 
         ColorChooser colourChooser = new ColorChooser();
@@ -291,7 +292,8 @@ public class MainUI {
 
         mainContent.add(northPanels, BorderLayout.NORTH);
 
-        generateDefaultKeyBindings(editorPanel);
+
+        generateDefaultKeyBindings();
 
     }
 
@@ -303,6 +305,7 @@ public class MainUI {
     public DrawingTool getSelectedDrawingTool() {
         return selectedDrawingTool;
     }
+
 
     /**
      * Create the drawing tool objects and set the pen tool as the default selection.
@@ -332,99 +335,96 @@ public class MainUI {
     }
 
 
-    public void generateDefaultKeyBindings(JPanel editorPanel) {
 
-        //TODO cannot get clear to work with ctrl+c ??? thats why i added the boolean to function call
-        addKeyBinding(editorPanel, KeyEvent.VK_C, false,true ,"CLEAR CANVAS", (evt) -> {
+
+    public void generateDefaultKeyBindings() {
+
+        //TODO cannot get clear to work with ctrl+c ???
+        //TODO ctrl+a does not work unless you change the drawing tool???
+        shortcuts.addKeyBinding( KeyEvent.VK_C, false, true, true, Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
             drawArea.clear();
+
         });
 
-        addKeyBinding(editorPanel, KeyEvent.VK_I, true,false , "EXPORT TOOL", (evt) -> {
+        shortcuts.addKeyBinding( KeyEvent.VK_O, true, false, false, Shortcuts.EXPORT_SHORTCUT, (evt) -> {
             importExport.exportImage();
         });
 
-        addKeyBinding(editorPanel, KeyEvent.VK_O, true, false ,"IMPORT TOOL", (evt) -> {
+        shortcuts.addKeyBinding( KeyEvent.VK_I, true, false, false, Shortcuts.IMPORT_SHORTCUT, (evt) -> {
             importExport.importImage();
         });
 
-        addKeyBinding(editorPanel, KeyEvent.VK_B, true,false , "BRUSH TOOL", (evt) -> {
+        shortcuts.addKeyBinding( KeyEvent.VK_B, true, false, false, Shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = brushTool;
+            updateSizeSlider();
         });
 
-        addKeyBinding(editorPanel, KeyEvent.VK_L, true, false ,"LINE TOOL", (evt) -> {
+        shortcuts.addKeyBinding( KeyEvent.VK_L, true, false, false, Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = lineTool;
+            updateSizeSlider();
         });
-
-        addKeyBinding(editorPanel, KeyEvent.VK_R, true,false , "RECT TOOL", (evt) -> {
+/*
+        addKeyBinding(editorPanel, KeyEvent.VK_R, true, false, false, "RECT TOOL", (evt) -> {
             selectedDrawingTool = rectangleTool;
+            updateFillState(); // Tool supports filling
+            updateSizeSlider();
         });
 
-        addKeyBinding(editorPanel, KeyEvent.VK_E, true, false ,"ELIPSE TOOL", (evt) -> {
+        addKeyBinding(editorPanel, KeyEvent.VK_E, true, false, false, "ELIPSE TOOL", (evt) -> {
             selectedDrawingTool = ellipseTool;
+            updateSizeSlider();
         });
 
-        addKeyBinding(editorPanel, KeyEvent.VK_Q, true, false ,"ELIPSE TOOL", (evt) -> {
+        addKeyBinding(editorPanel, KeyEvent.VK_Q, true, false, false, "ELIPSE TOOL", (evt) -> {
             selectedDrawingTool = ellipseTool;
+            updateSizeSlider();
+            updateFillState(); // Tool supports filling
         });
 
-        addKeyBinding(editorPanel, KeyEvent.VK_E, true, false ,"ERASER TOOL", (evt) -> {
+        addKeyBinding(editorPanel, KeyEvent.VK_E, true, false, false, "ERASER TOOL", (evt) -> {
             selectedDrawingTool = eraserTool;
+            updateSizeSlider();
         });
 
-        addKeyBinding(editorPanel, KeyEvent.VK_T, true, false ,"TEXT TOOL", (evt) -> {
+        addKeyBinding(editorPanel, KeyEvent.VK_T, true, false, false, "TEXT TOOL", (evt) -> {
             selectedDrawingTool = textTool;
+            updateSizeSlider();
         });
 
-        addKeyBinding(editorPanel, KeyEvent.VK_P, true, false ,"PAINTBUCKET TOOL", (evt) -> {
+        addKeyBinding(editorPanel, KeyEvent.VK_P, true, false, false, "PAINTBUCKET TOOL", (evt) -> {
             selectedDrawingTool = paintBucketTool;
+            updateSizeSlider();
         });
 
-        addKeyBinding(editorPanel, KeyEvent.VK_F, true,false , "FAN TOOL", (evt) -> {
+        addKeyBinding(editorPanel, KeyEvent.VK_F, true, false, false, "FAN TOOL", (evt) -> {
             selectedDrawingTool = fanTool;
+            updateSizeSlider();
         });
 
-        addKeyBinding(editorPanel, KeyEvent.VK_C, true,false , "CELTIC TOOL", (evt) -> {
+        addKeyBinding(editorPanel, KeyEvent.VK_C, false, false, false, "CELTIC TOOL", (evt) -> {
             selectedDrawingTool = celticKnotTool;
+            updateSizeSlider();
         });
 
-        addKeyBinding(editorPanel, KeyEvent.VK_D, true,false , "DNA TOOL", (evt) -> {
+        addKeyBinding(editorPanel, KeyEvent.VK_D, true, false, false, "DNA TOOL", (evt) -> {
             selectedDrawingTool = dnaTool;
+            updateSizeSlider();
         });
 
-        addKeyBinding(editorPanel, KeyEvent.VK_N, true, false ,"EYE TOOL", (evt) -> {
+        addKeyBinding(editorPanel, KeyEvent.VK_N, true, false, false, "EYE TOOL", (evt) -> {
             selectedDrawingTool = eyeDropperTool;
+            updateSizeSlider();
         });
 
-       addKeyBinding(editorPanel, KeyEvent.VK_A, true, false,"AIRBRUSH TOOL", (evt) -> {
+        addKeyBinding(editorPanel, KeyEvent.VK_A, true, false, false, "AIRBRUSH TOOL", (evt) -> {
             selectedDrawingTool = airBrushTool;
-       });
+            updateSizeSlider();
+        });*/
 
 
     }
 
-    public static void addKeyBinding(JComponent component, int keyCode,boolean useControl,boolean useShift ,String id,ActionListener actionListener ){
-
-        InputMap im = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-
-        if(useControl) {
-            im.put(KeyStroke.getKeyStroke(keyCode, InputEvent.CTRL_DOWN_MASK), id);
-        } else if (useShift){
-            im.put(KeyStroke.getKeyStroke(keyCode, InputEvent.SHIFT_DOWN_MASK), id);
-        } else {
-            im.put(KeyStroke.getKeyStroke(keyCode, 0,false),id);
-        }
-
-        ActionMap actionMap = component.getActionMap();
-
-        actionMap.put(id, new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionListener.actionPerformed(e);
-            }
-        });
 
 
-
-    }
 
 }
