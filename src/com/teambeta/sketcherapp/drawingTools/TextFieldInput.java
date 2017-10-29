@@ -20,6 +20,7 @@ public class TextFieldInput extends JDialog {
 
     /**
      * Constructor.
+     *
      * @param textColor color for text input
      * @param locationX x mouse coordinate
      * @param locationY y mouse coordinate
@@ -35,19 +36,20 @@ public class TextFieldInput extends JDialog {
         textField.setFont(font);
         textField.setFocusable(true);
         textField.setForeground(textColor);
-        textField.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
+        textField.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
                 userInput = textField.getText();
                 closeTextField(textField);
-            }});
+            }
+        });
         textField.addKeyListener(new KeyAdapter() {
-             @Override
-             public void keyPressed(KeyEvent e) {
-                 if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
-                     closeTextField(textField);
-                 }
-             }
-         }
+                                     @Override
+                                     public void keyPressed(KeyEvent e) {
+                                         if (e.getKeyChar() == KeyEvent.VK_ESCAPE) {
+                                             closeTextField(textField);
+                                         }
+                                     }
+                                 }
         );
         setPreferredSize(new Dimension(WIDTH * font.getSize(), (HEIGHT * font.getSize())));
         getContentPane().add(BorderLayout.CENTER, textField);
@@ -71,12 +73,13 @@ public class TextFieldInput extends JDialog {
      * @param fontType name (or style) of the font.
      */
     public void setFontType(String fontType) {
-        font = new Font(fontType, 0, font.getSize());
+        font = new Font(fontType, Font.PLAIN, font.getSize());
         setFont(font);
     }
 
     /**
      * Returns the text entered by user
+     *
      * @return user's input
      */
     public String getUserInput() {
