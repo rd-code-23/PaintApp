@@ -291,7 +291,7 @@ public class ShortcutDialog {
             return new String(label);
         }
 
-        public String changeShortcut() {
+        public void changeShortcut() {
 
             boolean isCtrl = ctrlKey.isSelected();
             boolean isAlt = altKey.isSelected();
@@ -299,51 +299,31 @@ public class ShortcutDialog {
 
             switch (theRow) {
                 case 0:
-                    if (sc.isValidKeyBinding(newKeyCode, isCtrl, isShift, isAlt)) {
                         sc.removeBinding(sc.getClearToolKeyCode(), sc.isIsCtrl_lineTool(), sc.isIsShift_lineTool(), sc.isIsAlt_lineTool());
                         sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.CLEAR_TOOL_SHORTCUT);
-                        return printShortcut(sc.getKBShortcut(sc.CLEAR_TOOL_SHORTCUT), sc.isIsCtrl_clearTool(), sc.isIsShift_clearTool(), sc.isIsAlt_clearTool());
-                    } else {
-                        return printShortcut(sc.getKBShortcut(sc.CLEAR_TOOL_SHORTCUT), sc.isIsCtrl_clearTool(), sc.isIsShift_clearTool(), sc.isIsAlt_clearTool());
-                    }
-
+                       break;
                 case 1:
-                    if (sc.isValidKeyBinding(newKeyCode, isCtrl, isShift, isAlt)) {
                         sc.removeBinding(sc.getBrushToolKeyCode(), sc.isIsCtrl_brushTool(), sc.isIsShift_brushTool(), sc.isIsAlt_brushTool());
                         sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.BRUSH_TOOL_SHORTCUT);
-                        return printShortcut(sc.getKBShortcut(sc.BRUSH_TOOL_SHORTCUT), sc.isIsCtrl_brushTool(), sc.isIsShift_brushTool(), sc.isIsAlt_brushTool());
-                    } else {
-                        return printShortcut(sc.getKBShortcut(sc.BRUSH_TOOL_SHORTCUT), sc.isIsCtrl_brushTool(), sc.isIsShift_brushTool(), sc.isIsAlt_brushTool());
-                    }
+                        break;
                 case 2:
-                    if (sc.isValidKeyBinding(newKeyCode, isCtrl, isShift, isAlt)) {
                         sc.removeBinding(sc.getLineToolKeyCode(), sc.isIsCtrl_lineTool(), sc.isIsShift_lineTool(), sc.isIsAlt_lineTool());
                         sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.LINE_TOOL_SHORTCUT);
-                        return printShortcut(sc.getKBShortcut(sc.LINE_TOOL_SHORTCUT), sc.isIsCtrl_lineTool(), sc.isIsShift_lineTool(), sc.isIsAlt_lineTool());
-                    } else {
-                        return printShortcut(sc.getKBShortcut(sc.LINE_TOOL_SHORTCUT), sc.isIsCtrl_lineTool(), sc.isIsShift_lineTool(), sc.isIsAlt_lineTool());
-                    }
+                         break;
                 case 3:
-                    if (sc.isValidKeyBinding(newKeyCode, isCtrl, isShift, isAlt)) {
                         sc.removeBinding(sc.getImportKeyCode(), sc.isIsCtrl_import(), sc.isIsShift_import(), sc.isIsAlt_import());
                         sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.IMPORT_SHORTCUT);
-                        return printShortcut(sc.getKBShortcut(sc.IMPORT_SHORTCUT), sc.isIsCtrl_import(), sc.isIsShift_import(), sc.isIsAlt_import());
-                    } else {
-                        return printShortcut(sc.getKBShortcut(sc.IMPORT_SHORTCUT), sc.isIsCtrl_import(), sc.isIsShift_import(), sc.isIsAlt_import());
-                    }
+                         break;
                 case 4:
-                    if (sc.isValidKeyBinding(newKeyCode, isCtrl, isShift, isAlt)) {
                         sc.removeBinding(sc.getExportKeyCode(), sc.isIsCtrl_export(), sc.isIsShift_export(), sc.isIsAlt_export());
                         sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.EXPORT_SHORTCUT);
-                        return printShortcut(sc.getKBShortcut(sc.EXPORT_SHORTCUT), sc.isIsCtrl_export(), sc.isIsShift_export(), sc.isIsAlt_export());
-                    } else {
-                        return printShortcut(sc.getKBShortcut(sc.EXPORT_SHORTCUT), sc.isIsCtrl_export(), sc.isIsShift_export(), sc.isIsAlt_export());
-                    }
+                        break;
+
                 default:
                     System.out.println("NO SUCH TOOL");
 
             }
-            return null;
+
         }
 
         public KeyStroke getKeyStroke() {
