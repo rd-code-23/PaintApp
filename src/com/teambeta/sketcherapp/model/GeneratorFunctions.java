@@ -34,84 +34,110 @@ public class GeneratorFunctions {
      * @return The morse code string of the character
      */
     private static String getCharToMorse(char c) {
-        String ret = null;
+        String ret;
         switch (c) {
-            case 'a': case 'A':
+            case 'a':
+            case 'A':
                 ret = ".-";
                 break;
-            case 'b': case 'B':
+            case 'b':
+            case 'B':
                 ret = "-...";
                 break;
-            case 'c': case 'C':
+            case 'c':
+            case 'C':
                 ret = "-.-.";
                 break;
-            case 'd': case 'D':
+            case 'd':
+            case 'D':
                 ret = "-..";
                 break;
-            case 'e': case 'E':
+            case 'e':
+            case 'E':
                 ret = ".";
                 break;
-            case 'f': case 'F':
+            case 'f':
+            case 'F':
                 ret = "..-.";
                 break;
-            case 'g': case 'G':
+            case 'g':
+            case 'G':
                 ret = "--.";
                 break;
-            case 'h': case 'H':
+            case 'h':
+            case 'H':
                 ret = "....";
                 break;
-            case 'i': case 'I':
+            case 'i':
+            case 'I':
                 ret = "..";
                 break;
-            case 'j': case 'J':
+            case 'j':
+            case 'J':
                 ret = ".---";
                 break;
-            case 'k': case 'K':
+            case 'k':
+            case 'K':
                 ret = "-.-";
                 break;
-            case 'l': case 'L':
+            case 'l':
+            case 'L':
                 ret = ".-..";
                 break;
-            case 'm': case 'M':
+            case 'm':
+            case 'M':
                 ret = "--";
                 break;
-            case 'n': case 'N':
+            case 'n':
+            case 'N':
                 ret = "-.";
                 break;
-            case 'o': case 'O':
+            case 'o':
+            case 'O':
                 ret = "---";
                 break;
-            case 'p': case 'P':
+            case 'p':
+            case 'P':
                 ret = ".--.";
                 break;
-            case 'q': case 'Q':
+            case 'q':
+            case 'Q':
                 ret = "--.-";
                 break;
-            case 'r': case 'R':
+            case 'r':
+            case 'R':
                 ret = ".-.";
                 break;
-            case 's': case 'S':
+            case 's':
+            case 'S':
                 ret = "...";
                 break;
-            case 't': case 'T':
+            case 't':
+            case 'T':
                 ret = "-";
                 break;
-            case 'u': case 'U':
+            case 'u':
+            case 'U':
                 ret = "..-";
                 break;
-            case 'v': case 'V':
+            case 'v':
+            case 'V':
                 ret = "...-";
                 break;
-            case 'w': case 'W':
+            case 'w':
+            case 'W':
                 ret = ".--";
                 break;
-            case 'x': case 'X':
+            case 'x':
+            case 'X':
                 ret = "-..-";
                 break;
-            case 'y': case 'Y':
+            case 'y':
+            case 'Y':
                 ret = "-.--";
                 break;
-            case 'z': case 'Z':
+            case 'z':
+            case 'Z':
                 ret = "--..";
                 break;
             case '0':
@@ -166,5 +192,4 @@ public class GeneratorFunctions {
         }
         return output.toString();
     }
-
 }
