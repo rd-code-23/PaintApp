@@ -89,9 +89,7 @@ public class PaintBucketTool extends DrawingTool {
         xCoordsOfPixelsToColor.add(xOfCurrentPixel);
         yCoordsOfPixelsToColor.add(yOfCurrentPixel);
         int replacementColorRGB = this.color.getRGB();
-        int replacementColorAlpha = this.color.getAlpha();
         int colorToReplaceRGB = colorToReplace.getRGB();
-        int colorToReplaceAlpha = colorToReplace.getAlpha();
         if (replacementColorRGB == colorToReplaceRGB) {
             //early exit
             return;
