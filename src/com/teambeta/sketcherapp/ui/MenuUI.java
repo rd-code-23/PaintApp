@@ -11,7 +11,6 @@ import java.awt.event.ActionListener;
  */
 
 public class MenuUI extends JMenuBar {
-
     private static final String FILE_MENU_BUTTON_TEXT = "File";
     private static final String EDIT_MENU_BUTTON_TEXT = "Edit";
     private static final String IMAGE_MENU_BUTTON_TEXT = "Image";
@@ -102,7 +101,7 @@ public class MenuUI extends JMenuBar {
     /**
      * The prepareMenuBar function builds the menu and adds submenus.
      */
-    public void prepareMenuBar() {
+    private void prepareMenuBar() {
         fileMenu = new JMenu(FILE_MENU_BUTTON_TEXT);
         editMenu = new JMenu(EDIT_MENU_BUTTON_TEXT);
         imageMenu = new JMenu(IMAGE_MENU_BUTTON_TEXT);

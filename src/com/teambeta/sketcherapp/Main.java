@@ -6,7 +6,6 @@ import com.teambeta.sketcherapp.ui.MainUI;
  * Class to wrap all components together.
  */
 public class Main {
-
     /**
      * Main program.
      *

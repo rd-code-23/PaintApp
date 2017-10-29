@@ -18,43 +18,39 @@ public abstract class DrawingTool {
 
     /**
      * onDrag defines the graphical behavior of the tool when the mouse is dragged.
-     * @param canvas The final image to mix onto.
-     * @param drawingLayers
-     * @param layers The canvas layers to draw on.
-     * @param e      The mouse event that needs to be responded to.
+     *
+     * @param canvas        The final image to mix onto.
+     * @param e             The mouse event that needs to be responded to.
+     * @param drawingLayers The canvas layers to draw on.
      */
-    public abstract void onDrag(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers,
-                                BufferedImage[] layers, MouseEvent e);
+    public abstract void onDrag(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers);
 
     /**
      * onDrag defines the graphical behavior of the tool when the mouse is dragged.
-     * @param canvas       The final image to mix onto.
-     * @param layers       The canvas layers to draw on.
-     * @param e            The mouse event that needs to be responded to.
-     * @param drawingLayers The canvas layer to draw on.
+     *
+     * @param canvas        The final image to mix onto.
+     * @param e             The mouse event that needs to be responded to.
+     * @param drawingLayers The canvas layers to draw on.
      */
-    public abstract void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e,
-                                   LinkedList<ImageLayer> drawingLayers);
+    public abstract void onRelease(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers);
 
     /**
      * onClick defines the graphical behavior of the tool when the mouse is released.
-     * @param canvas       The final image to mix onto.
-     * @param layers       The canvas layers to draw on.
-     * @param e            The mouse event that needs to be responded to.
+     *
+     * @param canvas        The final image to mix onto.
+     * @param e             The mouse event that needs to be responded to.
      * @param drawingLayers The canvas layer to draw on.
      */
-    public abstract void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e,
-                                 LinkedList<ImageLayer> drawingLayers);
+    public abstract void onClick(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers);
 
     /**
      * onPress defines the graphical behavior of the tool when the mouse is released.
-     * @param canvas       The final image to mix onto.
-     * @param layers       The canvas layers to draw on.
-     * @param e            The mouse event that needs to be responded to.
+     *
+     * @param canvas        The final image to mix onto.
+     * @param e             The mouse event that needs to be responded to.
      * @param drawingLayers The canvas layers to draw on.
      */
-    public abstract void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e,
-                                 LinkedList<ImageLayer> drawingLayers);
+    public abstract void onPress(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers);
 
     /**
      * @return Returns the current width of the tool

@@ -20,7 +20,6 @@ import static java.awt.Color.black;
  */
 public class DrawArea extends JComponent {
     private BufferedImage canvasBufferedImage;
-    private BufferedImage[] layers;
     private LinkedList<ImageLayer> drawingLayers;
     private ImageLayer currentlySelectedLayer;
     private static BufferedImage previewBufferedImage;
@@ -43,7 +42,7 @@ public class DrawArea extends JComponent {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                MainUI.getSelectedDrawingTool().onClick(canvasBufferedImage, layers, e, drawingLayers);
+                MainUI.getSelectedDrawingTool().onClick(canvasBufferedImage, e, drawingLayers);
                 isCanvasAltered = true;
                 repaint();
             }
@@ -51,7 +50,7 @@ public class DrawArea extends JComponent {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                MainUI.getSelectedDrawingTool().onPress(canvasBufferedImage, layers, e, drawingLayers);
+                MainUI.getSelectedDrawingTool().onPress(canvasBufferedImage, e, drawingLayers);
                 isCanvasAltered = true;
                 repaint();
             }
@@ -59,20 +58,17 @@ public class DrawArea extends JComponent {
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
-                MainUI.getSelectedDrawingTool().onRelease(canvasBufferedImage, layers, e, drawingLayers);
+                MainUI.getSelectedDrawingTool().onRelease(canvasBufferedImage, e, drawingLayers);
                 isCanvasAltered = true;
                 repaint();
             }
         });
-
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
-                MainUI.getSelectedDrawingTool().onDrag(canvasBufferedImage, drawingLayers, layers, e);
+                MainUI.getSelectedDrawingTool().onDrag(canvasBufferedImage, e, drawingLayers);
                 repaint();
             }
         });
-
-        layers = new BufferedImage[1];
         drawingLayers = new LinkedList<>();
     }
 
@@ -102,11 +98,9 @@ public class DrawArea extends JComponent {
         //clear the canvasBufferedImage to its default color
         canvasGraphics.setColor(Color.WHITE);
         canvasGraphics.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-
         //draw the layers in order
         AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
         canvasGraphics.setComposite(alphaComposite);
-
         for (BufferedImage layer : layers) {
             canvasGraphics.drawImage(layer, 0, 0, null);
         }
@@ -129,20 +123,18 @@ public class DrawArea extends JComponent {
         if (canvasBufferedImage == null) {
             // create a canvasBufferedImage to draw on
             canvasBufferedImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-            for (int i = 0; i < layers.length; i++) {
-                layers[i] = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-            }
             previewBufferedImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
             graphics = (Graphics2D) canvasBufferedImage.getGraphics();
             // enable antialiasing
             graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             // clear draw area
             clear();
-        }
-        if (drawingLayers.isEmpty()) {
-            drawingLayers.add(new ImageLayer(new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB)));
-            currentlySelectedLayer = drawingLayers.get(0);
-            currentlySelectedLayer.setSelected(true);
+            if (drawingLayers.isEmpty()) {
+                drawingLayers.add(new ImageLayer(new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB)));
+                currentlySelectedLayer = drawingLayers.get(0);
+                currentlySelectedLayer.setSelected(true);
+            }
+            drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
         }
         canvasGraphics.drawImage(canvasBufferedImage, 0, 0, null);
     }
@@ -151,21 +143,15 @@ public class DrawArea extends JComponent {
      * Clears written elements on canvasBufferedImage.
      */
     public void clear() {
-        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
-        layer1Graphics.setPaint(Color.white);
-        graphics.setPaint(Color.white);
-        // draw white on entire draw area to clear
-        graphics.fillRect(0, 0, MainUI.CANVAS_WIDTH, MainUI.CANVAS_HEIGHT);
-        layer1Graphics.fillRect(0, 0, MainUI.CANVAS_WIDTH, MainUI.CANVAS_HEIGHT);
-        graphics.setPaint(black);
-        layer1Graphics.setPaint(black);
-
         if (currentlySelectedLayer != null) {
-            Graphics2D currentlySelectedLayersGraphics =
-                    (Graphics2D) currentlySelectedLayer.getBufferedImage().getGraphics();
-            currentlySelectedLayersGraphics.setPaint(Color.white);
-            currentlySelectedLayersGraphics.fillRect(0, 0, MainUI.CANVAS_WIDTH, MainUI.CANVAS_HEIGHT);
-            currentlySelectedLayersGraphics.setPaint(black);
+            Graphics2D layerGraphics = (Graphics2D) currentlySelectedLayer.getBufferedImage().getGraphics();
+            layerGraphics.setPaint(Color.white);
+            graphics.setPaint(Color.white);
+            // draw white on entire draw area to clear
+            graphics.fillRect(0, 0, MainUI.CANVAS_WIDTH, MainUI.CANVAS_HEIGHT);
+            layerGraphics.fillRect(0, 0, MainUI.CANVAS_WIDTH, MainUI.CANVAS_HEIGHT);
+            graphics.setPaint(black);
+            layerGraphics.setPaint(black);
         }
         isCanvasAltered = false;
         repaint();
@@ -223,13 +209,8 @@ public class DrawArea extends JComponent {
      * @param image
      */
     public void setImportedImage(BufferedImage image) {
-        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
-        layer1Graphics.drawImage(image, 0, 0, this);
-
-        Graphics2D currentlySelectedLayersGraphics =
-                (Graphics2D) currentlySelectedLayer.getBufferedImage().getGraphics();
-        currentlySelectedLayersGraphics.drawImage(image, 0, 0, this);
-
+        Graphics2D selectedLayerGraphics = (Graphics2D) currentlySelectedLayer.getBufferedImage().getGraphics();
+        selectedLayerGraphics.drawImage(image, 0, 0, this);
         graphics.drawImage(image, 0, 0, this);
         graphics.finalize();
         isCanvasAltered = false;
@@ -259,14 +240,14 @@ public class DrawArea extends JComponent {
      */
     public void redrawToGreyscale() {
         // Redraw all of the layers to greyscale
-        for (BufferedImage layer : layers) {
-            makeBufferedImageGrayscale(layer);
-        }
+//        for (ImageLayer layer : drawingLayers) {
+//            makeBufferedImageGrayscale(layer.getBufferedImage());
+//        }
 
-        // Redraw current imageLayer to greyscale
+        // convert selected imageLayer to greyscale
         BufferedImage currentlySelectedLayerBufferedImage = currentlySelectedLayer.getBufferedImage();
         makeBufferedImageGrayscale(currentlySelectedLayerBufferedImage);
-        drawLayersOntoCanvas(layers, canvasBufferedImage);
+        drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
         repaint();
     }
 
@@ -275,33 +256,36 @@ public class DrawArea extends JComponent {
         int lumaValue;
         for (int x = 0; x < layer.getWidth(); ++x) {
             for (int y = 0; y < layer.getHeight(); ++y) {
-                color_at_point = new Color(layer.getRGB(x, y));
+                color_at_point = new Color(layer.getRGB(x, y), true);
                 if (color_at_point.getRGB() != -1) {
                     lumaValue = (int) (
                             RED_LUMA_COEFFICIENT * color_at_point.getRed()
                                     + GREEN_LUMA_COEFFICIENT * color_at_point.getGreen()
                                     + BLUE_LUMA_COEFFICIENT * color_at_point.getBlue()
                     );
-
                     if (lumaValue > 255) {
                         lumaValue = 255;
                     } else if (lumaValue < 0) {
                         lumaValue = 0;
                     }
-                    layer.setRGB(x, y, new Color(lumaValue, lumaValue, lumaValue).getRGB());
+                    layer.setRGB(x, y, new Color(lumaValue, lumaValue, lumaValue, color_at_point.getAlpha()).getRGB());
                 }
             }
         }
     }
 
     /**
-     * Draw random colourful noise on the canvasBufferedImage.
+     * Draw random colourful noise on the selectedLayer.
      */
     public void colouredNoiseGenerator() {
-        for (BufferedImage layer : layers) {
-            fillWithColouredNoise(layer);
-        }
-        drawLayersOntoCanvas(layers, canvasBufferedImage);
+//        for (ImageLayer layer : drawingLayers) {
+//            fillWithColouredNoise(layer.getBufferedImage());
+//        }
+
+        BufferedImage currentlySelectedLayerBufferedImage = currentlySelectedLayer.getBufferedImage();
+        fillWithColouredNoise(currentlySelectedLayerBufferedImage);
+
+        drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
         repaint();
     }
 
@@ -314,7 +298,6 @@ public class DrawArea extends JComponent {
                         GeneratorFunctions.randomInt(0, 255),
                         GeneratorFunctions.randomInt(0, 255)
                 );
-
                 layer.setRGB(x, y, color_at_point.getRGB());
             }
         }
@@ -323,23 +306,21 @@ public class DrawArea extends JComponent {
     /**
      * Fill in a black and white checkerboard pattern to the layer.
      *
-     * @param layer The BufferedImage layer to write on
+     * @param layer            The BufferedImage layer to write on
      * @param horizontal_count The amount of squares horizontally
-     * @param vertical_count The amount of squares vertically
+     * @param vertical_count   The amount of squares vertically
      */
     private void fillCheckerPattern(BufferedImage layer, int horizontal_count, int vertical_count) {
-
         Graphics2D layerGraphics = (Graphics2D) layer.getGraphics();
         Color old_color = layerGraphics.getColor();
 
         int square_width = layer.getWidth() / horizontal_count;
         int square_height = layer.getHeight() / vertical_count;
         int row = 0;
-        boolean isBlack = false;
+        boolean isBlack;
 
         for (int y = 0; y < layer.getHeight(); y += square_height) {
             if (y >= layer.getHeight()) y = layer.getHeight() - 1;
-
             // Alternate start colour for each row
             if (row % 2 == 0) {
                 isBlack = true;
@@ -363,10 +344,8 @@ public class DrawArea extends JComponent {
                 }
                 isBlack = !isBlack;
             }
-
             ++row;
         }
-
         layerGraphics.setColor(old_color);
     }
 
@@ -374,14 +353,17 @@ public class DrawArea extends JComponent {
      * Draw a black and white checkerboard pattern to all layers.
      *
      * @param horizontalCount The amount of squares horizontally
-     * @param verticalCount The amount of squares vertically
+     * @param verticalCount   The amount of squares vertically
      */
     public void drawCheckerPattern(int horizontalCount, int verticalCount) {
-        for (BufferedImage layer : layers) {
-            fillCheckerPattern(layer, horizontalCount, verticalCount);
-        }
-        drawLayersOntoCanvas(layers, canvasBufferedImage);
+//        for (ImageLayer layer : drawingLayers) {
+//            fillCheckerPattern(layer.getBufferedImage(), horizontalCount, verticalCount);
+//        }
+
+        BufferedImage currentlySelectedLayerBufferedImage = currentlySelectedLayer.getBufferedImage();
+        fillCheckerPattern(currentlySelectedLayerBufferedImage, horizontalCount, verticalCount);
+
+        drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
         repaint();
     }
-
 }

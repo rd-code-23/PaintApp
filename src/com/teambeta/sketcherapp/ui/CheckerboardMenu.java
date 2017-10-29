@@ -4,9 +4,8 @@ import javax.swing.*;
 
 /**
  * Generate a checkerboard pattern on canvas.
- */ 
+ */
 public class CheckerboardMenu {
-
     private DrawArea drawArea;
     private static final String DIALOG_MESSAGE = "Draw checkerboard pattern?\n" +
             "This will overwrite the entire canvas";
@@ -37,14 +36,11 @@ public class CheckerboardMenu {
                 horizontalCount = Integer.parseInt(JOptionPane.showInputDialog(DIALOG_HORIZONTAL));
                 verticalCount = Integer.parseInt(JOptionPane.showInputDialog(DIALOG_VERTICAL));
             } catch (NumberFormatException e) {
-                    JOptionPane.showMessageDialog(null, DIALOG_WARNING);
+                JOptionPane.showMessageDialog(null, DIALOG_WARNING);
             }
             if (horizontalCount > 0 && verticalCount > 0) {
                 drawArea.drawCheckerPattern(horizontalCount, verticalCount);
             }
-
         }
-
     }
-
 }

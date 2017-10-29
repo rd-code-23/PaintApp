@@ -9,9 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-
 public class ImportExport {
-
     private static final String EXPORT_CANVAS_DIALOG_TITLE = "Export Canvas";
     private static final String IMPORT_CANVAS_DIALOG_TITLE = "Import Canvas";
     private static final String USER_HOME = "user.home";
@@ -47,7 +45,7 @@ public class ImportExport {
         int retrieval = fileChooser.showSaveDialog(null);
 
         if (retrieval == JFileChooser.APPROVE_OPTION) {
-            File file = null;
+            File file;
             //write image to a file
             try {
                 file = new File(fileChooser.getSelectedFile() + PNG_EXTENSION);
@@ -80,8 +78,7 @@ public class ImportExport {
                 exc.printStackTrace();
             }
 
-            if (drawArea.isCanvasAltered() == true) {
-
+            if (drawArea.isCanvasAltered()) {
                 Object[] options = {JOPTION_SAVE,
                         JOPTION_DONT_SAVE,
                         JOPTION_CANCEL};
@@ -98,9 +95,7 @@ public class ImportExport {
                     exportImage();
                 }
             }
-
             drawArea.setImportedImage(image);
-
         }
     }
 }

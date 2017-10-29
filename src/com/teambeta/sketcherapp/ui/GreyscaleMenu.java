@@ -3,7 +3,6 @@ package com.teambeta.sketcherapp.ui;
 import javax.swing.*;
 
 public class GreyscaleMenu {
-
     private DrawArea drawArea;
     private static final String DIALOG_MESSAGE = "Convert all current canvas elements to greyscale?\n" +
             "This will overwrite the entire canvas";
@@ -23,10 +22,8 @@ public class GreyscaleMenu {
         int dialogWindow = JOptionPane.YES_NO_OPTION;
         int dialogOption = JOptionPane.showConfirmDialog(null,
                 DIALOG_MESSAGE, DIALOG_WINDOW_TITLE, dialogWindow);
-
         if (dialogOption == JOptionPane.YES_OPTION) {
             drawArea.redrawToGreyscale();
         }
     }
-
 }

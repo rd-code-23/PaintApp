@@ -13,7 +13,6 @@ import java.util.LinkedList;
  * The TriangleTool class implements the drawing behavior for when the Line tool has been selected
  */
 public class TriangleTool extends DrawingTool {
-
     private int currentY;
     private int currentX;
     private int initX;
@@ -25,8 +24,6 @@ public class TriangleTool extends DrawingTool {
     private int triangleWidth;
     private final int DEFAULT_WIDTH_VALUE = 10;
     private boolean fillShape;
-
-
 
     /**
      * The constructor sets the properties of the tool to their default values
@@ -45,7 +42,7 @@ public class TriangleTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers, BufferedImage[] layers, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         if (previewLayer == null) {
             previewLayer = DrawArea.getPreviewBufferedImage();
         }
@@ -61,8 +58,7 @@ public class TriangleTool extends DrawingTool {
         previewLayerGraphics.setColor(color);
         previewLayerGraphics.setStroke(new BasicStroke(getToolWidth()));
 
-        calcTriangleCoordinateData(e, layers, canvas);
-
+        calcTriangleCoordinateData(e);
 
         int[] x = {initX, currentX, currentX};
         int[] y = {currentY, initY, currentY};
@@ -70,44 +66,55 @@ public class TriangleTool extends DrawingTool {
 //        int [] y ={currentY,Math.abs(currentY-initY),currentY};
 
         if (fillShape) {
-            previewLayerGraphics.fillPolygon(x,y,3);
+            previewLayerGraphics.fillPolygon(x, y, 3);
         }
-        previewLayerGraphics.drawPolygon(x,y,3);
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
-
+        previewLayerGraphics.drawPolygon(x, y, 3);
 
         //info: https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
         //draw the preview layer on top of the drawing layer(s)
         AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
         canvasGraphics.setComposite(alphaComposite);
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
+        DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
         canvasGraphics.drawImage(previewLayer, 0, 0, null);
     }
 
-    @Override
-    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
-        int [] x ={initX,currentX,currentX};
-        int [] y ={currentY,initY,currentY};
-//        int [] x = {initX,Math.abs(currentX-initX),currentX};
-//        int [] y ={currentY,Math.abs(currentY-initY),currentY};
-
-
-        calcTriangleCoordinateData(e, layers, canvas);
-
-        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
-        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        layer1Graphics.setColor(color);
-        layer1Graphics.setStroke(new BasicStroke(getToolWidth()));
-
-
-        if (fillShape) {
-            layer1Graphics.fillPolygon(x,y,3);
+    private ImageLayer getSelectedLayer(LinkedList<ImageLayer> drawingLayers) {
+        //get the selected layer, this assumes there is only one selected layer.
+        for (int i = 0; i < drawingLayers.size(); i++) {
+            ImageLayer drawingLayer = drawingLayers.get(i);
+            if (drawingLayer.isSelected()) {
+                return drawingLayer;
+            }
         }
-        layer1Graphics.drawPolygon(x,y,3);
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
+        return null;
     }
 
-    private void calcTriangleCoordinateData(MouseEvent e, BufferedImage[] layers, BufferedImage canvas) {
+    @Override
+    public void onRelease(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+        int[] x = {initX, currentX, currentX};
+        int[] y = {currentY, initY, currentY};
+//        int [] x = {initX,Math.abs(currentX-initX),currentX};
+//        int [] y ={currentY,Math.abs(currentY-initY),currentY};
+        calcTriangleCoordinateData(e);
+        ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
+        if (selectedLayer != null) {
+            Graphics2D selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
+            initGraphics(selectedLayerGraphics);
+            if (fillShape) {
+                selectedLayerGraphics.fillPolygon(x, y, 3);
+            }
+            selectedLayerGraphics.drawPolygon(x, y, 3);
+            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+        }
+    }
+
+    private void initGraphics(Graphics2D selectedLayerGraphics) {
+        selectedLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        selectedLayerGraphics.setColor(color);
+        selectedLayerGraphics.setStroke(new BasicStroke(getToolWidth()));
+    }
+
+    private void calcTriangleCoordinateData(MouseEvent e) {
         // Get the coordinates of where the user released the mouse.
         currentX = e.getX();
         currentY = e.getY();
@@ -117,18 +124,16 @@ public class TriangleTool extends DrawingTool {
             initY = mouseOriginY;
         }
         if (currentX < mouseOriginX) {
-            initX = mouseOriginX ;
+            initX = mouseOriginX;
         }
-
-
     }
 
     @Override
-    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+    public void onClick(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
     }
 
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+    public void onPress(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         //set the coordinates to the current pixel clicked
         currentX = e.getX();
         currentY = e.getY();
@@ -174,5 +179,4 @@ public class TriangleTool extends DrawingTool {
     public void setFillState(boolean fillState) {
         fillShape = fillState;
     }
-
 }

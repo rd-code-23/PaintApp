@@ -18,7 +18,6 @@ import java.util.LinkedList;
  * - Draw a square when the shift button is held on mouse release.
  */
 public class RectangleTool extends DrawingTool {
-
     private int currentY;
     private int currentX;
     private int initX;
@@ -56,7 +55,7 @@ public class RectangleTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers, BufferedImage[] layers, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         if (previewLayer == null) {
             previewLayer = DrawArea.getPreviewBufferedImage();
         }
@@ -72,44 +71,52 @@ public class RectangleTool extends DrawingTool {
         previewLayerGraphics.setColor(color);
         previewLayerGraphics.setStroke(new BasicStroke(getToolWidth()));
 
-        calcSquareCoordinateData(e, layers, canvas);
-
+        calcSquareCoordinateData(e);
         //draw the square preview onto its layer.
         // Draw a filled rectangle/square if the alt key is down on release.
         if (fillShape) {
             previewLayerGraphics.fillRect(initX, initY, drawWidthX, drawHeightY);
         }
         previewLayerGraphics.drawRect(initX, initY, drawWidthX, drawHeightY);
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
-
-
         //info: https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
         //draw the preview layer on top of the drawing layer(s)
         AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
         canvasGraphics.setComposite(alphaComposite);
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
+        DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
         canvasGraphics.drawImage(previewLayer, 0, 0, null);
     }
 
-    @Override
-    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
-        calcSquareCoordinateData(e, layers, canvas);
-
-        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
-        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        layer1Graphics.setColor(color);
-        layer1Graphics.setStroke(new BasicStroke(getToolWidth()));
-
-        // Draw a filled rectangle/square if the alt key is down on release.
-        if (fillShape) {
-            layer1Graphics.fillRect(initX, initY, drawWidthX, drawHeightY);
+    private ImageLayer getSelectedLayer(LinkedList<ImageLayer> drawingLayers) {
+        //get the selected layer, this assumes there is only one selected layer.
+        for (int i = 0; i < drawingLayers.size(); i++) {
+            ImageLayer drawingLayer = drawingLayers.get(i);
+            if (drawingLayer.isSelected()) {
+                return drawingLayer;
+            }
         }
-        layer1Graphics.drawRect(initX, initY, drawWidthX, drawHeightY);
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
-
+        return null;
     }
 
-    private void calcSquareCoordinateData(MouseEvent e, BufferedImage[] layers, BufferedImage canvas) {
+    @Override
+    public void onRelease(BufferedImage canvas, MouseEvent e,
+                          LinkedList<ImageLayer> drawingLayers) {
+        calcSquareCoordinateData(e);
+        ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
+        if (selectedLayer != null) {
+            Graphics2D selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
+            selectedLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            selectedLayerGraphics.setColor(color);
+            selectedLayerGraphics.setStroke(new BasicStroke(getToolWidth()));
+            // Draw a filled rectangle/square if the alt key is down on release.
+            if (fillShape) {
+                selectedLayerGraphics.fillRect(initX, initY, drawWidthX, drawHeightY);
+            }
+            selectedLayerGraphics.drawRect(initX, initY, drawWidthX, drawHeightY);
+            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+        }
+    }
+
+    private void calcSquareCoordinateData(MouseEvent e) {
         // Get the coordinates of where the user released the mouse.
         currentX = e.getX();
         currentY = e.getY();
@@ -139,15 +146,14 @@ public class RectangleTool extends DrawingTool {
         if (currentX < mouseOriginX) {
             initX = mouseOriginX - drawWidthX;
         }
-
     }
 
     @Override
-    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+    public void onClick(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
     }
 
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+    public void onPress(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         canvas.getGraphics().setColor(color);
         currentX = e.getX();
         currentY = e.getY();

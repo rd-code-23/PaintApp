@@ -40,7 +40,6 @@ public class WidthChanger {
     private JCheckBox fillBox;
     private boolean isFill = false;
 
-
     /**
      * Constructor.
      */
@@ -213,7 +212,6 @@ public class WidthChanger {
      */
     public JComponent getGUI() {
         return widthPanel;
-
     }
 
     public void hidePanel() {
@@ -251,5 +249,4 @@ public class WidthChanger {
     public void setFill(boolean state) {
         isFill = state;
     }
-
 }
