@@ -414,7 +414,6 @@ public class MainUI {
         return colorChooser;
     }
 
-
     /**
      * Temprorary fix to allow the eraser tool to work no matter the order of creation.
      *
@@ -443,5 +442,4 @@ public class MainUI {
         };
         thread.start();
     }
-
 }

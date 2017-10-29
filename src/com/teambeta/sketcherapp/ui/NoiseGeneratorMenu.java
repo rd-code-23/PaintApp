@@ -11,7 +11,7 @@ public class NoiseGeneratorMenu {
 
     /*
         Constructor to access the drawArea
-     */
+    */
     public NoiseGeneratorMenu(DrawArea drawArea) {
         this.drawArea = drawArea;
     }

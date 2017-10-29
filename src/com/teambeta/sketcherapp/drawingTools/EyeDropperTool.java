@@ -24,15 +24,15 @@ public class EyeDropperTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers, BufferedImage[] layers, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
     }
 
     @Override
-    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+    public void onRelease(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
     }
 
     @Override
-    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+    public void onClick(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
     }
 
     private ImageLayer getSelectedLayer(LinkedList<ImageLayer> drawingLayers) {
@@ -48,12 +48,15 @@ public class EyeDropperTool extends DrawingTool {
 
     //TODO: Refactor static reference to a better handler.
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e,
+    public void onPress(BufferedImage canvas, MouseEvent e,
                         LinkedList<ImageLayer> drawingLayers) {
         ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
-        Color colorAtPoint = new Color(selectedLayer.getBufferedImage()
-                .getRGB(e.getX(), e.getY())); // Pull from layer 0 by default.
-        MainUI.getColorChooser().setColorFromEyeDropper(colorAtPoint); // Update to the color chooser.
+        Color colorAtPoint = null; // Pull from layer 0 by default.
+        if (selectedLayer != null) {
+            colorAtPoint = new Color(selectedLayer.getBufferedImage()
+                    .getRGB(e.getX(), e.getY()));
+            MainUI.getColorChooser().setColorFromEyeDropper(colorAtPoint); // Update to the color chooser.
+        }
     }
 
     @Override

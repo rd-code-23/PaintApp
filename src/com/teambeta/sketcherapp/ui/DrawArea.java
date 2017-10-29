@@ -20,7 +20,6 @@ import static java.awt.Color.black;
  */
 public class DrawArea extends JComponent {
     private BufferedImage canvasBufferedImage;
-    private BufferedImage[] layers;
     private LinkedList<ImageLayer> drawingLayers;
     private ImageLayer currentlySelectedLayer;
     private static BufferedImage previewBufferedImage;
@@ -43,7 +42,7 @@ public class DrawArea extends JComponent {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                MainUI.getSelectedDrawingTool().onClick(canvasBufferedImage, layers, e, drawingLayers);
+                MainUI.getSelectedDrawingTool().onClick(canvasBufferedImage, e, drawingLayers);
                 isCanvasAltered = true;
                 repaint();
             }
@@ -51,7 +50,7 @@ public class DrawArea extends JComponent {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                MainUI.getSelectedDrawingTool().onPress(canvasBufferedImage, layers, e, drawingLayers);
+                MainUI.getSelectedDrawingTool().onPress(canvasBufferedImage, e, drawingLayers);
                 isCanvasAltered = true;
                 repaint();
             }
@@ -59,18 +58,17 @@ public class DrawArea extends JComponent {
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
-                MainUI.getSelectedDrawingTool().onRelease(canvasBufferedImage, layers, e, drawingLayers);
+                MainUI.getSelectedDrawingTool().onRelease(canvasBufferedImage, e, drawingLayers);
                 isCanvasAltered = true;
                 repaint();
             }
         });
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
-                MainUI.getSelectedDrawingTool().onDrag(canvasBufferedImage, drawingLayers, layers, e);
+                MainUI.getSelectedDrawingTool().onDrag(canvasBufferedImage, e, drawingLayers);
                 repaint();
             }
         });
-        layers = new BufferedImage[1];
         drawingLayers = new LinkedList<>();
     }
 
@@ -125,9 +123,6 @@ public class DrawArea extends JComponent {
         if (canvasBufferedImage == null) {
             // create a canvasBufferedImage to draw on
             canvasBufferedImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-//            for (int i = 0; i < layers.length; i++) {
-//                layers[i] = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-//            }
             previewBufferedImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
             graphics = (Graphics2D) canvasBufferedImage.getGraphics();
             // enable antialiasing

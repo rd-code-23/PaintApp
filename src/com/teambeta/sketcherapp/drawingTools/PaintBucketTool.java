@@ -42,17 +42,16 @@ public class PaintBucketTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers,
-                       BufferedImage[] layers, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
     }
 
     @Override
-    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e,
+    public void onRelease(BufferedImage canvas, MouseEvent e,
                           LinkedList<ImageLayer> drawingLayers) {
     }
 
     @Override
-    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e,
+    public void onClick(BufferedImage canvas, MouseEvent e,
                         LinkedList<ImageLayer> drawingLayers) {
         ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
         if (selectedLayer != null) {
@@ -146,7 +145,7 @@ public class PaintBucketTool extends DrawingTool {
     }
 
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e,
+    public void onPress(BufferedImage canvas, MouseEvent e,
                         LinkedList<ImageLayer> drawingLayers) {
     }
 

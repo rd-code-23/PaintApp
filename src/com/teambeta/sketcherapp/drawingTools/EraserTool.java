@@ -48,8 +48,7 @@ public class EraserTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers,
-                       BufferedImage[] layers, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         //draw a path that follows your mouse while the mouse is being dragged
         currentX = e.getX();
         currentY = e.getY();
@@ -64,11 +63,11 @@ public class EraserTool extends DrawingTool {
     }
 
     @Override
-    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+    public void onRelease(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
     }
 
     @Override
-    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+    public void onClick(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         currentX = e.getX();
         currentY = e.getY();
         ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
@@ -81,7 +80,7 @@ public class EraserTool extends DrawingTool {
     }
 
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e,
+    public void onPress(BufferedImage canvas, MouseEvent e,
                         LinkedList<ImageLayer> drawingLayers) {
         //set the coordinates to the current point when the mouse is pressed
         currentX = e.getX();
