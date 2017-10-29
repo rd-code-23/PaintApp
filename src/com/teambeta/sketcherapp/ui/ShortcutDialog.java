@@ -147,6 +147,7 @@ public class ShortcutDialog {
         private KeyStroke ks;
         private JDialog dialog;
         private JLabel instructions;
+        private JLabel notValidShortcut;
         boolean isValid = false;
         private String label;
 
@@ -215,7 +216,8 @@ public class ShortcutDialog {
             altKey = new JToggleButton("alt");
             shiftKey = new JToggleButton("shift");
             instructions = new JLabel("Toggle ctrl,alt and shift.Then type a letter");
-
+            notValidShortcut = new JLabel();
+            GridBagConstraints c = new GridBagConstraints();
             ctrlKey.setFocusable(false);
             shiftKey.setFocusable(false);
             altKey.setFocusable(false);
@@ -227,10 +229,26 @@ public class ShortcutDialog {
                 public void actionPerformed(ActionEvent e) {
                   //  if(e.getSource() == saveButton){
                     //    System.out.println("saved");
+
+                    boolean isCtrl = ctrlKey.isSelected();
+                    boolean isAlt = altKey.isSelected();
+                    boolean isShift = shiftKey.isSelected();
+                    if(!sc.isValidKeyBinding(newKeyCode, isCtrl, isShift, isAlt)){
+                        notValidShortcut.setForeground(Color.red);
+                        //notValidShortcut.setBackground(Color.blue);
+                        notValidShortcut.setOpaque(true);
+                        notValidShortcut.setText("That Binding is Already Taken!");
+
+                    } else {
+
                         changeShortcut();
                         dialog.dispose();
                         shortcutsDialog.dispose();
                         renderPanel();
+
+                    }
+
+
                     //}
                 }
             });
@@ -239,7 +257,7 @@ public class ShortcutDialog {
                 dialog.setLocationRelativeTo(null);
                 dialog.setSize(450, 200);
                 dialog.setLayout(new GridBagLayout());
-                GridBagConstraints c = new GridBagConstraints();
+
 
                 c.gridx = 0;
                 c.gridy = 0;
@@ -252,10 +270,14 @@ public class ShortcutDialog {
                 listPane.add(shiftKey);
                 listPane.add(strokeKey);
                 listPane.add(saveButton);
+
                 c.gridx = 0;
                 c.gridy = 25;
 
                 dialog.add(listPane, c);
+                c.gridx = 0;
+                c.gridy = 30;
+                dialog.add(notValidShortcut,c);
                 listPane.setFocusable(true);
                 listPane.requestFocusInWindow();
 
