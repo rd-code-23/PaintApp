@@ -13,6 +13,7 @@ private static final String ABOUT_MESSAGE_TEXT = "Simon Fraser University\n" +
                                                  "Team Members:\n" +
                                                  "Andrea Renney, Darryl Fonseka, Zongyuan Shao, Ali Maladwala, Mathieu Laflamme, " +
                                                  "Kyle Saburao, Larren Canapi, Rishi Dholliwar\n\n" +
+                                                 "Goal:\n" +
                                                  "Our main objective is to design and implement a graphics editor, BetaPaint, such that it can " +
                                                  "be used effectively to create simple,\ncolorful graphics. By using a streamlined and clean " +
                                                  "design, the interface should be simple and easy to use without having \nany prior experience. " +
