@@ -115,7 +115,7 @@ public class ShortcutDialog {
     }
 
     /**
-     * prints the shortcut
+     * prints the shortcut 
      * @param keyCode
      * @param useControl
      * @param useShift
