@@ -6,7 +6,6 @@ import com.teambeta.sketcherapp.ui.MainUI;
  * Class to wrap all components together.
  */
 public class Main {
-
     /**
      * Main program.
      *
@@ -15,6 +14,6 @@ public class Main {
     public static void main(String[] args) {
         System.setProperty("sun.java2d.opengl", "True");
         MainUI mainUI = new MainUI();
-        mainUI.showGridBagLayoutDemo();
+        mainUI.displayUI();
     }
 }

@@ -1,11 +1,13 @@
 package com.teambeta.sketcherapp.drawingTools;
 
 import com.teambeta.sketcherapp.model.GeneralObserver;
+import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.ui.DrawArea;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
 /**
  * The EllipseTool class implements the drawing behavior for when the Ellipse tool has been selected
@@ -15,7 +17,6 @@ import java.awt.image.BufferedImage;
  * - Draw a circle when the shift button is held on mouse release.
  */
 public class EllipseTool extends DrawingTool {
-
     private int currentY;
     private int currentX;
     private int initX;
@@ -51,14 +52,12 @@ public class EllipseTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         if (previewLayer == null) {
-            //previewLayer = new BufferedImage(canvas.getWidth(), canvas.getHeight(), BufferedImage.TYPE_INT_ARGB);
-            previewLayer = DrawArea.getPreviewLayer();
+            previewLayer = DrawArea.getPreviewBufferedImage();
         }
         //clear preview layer
         DrawArea.clearBufferImageToTransparent(previewLayer);
-
         //init graphics objects
         Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
         canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -69,47 +68,62 @@ public class EllipseTool extends DrawingTool {
         previewLayerGraphics.setStroke(new BasicStroke(getToolWidth()));
         previewLayerGraphics.setColor(color);
 
-        calcEllipseCoordinateData(e, layers, canvas);
-
+        calcEllipseCoordinateData(e);
         //draw the circle preview onto the preview layer
         previewLayerGraphics.drawOval(initX, initY, drawWidthX, drawHeightY);
         // Draw a filled ellipse/circle if the alt key is down on release.
         if (fillShape) {
             previewLayerGraphics.fillOval(initX, initY, drawWidthX, drawHeightY);
         }
-
         //info: https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
         //draw the preview layer on top of the drawing layer(s)
         AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
         canvasGraphics.setComposite(alphaComposite);
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
+        DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
         canvasGraphics.drawImage(previewLayer, 0, 0, null);
     }
 
-    @Override
-    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        calcEllipseCoordinateData(e, layers, canvas);
-
-        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
-        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        layer1Graphics.setStroke(new BasicStroke(getToolWidth()));
-        layer1Graphics.setColor(color);
-        layer1Graphics.drawOval(initX, initY, drawWidthX, drawHeightY);
-        // Draw a filled ellipse/circle if the alt key is down on release.
-        if (fillShape) {
-            layer1Graphics.fillOval(initX, initY, drawWidthX, drawHeightY);
+    private ImageLayer getSelectedLayer(LinkedList<ImageLayer> drawingLayers) {
+        //get the selected layer, this assumes there is only one selected layer.
+        for (int i = 0; i < drawingLayers.size(); i++) {
+            ImageLayer drawingLayer = drawingLayers.get(i);
+            if (drawingLayer.isSelected()) {
+                return drawingLayer;
+            }
         }
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
+        return null;
     }
 
-    private void calcEllipseCoordinateData(MouseEvent e, BufferedImage[] layers, BufferedImage canvas) {
+    @Override
+    public void onRelease(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+        calcEllipseCoordinateData(e);
+        ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
+        if (selectedLayer != null) {
+            Graphics2D selectedLayerGraphics = initLayerGraphics(selectedLayer.getBufferedImage());
+            selectedLayerGraphics.drawOval(initX, initY, drawWidthX, drawHeightY);
+            // Draw a filled ellipse/circle if the alt key is down on release.
+            if (fillShape) {
+                selectedLayerGraphics.fillOval(initX, initY, drawWidthX, drawHeightY);
+            }
+            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+        }
+    }
+
+    private Graphics2D initLayerGraphics(BufferedImage layer) {
+        Graphics2D layerGraphics = (Graphics2D) layer.getGraphics();
+        layerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        layerGraphics.setStroke(new BasicStroke(getToolWidth()));
+        layerGraphics.setColor(color);
+        return layerGraphics;
+    }
+
+    private void calcEllipseCoordinateData(MouseEvent e) {
         // Get the coordinates of where the user released the mouse.
         currentX = e.getX();
         currentY = e.getY();
 
         xAxisMagnitudeDelta = Math.abs(currentX - mouseOriginX);
         yAxisMagnitudeDelta = Math.abs(currentY - mouseOriginY);
-
         // Detect shift-down by the MouseEvent, e.
         if (e.isShiftDown()) {
             if (xAxisMagnitudeDelta > yAxisMagnitudeDelta) {
@@ -123,7 +137,6 @@ public class EllipseTool extends DrawingTool {
             drawWidthX = xAxisMagnitudeDelta;
             drawHeightY = yAxisMagnitudeDelta;
         }
-
         // Handle cases where the ellipse lies in a quadrant (with origin 0,0 at click) other than IV.
         if (currentY < mouseOriginY) {
             initY = mouseOriginY - drawHeightY;
@@ -131,15 +144,16 @@ public class EllipseTool extends DrawingTool {
         if (currentX < mouseOriginX) {
             initX = mouseOriginX - drawWidthX;
         }
-
     }
 
     @Override
-    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onClick(BufferedImage canvas, MouseEvent e,
+                        LinkedList<ImageLayer> drawingLayers) {
     }
 
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onPress(BufferedImage canvas, MouseEvent e,
+                        LinkedList<ImageLayer> drawingLayers) {
         canvas.getGraphics().setColor(color);
         currentX = e.getX();
         currentY = e.getY();

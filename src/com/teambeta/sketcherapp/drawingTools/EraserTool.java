@@ -1,12 +1,13 @@
 package com.teambeta.sketcherapp.drawingTools;
 
+import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.ui.DrawArea;
 import com.teambeta.sketcherapp.ui.MainUI;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
 /**
  * NOTE:
@@ -15,12 +16,10 @@ import java.awt.image.BufferedImage;
  * The EraserTool class implements the drawing behavior for when the Eraser tool has been selected
  */
 public class EraserTool extends DrawingTool {
-
     private int currentX;
     private int currentY;
     private int lastX;
     private int lastY;
-    private Graphics2D layer1Graphics;
     private Color color;
     private int eraserWidth;
     private final int DEFAULT_WIDTH_VALUE = 10;
@@ -37,37 +36,52 @@ public class EraserTool extends DrawingTool {
         color = Color.white; // Default color until MainUI updates to the proper color.
     }
 
-
+    private ImageLayer getSelectedLayer(LinkedList<ImageLayer> drawingLayers) {
+        //get the selected layer, this assumes there is only one selected layer.
+        for (int i = 0; i < drawingLayers.size(); i++) {
+            ImageLayer drawingLayer = drawingLayers.get(i);
+            if (drawingLayer.isSelected()) {
+                return drawingLayer;
+            }
+        }
+        return null;
+    }
 
     @Override
-    public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         //draw a path that follows your mouse while the mouse is being dragged
         currentX = e.getX();
         currentY = e.getY();
-
-        layer1Graphics.drawLine(lastX, lastY, currentX, currentY);
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
-
+        ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
+        if (selectedLayer != null) {
+            Graphics2D layerGraphics = initLayerGraphics(selectedLayer.getBufferedImage());
+            layerGraphics.drawLine(lastX, lastY, currentX, currentY);
+            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+        }
         lastX = currentX;
         lastY = currentY;
     }
 
     @Override
-    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onRelease(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
     }
 
     @Override
-    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onClick(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         currentX = e.getX();
         currentY = e.getY();
-
-        layer1Graphics.fillOval(currentX - (eraserWidth/2),currentY - (eraserWidth/2), eraserWidth, eraserWidth);
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
+        ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
+        if (selectedLayer != null) {
+            Graphics2D layerGraphics = initLayerGraphics(selectedLayer.getBufferedImage());
+            layerGraphics.fillOval(currentX - (eraserWidth / 2),
+                    currentY - (eraserWidth / 2), eraserWidth, eraserWidth);
+            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+        }
     }
 
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        initLayer1Graphics(canvas, layers, e);
+    public void onPress(BufferedImage canvas, MouseEvent e,
+                        LinkedList<ImageLayer> drawingLayers) {
         //set the coordinates to the current point when the mouse is pressed
         currentX = e.getX();
         currentY = e.getY();
@@ -82,7 +96,7 @@ public class EraserTool extends DrawingTool {
 
     @Override
     public void setToolWidth(int width) {
-            eraserWidth = width;
+        eraserWidth = width;
     }
 
     /**
@@ -97,23 +111,19 @@ public class EraserTool extends DrawingTool {
 
     /**
      * Initialize the parameters required for layer1Graphics.
-     *
-     * @param canvas for drawing the line onto.
-     * @param layers first layer by default is layers[0]
-     * @param e      MouseEvent
      */
-    private void initLayer1Graphics(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        layer1Graphics = (Graphics2D) layers[0].getGraphics();
-        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        layer1Graphics.setColor(color);
-        layer1Graphics.setStroke(new BasicStroke(getToolWidth(), BasicStroke.CAP_ROUND,    // End-cap style
+    private Graphics2D initLayerGraphics(BufferedImage layer) {
+        Graphics2D layerGraphics = (Graphics2D) layer.getGraphics();
+        layerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        layerGraphics.setColor(color);
+        layerGraphics.setStroke(new BasicStroke(getToolWidth(), BasicStroke.CAP_ROUND,    // End-cap style
                 BasicStroke.CAP_BUTT));
         if (MainUI.getDrawArea() != null) {
             color = MainUI.getDrawArea().getBackground();
         }
+        return layerGraphics;
     }
 
     public void setFillState(boolean fillState) {
-
     }
 }
