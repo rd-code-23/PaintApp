@@ -2,6 +2,7 @@ package com.teambeta.sketcherapp.ui;
 
 import com.teambeta.sketcherapp.model.GreyscaleMenu;
 import com.teambeta.sketcherapp.model.ImportExport;
+import com.teambeta.sketcherapp.model.AboutMenu;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -83,17 +84,19 @@ public class MenuUI extends JMenuBar {
     private DrawArea drawArea;
     private ImportExport importExport;
     private GreyscaleMenu greyscaleMenu;
+    private AboutMenu aboutMenu;
 
 
     /**
      * constructor
      */
 
-    public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu) {
+    public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu, AboutMenu aboutMenu) {
 
         this.drawArea = drawArea;
         this.importExport = importExport;
         this.greyscaleMenu = greyscaleMenu;
+        this.aboutMenu = aboutMenu;
         prepareMenuBar();
     }
 
@@ -168,6 +171,7 @@ public class MenuUI extends JMenuBar {
         iExport.addActionListener(menuActionListener);
         iImport.addActionListener(menuActionListener);
         iGreyscale.addActionListener(menuActionListener);
+        hAbout.addActionListener(menuActionListener);
 
     }
 
@@ -184,6 +188,9 @@ public class MenuUI extends JMenuBar {
             }
             if (e.getSource() == iGreyscale) {
                 greyscaleMenu.showWindow();
+            }
+            if (e.getSource() == hAbout) {
+                aboutMenu.PrepareAbout();
             }
         }
 
