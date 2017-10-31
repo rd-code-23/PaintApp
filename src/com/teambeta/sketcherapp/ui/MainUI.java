@@ -2,6 +2,7 @@ package com.teambeta.sketcherapp.ui;
 
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.ImportExport;
+import com.teambeta.sketcherapp.model.Shortcuts;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -11,6 +12,7 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.File;
 
 /**
@@ -82,6 +84,10 @@ public class MainUI {
     private static DrawArea drawArea;
     private static ColorChooser colorChooser;
     private WidthChanger widthChanger;
+    private ShortcutDialog keboardShortCutPanel;
+    private Shortcuts shortcuts;
+    private ImportExport importExport;
+    private   JPanel canvasTools;
 
     private static final String APPLICATION_LOGO_IMAGE_DIRECTORY = "res/BPIcon.png";
 
@@ -267,7 +273,7 @@ public class MainUI {
         mainContent.setLayout(new BorderLayout());
         drawArea = new DrawArea();
 
-        ImportExport importExport = new ImportExport(drawArea, this);
+         importExport = new ImportExport(drawArea, this);
         GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
         NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
         CheckerboardMenu checkerboardMenu = new CheckerboardMenu(drawArea);
@@ -306,7 +312,7 @@ public class MainUI {
                 celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton,
         };
 
-        JPanel canvasTools = new JPanel();
+       canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
         canvasTools.setBackground(Color.DARK_GRAY);
         canvasTools.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
@@ -323,7 +329,9 @@ public class MainUI {
         /* END MAINUI BUTTONS */
         JPanel northPanel = new JPanel();
         northPanel.setLayout(new BorderLayout());
-        MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, noiseGeneratorMenu, checkerboardMenu);
+        shortcuts = new Shortcuts(canvasTools,this);
+        keboardShortCutPanel = new ShortcutDialog(this,shortcuts);
+        MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel);
         northPanel.add(menuUI, BorderLayout.NORTH);
 
         JPanel toolSettings = new JPanel();
@@ -384,6 +392,10 @@ public class MainUI {
         editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
         mainContent.add(editorPanel, BorderLayout.EAST);
         mainContent.add(northPanel, BorderLayout.NORTH);
+
+
+
+        generateDefaultKeyBindings();
     }
 
     /**
@@ -442,4 +454,91 @@ public class MainUI {
         };
         thread.start();
     }
+
+    /**
+     * generates the default key binding for shortcut keys
+     */
+    public void generateDefaultKeyBindings() {
+
+        //TODO ctrl+c doesnt work unless you press something on the canvas tools ???
+        //TODO I THINK THE ANSWER IS HERE  https://stackoverflow.com/questions/16229526/how-do-you-remove-the-ctrlc-action-on-a-jfilechooser
+        //TODO also https://coderanch.com/t/341695/java/enable-CTRL-perform-action-coping
+
+
+
+        shortcuts.addKeyBinding( KeyEvent.VK_C, false, true, true, Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
+            drawArea.clear();
+        });
+        shortcuts.addKeyBinding( KeyEvent.VK_O, true, false, false, Shortcuts.EXPORT_SHORTCUT, (evt) -> {
+            importExport.exportImage();
+        });
+        shortcuts.addKeyBinding( KeyEvent.VK_I, true, false, false, Shortcuts.IMPORT_SHORTCUT, (evt) -> {
+            importExport.importImage();
+        });
+        shortcuts.addKeyBinding( KeyEvent.VK_B, true, false, false, Shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
+            selectedDrawingTool = brushTool;
+            updateSizeSlider();
+        });
+        shortcuts.addKeyBinding( KeyEvent.VK_L, true, false, false, Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
+            selectedDrawingTool = lineTool;
+            updateSizeSlider();
+        });
+/*
+        addKeyBinding(editorPanel, KeyEvent.VK_R, true, false, false, "RECT TOOL", (evt) -> {
+            selectedDrawingTool = rectangleTool;
+            updateFillState(); // Tool supports filling
+            updateSizeSlider();
+        });
+        addKeyBinding(editorPanel, KeyEvent.VK_E, true, false, false, "ELIPSE TOOL", (evt) -> {
+            selectedDrawingTool = ellipseTool;
+            updateSizeSlider();
+        });
+        addKeyBinding(editorPanel, KeyEvent.VK_Q, true, false, false, "ELIPSE TOOL", (evt) -> {
+            selectedDrawingTool = ellipseTool;
+            updateSizeSlider();
+            updateFillState(); // Tool supports filling
+        });
+        addKeyBinding(editorPanel, KeyEvent.VK_E, true, false, false, "ERASER TOOL", (evt) -> {
+            selectedDrawingTool = eraserTool;
+            updateSizeSlider();
+        });
+        addKeyBinding(editorPanel, KeyEvent.VK_T, true, false, false, "TEXT TOOL", (evt) -> {
+            selectedDrawingTool = textTool;
+            updateSizeSlider();
+        });
+        addKeyBinding(editorPanel, KeyEvent.VK_P, true, false, false, "PAINTBUCKET TOOL", (evt) -> {
+            selectedDrawingTool = paintBucketTool;
+            updateSizeSlider();
+        });
+        addKeyBinding(editorPanel, KeyEvent.VK_F, true, false, false, "FAN TOOL", (evt) -> {
+            selectedDrawingTool = fanTool;
+            updateSizeSlider();
+        });
+        addKeyBinding(editorPanel, KeyEvent.VK_C, false, false, false, "CELTIC TOOL", (evt) -> {
+            selectedDrawingTool = celticKnotTool;
+            updateSizeSlider();
+        });
+        addKeyBinding(editorPanel, KeyEvent.VK_D, true, false, false, "DNA TOOL", (evt) -> {
+            selectedDrawingTool = dnaTool;
+            updateSizeSlider();
+        });
+        addKeyBinding(editorPanel, KeyEvent.VK_N, true, false, false, "EYE TOOL", (evt) -> {
+            selectedDrawingTool = eyeDropperTool;
+            updateSizeSlider();
+        });
+        addKeyBinding(editorPanel, KeyEvent.VK_A, true, false, false, "AIRBRUSH TOOL", (evt) -> {
+            selectedDrawingTool = airBrushTool;
+            updateSizeSlider();
+        });*/
+    }
+
+    /**
+        Used in Shortcuts class to focus the canvas tools
+     */
+    public void focusCanvasTools(){
+        canvasTools.setFocusable(true);
+
+    }
+
+
 }

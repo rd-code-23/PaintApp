@@ -1,9 +1,11 @@
 package com.teambeta.sketcherapp.model;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyListener;
 
 import com.teambeta.sketcherapp.Main;
 import com.teambeta.sketcherapp.ui.DrawArea;
@@ -12,6 +14,7 @@ import com.teambeta.sketcherapp.ui.MainUI;
 public class Shortcuts {
 
     public static final String CLEAR_TOOL_SHORTCUT = "CLEAR";
+    public static final String NO_SUCH_TOOL = "NO SUCH TOOL";
     static int clearToolKeyCode;
     static boolean isCtrl_clearTool;
     static boolean isShift_clearTool;
@@ -36,14 +39,15 @@ public class Shortcuts {
     static boolean isAlt_brushTool;
 
     public static final String LINE_TOOL_SHORTCUT = "LINE TOOL";
-
-
     int lineToolKeyCode;
     static boolean isCtrl_lineTool;
     static boolean isShift_lineTool;
     static boolean isAlt_lineTool;
-    JComponent component;
-    MainUI mainUI;
+
+    private JComponent component;
+    private MainUI mainUI;
+    private ActionMap actionMap;
+    private InputMap im;
 
     public Shortcuts(JComponent component, MainUI mainUI) {
         this.component = component;
@@ -52,13 +56,7 @@ public class Shortcuts {
         this.mainUI = mainUI;
     }
 
-
-    ActionMap actionMap;
-    InputMap im;
-
-
     public void addKeyBinding(int keyCode, boolean useControl, boolean useShift, boolean useAlt, String id, ActionListener actionListener) {
-
 
         if (useControl && useAlt && useShift) {
             im.put(KeyStroke.getKeyStroke(keyCode, InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), id);
@@ -78,7 +76,6 @@ public class Shortcuts {
             im.put(KeyStroke.getKeyStroke(keyCode, 0, false), id);
         }
 
-
         actionMap.put(id, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -86,17 +83,21 @@ public class Shortcuts {
             }
         });
 
-
         setKBShortcut(id, keyCode, useControl, useShift, useAlt);
-        if (actionMap.get(id).equals(CLEAR_TOOL_SHORTCUT)) {
-            System.out.println("its clear ");
-        }
 
-        //  System.out.println("action map size: " + actionMap.size());
-        //System.out.println("actionMap: " + actionMap.get(id));
+        mainUI.focusCanvasTools();
+
+    }
+
+    public void fixctrlc(){
+        im = (InputMap)UIManager.get("Table.ancestorInputMap");
+        KeyStroke ctrlC = KeyStroke.getKeyStroke("control C");
+       // im.put(ctrlC, "none");
+        im.remove(ctrlC);
     }
 
     public void removeBinding(int keyCode, boolean useControl, boolean useShift, boolean useAlt) {
+
         if (useControl && useAlt && useShift) {
             im.remove(KeyStroke.getKeyStroke(keyCode, InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
         } else if (useControl && useAlt) {
@@ -114,11 +115,14 @@ public class Shortcuts {
         } else {
             im.remove(KeyStroke.getKeyStroke(keyCode, 0, false));
         }
+
+        mainUI.focusCanvasTools();
     }
 
-
     public void changeKeyBinding(int keyCode, boolean useControl, boolean useShift, boolean useAlt, String id) {
+
         im = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+
         if (useControl && useAlt && useShift) {
             im.put(KeyStroke.getKeyStroke(keyCode, InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), id);
         } else if (useControl && useAlt) {
@@ -137,6 +141,8 @@ public class Shortcuts {
             im.put(KeyStroke.getKeyStroke(keyCode, 0, false), id);
         }
         setKBShortcut(id, keyCode, useControl, useShift, useAlt);
+
+        mainUI.focusCanvasTools();
     }
 
     public void setKBShortcut(String tool, int keyCode, boolean useControl, boolean useShift, boolean useAlt) {
@@ -172,12 +178,13 @@ public class Shortcuts {
                 isAlt_lineTool = useAlt;
                 break;
             default:
-                System.out.println("NO SUCH TOOL for set ");
+                System.out.println(NO_SUCH_TOOL);
         }
     }
 
     public void removeAllBindings() {
         im.clear();
+        mainUI.focusCanvasTools();
         mainUI.generateDefaultKeyBindings();
     }
 
@@ -194,7 +201,7 @@ public class Shortcuts {
             case LINE_TOOL_SHORTCUT:
                 return (char) lineToolKeyCode;
             default:
-                System.out.println("NO SUCH TOOL for get ");
+                System.out.println(NO_SUCH_TOOL);
                 return 0;
         }
     }
@@ -220,7 +227,6 @@ public class Shortcuts {
         }
         return true;
     }
-
 
     public JComponent getComponent() {
         return component;
