@@ -2,13 +2,13 @@ package com.teambeta.sketcherapp.drawingTools;
 
 
 import com.teambeta.sketcherapp.model.GeneralObserver;
+import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.ui.DrawArea;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
+import java.util.LinkedList;
 
 /**
  * Text tool class that places text inputted by user onto canvas.
@@ -18,6 +18,7 @@ public class TextTool extends DrawingTool {
     private int currentX;
     private Color color;
     private int textSize;
+    private String font;
     private final int DEFAULT_WIDTH_VALUE = 20;
 
     public TextTool() {
@@ -34,21 +35,35 @@ public class TextTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
     }
 
     @Override
-    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onRelease(BufferedImage canvas, MouseEvent e,
+                          LinkedList<ImageLayer> drawingLayers) {
+    }
+
+    private ImageLayer getSelectedLayer(LinkedList<ImageLayer> drawingLayers) {
+        //get the selected layer, this assumes there is only one selected layer.
+        for (int i = 0; i < drawingLayers.size(); i++) {
+            ImageLayer drawingLayer = drawingLayers.get(i);
+            if (drawingLayer.isSelected()) {
+                return drawingLayer;
+            }
+        }
+        return null;
     }
 
     @Override
-    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        placeText(canvas, layers, e);
+    public void onClick(BufferedImage canvas, MouseEvent e,
+                        LinkedList<ImageLayer> drawingLayers) {
+        placeText(canvas, drawingLayers, e);
     }
 
 
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onPress(BufferedImage canvas, MouseEvent e,
+                        LinkedList<ImageLayer> drawingLayers) {
     }
 
     @Override
@@ -58,37 +73,47 @@ public class TextTool extends DrawingTool {
 
     @Override
     public void setToolWidth(int width) {
-    textSize = width;
+        textSize = width;
     }
 
     /**
-     * Places text inputted by user on canvas.
-     * @param canvas to draw text onto
-     * @param layers first layer by default is layers[0]
-     * @param e MouseEvent
+     * Sets font for text.
+     *
+     * @param fontType String of font type.
      */
-    private void placeText(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
+    public void setFont(String fontType) {
+        font = fontType;
+    }
 
-        Font myFont = new Font("Serif", Font.PLAIN, getToolWidth());
-        layer1Graphics.setFont(myFont);
-        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        layer1Graphics.setColor(color);
+    /**
+     * @param canvas        to draw text onto
+     * @param drawingLayers The layers of the DrawArea
+     * @param e             MouseEvent
+     */
+    private void placeText(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers, MouseEvent e) {
+        ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
+        Graphics2D selectedLayerGraphics;
+        if (selectedLayer != null) {
+            selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
 
+            Font customFont = new Font(font, Font.PLAIN, getToolWidth());
+            selectedLayerGraphics.setFont(customFont);
+            selectedLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            selectedLayerGraphics.setColor(color);
 
+            //draw where the mouse was clicked
+            currentX = e.getX();
+            currentY = e.getY();
+            Point location = MouseInfo.getPointerInfo().getLocation();
 
-        //draw where the mouse was clicked
-        currentX = e.getX();
-        currentY = e.getY();
-
-        Point location = MouseInfo.getPointerInfo().getLocation();
-
-        TextFieldInput textFieldInput = new TextFieldInput(color, (int) location.getX(), (int) location.getY(), myFont);
-        String userInput = textFieldInput.getUserInput();
-
-        if (!userInput.equals("")) {
-            layer1Graphics.drawString(userInput, currentX, currentY);
-            DrawArea.drawLayersOntoCanvas(layers, canvas);
+            TextFieldInput textFieldInput = new TextFieldInput(color,
+                    (int) location.getX(), (int) location.getY(), customFont);
+            textFieldInput.setFontType(customFont.getFontName());
+            String userInput = textFieldInput.getUserInput();
+            if (!userInput.equals("")) {
+                selectedLayerGraphics.drawString(userInput, currentX, currentY);
+                DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+            }
         }
     }
 
@@ -106,6 +131,5 @@ public class TextTool extends DrawingTool {
 
     @Override
     public void setFillState(boolean fillState) {
-
     }
 }

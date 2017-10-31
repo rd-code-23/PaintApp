@@ -10,44 +10,34 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
 /**
- * The EllipseTool class implements the drawing behavior for when the Ellipse tool has been selected
- * <p>
- * Behaviour of the ellipse tool:
- * - The end-point relative to the init-point can be in any 4 quadrants.
- * - Draw a circle when the shift button is held on mouse release.
+ * The TriangleTool class implements the drawing behavior for when the Line tool has been selected
  */
-public class EllipseTool extends DrawingTool {
+public class TriangleTool extends DrawingTool {
     private int currentY;
     private int currentX;
     private int initX;
     private int initY;
     private int mouseOriginX;
     private int mouseOriginY;
-    private int xAxisMagnitudeDelta;
-    private int yAxisMagnitudeDelta;
-    private int drawWidthX;
-    private int drawHeightY;
     private Color color;
-    private final int DEFAULT_STOKE_VALUE = 10;
-    private int ellipseWidth;
-    private boolean fillShape;
     private BufferedImage previewLayer = null;
+    private int triangleWidth;
+    private final int DEFAULT_WIDTH_VALUE = 10;
+    private boolean fillShape;
 
     /**
      * The constructor sets the properties of the tool to their default values
      */
-    public EllipseTool() {
-        color = Color.black;
+    public TriangleTool() {
         registerObservers();
+        color = Color.black;
         initX = 0;
         initY = 0;
         currentX = 0;
         currentY = 0;
         mouseOriginX = 0;
         mouseOriginY = 0;
-        drawWidthX = 0;
-        drawHeightY = 0;
-        ellipseWidth = DEFAULT_STOKE_VALUE;
+        triangleWidth = DEFAULT_WIDTH_VALUE;
         fillShape = false;
     }
 
@@ -58,23 +48,28 @@ public class EllipseTool extends DrawingTool {
         }
         //clear preview layer
         DrawArea.clearBufferImageToTransparent(previewLayer);
+
         //init graphics objects
         Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
         canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         canvasGraphics.setColor(color);
-
         Graphics2D previewLayerGraphics = (Graphics2D) previewLayer.getGraphics();
-        previewLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        previewLayerGraphics.setStroke(new BasicStroke(getToolWidth()));
+        canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         previewLayerGraphics.setColor(color);
+        previewLayerGraphics.setStroke(new BasicStroke(getToolWidth()));
 
-        calcEllipseCoordinateData(e);
-        //draw the circle preview onto the preview layer
-        previewLayerGraphics.drawOval(initX, initY, drawWidthX, drawHeightY);
-        // Draw a filled ellipse/circle if the alt key is down on release.
+        calcTriangleCoordinateData(e);
+
+        int[] x = {initX, currentX, currentX};
+        int[] y = {currentY, initY, currentY};
+//        int [] x = {initX,Math.abs(currentX-initX),currentX};
+//        int [] y ={currentY,Math.abs(currentY-initY),currentY};
+
         if (fillShape) {
-            previewLayerGraphics.fillOval(initX, initY, drawWidthX, drawHeightY);
+            previewLayerGraphics.fillPolygon(x, y, 3);
         }
+        previewLayerGraphics.drawPolygon(x, y, 3);
+
         //info: https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
         //draw the preview layer on top of the drawing layer(s)
         AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
@@ -96,65 +91,50 @@ public class EllipseTool extends DrawingTool {
 
     @Override
     public void onRelease(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
-        calcEllipseCoordinateData(e);
+        int[] x = {initX, currentX, currentX};
+        int[] y = {currentY, initY, currentY};
+//        int [] x = {initX,Math.abs(currentX-initX),currentX};
+//        int [] y ={currentY,Math.abs(currentY-initY),currentY};
+        calcTriangleCoordinateData(e);
         ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
         if (selectedLayer != null) {
-            Graphics2D selectedLayerGraphics = initLayerGraphics(selectedLayer.getBufferedImage());
-            selectedLayerGraphics.drawOval(initX, initY, drawWidthX, drawHeightY);
-            // Draw a filled ellipse/circle if the alt key is down on release.
+            Graphics2D selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
+            initGraphics(selectedLayerGraphics);
             if (fillShape) {
-                selectedLayerGraphics.fillOval(initX, initY, drawWidthX, drawHeightY);
+                selectedLayerGraphics.fillPolygon(x, y, 3);
             }
+            selectedLayerGraphics.drawPolygon(x, y, 3);
             DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
         }
     }
 
-    private Graphics2D initLayerGraphics(BufferedImage layer) {
-        Graphics2D layerGraphics = (Graphics2D) layer.getGraphics();
-        layerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        layerGraphics.setStroke(new BasicStroke(getToolWidth()));
-        layerGraphics.setColor(color);
-        return layerGraphics;
+    private void initGraphics(Graphics2D selectedLayerGraphics) {
+        selectedLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        selectedLayerGraphics.setColor(color);
+        selectedLayerGraphics.setStroke(new BasicStroke(getToolWidth()));
     }
 
-    private void calcEllipseCoordinateData(MouseEvent e) {
+    private void calcTriangleCoordinateData(MouseEvent e) {
         // Get the coordinates of where the user released the mouse.
         currentX = e.getX();
         currentY = e.getY();
 
-        xAxisMagnitudeDelta = Math.abs(currentX - mouseOriginX);
-        yAxisMagnitudeDelta = Math.abs(currentY - mouseOriginY);
-        // Detect shift-down by the MouseEvent, e.
-        if (e.isShiftDown()) {
-            if (xAxisMagnitudeDelta > yAxisMagnitudeDelta) {
-                drawWidthX = yAxisMagnitudeDelta;
-                drawHeightY = yAxisMagnitudeDelta;
-            } else {
-                drawWidthX = xAxisMagnitudeDelta;
-                drawHeightY = xAxisMagnitudeDelta;
-            }
-        } else {
-            drawWidthX = xAxisMagnitudeDelta;
-            drawHeightY = yAxisMagnitudeDelta;
-        }
-        // Handle cases where the ellipse lies in a quadrant (with origin 0,0 at click) other than IV.
+        // Handle cases where the triangle lies in a quadrant (with origin 0,0 at click) other than IV.
         if (currentY < mouseOriginY) {
-            initY = mouseOriginY - drawHeightY;
+            initY = mouseOriginY;
         }
         if (currentX < mouseOriginX) {
-            initX = mouseOriginX - drawWidthX;
+            initX = mouseOriginX;
         }
     }
 
     @Override
-    public void onClick(BufferedImage canvas, MouseEvent e,
-                        LinkedList<ImageLayer> drawingLayers) {
+    public void onClick(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
     }
 
     @Override
-    public void onPress(BufferedImage canvas, MouseEvent e,
-                        LinkedList<ImageLayer> drawingLayers) {
-        canvas.getGraphics().setColor(color);
+    public void onPress(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+        //set the coordinates to the current pixel clicked
         currentX = e.getX();
         currentY = e.getY();
         initX = currentX;
@@ -165,18 +145,18 @@ public class EllipseTool extends DrawingTool {
 
     @Override
     public int getToolWidth() {
-        return ellipseWidth;
+        return triangleWidth;
     }
 
     @Override
     public void setToolWidth(int width) {
-        ellipseWidth = width;
+        triangleWidth = width;
     }
 
     /**
-     * getColor returns the current color the ellipse tool is set to.
+     * getColor returns the current color the line tool is set to.
      *
-     * @return the current Color of the ellipse
+     * @return the current Color of the LineTool
      */
     @Override
     public Color getColor() {
@@ -195,6 +175,7 @@ public class EllipseTool extends DrawingTool {
         });
     }
 
+    @Override
     public void setFillState(boolean fillState) {
         fillShape = fillState;
     }

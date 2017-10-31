@@ -6,7 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,14 +15,12 @@ import java.util.List;
  */
 public class ColorChooser extends JPanel {
     private static Color color;
-    private static final int SQUARE_POS_XY = 10;
     private static final int SQUARE_LENGTH = 50;
     private static final int PANEL_LENGTH = 50;
-    private static List<GeneralObserver> observers;
+    private static List<GeneralObserver> observers = new ArrayList<>();
 
     // Constructor that displays default color as a square panel (graphic selector).
     public ColorChooser() {
-        observers = new ArrayList<>();
         color = Color.BLACK;
         addMouseListener(new MouseAdapter() {
             @Override
@@ -35,8 +33,11 @@ public class ColorChooser extends JPanel {
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setBackground(Color.DARK_GRAY);
+        setSize(SQUARE_LENGTH, SQUARE_LENGTH);
         graphics.setColor(getColor());
-        graphics.fillRect(SQUARE_POS_XY, SQUARE_POS_XY, SQUARE_LENGTH, SQUARE_LENGTH);
+        graphics.fillRect(0, 0, SQUARE_LENGTH, SQUARE_LENGTH);
         graphics.dispose();
     }
 
@@ -44,7 +45,6 @@ public class ColorChooser extends JPanel {
     public Dimension getPreferredSize() {
         return new Dimension(PANEL_LENGTH, PANEL_LENGTH);
     }
-
 
     /**
      * Changes color for the graphic selector.
@@ -57,6 +57,17 @@ public class ColorChooser extends JPanel {
         if (color == null) {
             color = previousColor;
         }
+        paintComponent(getGraphics());
+        notifyObservers();
+    }
+
+    /**
+     * Used by the eye dropper tool to directly update the color of the color chooser.
+     *
+     * @param color The color to be set
+     */
+    public void setColorFromEyeDropper(Color color) {
+        ColorChooser.color = color;
         paintComponent(getGraphics());
         notifyObservers();
     }

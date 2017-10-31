@@ -10,9 +10,7 @@ import java.awt.event.ActionListener;
  * The MenuUI class adds a menu bar with submenus to the top of the application.
  */
 
-
 public class MenuUI extends JMenuBar {
-
     private static final String FILE_MENU_BUTTON_TEXT = "File";
     private static final String EDIT_MENU_BUTTON_TEXT = "Edit";
     private static final String IMAGE_MENU_BUTTON_TEXT = "Image";
@@ -41,7 +39,6 @@ public class MenuUI extends JMenuBar {
 
     private JMenuItem eUndo;
     private JMenuItem eRedo;
-    private JMenuItem eKeybordShortCuts;
 
     private static final String EUNDO_MENU_BUTTON_TEXT = "Undo";
     private static final String EREDO_MENU_BUTTON_TEXT = "Redo";
@@ -49,14 +46,20 @@ public class MenuUI extends JMenuBar {
     private JMenuItem iCanvasSize;
     private JMenuItem iRotateCanvas;
     private JMenuItem iColourMode;
+    private JMenuItem iGeneratorsSubMenu;
+    private JMenuItem iCheckerBoard;
+    private JMenuItem iGreyscale;
+    private JMenuItem iGenerateNoise;
     private JMenuItem iImport;
     private JMenuItem iExport;
-
-
 
     private static final String ICANVASSIZE_MENU_BUTTON_TEXT = "Canvas Size";
     private static final String IROTATECANVAS_MENU_BUTTON_TEXT = "Rotate Canvas";
     private static final String ICOLOURMODE_MENU_BUTTON_TEXT = "Colour Mode";
+    private static final String IGENERATORSSUBMENU_MENU_BUTTON_TEXT = "Generators";
+    private static final String ICHECKERBOARD_MENU_BUTTON_TEXT = "Checkerboard";
+    private static final String IGREYSCALE_MENU_BUTTON_TEXT = "Greyscale";
+    private static final String IGENERATENOISE_MENU_BUTTON_TEXT = "Generate Noise";
     private static final String IIMPORT_MENU_BUTTON_TEXT = "Import";
     private static final String IEXPORT_MENU_BUTTON_TEXT = "Export";
 
@@ -78,26 +81,27 @@ public class MenuUI extends JMenuBar {
 
     private DrawArea drawArea;
     private ImportExport importExport;
-    private ShortcutDialog keboardShortCutPanel;
-
+    private GreyscaleMenu greyscaleMenu;
+    private NoiseGeneratorMenu noiseGeneratorMenu;
+    private CheckerboardMenu checkerboardMenu;
 
     /**
      * constructor
      */
-
-    public MenuUI(DrawArea drawArea, ImportExport importExport,ShortcutDialog keboardShortCutPanel) {
-
+    public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu,
+                  NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu) {
         this.drawArea = drawArea;
         this.importExport = importExport;
-        this.keboardShortCutPanel = keboardShortCutPanel;
+        this.greyscaleMenu = greyscaleMenu;
+        this.noiseGeneratorMenu = noiseGeneratorMenu;
+        this.checkerboardMenu = checkerboardMenu;
         prepareMenuBar();
     }
 
     /**
      * The prepareMenuBar function builds the menu and adds submenus.
      */
-    public void prepareMenuBar() {
-
+    private void prepareMenuBar() {
         fileMenu = new JMenu(FILE_MENU_BUTTON_TEXT);
         editMenu = new JMenu(EDIT_MENU_BUTTON_TEXT);
         imageMenu = new JMenu(IMAGE_MENU_BUTTON_TEXT);
@@ -126,21 +130,27 @@ public class MenuUI extends JMenuBar {
 
         eUndo = new JMenuItem(EUNDO_MENU_BUTTON_TEXT);
         eRedo = new JMenuItem(EREDO_MENU_BUTTON_TEXT);
-        eKeybordShortCuts = new JMenuItem("Shortcuts");
 
         editMenu.add(eUndo);
         editMenu.add(eRedo);
-        editMenu.add(eKeybordShortCuts);
 
         iCanvasSize = new JMenuItem(ICANVASSIZE_MENU_BUTTON_TEXT);
         iRotateCanvas = new JMenuItem(IROTATECANVAS_MENU_BUTTON_TEXT);
         iColourMode = new JMenuItem(ICOLOURMODE_MENU_BUTTON_TEXT);
+        iGeneratorsSubMenu = new JMenu(IGENERATORSSUBMENU_MENU_BUTTON_TEXT);
+        iCheckerBoard = new JMenuItem(ICHECKERBOARD_MENU_BUTTON_TEXT);
+        iGreyscale = new JMenuItem(IGREYSCALE_MENU_BUTTON_TEXT);
+        iGenerateNoise = new JMenuItem(IGENERATENOISE_MENU_BUTTON_TEXT);
         iImport = new JMenuItem(IIMPORT_MENU_BUTTON_TEXT);
         iExport = new JMenuItem(IEXPORT_MENU_BUTTON_TEXT);
 
         imageMenu.add(iCanvasSize);
         imageMenu.add(iRotateCanvas);
         imageMenu.add(iColourMode);
+        imageMenu.add(iGeneratorsSubMenu);
+        iGeneratorsSubMenu.add(iGreyscale);
+        iGeneratorsSubMenu.add(iCheckerBoard);
+        iGeneratorsSubMenu.add(iGenerateNoise);
         imageMenu.add(iImport);
         imageMenu.add(iExport);
 
@@ -163,30 +173,30 @@ public class MenuUI extends JMenuBar {
         // MENU ACTION LISTENERS
         iExport.addActionListener(menuActionListener);
         iImport.addActionListener(menuActionListener);
-        eKeybordShortCuts.addActionListener(menuActionListener);
-
+        iGreyscale.addActionListener(menuActionListener);
+        iGenerateNoise.addActionListener(menuActionListener);
+        iCheckerBoard.addActionListener(menuActionListener);
     }
 
     private ActionListener menuActionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-
             // Export canvas menu button
             if (e.getSource() == iExport) {
                 importExport.exportImage();
             }
             if (e.getSource() == iImport) {
-               importExport.importImage();
+                importExport.importImage();
             }
-
-            if(e.getSource() == eKeybordShortCuts){
-                    keboardShortCutPanel.renderPanel();
+            if (e.getSource() == iGreyscale) {
+                greyscaleMenu.showWindow();
+            }
+            if (e.getSource() == iGenerateNoise) {
+                noiseGeneratorMenu.showWindow();
+            }
+            if (e.getSource() == iCheckerBoard) {
+                checkerboardMenu.showWindow();
             }
         }
-
     };
-
-
-
 }
-

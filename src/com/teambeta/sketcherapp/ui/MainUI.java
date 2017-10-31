@@ -1,27 +1,26 @@
 package com.teambeta.sketcherapp.ui;
 
-import com.teambeta.sketcherapp.drawingTools.DrawingTool;
-import com.teambeta.sketcherapp.drawingTools.LineTool;
-import com.teambeta.sketcherapp.drawingTools.BrushTool;
-import com.teambeta.sketcherapp.drawingTools.RectangleTool;
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.ImportExport;
-import com.teambeta.sketcherapp.model.Shortcuts;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.KeyStroke;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
+import java.io.File;
 
 /**
  * Main UI class to wrap all GUI elements together.
  */
 public class MainUI {
+    private static final String DEFAULT_FONT = "Arial";
+    private static final int PANEL_SECTION_SPACING = 20;
+    private static final int WEST_PANEL_WIDTH = 120;
+    private static final int COLOR_PANEL_HEIGHT = 200;
     private static LineTool lineTool;
     private static BrushTool brushTool;
     private static RectangleTool rectangleTool;
@@ -34,8 +33,9 @@ public class MainUI {
     private static CelticKnotTool celticKnotTool;
     private static DNATool dnaTool;
     private static AirBrushTool airBrushTool;
-    public static DrawingTool selectedDrawingTool;
-
+    private static TriangleTool triangleTool;
+    private static DrawingTool selectedDrawingTool;
+    private static EyeDropperStats eyeDropperStats;
 
     private static final String CLEAR_BUTTON_TEXT = "Clear";
     private static final String BRUSH_BUTTON_TEXT = "Brush";
@@ -50,16 +50,18 @@ public class MainUI {
     private static final String CELTIC_KNOT_TOOL_BUTTON_TEXT = "Celtic Knot";
     private static final String DNA_TOOL_BUTTON_TEXT = "DNA";
     private static final String AIR_BRUSH_TOOL_BUTTON_TEXT = "Airbrush";
+    private static final String TRIANGLE_TOOL_BUTTON_TEXT = "Triangle";
     private JFrame mainFrame;
 
-    private static final String APPLICATION_NAME = "Beta Sketcher";
+    private static final String APPLICATION_NAME = "Beta Paint";
     private static final int APPLICATION_WIDTH = 1920;
     private static final int APPLICATION_HEIGHT = 1080;
-    private static final int EDITOR_PANEL_WIDTH = 100;
+    private static final int EDITOR_PANEL_WIDTH = 300;
     private static final int EDITOR_PANEL_HEIGHT = 300;
-    public static final int CANVAS_WIDTH = 1920;
-    public static final int CANVAS_HEIGHT = 1080;
-
+    public static final int CANVAS_WIDTH = 1600;
+    public static final int CANVAS_HEIGHT = 900;
+    private static final String START_SOUND_PATH = System.getProperty("user.dir") + File.separator + "src" +
+            File.separator + "res" + File.separator + "start-sound.wav";
 
     private JButton clearButton;
     private JButton brushToolButton;
@@ -74,11 +76,14 @@ public class MainUI {
     private JButton paintBucketToolButton;
     private JButton dnaToolButton;
     private JButton airBrushToolButton;
+    private JButton triangleToolButton;
+    private JComboBox<String> fontSelector;
+
+    private static DrawArea drawArea;
+    private static ColorChooser colorChooser;
     private WidthChanger widthChanger;
-    private DrawArea drawArea;
-    ImportExport importExport;
-    ShortcutDialog keboardShortCutPanel;
-    Shortcuts shortcuts;
+
+    private static final String APPLICATION_LOGO_IMAGE_DIRECTORY = "res/BPIcon.png";
 
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -113,8 +118,6 @@ public class MainUI {
             } else if (e.getSource() == eraserToolButton) {
                 selectedDrawingTool = eraserTool;
                 updateSizeSlider();
-            } else if (e.getSource() == textToolButton) {
-                selectedDrawingTool = textTool;
             } else if (e.getSource() == paintBucketToolButton) {
                 selectedDrawingTool = paintBucketTool;
                 updateSizeSlider();
@@ -129,21 +132,37 @@ public class MainUI {
             } else if (e.getSource() == airBrushToolButton) {
                 selectedDrawingTool = airBrushTool;
                 updateSizeSlider();
-            }
-
-            if (e.getSource() == widthChanger.getCheckBoxGlobalSizeComponent()) {
+            } else if (e.getSource() == widthChanger.getCheckBoxGlobalSizeComponent()) {
                 if (widthChanger.isGlobalSize()) {
                     widthChanger.setGlobalSize(false);
                 } else {
                     widthChanger.setGlobalSize(true);
                 }
-            }
-
-            if (e.getSource() == widthChanger.getFillBox()) {
+            } else if (e.getSource() == fontSelector) {
+                textTool.setFont((String) fontSelector.getSelectedItem());
+            } else if (e.getSource() == widthChanger.getFillBox()) {
                 widthChanger.setFill(!widthChanger.isFill());
                 selectedDrawingTool.setFillState(widthChanger.isFill());
+            } else if (e.getSource() == triangleToolButton) {
+                selectedDrawingTool = triangleTool;
+                updateSizeSlider();
+                updateFillState();
             }
 
+            /* We can also make it so that instead of hiding tool components when another is selected,
+               have it so that components replace each other (depending on its position in the panel).
+
+               Review 1: Default to hiding if the tool isn't the text tool. Use direct checks to see if the current tool
+               is allowed to use the font dropdown menu. JButton objects currently are the only ones allowed to hide.
+               Subclass JButton if we are going to use them for other purposes. Might as well add helper methods to this
+               future subclass.
+             */
+            if (e.getSource() == textToolButton) {
+                selectedDrawingTool = textTool;
+                fontSelector.setVisible(true);
+            } else if ((e.getSource() != textToolButton) && (e.getSource() instanceof JButton)) {
+                fontSelector.setVisible(false);
+            }
         }
     };
 
@@ -151,8 +170,32 @@ public class MainUI {
      * Constructor.
      */
     public MainUI() {
-        prepareGUI();
+        String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+        fontSelector = new JComboBox<>(fonts);
+        fontSelector.setSelectedItem(DEFAULT_FONT);
+        fontSelector.setVisible(false);
         initDrawingTools();
+        prepareGUI();
+    }
+
+    /**
+     * Create the drawing tool objects and set the pen tool as the default selection.
+     */
+    private void initDrawingTools() {
+        lineTool = new LineTool();
+        brushTool = new BrushTool();
+        rectangleTool = new RectangleTool();
+        eraserTool = new EraserTool(); // Requires drawArea due to requiring the canvas colour.
+        ellipseTool = new EllipseTool();
+        eyeDropperTool = new EyeDropperTool(); // Requires widthChanger UI element for direct text update.
+        textTool = new TextTool();
+        fanTool = new FanTool();
+        celticKnotTool = new CelticKnotTool();
+        paintBucketTool = new PaintBucketTool();
+        dnaTool = new DNATool();
+        airBrushTool = new AirBrushTool();
+        triangleTool = new TriangleTool();
+        selectedDrawingTool = brushTool;
     }
 
     /**
@@ -195,7 +238,6 @@ public class MainUI {
             widthChanger.setCurrentWidthValue(selectedDrawingTool.getToolWidth());
             widthChanger.setJLabel();
         }
-
     }
 
     /**
@@ -211,28 +253,36 @@ public class MainUI {
      */
     private void prepareGUI() {
         mainFrame = new JFrame(APPLICATION_NAME);
-        Container mainContent = mainFrame.getContentPane();
-        mainContent.setLayout(new BorderLayout());
+        mainFrame.setIconImage(new ImageIcon(APPLICATION_LOGO_IMAGE_DIRECTORY).getImage());
+        mainFrame.setSize(APPLICATION_WIDTH, APPLICATION_HEIGHT);
+        mainFrame.getContentPane().setBackground(Color.DARK_GRAY);
 
         mainFrame.setSize(APPLICATION_WIDTH, APPLICATION_HEIGHT);
         mainFrame.getContentPane().setBackground(Color.DARK_GRAY);
 
         mainFrame.setLocationByPlatform(true);
         mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        // mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
+        Container mainContent = mainFrame.getContentPane();
+        mainContent.setLayout(new BorderLayout());
         drawArea = new DrawArea();
 
-        importExport = new ImportExport(drawArea, this);
-        JPanel canvasTools = new JPanel();
-        shortcuts = new Shortcuts(canvasTools,this);
-        keboardShortCutPanel = new ShortcutDialog(this,shortcuts);
+        ImportExport importExport = new ImportExport(drawArea, this);
+        GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
+        NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
+        CheckerboardMenu checkerboardMenu = new CheckerboardMenu(drawArea);
 
-        // ideally this should be in its own widthPanel with a proper scale, not directly to mainContent
-        mainContent.add(drawArea, BorderLayout.CENTER);
+        JPanel drawAreaPanel = new JPanel();
+        drawAreaPanel.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.ipady = CANVAS_HEIGHT;
+        c.ipadx = CANVAS_WIDTH;
+        drawAreaPanel.setBackground(Color.decode("#222222"));
+        drawAreaPanel.add(drawArea, c);
+        mainContent.add(drawAreaPanel, BorderLayout.CENTER);
 
         /* START MAINUI BUTTONS */
-
         clearButton = new JButton(CLEAR_BUTTON_TEXT);
         brushToolButton = new JButton(BRUSH_BUTTON_TEXT);
         lineToolButton = new JButton(LINE_TOOL_BUTTON_TEXT);
@@ -246,55 +296,94 @@ public class MainUI {
         paintBucketToolButton = new JButton(PAINT_BUCKET_BUTTON_TEXT);
         dnaToolButton = new JButton(DNA_TOOL_BUTTON_TEXT);
         airBrushToolButton = new JButton(AIR_BRUSH_TOOL_BUTTON_TEXT);
+        triangleToolButton = new JButton(TRIANGLE_TOOL_BUTTON_TEXT);
 
         // Add a button to this array to register to actionListener and canvasTools
-        JButton[] buttonContainer = {clearButton, brushToolButton, lineToolButton, rectangleToolButton,
-                ellipseToolButton, eraserToolButton, textToolButton, paintBucketToolButton, fanToolButton,
-                celticKnotToolButton, dnaToolButton, eyeDropperToolButton, airBrushToolButton
+        // The order of this list determines the order of the buttons in the generated UI. Index -> 0 = Position -> First
+        JButton[] buttonContainer = {
+                clearButton, brushToolButton, airBrushToolButton, eraserToolButton, lineToolButton,
+                fanToolButton, rectangleToolButton, ellipseToolButton, triangleToolButton, paintBucketToolButton,
+                celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton,
         };
 
-
+        JPanel canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
         canvasTools.setBackground(Color.DARK_GRAY);
+        canvasTools.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
 
         // Register buttons to actionListener and canvasTools
         for (JButton button : buttonContainer) {
             button.addActionListener(actionListener);
+            button.setAlignmentX(Component.CENTER_ALIGNMENT);
             canvasTools.add(button);
+            canvasTools.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
         }
+        canvasTools.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
         /* END MAINUI BUTTONS */
+        JPanel northPanel = new JPanel();
+        northPanel.setLayout(new BorderLayout());
+        MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, noiseGeneratorMenu, checkerboardMenu);
+        northPanel.add(menuUI, BorderLayout.NORTH);
 
-        JPanel northPanels = new JPanel();
-        northPanels.setLayout(new BorderLayout());
-        MenuUI menuUI = new MenuUI(drawArea, importExport, keboardShortCutPanel);
-        northPanels.add(menuUI, BorderLayout.NORTH);
-
+        JPanel toolSettings = new JPanel();
+        toolSettings.setLayout(new BoxLayout(toolSettings, BoxLayout.X_AXIS));
+        toolSettings.setBackground(Color.DARK_GRAY);
+        toolSettings.add(Box.createRigidArea(new Dimension(WEST_PANEL_WIDTH, 0)));
         widthChanger = new WidthChanger();
-        widthChanger.renderPanel();
-        northPanels.add(widthChanger.getGUI(), BorderLayout.CENTER);
+        toolSettings.add(widthChanger.getGUI());
+        northPanel.add(toolSettings, BorderLayout.CENTER);
+
+        if (fontSelector != null) {
+            northPanel.add(fontSelector, BorderLayout.EAST);
+            textTool.setFont((String) fontSelector.getSelectedItem());
+        }
 
         MainUI.listenForSlider listenForSlider = new MainUI.listenForSlider();
         widthChanger.getSliderComponent().addChangeListener(listenForSlider);
         widthChanger.getJTextFieldComponent().addActionListener(actionListener);
+        fontSelector.addActionListener(actionListener);
         widthChanger.getCheckBoxGlobalSizeComponent().addActionListener(actionListener);
         widthChanger.getFillBox().addActionListener(actionListener);
 
+        JPanel colorPanel = new JPanel();
+        colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.Y_AXIS));
+        colorPanel.setBackground(Color.DARK_GRAY);
+        final Dimension CANVAS_TOOLS_MAX_SIZE = canvasTools.getMaximumSize();
+        colorPanel.setMaximumSize(new Dimension((int) CANVAS_TOOLS_MAX_SIZE.getWidth(), COLOR_PANEL_HEIGHT));
+        colorPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
+        colorChooser = new ColorChooser();
 
-        mainContent.add(canvasTools, BorderLayout.WEST);
+        JPanel colorChooserPanel = new JPanel();
+        colorChooserPanel.setLayout(new GridBagLayout());
+        GridBagConstraints colorChooserConstraints = new GridBagConstraints();
+        colorChooserPanel.setBackground(Color.DARK_GRAY);
+        colorChooserPanel.add(colorChooser, colorChooserConstraints);
+        eyeDropperStats = new EyeDropperStats();
+        colorChooserConstraints.gridx = 0;
+        colorChooserConstraints.gridy = 1;
+        colorChooserConstraints.insets = new Insets(PANEL_SECTION_SPACING, 0, 0, 0);
+        colorChooserPanel.add(eyeDropperStats, colorChooserConstraints);
+        colorPanel.add(colorChooserPanel);
 
-        ColorChooser colourChooser = new ColorChooser();
+        colorPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+        JPanel westPanel = new JPanel();
+        westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
+        westPanel.setPreferredSize(new Dimension(WEST_PANEL_WIDTH, 0));
+        westPanel.setBackground(Color.DARK_GRAY);
+
+        westPanel.add(canvasTools);
+        westPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
+        westPanel.add(colorPanel);
+
+        mainContent.add(westPanel, BorderLayout.WEST);
+
         JPanel editorPanel = new JPanel();
         editorPanel.setLayout(new BorderLayout());
-        editorPanel.add(colourChooser, BorderLayout.NORTH);
         editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
         mainContent.add(editorPanel, BorderLayout.EAST);
-
-        mainContent.add(northPanels, BorderLayout.NORTH);
-
-
-        generateDefaultKeyBindings();
-
+        mainContent.add(northPanel, BorderLayout.NORTH);
     }
 
     /**
@@ -302,129 +391,55 @@ public class MainUI {
      *
      * @return selected drawing tool.
      */
-    public DrawingTool getSelectedDrawingTool() {
+    public static DrawingTool getSelectedDrawingTool() {
         return selectedDrawingTool;
-    }
-
-
-    /**
-     * Create the drawing tool objects and set the pen tool as the default selection.
-     */
-    private void initDrawingTools() {
-        lineTool = new LineTool();
-        brushTool = new BrushTool();
-        rectangleTool = new RectangleTool();
-        eraserTool = new EraserTool(drawArea); // Requires drawArea due to requiring the canvas colour.
-        ellipseTool = new EllipseTool();
-        eyeDropperTool = new EyeDropperTool(widthChanger); // Requires widthChanger UI element for direct text update.
-        textTool = new TextTool();
-        fanTool = new FanTool();
-        celticKnotTool = new CelticKnotTool();
-        paintBucketTool = new PaintBucketTool();
-        dnaTool = new DNATool();
-        airBrushTool = new AirBrushTool();
-        selectedDrawingTool = brushTool;
     }
 
     /**
      * Display GUI.
      */
-    public void showGridBagLayoutDemo() {
-
+    public void displayUI() {
+        mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        mainFrame.setLocationRelativeTo(null);  // positions GUI in center when opened
         mainFrame.setVisible(true);
+        playStartUpSound();
     }
 
-
-
-
-    public void generateDefaultKeyBindings() {
-
-        //TODO cannot get clear to work with ctrl+c ???
-        //TODO ctrl+a does not work unless you change the drawing tool???
-        shortcuts.addKeyBinding( KeyEvent.VK_C, false, true, true, Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
-            drawArea.clear();
-
-        });
-
-        shortcuts.addKeyBinding( KeyEvent.VK_O, true, false, false, Shortcuts.EXPORT_SHORTCUT, (evt) -> {
-            importExport.exportImage();
-        });
-
-        shortcuts.addKeyBinding( KeyEvent.VK_I, true, false, false, Shortcuts.IMPORT_SHORTCUT, (evt) -> {
-            importExport.importImage();
-        });
-
-        shortcuts.addKeyBinding( KeyEvent.VK_B, true, false, false, Shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
-            selectedDrawingTool = brushTool;
-            updateSizeSlider();
-        });
-
-        shortcuts.addKeyBinding( KeyEvent.VK_L, true, false, false, Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
-            selectedDrawingTool = lineTool;
-            updateSizeSlider();
-        });
-/*
-        addKeyBinding(editorPanel, KeyEvent.VK_R, true, false, false, "RECT TOOL", (evt) -> {
-            selectedDrawingTool = rectangleTool;
-            updateFillState(); // Tool supports filling
-            updateSizeSlider();
-        });
-
-        addKeyBinding(editorPanel, KeyEvent.VK_E, true, false, false, "ELIPSE TOOL", (evt) -> {
-            selectedDrawingTool = ellipseTool;
-            updateSizeSlider();
-        });
-
-        addKeyBinding(editorPanel, KeyEvent.VK_Q, true, false, false, "ELIPSE TOOL", (evt) -> {
-            selectedDrawingTool = ellipseTool;
-            updateSizeSlider();
-            updateFillState(); // Tool supports filling
-        });
-
-        addKeyBinding(editorPanel, KeyEvent.VK_E, true, false, false, "ERASER TOOL", (evt) -> {
-            selectedDrawingTool = eraserTool;
-            updateSizeSlider();
-        });
-
-        addKeyBinding(editorPanel, KeyEvent.VK_T, true, false, false, "TEXT TOOL", (evt) -> {
-            selectedDrawingTool = textTool;
-            updateSizeSlider();
-        });
-
-        addKeyBinding(editorPanel, KeyEvent.VK_P, true, false, false, "PAINTBUCKET TOOL", (evt) -> {
-            selectedDrawingTool = paintBucketTool;
-            updateSizeSlider();
-        });
-
-        addKeyBinding(editorPanel, KeyEvent.VK_F, true, false, false, "FAN TOOL", (evt) -> {
-            selectedDrawingTool = fanTool;
-            updateSizeSlider();
-        });
-
-        addKeyBinding(editorPanel, KeyEvent.VK_C, false, false, false, "CELTIC TOOL", (evt) -> {
-            selectedDrawingTool = celticKnotTool;
-            updateSizeSlider();
-        });
-
-        addKeyBinding(editorPanel, KeyEvent.VK_D, true, false, false, "DNA TOOL", (evt) -> {
-            selectedDrawingTool = dnaTool;
-            updateSizeSlider();
-        });
-
-        addKeyBinding(editorPanel, KeyEvent.VK_N, true, false, false, "EYE TOOL", (evt) -> {
-            selectedDrawingTool = eyeDropperTool;
-            updateSizeSlider();
-        });
-
-        addKeyBinding(editorPanel, KeyEvent.VK_A, true, false, false, "AIRBRUSH TOOL", (evt) -> {
-            selectedDrawingTool = airBrushTool;
-            updateSizeSlider();
-        });*/
-
-
+    /**
+     * Returns eyedropper stats object.
+     *
+     * @return eyedropper stats object
+     */
+    public static ColorChooser getColorChooser() {
+        return colorChooser;
     }
 
+    /**
+     * Temprorary fix to allow the eraser tool to work no matter the order of creation.
+     *
+     * @return The UI drawArea
+     */
+    public static DrawArea getDrawArea() {
+        return drawArea;
+    }
 
-
-
+    /**
+     * Play the start up sound when the application is launched or when user switches out of minimode
+     */
+    private void playStartUpSound() {
+        File startUpSound = new File(START_SOUND_PATH);
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    Clip clip = AudioSystem.getClip();
+                    clip.open(AudioSystem.getAudioInputStream(startUpSound));
+                    clip.start();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        thread.start();
+    }
 }
