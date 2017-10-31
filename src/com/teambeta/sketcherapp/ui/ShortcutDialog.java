@@ -40,6 +40,9 @@ public class ShortcutDialog {
     // This class was taken and modified from  http://www.java2s.com/Code/Java/Swing-Components/ButtonTableExample.htm
     // Also got help from https://stackoverflow.com/questions/46985936/using-keybinding-and-action-map-in-java-for-shortcut-keys-for-buttons
 
+    /**
+     * remderes the panel for the shortcut dialog
+     */
     public void renderPanel() {
 
         DefaultTableModel dm = new DefaultTableModel();
@@ -111,7 +114,14 @@ public class ShortcutDialog {
 
     }
 
-
+    /**
+     * prints the shortcut 
+     * @param keyCode
+     * @param useControl
+     * @param useShift
+     * @param useAlt
+     * @return
+     */
     String printShortcut(int keyCode, boolean useControl, boolean useShift, boolean useAlt) {
 
         String string = "";
@@ -208,6 +218,7 @@ public class ShortcutDialog {
 
         public Object getCellEditorValue() {
             dialog = new JDialog(mainUI.getMainFrame(), EDIT_SHORTCUT_TITLE_EDIT_SHORTCUT_DIALOG, true);
+
 
             JPanel listPane;
             listPane = new JPanel();
