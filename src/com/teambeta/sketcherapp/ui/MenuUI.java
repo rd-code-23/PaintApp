@@ -80,24 +80,20 @@ public class MenuUI extends JMenuBar {
     private static final String HDEVELOPERINFO_MENU_BUTTON_TEXT = "Developer Info";
     private static final String HABOUT_MENU_BUTTON_TEXT = "About";
 
-    private DrawArea drawArea;
     private ImportExport importExport;
     private GreyscaleMenu greyscaleMenu;
-    private AboutMenu aboutMenu;
     private NoiseGeneratorMenu noiseGeneratorMenu;
     private CheckerboardMenu checkerboardMenu;
 
     /**
      * Constructor
      */
-    public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu,
-                  NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu, AboutMenu aboutMenu) {
-        this.drawArea = drawArea;
+    public MenuUI(ImportExport importExport, GreyscaleMenu greyscaleMenu,
+                  NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu) {
         this.importExport = importExport;
         this.greyscaleMenu = greyscaleMenu;
         this.noiseGeneratorMenu = noiseGeneratorMenu;
         this.checkerboardMenu = checkerboardMenu;
-        this.aboutMenu = aboutMenu;
         prepareMenuBar();
     }
 
@@ -196,7 +192,8 @@ public class MenuUI extends JMenuBar {
                 greyscaleMenu.showWindow();
             }
             if (e.getSource() == hAbout) {
-                aboutMenu.PrepareAbout();
+                AboutMenu.prepareAbout();
+            }
             if (e.getSource() == iGenerateNoise) {
                 noiseGeneratorMenu.showWindow();
             }

@@ -7,8 +7,6 @@ import javax.swing.*;
  * Displays About page.
  */
 public class AboutMenu extends JFrame {
-
-
 private static final String ABOUT_MESSAGE_TEXT = "Simon Fraser University\n" +
                                                  "CMPT 106, Fall 2017\n" +
                                                  "Team Beta Group Project: Beta Paint\n" +
@@ -29,7 +27,7 @@ private static final String TITLE = "About";
     /**
      * Prepare about screen popup
      */
-    public void PrepareAbout() {
+    public static void prepareAbout() {
         JOptionPane.showMessageDialog(null, ABOUT_MESSAGE_TEXT, TITLE, JOptionPane.PLAIN_MESSAGE);
          }
 

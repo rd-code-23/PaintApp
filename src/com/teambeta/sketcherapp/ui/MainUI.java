@@ -325,7 +325,7 @@ public class MainUI {
         /* END MAINUI BUTTONS */
         JPanel northPanel = new JPanel();
         northPanel.setLayout(new BorderLayout());
-        MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, noiseGeneratorMenu, checkerboardMenu);
+        MenuUI menuUI = new MenuUI(importExport, greyscaleMenu, noiseGeneratorMenu, checkerboardMenu);
         northPanel.add(menuUI, BorderLayout.NORTH);
 
         JPanel toolSettings = new JPanel();
