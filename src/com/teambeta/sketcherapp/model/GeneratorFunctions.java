@@ -192,4 +192,72 @@ public class GeneratorFunctions {
         }
         return output.toString();
     }
+
+
+    /**
+     * Encrypt a character with the Caesar cipher.
+     * Will only encrypt upwards.
+     *
+     * @param org The character
+     * @param shift The positive shift value
+     * @return The encrypted character
+     */
+    private static char getEncryptedCaesarChar(char org, int shift) {
+
+        final char LOWERCHAR_A = 'a';
+        final char LOWERCHAR_Z = 'z';
+        final char UPPERCHAR_A = 'A';
+        final char UPPERCHAR_Z = 'Z';
+        final char SPACE = ' ';
+        final int ALPHABET_LENGTH = 26;
+
+        int ending_diff = 0;
+        int cont_diff = 0;
+
+        shift = Math.abs(shift % ALPHABET_LENGTH);
+
+        if ((org + shift > LOWERCHAR_Z) && (org >= LOWERCHAR_A && org <= LOWERCHAR_Z)) {
+
+            ending_diff = LOWERCHAR_Z + 1 - org;
+            cont_diff = shift - ending_diff;
+            return (char) (LOWERCHAR_A + cont_diff);
+
+        } else if ((org + shift > UPPERCHAR_Z) && (org >= UPPERCHAR_A && org <= UPPERCHAR_Z)) {
+
+            ending_diff = UPPERCHAR_Z + 1 - org;
+            cont_diff = shift - ending_diff;
+            return (char) (UPPERCHAR_A + cont_diff);
+
+        }
+
+        if (org == SPACE) {
+            return SPACE;
+        }
+
+        return (char) (org + shift);
+    }
+
+
+    /**
+     * Encrypt a string with the Caesar cipher.
+     * Will only encrypt upwards, and will only encrypt letters.
+     *
+     * @param input The string to encrypt
+     * @param shift The positive shift value
+     * @return The encrypted string
+     */
+    public static String getCaesarEncrypt(String input, int shift) {
+        shift = shift % 26;
+
+        StringBuilder output = new StringBuilder();
+        for (char c : input.toCharArray()) {
+            if (Character.isLetter(c)) {
+                output.append(getEncryptedCaesarChar(c, shift));
+            } else {
+                output.append(c);
+            }
+        }
+        return output.toString();
+    }
+
 }
