@@ -247,9 +247,9 @@ public class GeneratorFunctions {
      * @return The encrypted string
      */
     public static String getCaesarEncrypt(String input, int shift) {
-        shift = shift % 26;
 
         StringBuilder output = new StringBuilder();
+
         for (char c : input.toCharArray()) {
             if (Character.isLetter(c)) {
                 output.append(getEncryptedCaesarChar(c, shift));
@@ -257,6 +257,7 @@ public class GeneratorFunctions {
                 output.append(c);
             }
         }
+
         return output.toString();
     }
 
