@@ -1,6 +1,7 @@
 package com.teambeta.sketcherapp.ui;
 
 import com.teambeta.sketcherapp.model.ImportExport;
+import com.teambeta.sketcherapp.model.AboutMenu;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -79,18 +80,16 @@ public class MenuUI extends JMenuBar {
     private static final String HDEVELOPERINFO_MENU_BUTTON_TEXT = "Developer Info";
     private static final String HABOUT_MENU_BUTTON_TEXT = "About";
 
-    private DrawArea drawArea;
     private ImportExport importExport;
     private GreyscaleMenu greyscaleMenu;
     private NoiseGeneratorMenu noiseGeneratorMenu;
     private CheckerboardMenu checkerboardMenu;
 
     /**
-     * constructor
+     * Constructor
      */
-    public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu,
+    public MenuUI(ImportExport importExport, GreyscaleMenu greyscaleMenu,
                   NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu) {
-        this.drawArea = drawArea;
         this.importExport = importExport;
         this.greyscaleMenu = greyscaleMenu;
         this.noiseGeneratorMenu = noiseGeneratorMenu;
@@ -174,6 +173,7 @@ public class MenuUI extends JMenuBar {
         iExport.addActionListener(menuActionListener);
         iImport.addActionListener(menuActionListener);
         iGreyscale.addActionListener(menuActionListener);
+        hAbout.addActionListener(menuActionListener);
         iGenerateNoise.addActionListener(menuActionListener);
         iCheckerBoard.addActionListener(menuActionListener);
     }
@@ -190,6 +190,9 @@ public class MenuUI extends JMenuBar {
             }
             if (e.getSource() == iGreyscale) {
                 greyscaleMenu.showWindow();
+            }
+            if (e.getSource() == hAbout) {
+                AboutMenu.prepareAbout();
             }
             if (e.getSource() == iGenerateNoise) {
                 noiseGeneratorMenu.showWindow();
