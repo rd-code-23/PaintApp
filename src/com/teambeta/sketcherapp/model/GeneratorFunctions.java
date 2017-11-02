@@ -208,6 +208,8 @@ public class GeneratorFunctions {
         final char LETTER_z = 'z';
         final char LETTER_A = 'A';
         final char LETTER_Z = 'Z';
+        final char LETTER_0 = '0';
+        final char LETTER_9 = '9';
 
         int lower_inclusive_bound = 0;
         int upper_inclusive_bound = 0;
@@ -221,6 +223,9 @@ public class GeneratorFunctions {
         } else if ((letter >= LETTER_A) && (letter <= LETTER_Z)) {
             lower_inclusive_bound = LETTER_A;
             upper_inclusive_bound = LETTER_Z;
+        } else if ((letter >= LETTER_0) && (letter <= LETTER_9)) {
+            lower_inclusive_bound = LETTER_0;
+            upper_inclusive_bound = LETTER_9;
         } else {
             // Explicit return on non-letters
             return letter;
@@ -262,7 +267,7 @@ public class GeneratorFunctions {
         StringBuilder output = new StringBuilder();
 
         for (char c : input.toCharArray()) {
-            if (Character.isLetter(c)) {
+            if (Character.isLetter(c) || Character.isDigit(c)) {
                 output.append(getEncryptedCaesarChar(c, shift));
             } else {
                 output.append(c);
