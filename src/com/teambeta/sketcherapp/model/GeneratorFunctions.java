@@ -221,6 +221,9 @@ public class GeneratorFunctions {
         } else if ((letter >= LETTER_A) && (letter <= LETTER_Z)) {
             lower_inclusive_bound = LETTER_A;
             upper_inclusive_bound = LETTER_Z;
+        } else {
+            // Explicit return on non-letters
+            return letter;
         }
 
         if (shift > 0) {
