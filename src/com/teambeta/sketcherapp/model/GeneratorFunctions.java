@@ -196,54 +196,62 @@ public class GeneratorFunctions {
 
     /**
      * Encrypt a character with the Caesar cipher.
-     * Will only encrypt upwards.
      *
-     * @param org The character
-     * @param shift The positive shift value
+     * @param letter The character
+     * @param shift The shift value
      * @return The encrypted character
      */
-    private static char getEncryptedCaesarChar(char org, int shift) {
+    private static char getEncryptedCaesarChar(char letter, int shift) {
 
-        final char LOWERCHAR_A = 'a';
-        final char LOWERCHAR_Z = 'z';
-        final char UPPERCHAR_A = 'A';
-        final char UPPERCHAR_Z = 'Z';
-        final char SPACE = ' ';
         final int ALPHABET_LENGTH = 26;
+        final char LETTER_a = 'a';
+        final char LETTER_z = 'z';
+        final char LETTER_A = 'A';
+        final char LETTER_Z = 'Z';
 
-        int ending_diff = 0;
-        int cont_diff = 0;
+        int lower_inclusive_bound = 0;
+        int upper_inclusive_bound = 0;
 
-        shift = Math.abs(shift % ALPHABET_LENGTH);
+        shift = shift % ALPHABET_LENGTH;
 
-        if ((org + shift > LOWERCHAR_Z) && (org >= LOWERCHAR_A && org <= LOWERCHAR_Z)) {
-
-            ending_diff = LOWERCHAR_Z + 1 - org;
-            cont_diff = shift - ending_diff;
-            return (char) (LOWERCHAR_A + cont_diff);
-
-        } else if ((org + shift > UPPERCHAR_Z) && (org >= UPPERCHAR_A && org <= UPPERCHAR_Z)) {
-
-            ending_diff = UPPERCHAR_Z + 1 - org;
-            cont_diff = shift - ending_diff;
-            return (char) (UPPERCHAR_A + cont_diff);
-
+        // Define boundaries
+        if ((letter >= LETTER_a) && (letter <= LETTER_z)) {
+            lower_inclusive_bound = LETTER_a;
+            upper_inclusive_bound = LETTER_z;
+        } else if ((letter >= LETTER_A) && (letter <= LETTER_Z)) {
+            lower_inclusive_bound = LETTER_A;
+            upper_inclusive_bound = LETTER_Z;
         }
 
-        if (org == SPACE) {
-            return SPACE;
+        if (shift > 0) {
+            // Handle positive wrap-around
+            if ((letter + shift) > upper_inclusive_bound) {
+                letter = (char) ((lower_inclusive_bound - 1) + (letter + shift - upper_inclusive_bound));
+            } else {
+                // Handle positive shift
+                letter += shift;
+            }
+        } else if (shift < 0) {
+            // Handle negative wrap-around
+            if ((letter + shift) < lower_inclusive_bound) {
+                letter = (char) ((upper_inclusive_bound + 1) - (lower_inclusive_bound - (letter + shift)));
+            } else {
+                // Handle negative shift
+                letter += shift;
+            }
         }
 
-        return (char) (org + shift);
+        return (char) letter;
+
     }
 
 
     /**
      * Encrypt a string with the Caesar cipher.
-     * Will only encrypt upwards, and will only encrypt letters.
+     * Will only encrypt letters.
      *
      * @param input The string to encrypt
-     * @param shift The positive shift value
+     * @param shift The shift value
      * @return The encrypted string
      */
     public static String getCaesarEncrypt(String input, int shift) {
