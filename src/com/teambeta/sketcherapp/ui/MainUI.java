@@ -5,7 +5,6 @@ import com.teambeta.sketcherapp.Database.DB_KBShortcuts;
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.ImportExport;
 import com.teambeta.sketcherapp.model.Shortcuts;
-import org.sqlite.core.DB;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -424,6 +423,7 @@ public class MainUI {
         System.out.println();
 
         setDefaultActionMap();
+        generateDefaultKeyBindings();
        // db_kbShortcuts.dropTable();
         if(db_kbShortcuts.isTableExists()){
             db_kbShortcuts.generateDBKeyBindings();
@@ -704,8 +704,12 @@ public class MainUI {
      */
     public void focusCanvasTools(){
         canvasTools.setFocusable(true);
-
     }
 
+
+    public void focusWidthPanel(){
+        widthChanger.getJTextFieldComponent().setFocusable(false);
+
+    }
 
 }

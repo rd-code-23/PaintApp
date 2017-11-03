@@ -53,7 +53,7 @@ public class Shortcuts {
         im = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         actionMap = component.getActionMap();
         this.mainUI = mainUI;
-      //  this.db_kbShortcuts = db_kbShortcuts;
+
 
 
     }
@@ -103,6 +103,7 @@ public class Shortcuts {
         setKBShortcut(id, keyCode, useControl, useShift, useAlt);
 
         mainUI.focusCanvasTools();
+        mainUI.focusWidthPanel();
 
     }
 
@@ -145,6 +146,7 @@ public class Shortcuts {
         }
 
         mainUI.focusCanvasTools();
+        mainUI.focusWidthPanel();
     }
 
     public void changeKeyBinding(int keyCode, boolean useControl, boolean useShift, boolean useAlt, String id) {
@@ -177,6 +179,7 @@ public class Shortcuts {
         setKBShortcut(id, keyCode, useControl, useShift, useAlt);
 
         mainUI.focusCanvasTools();
+        mainUI.focusWidthPanel();
     }
 
     public void changeKeyBinding2(String keyCodeChar, boolean useControl, boolean useShift, boolean useAlt, String id) {
@@ -212,6 +215,7 @@ public class Shortcuts {
         setKBShortcut(id, keyCode, useControl, useShift, useAlt);
 
         mainUI.focusCanvasTools();
+        mainUI.focusWidthPanel();
     }
 
     public void removeBinding2(String keyCodeChar, boolean useControl, boolean useShift, boolean useAlt) {
@@ -243,6 +247,7 @@ public class Shortcuts {
         }
 
         mainUI.focusCanvasTools();
+        mainUI.focusWidthPanel();
     }
 
     public static void  setKBShortcut(String tool, int keyCode, boolean useControl, boolean useShift, boolean useAlt) {
