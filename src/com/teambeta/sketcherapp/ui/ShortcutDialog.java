@@ -28,7 +28,7 @@ public class ShortcutDialog {
 
     private MainUI mainUI;
     private Shortcuts sc;
-    private JButton setDefaultShortcuts;
+    private JButton setDefaultShortcutsButton;
     private JButton applyButton;
     private JDialog shortcutsDialog;
 
@@ -68,11 +68,13 @@ public class ShortcutDialog {
         shortcutsDialog.setSize(SHORTUCT_DIALOG_WIDTH, SHORTCUT_DIALOG_HEIGHT);
         shortcutsDialog.setLayout(new GridBagLayout());
 
-        setDefaultShortcuts = new JButton(DEFAULT_BUTTON);
+        setDefaultShortcutsButton = new JButton(DEFAULT_BUTTON);
         ActionListener actionListener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (e.getSource() == setDefaultShortcuts) {
-                    sc.removeAllBindings();
+                if (e.getSource() == setDefaultShortcutsButton) {
+                    sc.resetDefaultBindings();
+                    //TODO UPDATE DATABASE
+
                     shortcutsDialog.dispose();
                     renderPanel();
                 }
@@ -88,7 +90,7 @@ public class ShortcutDialog {
             }
         };
 
-        setDefaultShortcuts.addActionListener(actionListener);
+        setDefaultShortcutsButton.addActionListener(actionListener);
         applyButton.addActionListener(actionListener2);
         GridBagConstraints c = new GridBagConstraints();
 
@@ -100,7 +102,7 @@ public class ShortcutDialog {
         c.anchor = GridBagConstraints.LINE_START;
         c.gridx = -1;
         c.gridy = 3;
-        shortcutsDialog.add(setDefaultShortcuts, c);
+        shortcutsDialog.add(setDefaultShortcutsButton, c);
         c.gridx = -1;
         c.gridy = 3;
         c.anchor = GridBagConstraints.CENTER;
@@ -125,7 +127,7 @@ public class ShortcutDialog {
     String printShortcut(int keyCode, boolean useControl, boolean useShift, boolean useAlt) {
 
         String string = "";
-
+        System.out.println("priNTING: " + useControl);
         if (useControl) {
             string += "Ctrl+";
         }
