@@ -262,13 +262,6 @@ public class MainUI {
         selectedDrawingTool.setFillState(widthChanger.isFill());
     }
 
-    public DB_KBShortcuts getDb_kbShortcuts() {
-        return db_kbShortcuts;
-    }
-
-    public void setDb_kbShortcuts(DB_KBShortcuts db_kbShortcuts) {
-        this.db_kbShortcuts = db_kbShortcuts;
-    }
 
     /**
      * Build main GUI.
@@ -328,7 +321,7 @@ public class MainUI {
                 celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton,
         };
 
-        JPanel canvasTools = new JPanel();
+        canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
         canvasTools.setBackground(Color.DARK_GRAY);
         canvasTools.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
@@ -645,6 +638,14 @@ public class MainUI {
     public void focusWidthPanelToFalse() {
         widthChanger.getJTextFieldComponent().setFocusable(false);
 
+    }
+
+    public DB_KBShortcuts getDb_kbShortcuts() {
+        return db_kbShortcuts;
+    }
+
+    public void setDb_kbShortcuts(DB_KBShortcuts db_kbShortcuts) {
+        this.db_kbShortcuts = db_kbShortcuts;
     }
 
 }
