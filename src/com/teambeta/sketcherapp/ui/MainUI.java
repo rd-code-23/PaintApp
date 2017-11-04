@@ -141,9 +141,19 @@ public class MainUI {
             } else if (e.getSource() == textToolSettings.getFontSelector()) {
                 textTool.setFont(textToolSettings.getFontFromSelector());
             } else if (e.getSource() == textToolSettings.getCaesarSelector()) {
-                textTool.setCaesarConvert(textToolSettings.getCaesarSelected());
+                textTool.setCaesarConvert(textToolSettings.isCaesarSelected());
+                if (textToolSettings.isCaesarSelected()) {
+                    textToolSettings.enableCaesarShiftField(true);
+                } else {
+                    textToolSettings.enableCaesarShiftField(false);
+                }
             } else if (e.getSource() == textToolSettings.getMorseCodeSelector()) {
-                textTool.setMorseConvert(textToolSettings.getMorseSelected());
+                textTool.setMorseConvert(textToolSettings.isMorseSelected());
+                if (!textToolSettings.isCaesarSelected()) {
+                    textToolSettings.enableCaesarShiftField(false);
+                } else {
+                    textToolSettings.enableCaesarShiftField(true);
+                }
             } else if (e.getSource() == widthChanger.getFillBox()) {
                 widthChanger.setFill(!widthChanger.isFill());
                 selectedDrawingTool.setFillState(widthChanger.isFill());
@@ -387,7 +397,7 @@ public class MainUI {
         mainContent.add(northPanel, BorderLayout.NORTH);
 
         // Standard ActionListeners do not properly send updates to the text tool. PropertyChangeListeners work better.
-        textToolSettings.getNumberInputField().addPropertyChangeListener(new PropertyChangeListener() {
+        textToolSettings.getCaesarShiftField().addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 textTool.setCaesarShiftValue(textToolSettings.getCaesarShiftValue());

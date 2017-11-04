@@ -11,13 +11,13 @@ import java.text.NumberFormat;
  */
 public class TextToolSettings extends JPanel {
     private JPanel transformPanel;
-    private JLabel encryptionsLabel;
+    private JLabel encryptionLabel;
     private JLabel morseCodeLabel;
     private JLabel caesarLabel;
-    private JLabel numberInputLabel;
+    private JLabel caesarShiftLabel;
     private JCheckBox morseCodeSelector;
     private JCheckBox caesarSelector;
-    private JFormattedTextField numberInputField;
+    private JFormattedTextField caesarShiftField;
     private NumberFormat integerFormat;
     private NumberFormatter integerFormatter;
     private JComboBox<String> fontSelector;
@@ -47,14 +47,14 @@ public class TextToolSettings extends JPanel {
         setBackground(Color.DARK_GRAY);
 
         transformPanel = new JPanel();
-        encryptionsLabel = new JLabel(TRANSFORM_LABEL);
+        encryptionLabel = new JLabel(TRANSFORM_LABEL);
         morseCodeLabel = new JLabel(MORSE_CODE_LABEL);
         caesarLabel = new JLabel(CAESAR_LABEL);
-        numberInputLabel = new JLabel(NUMBER_LABEL);
-        encryptionsLabel.setForeground(Color.WHITE);
+        caesarShiftLabel = new JLabel(NUMBER_LABEL);
+        encryptionLabel.setForeground(Color.WHITE);
         morseCodeLabel.setForeground(Color.WHITE);
         caesarLabel.setForeground(Color.WHITE);
-        numberInputLabel.setForeground(Color.WHITE);
+        caesarShiftLabel.setForeground(Color.WHITE);
 
         morseCodeSelector = new JCheckBox();
         caesarSelector = new JCheckBox();
@@ -67,20 +67,22 @@ public class TextToolSettings extends JPanel {
         integerFormatter.setMaximum(MAX_SHIFT_VALUE);
         integerFormatter.setMinimum(MIN_SHIFT_VALUE);
 
-        numberInputField = new JFormattedTextField(integerFormatter);
-        numberInputField.setPreferredSize(new Dimension(NUMBER_FIELD_WIDTH, NUMBER_FIELD_HEIGHT));
-        numberInputField.setMaximumSize(new Dimension(NUMBER_FIELD_WIDTH, NUMBER_FIELD_HEIGHT));
-        numberInputField.setValue(new Integer(DEFAULT_SHIFT_VALUE));
+        caesarShiftField = new JFormattedTextField(integerFormatter);
+        caesarShiftField.setPreferredSize(new Dimension(NUMBER_FIELD_WIDTH, NUMBER_FIELD_HEIGHT));
+        caesarShiftField.setMaximumSize(new Dimension(NUMBER_FIELD_WIDTH, NUMBER_FIELD_HEIGHT));
+        caesarShiftField.setValue(new Integer(DEFAULT_SHIFT_VALUE));
         morseCodeSelector.setBackground(Color.DARK_GRAY);
         caesarSelector.setBackground(Color.DARK_GRAY);
 
         fontSelector = new JComboBox<>(fonts);
         fontSelector.setSelectedItem(DEFAULT_FONT);
 
+        enableCaesarShiftField(false);
+
         setLabelFonts();
         setVisibility(false);
 
-        add(encryptionsLabel);
+        add(encryptionLabel);
         add(Box.createRigidArea(new Dimension(COMPONENT_SPACING, 0)));
 
         buildTransformPanel();
@@ -105,9 +107,9 @@ public class TextToolSettings extends JPanel {
         transformPanel.add(caesarLabel);
         transformPanel.add(caesarSelector);
         transformPanel.add(Box.createRigidArea(new Dimension(COMPONENT_SPACING, 0)));
-        transformPanel.add(numberInputLabel);
+        transformPanel.add(caesarShiftLabel);
         transformPanel.add(Box.createRigidArea(new Dimension(ELEMENT_SPACING, 0)));
-        transformPanel.add(numberInputField);
+        transformPanel.add(caesarShiftField);
         transformPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
         transformPanel.add(Box.createRigidArea(new Dimension(COMPONENT_SPACING, 0)));
     }
@@ -116,10 +118,10 @@ public class TextToolSettings extends JPanel {
      * Helper function to set fonts to labels.
      */
     private void setLabelFonts() {
-        encryptionsLabel.setFont(new Font(DEFAULT_FONT, Font.PLAIN, HEADER_FONT_SIZE));
+        encryptionLabel.setFont(new Font(DEFAULT_FONT, Font.PLAIN, HEADER_FONT_SIZE));
         morseCodeLabel.setFont(new Font(DEFAULT_FONT, Font.PLAIN, FONT_SIZE));
         caesarLabel.setFont(new Font(DEFAULT_FONT, Font.PLAIN, FONT_SIZE));
-        numberInputLabel.setFont(new Font(DEFAULT_FONT, Font.PLAIN, FONT_SIZE));
+        caesarShiftLabel.setFont(new Font(DEFAULT_FONT, Font.PLAIN, FONT_SIZE));
     }
 
     /**
@@ -129,13 +131,13 @@ public class TextToolSettings extends JPanel {
      */
     public void setVisibility(Boolean isVisible) {
         transformPanel.setVisible(isVisible);
-        encryptionsLabel.setVisible(isVisible);
+        encryptionLabel.setVisible(isVisible);
         morseCodeLabel.setVisible(isVisible);
         caesarLabel.setVisible(isVisible);
-        numberInputLabel.setVisible(isVisible);
+        caesarShiftLabel.setVisible(isVisible);
         morseCodeSelector.setVisible(isVisible);
         caesarSelector.setVisible(isVisible);
-        numberInputField.setVisible(isVisible);
+        caesarShiftField.setVisible(isVisible);
         fontSelector.setVisible(isVisible);
     }
 
@@ -147,10 +149,33 @@ public class TextToolSettings extends JPanel {
     public void addActionListener(ActionListener actionListener) {
         morseCodeSelector.addActionListener(actionListener);
         caesarSelector.addActionListener(actionListener);
-        numberInputField.addActionListener(actionListener);
+        caesarShiftField.addActionListener(actionListener);
         fontSelector.addActionListener(actionListener);
     }
 
+    /**
+     * Enable or disable caesar shift field. When morse code is selected, the field should be disabled.
+     *
+     * @param isEnabled specifies if the field is enabled.
+     */
+    public void enableCaesarShiftField(Boolean isEnabled) {
+        caesarShiftField.setEnabled(isEnabled);
+        if (isEnabled) {
+            caesarShiftField.setBackground(Color.WHITE);
+            caesarShiftLabel.setForeground(Color.WHITE);
+        } else {
+            caesarShiftField.setBackground(Color.GRAY);
+            caesarShiftLabel.setForeground(Color.GRAY);
+        }
+    }
+
+    public void setMorseCodeSelection(Boolean isSelected) {
+        morseCodeSelector.setSelected(isSelected);
+    }
+
+    public void setCaesarSelection(Boolean isSelected) {
+        caesarSelector.setSelected(isSelected);
+    }
 
     /**
      * Returns morse code checkbox component.
@@ -162,7 +187,7 @@ public class TextToolSettings extends JPanel {
     }
 
     /**
-     * Rerturns caesar checkbox component.
+     * Returns caesar checkbox component.
      *
      * @return caesarSelector component.
      */
@@ -173,10 +198,10 @@ public class TextToolSettings extends JPanel {
     /**
      * Returns number input field.
      *
-     * @return numberInputField component.
+     * @return caesarShiftField component.
      */
-    public JTextField getNumberInputField() {
-        return numberInputField;
+    public JTextField getCaesarShiftField() {
+        return caesarShiftField;
     }
 
     /**
@@ -202,7 +227,7 @@ public class TextToolSettings extends JPanel {
      *
      * @return state of Caesar Encrypt checkbox.
      */
-    public boolean getCaesarSelected() {
+    public boolean isCaesarSelected() {
         return caesarSelector.isSelected();
     }
 
@@ -211,7 +236,7 @@ public class TextToolSettings extends JPanel {
      *
      * @return state of Morse Code checkbox.
      */
-    public boolean getMorseSelected() {
+    public boolean isMorseSelected() {
         return morseCodeSelector.isSelected();
     }
 
@@ -221,7 +246,6 @@ public class TextToolSettings extends JPanel {
      * @return value of the Caesar Encrypt shift field.
      */
     public int getCaesarShiftValue() {
-        return (int) numberInputField.getValue();
+        return (int) caesarShiftField.getValue();
     }
-
 }
