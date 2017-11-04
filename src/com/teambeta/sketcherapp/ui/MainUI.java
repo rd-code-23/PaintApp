@@ -185,7 +185,6 @@ public class MainUI {
         fontSelector = new JComboBox<>(fonts);
         fontSelector.setSelectedItem(DEFAULT_FONT);
         fontSelector.setVisible(false);
-        // databaseHandler();
         initDrawingTools();
         prepareGUI();
     }
@@ -348,7 +347,6 @@ public class MainUI {
         //setting up the shortcuts and database
         shortcuts = new Shortcuts(canvasTools, this);
         db_kbShortcuts = new DB_KBShortcuts(shortcuts);
-        db_kbShortcuts.createTable();
         keboardShortCutPanel = new ShortcutDialog(this, shortcuts);
 
         MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel);
