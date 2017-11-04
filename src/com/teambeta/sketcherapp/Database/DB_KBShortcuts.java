@@ -84,12 +84,6 @@ public class DB_KBShortcuts {
 
     /**
      * updates a record in the database
-     *
-     * @param shortcutName
-     * @param keyStroke
-     * @param isCTRL
-     * @param isALT
-     * @param isSHIFT
      */
     public void update(String shortcutName, String keyStroke, String isCTRL, String isALT, String isSHIFT) {
         try {
@@ -180,9 +174,6 @@ public class DB_KBShortcuts {
 
     /**
      * checks to see if a record exists
-     *
-     * @param shortcutName
-     * @return
      */
     public boolean isDataExists(String shortcutName) {
         try {
@@ -213,8 +204,6 @@ public class DB_KBShortcuts {
 
     /**
      * checks to see if a table exists
-     *
-     * @return
      */
     public boolean isTableExists() {
         try {
