@@ -5,9 +5,10 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 /**
- * Text settings including font, and other encryption options
+ * Text settings including font, and other encryption options.
  */
 public class TextToolSettings extends JPanel {
+    private JPanel encryptionPanel;
     private JLabel encryptionsLabel;
     private JLabel morseCodeLabel;
     private JLabel caesarLabel;
@@ -17,6 +18,13 @@ public class TextToolSettings extends JPanel {
     private JTextField numberInputField;
     private JComboBox<String> fontSelector;
 
+    private static final int COMPONENT_SPACING = 20;
+    private static final int ENCRYPTION_PANEL_HEIGHT = 40;
+    private static final int HEADER_FONT_SIZE = 16;
+    private static final int FONT_SIZE = 12;
+    private static final int ELEMENT_SPACING = 10;
+    private static final int NUMBER_FIELD_WIDTH = 40;
+    private static final int NUMBER_FIELD_HEIGHT = 25;
     private static final String DEFAULT_FONT = "Arial";
     private static final String MORSE_CODE_LABEL = "Morse code";
     private static final String CEASAR_LABEL = "Caesar";
@@ -43,26 +51,59 @@ public class TextToolSettings extends JPanel {
         morseCodeSelector = new JCheckBox();
         caesarSelector = new JCheckBox();
         numberInputField = new JTextField();
+        numberInputField.setPreferredSize(new Dimension(NUMBER_FIELD_WIDTH, NUMBER_FIELD_HEIGHT));
+        numberInputField.setMaximumSize(new Dimension(NUMBER_FIELD_WIDTH, NUMBER_FIELD_HEIGHT));
         morseCodeSelector.setBackground(Color.DARK_GRAY);
         caesarSelector.setBackground(Color.DARK_GRAY);
 
         fontSelector = new JComboBox<>(fonts);
         fontSelector.setSelectedItem(DEFAULT_FONT);
 
+        setPanelFonts();
         setVisibility(false);
 
         add(encryptionsLabel);
-        add(morseCodeLabel);
-        add(morseCodeSelector);
-        add(caesarLabel);
-        add(caesarSelector);
-        add(numberInputLabel);
-        add(numberInputField);
+        add(Box.createRigidArea(new Dimension(COMPONENT_SPACING, 0)));
+
+        buildEncryptionPanel();
+
+        add(encryptionPanel);
+        add(Box.createRigidArea(new Dimension(COMPONENT_SPACING, 0)));
         add(fontSelector);
     }
 
     /**
+     * Helper function to build encryption panel and its components.
+     */
+    private void buildEncryptionPanel() {
+        encryptionPanel = new JPanel();
+        encryptionPanel.setLayout(new BoxLayout(encryptionPanel, BoxLayout.X_AXIS));
+        encryptionPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, ENCRYPTION_PANEL_HEIGHT));
+        encryptionPanel.setBackground(Color.DARK_GRAY);
+        encryptionPanel.add(Box.createRigidArea(new Dimension(COMPONENT_SPACING, 0)));
+        encryptionPanel.add(morseCodeLabel);
+        encryptionPanel.add(morseCodeSelector);
+        encryptionPanel.add(Box.createRigidArea(new Dimension(COMPONENT_SPACING, 0)));
+        encryptionPanel.add(caesarLabel);
+        encryptionPanel.add(caesarSelector);
+        encryptionPanel.add(Box.createRigidArea(new Dimension(COMPONENT_SPACING, 0)));
+        encryptionPanel.add(numberInputLabel);
+        encryptionPanel.add(Box.createRigidArea(new Dimension(ELEMENT_SPACING, 0)));
+        encryptionPanel.add(numberInputField);
+        encryptionPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        encryptionPanel.add(Box.createRigidArea(new Dimension(COMPONENT_SPACING, 0)));
+    }
+
+    private void setPanelFonts() {
+        encryptionsLabel.setFont(new Font(DEFAULT_FONT, Font.PLAIN, HEADER_FONT_SIZE));
+        morseCodeLabel.setFont(new Font(DEFAULT_FONT, Font.PLAIN, FONT_SIZE));
+        caesarLabel.setFont(new Font(DEFAULT_FONT, Font.PLAIN, FONT_SIZE));
+        numberInputLabel.setFont(new Font(DEFAULT_FONT, Font.PLAIN, FONT_SIZE));
+    }
+
+    /**
      * Sets visibility to all components.
+     *
      * @param isVisible specifies visibility level for all comonents.
      */
     public void setVisibility(Boolean isVisible) {
@@ -78,6 +119,7 @@ public class TextToolSettings extends JPanel {
 
     /**
      * Add action listener to components.
+     *
      * @param actionListener specified by MainUI.
      */
     public void addActionListener(ActionListener actionListener) {
@@ -89,6 +131,7 @@ public class TextToolSettings extends JPanel {
 
     /**
      * Returns morse code checkbox component.
+     *
      * @return morseCodeSelector component.
      */
     public JCheckBox getMorseCodeSelector() {
@@ -97,7 +140,8 @@ public class TextToolSettings extends JPanel {
 
     /**
      * Rerturns caesar checkbox component.
-     * @return caesarSlector component.
+     *
+     * @return caesarSelector component.
      */
     public JCheckBox getCaesarSelector() {
         return caesarSelector;
@@ -105,6 +149,7 @@ public class TextToolSettings extends JPanel {
 
     /**
      * Returns number input field.
+     *
      * @return numberInputField component.
      */
     public JTextField getNumberInputField() {
@@ -113,6 +158,7 @@ public class TextToolSettings extends JPanel {
 
     /**
      * Returns font selector.
+     *
      * @return fontSelector component.
      */
     public JComboBox<String> getFontSelector() {
@@ -121,6 +167,7 @@ public class TextToolSettings extends JPanel {
 
     /**
      * Return the selected item in the font selector.
+     *
      * @return string of font selected.
      */
     public String getFontFromSelector() {
