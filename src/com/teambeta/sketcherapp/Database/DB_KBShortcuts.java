@@ -3,25 +3,32 @@ package com.teambeta.sketcherapp.Database;
 import com.teambeta.sketcherapp.model.Shortcuts;
 
 import java.sql.*;
-//todo bug with the
+
 public class DB_KBShortcuts {
 
-    public static final String KB_SHORTCUTS_TABLE = "KB_SHORTCUTS_TABLE";
-    public static final String SHORTCUT_NAME = "SHORTCUT_NAME";
-    public static final String KEY_STROKE = "KEY_STROKE";
-    public static final String IS_CTRL = "IS_CTRL";
-    public static final String IS_ALT = "IS_ALT";
-    public static final String IS_SHIFT = "IS_SHIFT";
+    private static final String KB_SHORTCUTS_TABLE = "KB_SHORTCUTS_TABLE";
+    private static final String SHORTCUT_NAME = "SHORTCUT_NAME";
+    private static final String KEY_STROKE = "KEY_STROKE";
+    private static final String IS_CTRL = "IS_CTRL";
+    private static final String IS_ALT = "IS_ALT";
+    private static final String IS_SHIFT = "IS_SHIFT";
 
-    Shortcuts shortcuts;
+    private Connection connection = null;
+    private Shortcuts shortcuts;
 
+
+    /**
+     * @param shortcuts used to generate the database
+     */
     public DB_KBShortcuts(Shortcuts shortcuts) {
         this.shortcuts = shortcuts;
     }
 
-    public void createTable() {
-        Connection connection = null;
 
+    /**
+     * creates a table
+     */
+    public void createTable() {
         try {
             connection = ConnectionConfiguration.getConnection();
 
@@ -33,10 +40,9 @@ public class DB_KBShortcuts {
                     + IS_SHIFT + "    VARCHAR(5)       NOT NULL, "
                     + IS_ALT + "     VARCHAR(5)       NOT NULL "
                     + " );";
-//     + IS_CTRL + "    CHAR(1)       NOT NULL, "
+
             Statement stmt = connection.createStatement();
             stmt.execute(sqlCreate);
-            System.out.println(KB_SHORTCUTS_TABLE + " Table created or exists");
             stmt.close();
             connection.close();
         } catch (Exception e) {
@@ -45,65 +51,60 @@ public class DB_KBShortcuts {
 
     }
 
+    /**
+     * inserts a record into the database
+     */
     public void insert(String shortcutName, String keyStroke, String isCTRL, String isALT, String isSHIFT) {
 
-        if(isDataExists(shortcutName)){
+        if (isDataExists(shortcutName)) {
             return;
         }
 
-        Connection connection = null;
-        PreparedStatement preparedStatement = null; // protects from SQL injection attacks
+        PreparedStatement pst = null;
+
         try {
-
             connection = ConnectionConfiguration.getConnection();
-
-            preparedStatement = connection.prepareStatement(
+            pst = connection.prepareStatement(
                     "INSERT INTO " + KB_SHORTCUTS_TABLE +
                             "(SHORTCUT_NAME,KEY_STROKE,IS_CTRL,IS_SHIFT,IS_ALT)" +
                             "VALUES(?,?,?,?,?) ");
 
-            preparedStatement.setString(1, shortcutName); // 1 = first column
-            preparedStatement.setString(2, keyStroke);
-            preparedStatement.setString(3, isCTRL);
-            preparedStatement.setString(4, isSHIFT);
-            preparedStatement.setString(5, isALT);
-            preparedStatement.executeUpdate();
-            preparedStatement.close();
+            pst.setString(1, shortcutName); // 1 = first column
+            pst.setString(2, keyStroke);
+            pst.setString(3, isCTRL);
+            pst.setString(4, isSHIFT);
+            pst.setString(5, isALT);
+            pst.executeUpdate();
+            pst.close();
             connection.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * updates a record in the database
+     *
+     * @param shortcutName
+     * @param keyStroke
+     * @param isCTRL
+     * @param isALT
+     * @param isSHIFT
+     */
     public void update(String shortcutName, String keyStroke, String isCTRL, String isALT, String isSHIFT) {
-        Connection connection = null;
-
         try {
-
             connection = ConnectionConfiguration.getConnection();
 
-          /*  preparedStatement = connection.prepareStatement(
-                    "UPDATE " + KB_SHORTCUTS_TABLE + " WHERE " + SHORTCUT_NAME
-                            + " = " + shortcutName +
-                            " (SHORTCUT_NAME,KEY_STROKE,IS_CTRL,IS_ALT,IS_SHIFT) " +
-                            " VALUES(?,?,?,?,?) ");
-
-            preparedStatement.setString(1, shortcutName); // 1 = first column
-            preparedStatement.setString(2, keyStroke);
-            preparedStatement.setString(3, isCTRL);
-            preparedStatement.setString(4, isALT);
-            preparedStatement.setString(5, isSHIFT);
-            preparedStatement.executeUpdate();
-            preparedStatement.close();*/
             String query = "UPDATE  " + KB_SHORTCUTS_TABLE
                     + " SET "
-                    +  SHORTCUT_NAME  + " =  ?, "
-                    +  KEY_STROKE  + " =  ?, "
-                    +  IS_CTRL  + " =  ?, "
-                    +  IS_SHIFT  + " =  ?, "
-                    +  IS_ALT  + " =  ? "
+                    + SHORTCUT_NAME + " =  ?, "
+                    + KEY_STROKE + " =  ?, "
+                    + IS_CTRL + " =  ?, "
+                    + IS_SHIFT + " =  ?, "
+                    + IS_ALT + " =  ? "
                     + " WHERE "
                     + SHORTCUT_NAME + " LIKE ? ";
+
             PreparedStatement pst = connection.prepareStatement(query);
             pst.setString(1, shortcutName);
             pst.setString(2, keyStroke);
@@ -114,65 +115,21 @@ public class DB_KBShortcuts {
             pst.executeUpdate();
             pst.close();
             connection.close();
-         //   printTable();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
-    public void printTable() {
-        Connection connection = null;
-        //  PreparedStatement preparedStatement = null; // protects from SQL injection attacks
-        ResultSet rs = null;
-        Statement st = null;
-        ResultSetMetaData rsmd = null;
+    /**
+     * drop table
+     */
+    public void dropTable() {
         try {
             connection = ConnectionConfiguration.getConnection();
-            st = connection.createStatement();
-            rs = st.executeQuery("select * from " + KB_SHORTCUTS_TABLE);
-            rsmd = rs.getMetaData();
-            int columnsNumber = rsmd.getColumnCount();
-            while (rs.next()) {
-                //Print one row
-                for (int i = 1; i <= columnsNumber; i++) {
 
-                    System.out.print(rs.getString(i) + " "); //Print one element of a row
+            String sqlCreate = " DROP TABLE " + KB_SHORTCUTS_TABLE;
 
-                }
-
-                System.out.println();//Move to the next line to print the next row.
-
-            }
-
-            System.out.println();
-
-
-
-            rs.close();
-            st.close();
-            connection.close();
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
-    }
-
-
-    public void dropTable() {
-        Connection connection = null;
-        Statement stmt = null;
-
-        connection = ConnectionConfiguration.getConnection();
-
-        String sqlCreate = " DROP TABLE " + KB_SHORTCUTS_TABLE;
-
-
-        try {
-            stmt = connection.createStatement();
+            Statement stmt = connection.createStatement();
             stmt.execute(sqlCreate);
             stmt.close();
             connection.close();
@@ -183,71 +140,59 @@ public class DB_KBShortcuts {
 
     }
 
-    public void generateDBKeyBindings () {
+    /**
+     * generates the key binding from the database
+     */
+    public void generateDBKeyBindings() {
+        try {
+            connection = ConnectionConfiguration.getConnection();
+            Statement stmt = connection.createStatement();
+            ResultSet rset = stmt.executeQuery("select * from " + KB_SHORTCUTS_TABLE);
 
-      //  printTable();
-
-        Connection connection = null;
-        ResultSet rset = null; //table of record from DB
-        try{
-            connection =    ConnectionConfiguration.getConnection();
-            Statement s2 = connection.createStatement();
-            rset = s2.executeQuery("select * from " + KB_SHORTCUTS_TABLE);
-            System.out.println("------------------------------");
-            System.out.println("generating DB shortcuts");
-          while(rset.next()){
-               // System.out.println("from db:  " + rset.getString(SHORTCUT_NAME));
-               // System.out.println("from db:  " + rset.getString(KEY_STROKE));
-               // System.out.println("from db:  " + rset.getBoolean(IS_CTRL));
+            while (rset.next()) {
 
                 boolean isCtrl = false;
                 boolean isShift = false;
                 boolean isAlt = false;
 
-                if(rset.getString(IS_CTRL).equals("true")){
+                if (rset.getString(IS_CTRL).equals("true")) {
                     isCtrl = true;
                 }
 
-             if(rset.getString(IS_SHIFT).equals("true")){
+                if (rset.getString(IS_SHIFT).equals("true")) {
                     isShift = true;
                 }
 
-                if(rset.getString(IS_ALT).equals("true")){
+                if (rset.getString(IS_ALT).equals("true")) {
                     isAlt = true;
                 }
 
                 int keyCode;
                 keyCode = rset.getString(KEY_STROKE).charAt(0);
-            //    System.out.println(keyCode);
-                  shortcuts.removeBinding(keyCode,  isCtrl , isShift, isAlt);
 
-              //keyCode = rset.getString(KEY_STROKE).charAt(0);
+                shortcuts.removeBinding(keyCode, isCtrl, isShift, isAlt);
 
-                shortcuts.getDBShortcuts(keyCode,  isCtrl , isShift, isAlt,rset.getString(SHORTCUT_NAME));
-    /*         //   shortcuts.setKBShortcut(rset.getString(SHORTCUT_NAME), rset.getInt(KEY_STROKE), rset.getBoolean(IS_CTRL) , rset.getBoolean(IS_SHIFT), rset.getBoolean(IS_ALT));
-            */
-        }
-            System.out.println();
-            System.out.println();
-            System.out.println("------------------------------");
-            s2.close();
+
+                shortcuts.getDBShortcuts(keyCode, isCtrl, isShift, isAlt, rset.getString(SHORTCUT_NAME));
+
+            }
+
+            stmt.close();
             rset.close();
             connection.close();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
+    /**
+     * checks to see if a record exists
+     *
+     * @param shortcutName
+     * @return
+     */
     public boolean isDataExists(String shortcutName) {
-
-        Connection connection = null;
-        //  PreparedStatement preparedStatement = null; // protects from SQL injection attacks
-
-
-        ResultSetMetaData rsmd = null;
-
-
         try {
             connection = ConnectionConfiguration.getConnection();
             String query = "SELECT (count(*) > 0) as found FROM " + KB_SHORTCUTS_TABLE + " WHERE " + SHORTCUT_NAME + " LIKE ? ";
@@ -260,14 +205,13 @@ public class DB_KBShortcuts {
                 if (rs.next()) {
                     boolean found = rs.getBoolean(1); // "found" column
                     if (found) {
-                     //   System.out.println(shortcutName + " exists ");
                         return true;
                     } else {
-                     //   System.out.println(shortcutName + " does not exists ");
                         return false;
                     }
                 }
             }
+
             pst.close();
             connection.close();
         } catch (SQLException e) {
@@ -276,49 +220,40 @@ public class DB_KBShortcuts {
         return false;
     }
 
-    public boolean isTableExists(){
-        Connection connection = null;
-        connection = ConnectionConfiguration.getConnection();
-        ResultSet tables = null;
-        try{
-          /*  DatabaseMetaData md =  connection.getMetaData();
-            ResultSet rs = md.getTables(null, null,KB_SHORTCUTS_TABLE, null);
-            rs.last();
-            rs.close();
-            connection.close();
-            return rs.getRow() > 0;*/
-
+    /**
+     * checks to see if a table exists
+     *
+     * @return
+     */
+    public boolean isTableExists() {
+        try {
+            connection = ConnectionConfiguration.getConnection();
             DatabaseMetaData dbm = connection.getMetaData();
-            // check if "employee" table is there
-             tables = dbm.getTables(null, null, KB_SHORTCUTS_TABLE, null);
-            if (tables.next()) {
 
-                tables.close();
+            ResultSet rset = dbm.getTables(null, null, KB_SHORTCUTS_TABLE, null);
+
+            if (rset.next()) {
+                rset.close();
                 connection.close();
                 return true;
-            }
-            else {
-                tables.close();
+            } else {
+                rset.close();
                 connection.close();
-                return  false;
+                return false;
             }
 
-
-
-
-
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
 
         }
 
         return false;
     }
-    /*
-    public String getKeyStroke(String shortcutName){
 
-        Connection connection = null;
-        //  PreparedStatement preparedStatement = null; // protects from SQL injection attacks
+    /**
+     * prints a tables contents through the console
+     */
+    public void printTable() {
         ResultSet rs = null;
         Statement st = null;
         ResultSetMetaData rsmd = null;
@@ -332,20 +267,16 @@ public class DB_KBShortcuts {
                 //Print one row
                 for (int i = 1; i <= columnsNumber; i++) {
 
-                    if(rs.getString(i).equals(shortcutName)){
-                        return rs.
-                    }
-                    System.out.print(rs.getString(i) + " "); //Print one element of a row
+                    System.out.print(rs.getString(i) + " ");
 
                 }
 
-                System.out.println();//Move to the next line to print the next row.
+                System.out.println();
 
             }
 
             System.out.println();
 
-            //   preparedStatement.close();
 
             rs.close();
             st.close();
@@ -355,7 +286,9 @@ public class DB_KBShortcuts {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }*/
+
+
+    }
 
 
 }

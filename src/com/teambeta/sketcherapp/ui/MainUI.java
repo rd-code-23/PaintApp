@@ -90,9 +90,9 @@ public class MainUI {
     private ShortcutDialog keboardShortCutPanel;
     private Shortcuts shortcuts;
     private ImportExport importExport;
-    private   JPanel canvasTools;
+    private JPanel canvasTools;
 
-    DB_KBShortcuts db_kbShortcuts;
+    private DB_KBShortcuts db_kbShortcuts;
 
     private static final String APPLICATION_LOGO_IMAGE_DIRECTORY = "res/BPIcon.png";
 
@@ -185,11 +185,10 @@ public class MainUI {
         fontSelector = new JComboBox<>(fonts);
         fontSelector.setSelectedItem(DEFAULT_FONT);
         fontSelector.setVisible(false);
-       // databaseHandler();
+        // databaseHandler();
         initDrawingTools();
         prepareGUI();
     }
-
 
 
     /**
@@ -289,7 +288,7 @@ public class MainUI {
         mainContent.setLayout(new BorderLayout());
         drawArea = new DrawArea();
 
-         importExport = new ImportExport(drawArea, this);
+        importExport = new ImportExport(drawArea, this);
         GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
         NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
         CheckerboardMenu checkerboardMenu = new CheckerboardMenu(drawArea);
@@ -328,7 +327,7 @@ public class MainUI {
                 celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton,
         };
 
-       canvasTools = new JPanel();
+        canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
         canvasTools.setBackground(Color.DARK_GRAY);
         canvasTools.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
@@ -346,16 +345,12 @@ public class MainUI {
         JPanel northPanel = new JPanel();
         northPanel.setLayout(new BorderLayout());
 
-        //TODO
-            shortcuts = new Shortcuts(canvasTools,this);
+        //setting up the shortcuts and database
+        shortcuts = new Shortcuts(canvasTools, this);
         db_kbShortcuts = new DB_KBShortcuts(shortcuts);
         db_kbShortcuts.createTable();
+        keboardShortCutPanel = new ShortcutDialog(this, shortcuts);
 
-
-
-
-
-        keboardShortCutPanel = new ShortcutDialog(this,shortcuts);
         MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel);
         northPanel.add(menuUI, BorderLayout.NORTH);
 
@@ -418,15 +413,7 @@ public class MainUI {
         mainContent.add(editorPanel, BorderLayout.EAST);
         mainContent.add(northPanel, BorderLayout.NORTH);
 
-
-     //   db_kbShortcuts.printTable();
-        System.out.println();
-        System.out.println();
-
-
-
-
-        if(db_kbShortcuts.isTableExists()){
+        if (db_kbShortcuts.isTableExists()) {
             generateDBDefaultKeyBindings();
             db_kbShortcuts.generateDBKeyBindings();
         } else {
@@ -434,9 +421,6 @@ public class MainUI {
             generateDefaultKeyBindings();
         }
 
-        db_kbShortcuts.printTable();
-        //  shortcuts.generateDBKeyBindings();
-        //then update the bindings
     }
 
     /**
@@ -496,69 +480,33 @@ public class MainUI {
         thread.start();
     }
 
-    private void databaseHandler(){
-        db_kbShortcuts.createTable();
-     //   db_kbShortcuts.dropTable();
-        //  db_kbShortcuts.insert(Shortcuts.BRUSH_TOOL_SHORTCUT,"b","F","T","T");
-        //  db_kbShortcuts.printTable();
-        //     db_kbShortcuts.dropTable();
-        db_kbShortcuts.printTable();
-    }
-
     /**
      * generates the default key binding for shortcut keys
      */
-/*
-    public void setDefaultActionMap() {
-
-
-        shortcuts.setActionMap( Shortcuts.CLEAR_TOOL_SHORTCUT,(evt) -> {
-            drawArea.clear();
-        });
-
-        shortcuts.setActionMap( Shortcuts.EXPORT_SHORTCUT, (evt) -> {
-            importExport.exportImage();
-        });
-
-        shortcuts.setActionMap(Shortcuts.IMPORT_SHORTCUT, (evt) -> {
-            importExport.importImage();
-        });
-
-        shortcuts.setActionMap(Shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
-            selectedDrawingTool = brushTool;
-            updateSizeSlider();
-        });
-
-        shortcuts.setActionMap( Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
-            selectedDrawingTool = lineTool;
-            updateSizeSlider();
-        });
-
-    }*/
     public void generateDefaultKeyBindings() {
 
-        shortcuts.addKeyBinding( KeyEvent.VK_C, true, false, false, Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(KeyEvent.VK_C, true, false, false, Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
             drawArea.clear();
         });
 
 
-        shortcuts.addKeyBinding( KeyEvent.VK_O, true, false, false, Shortcuts.EXPORT_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(KeyEvent.VK_O, true, false, false, Shortcuts.EXPORT_SHORTCUT, (evt) -> {
             importExport.exportImage();
         });
 
 
-        shortcuts.addKeyBinding( KeyEvent.VK_I, true, false, false, Shortcuts.IMPORT_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(KeyEvent.VK_I, true, false, false, Shortcuts.IMPORT_SHORTCUT, (evt) -> {
             importExport.importImage();
         });
 
-       // db_kbShortcuts.insert(Shortcuts.BRUSH_TOOL_SHORTCUT,"B","T","F","F");
-        shortcuts.addKeyBinding( KeyEvent.VK_B, true, false, false, Shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
+        // db_kbShortcuts.insert(Shortcuts.BRUSH_TOOL_SHORTCUT,"B","T","F","F");
+        shortcuts.addKeyBinding(KeyEvent.VK_B, true, false, false, Shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = brushTool;
             updateSizeSlider();
         });
 
 
-        shortcuts.addKeyBinding( KeyEvent.VK_L, true, false, false, Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(KeyEvent.VK_L, true, false, false, Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = lineTool;
             updateSizeSlider();
         });
@@ -611,6 +559,9 @@ public class MainUI {
         });*/
     }
 
+    /**
+     * gets the kebinding for the shortcuts from the database
+     */
     public void generateDBDefaultKeyBindings() {
 
         shortcuts.addKeyBinding(Shortcuts.getClearToolKeyCode(), Shortcuts.isIsAlt_clearTool(), Shortcuts.isIsShift_clearTool(), Shortcuts.isIsAlt_clearTool(), Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
@@ -618,7 +569,7 @@ public class MainUI {
         });
 
 
-        shortcuts.addKeyBinding( shortcuts.getExportKeyCode(), shortcuts.isIsCtrl_export(), shortcuts.isIsShift_export(), shortcuts.isIsAlt_export(), Shortcuts.EXPORT_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(shortcuts.getExportKeyCode(), shortcuts.isIsCtrl_export(), shortcuts.isIsShift_export(), shortcuts.isIsAlt_export(), Shortcuts.EXPORT_SHORTCUT, (evt) -> {
             importExport.exportImage();
         });
 
@@ -628,7 +579,7 @@ public class MainUI {
         });
 
 
-        shortcuts.addKeyBinding( shortcuts.getBrushToolKeyCode() ,shortcuts.isIsCtrl_brushTool(), shortcuts.isIsShift_brushTool(), shortcuts.isIsAlt_brushTool(),shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(shortcuts.getBrushToolKeyCode(), shortcuts.isIsCtrl_brushTool(), shortcuts.isIsShift_brushTool(), shortcuts.isIsAlt_brushTool(), shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = brushTool;
             updateSizeSlider();
         });
@@ -688,14 +639,16 @@ public class MainUI {
     }
 
     /**
-        Used in Shortcuts class to focus the canvas tools
+     * Used in Shortcuts class to focus the canvas tools
      */
-    public void focusCanvasTools(){
+    public void focusCanvasTools() {
         canvasTools.setFocusable(true);
     }
 
-
-    public void focusWidthPanel(){
+    /**
+     * Used in Shortcuts class to focus the canvas tools
+     */
+    public void focusWidthPanelToFalse() {
         widthChanger.getJTextFieldComponent().setFocusable(false);
 
     }

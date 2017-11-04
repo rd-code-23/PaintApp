@@ -25,6 +25,9 @@ public class ShortcutDialog {
     private static final String ACTION_SHORTCUT_TABLE_COL = "Action";
     private static final String DEFAULT_BUTTON = "Default";
     private static final String APPLY_BUTTON = "Apply";
+    private static final String CTRL_PLUS_STRING = "Ctrl+";
+    private static final String SHIFT_PLUS_STRING = "Shift+";
+    private static final String ALT_PLUS_STRING = "Alt+";
 
     private MainUI mainUI;
     private Shortcuts sc;
@@ -41,7 +44,7 @@ public class ShortcutDialog {
     // Also got help from https://stackoverflow.com/questions/46985936/using-keybinding-and-action-map-in-java-for-shortcut-keys-for-buttons
 
     /**
-     * remderes the panel for the shortcut dialog
+     * renders the panel for the shortcut dialog
      */
     public void renderPanel() {
 
@@ -73,8 +76,6 @@ public class ShortcutDialog {
             public void actionPerformed(ActionEvent e) {
                 if (e.getSource() == setDefaultShortcutsButton) {
                     sc.resetDefaultBindings();
-                    //TODO UPDATE DATABASE
-
                     shortcutsDialog.dispose();
                     renderPanel();
                 }
@@ -117,27 +118,22 @@ public class ShortcutDialog {
     }
 
     /**
-     * prints the shortcut 
-     * @param keyCode
-     * @param useControl
-     * @param useShift
-     * @param useAlt
-     * @return
+     * prints the shortcut
      */
     String printShortcut(int keyCode, boolean useControl, boolean useShift, boolean useAlt) {
 
         String string = "";
-        System.out.println("priNTING: " + useControl);
+
         if (useControl) {
-            string += "Ctrl+";
+            string += CTRL_PLUS_STRING;
         }
 
         if (useShift) {
-            string += "Shift+";
+            string += SHIFT_PLUS_STRING;
         }
 
         if (useAlt) {
-            string += "Alt+";
+            string += ALT_PLUS_STRING;
         }
 
         string += (char) keyCode;
@@ -171,6 +167,16 @@ public class ShortcutDialog {
         private static final String EDIT_SHORTCUT_TITLE_EDIT_SHORTCUT_DIALOG = "Edit Shortcut";
         private static final int WIDTH_EDIT_SHORTCUT_DIALOG = 450;
         private static final int HEIGHT_EDIT_SHORTCUT_DIALOG = 200;
+        private static final String KEY_STROKE_SYMBOL_BUTTON = "-";
+        private static final String SAVE_TEXT_BUTTON = "Save";
+        private static final String CANCEL_TEXT_BUTTON = "Cancel";
+        private static final String CTRL_TEXT_BUTTON = "ctrl";
+        private static final String ALT_TEXT_BUTTON = "alt";
+        private static final String SHIFT_TEXT_BUTTON = "shift";
+        private static final String INSTRUCTION_EDIT_SHORTCUT_LABEL = "Toggle ctrl,alt and shift. Then type a letter";
+        private static final String INSTRUCTION_INVALID_BINDING_EDIT_LABEL = "That Binding is Already Taken! Try Again";
+        private static final String INSTRUCTION_ENTER_LETTER_LABEL = "You need to enter a letter!";
+        private static final String NO_SUCH_TOOL = "NO SUCH TOOL";
 
         protected JButton button;
         private int newKeyCode = -1;
@@ -221,7 +227,6 @@ public class ShortcutDialog {
         public Object getCellEditorValue() {
             dialog = new JDialog(mainUI.getMainFrame(), EDIT_SHORTCUT_TITLE_EDIT_SHORTCUT_DIALOG, true);
 
-
             JPanel listPane;
             listPane = new JPanel();
 
@@ -242,13 +247,13 @@ public class ShortcutDialog {
                 }
             });
 
-            strokeKey = new JButton("-");
-            saveButton = new JButton("Save");
-            exitButton = new JButton("Cancel");
-            ctrlKey = new JToggleButton("ctrl");
-            altKey = new JToggleButton("alt");
-            shiftKey = new JToggleButton("shift");
-            instructions = new JLabel("Toggle ctrl,alt and shift.Then type a letter");
+            strokeKey = new JButton(KEY_STROKE_SYMBOL_BUTTON);
+            saveButton = new JButton(SAVE_TEXT_BUTTON);
+            exitButton = new JButton(CANCEL_TEXT_BUTTON);
+            ctrlKey = new JToggleButton(CTRL_TEXT_BUTTON);
+            altKey = new JToggleButton(ALT_TEXT_BUTTON);
+            shiftKey = new JToggleButton(SHIFT_TEXT_BUTTON);
+            instructions = new JLabel(INSTRUCTION_EDIT_SHORTCUT_LABEL);
             notValidShortcut = new JLabel();
             GridBagConstraints c = new GridBagConstraints();
             ctrlKey.setFocusable(false);
@@ -267,12 +272,12 @@ public class ShortcutDialog {
                     if (!sc.isValidKeyBinding(newKeyCode, isCtrl, isShift, isAlt)) {
                         notValidShortcut.setForeground(Color.red);
                         notValidShortcut.setOpaque(true);
-                        notValidShortcut.setText("That Binding is Already Taken!");
+                        notValidShortcut.setText(INSTRUCTION_INVALID_BINDING_EDIT_LABEL);
 
                     } else if (newKeyCode == -1) {
                         notValidShortcut.setForeground(Color.red);
                         notValidShortcut.setOpaque(true);
-                        notValidShortcut.setText("You need to enter a letter!");
+                        notValidShortcut.setText(INSTRUCTION_ENTER_LETTER_LABEL);
                     } else {
 
                         changeShortcut();
@@ -349,7 +354,7 @@ public class ShortcutDialog {
                     break;
 
                 default:
-                    System.out.println("NO SUCH TOOL");
+                    System.out.println(NO_SUCH_TOOL);
 
             }
 

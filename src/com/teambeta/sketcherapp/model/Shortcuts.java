@@ -4,16 +4,14 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
 
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
-import com.teambeta.sketcherapp.Database.DB_KBShortcuts;
 import com.teambeta.sketcherapp.ui.MainUI;
 
 public class Shortcuts {
 
-    public static final String CLEAR_TOOL_SHORTCUT = "CLEAR";
     public static final String NO_SUCH_TOOL = "NO SUCH TOOL";
+
+    public static final String CLEAR_TOOL_SHORTCUT = "CLEAR";
     static int clearToolKeyCode;
     static boolean isCtrl_clearTool;
     static boolean isShift_clearTool;
@@ -47,21 +45,19 @@ public class Shortcuts {
     private MainUI mainUI;
     private ActionMap actionMap;
     private InputMap im;
-    //private DB_KBShortcuts db_kbShortcuts;
 
     public Shortcuts(JComponent component, MainUI mainUI) {
         this.component = component;
         im = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         actionMap = component.getActionMap();
         this.mainUI = mainUI;
-
-
     }
 
 
-
+    /**
+     * adds a new key binding that does not exists in the database
+     */
     public void addKeyBinding(int keyCode, boolean useControl, boolean useShift, boolean useAlt, String id, ActionListener actionListener) {
-
         char c = (char) keyCode;
         mainUI.getDb_kbShortcuts().insert(id, "" + c, "" + useControl, "" + useAlt, "" + useShift);
         addBinding(keyCode, useControl, useShift, useAlt, id);
@@ -71,28 +67,30 @@ public class Shortcuts {
                 actionListener.actionPerformed(e);
             }
         });
-        mainUI.focusCanvasTools();
-        mainUI.focusWidthPanel();
-
     }
 
 
-
-
+    /**
+     * changes a  key binding that exists and updates the database
+     */
     public void changeKeyBinding(int keyCode, boolean useControl, boolean useShift, boolean useAlt, String id) {
         char c = (char) keyCode;
         mainUI.getDb_kbShortcuts().update(id, "" + c, "" + useControl, "" + useAlt, "" + useShift);
         addBinding(keyCode, useControl, useShift, useAlt, id);
     }
 
+    /**
+     * used by the program to get bindings from the database
+     */
     public void getDBShortcuts(int keyCode, boolean useControl, boolean useShift, boolean useAlt, String id) {
-        im = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         addBinding(keyCode, useControl, useShift, useAlt, id);
         mainUI.focusCanvasTools();
-        mainUI.focusWidthPanel();
+        mainUI.focusWidthPanelToFalse();
     }
 
-
+    /**
+     * adds the key binding to the program
+     */
     private void addBinding(int keyCode, boolean useControl, boolean useShift, boolean useAlt, String id) {
         if (useControl && useAlt && useShift) {
             im.put(KeyStroke.getKeyStroke(keyCode, InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), id);
@@ -115,12 +113,13 @@ public class Shortcuts {
         setKBShortcut(id, keyCode, useControl, useShift, useAlt);
 
         mainUI.focusCanvasTools();
-        mainUI.focusWidthPanel();
+        mainUI.focusWidthPanelToFalse();
     }
 
-
+    /**
+     * removes a binding
+     */
     public void removeBinding(int keyCode, boolean useControl, boolean useShift, boolean useAlt) {
-
         if (useControl && useAlt && useShift) {
             im.remove(KeyStroke.getKeyStroke(keyCode, InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK));
         } else if (useControl && useAlt) {
@@ -140,60 +139,12 @@ public class Shortcuts {
         }
 
         mainUI.focusCanvasTools();
-        mainUI.focusWidthPanel();
+        mainUI.focusWidthPanelToFalse();
     }
 
-
-    /*
-    public void DB_addKeyBinding(int keyCode, boolean useControl, boolean useShift, boolean useAlt, String id, ActionListener actionListener) {
-
-
-        char c=(char)keyCode;
-        mainUI.getDb_kbShortcuts().insert(id,"" + c,"" + useControl ,"" + useAlt,"" + useShift);
-
-
-        if (useControl && useAlt && useShift) {
-            im.put(KeyStroke.getKeyStroke(keyCode, InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), id);
-        } else if (useControl && useAlt) {
-            im.put(KeyStroke.getKeyStroke(keyCode, InputEvent.CTRL_DOWN_MASK | InputEvent.ALT_DOWN_MASK), id);
-        } else if (useControl && useShift) {
-            im.put(KeyStroke.getKeyStroke(keyCode, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), id);
-        } else if (useAlt && useShift) {
-            im.put(KeyStroke.getKeyStroke(keyCode, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), id);
-        } else if (useControl) {
-            im.put(KeyStroke.getKeyStroke(keyCode, InputEvent.CTRL_DOWN_MASK), id);
-        } else if (useShift) {
-            im.put(KeyStroke.getKeyStroke(keyCode, InputEvent.SHIFT_DOWN_MASK), id);
-        } else if (useAlt) {
-            im.put(KeyStroke.getKeyStroke(keyCode, InputEvent.ALT_DOWN_MASK), id);
-        } else {
-            im.put(KeyStroke.getKeyStroke(keyCode, 0, false), id);
-        }
-
-        actionMap.put(id, new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionListener.actionPerformed(e);
-            }
-        });
-
-        setKBShortcut(id, keyCode, useControl, useShift, useAlt);
-
-        mainUI.focusCanvasTools();
-        mainUI.focusWidthPanel();
-
-    }
-    public void setActionMap(String id, ActionListener actionListener) {
-        actionMap.put(id, new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                actionListener.actionPerformed(e);
-            }
-        });
-
-    }*/
-
-
+    /**
+     * sets all the variables so the program can get key binding information
+     */
     public static void setKBShortcut(String tool, int keyCode, boolean useControl, boolean useShift, boolean useAlt) {
         switch (tool) {
             case CLEAR_TOOL_SHORTCUT:
@@ -231,15 +182,22 @@ public class Shortcuts {
         }
     }
 
+    /**
+     * sets the key binding to default settings
+     */
     public void resetDefaultBindings() {
         im.clear();
         mainUI.focusCanvasTools();
         mainUI.getDb_kbShortcuts().dropTable();
         mainUI.getDb_kbShortcuts().createTable();
         mainUI.generateDefaultKeyBindings();
-
     }
 
+    /**
+     * gets any tools key code
+     * @param tool
+     * @return
+     */
     public char getKBShortcut(String tool) {
         switch (tool) {
             case CLEAR_TOOL_SHORTCUT:
@@ -258,8 +216,9 @@ public class Shortcuts {
         }
     }
 
-
-
+    /**
+     * when the user changes a binding, this function will check to see if there is another tool using the same binding
+     */
     public boolean isValidKeyBinding(int keyCode, boolean ctrl, boolean shift, boolean alt) {
         if (keyCode == brushToolKeyCode && ctrl == isCtrl_brushTool && shift == isIsShift_brushTool() && alt == isIsAlt_brushTool()) {
             return false;
