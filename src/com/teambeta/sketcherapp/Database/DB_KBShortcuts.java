@@ -126,14 +126,11 @@ public class DB_KBShortcuts {
     public void dropTable() {
         try {
             connection = ConnectionConfiguration.getConnection();
-
             String sqlCreate = " DROP TABLE " + KB_SHORTCUTS_TABLE;
-
             Statement stmt = connection.createStatement();
             stmt.execute(sqlCreate);
             stmt.close();
             connection.close();
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -150,7 +147,6 @@ public class DB_KBShortcuts {
             ResultSet rset = stmt.executeQuery("select * from " + KB_SHORTCUTS_TABLE);
 
             while (rset.next()) {
-
                 boolean isCtrl = false;
                 boolean isShift = false;
                 boolean isAlt = false;
@@ -169,12 +165,8 @@ public class DB_KBShortcuts {
 
                 int keyCode;
                 keyCode = rset.getString(KEY_STROKE).charAt(0);
-
                 shortcuts.removeBinding(keyCode, isCtrl, isShift, isAlt);
-
-
                 shortcuts.getDBShortcuts(keyCode, isCtrl, isShift, isAlt, rset.getString(SHORTCUT_NAME));
-
             }
 
             stmt.close();
@@ -198,7 +190,6 @@ public class DB_KBShortcuts {
             String query = "SELECT (count(*) > 0) as found FROM " + KB_SHORTCUTS_TABLE + " WHERE " + SHORTCUT_NAME + " LIKE ? ";
             PreparedStatement pst = connection.prepareStatement(query);
             pst.setString(1, shortcutName);
-
 
             try (ResultSet rs = pst.executeQuery()) {
                 // Only expecting a single result
@@ -263,20 +254,16 @@ public class DB_KBShortcuts {
             rs = st.executeQuery("select * from " + KB_SHORTCUTS_TABLE);
             rsmd = rs.getMetaData();
             int columnsNumber = rsmd.getColumnCount();
+
             while (rs.next()) {
                 //Print one row
                 for (int i = 1; i <= columnsNumber; i++) {
-
                     System.out.print(rs.getString(i) + " ");
-
                 }
-
                 System.out.println();
-
             }
 
             System.out.println();
-
 
             rs.close();
             st.close();

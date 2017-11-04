@@ -489,22 +489,18 @@ public class MainUI {
             drawArea.clear();
         });
 
-
         shortcuts.addKeyBinding(KeyEvent.VK_O, true, false, false, Shortcuts.EXPORT_SHORTCUT, (evt) -> {
             importExport.exportImage();
         });
-
 
         shortcuts.addKeyBinding(KeyEvent.VK_I, true, false, false, Shortcuts.IMPORT_SHORTCUT, (evt) -> {
             importExport.importImage();
         });
 
-        // db_kbShortcuts.insert(Shortcuts.BRUSH_TOOL_SHORTCUT,"B","T","F","F");
         shortcuts.addKeyBinding(KeyEvent.VK_B, true, false, false, Shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = brushTool;
             updateSizeSlider();
         });
-
 
         shortcuts.addKeyBinding(KeyEvent.VK_L, true, false, false, Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = lineTool;
@@ -568,22 +564,18 @@ public class MainUI {
             drawArea.clear();
         });
 
-
         shortcuts.addKeyBinding(shortcuts.getExportKeyCode(), shortcuts.isIsCtrl_export(), shortcuts.isIsShift_export(), shortcuts.isIsAlt_export(), Shortcuts.EXPORT_SHORTCUT, (evt) -> {
             importExport.exportImage();
         });
-
 
         shortcuts.addKeyBinding(shortcuts.getImportKeyCode(), shortcuts.isIsCtrl_import(), shortcuts.isIsShift_import(), shortcuts.isIsAlt_import(), Shortcuts.IMPORT_SHORTCUT, (evt) -> {
             importExport.importImage();
         });
 
-
         shortcuts.addKeyBinding(shortcuts.getBrushToolKeyCode(), shortcuts.isIsCtrl_brushTool(), shortcuts.isIsShift_brushTool(), shortcuts.isIsAlt_brushTool(), shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = brushTool;
             updateSizeSlider();
         });
-
 
         shortcuts.addKeyBinding(shortcuts.getLineToolKeyCode(), shortcuts.isIsCtrl_lineTool(), shortcuts.isIsShift_lineTool(), shortcuts.isIsAlt_lineTool(), Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = lineTool;
@@ -647,6 +639,7 @@ public class MainUI {
 
     /**
      * Used in Shortcuts class to focus the canvas tools
+     * this also makes the text field to be read only
      */
     public void focusWidthPanelToFalse() {
         widthChanger.getJTextFieldComponent().setFocusable(false);
