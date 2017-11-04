@@ -39,6 +39,7 @@ public class TextToolSettings extends JPanel {
         String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
         setBackground(Color.DARK_GRAY);
 
+        encryptionPanel = new JPanel();
         encryptionsLabel = new JLabel(ENCRYPTIONS_LABEL);
         morseCodeLabel = new JLabel(MORSE_CODE_LABEL);
         caesarLabel = new JLabel(CEASAR_LABEL);
@@ -59,7 +60,7 @@ public class TextToolSettings extends JPanel {
         fontSelector = new JComboBox<>(fonts);
         fontSelector.setSelectedItem(DEFAULT_FONT);
 
-        setPanelFonts();
+        setLabelFonts();
         setVisibility(false);
 
         add(encryptionsLabel);
@@ -76,7 +77,6 @@ public class TextToolSettings extends JPanel {
      * Helper function to build encryption panel and its components.
      */
     private void buildEncryptionPanel() {
-        encryptionPanel = new JPanel();
         encryptionPanel.setLayout(new BoxLayout(encryptionPanel, BoxLayout.X_AXIS));
         encryptionPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, ENCRYPTION_PANEL_HEIGHT));
         encryptionPanel.setBackground(Color.DARK_GRAY);
@@ -94,7 +94,10 @@ public class TextToolSettings extends JPanel {
         encryptionPanel.add(Box.createRigidArea(new Dimension(COMPONENT_SPACING, 0)));
     }
 
-    private void setPanelFonts() {
+    /**
+     * Helper function to set fonts to labels.
+     */
+    private void setLabelFonts() {
         encryptionsLabel.setFont(new Font(DEFAULT_FONT, Font.PLAIN, HEADER_FONT_SIZE));
         morseCodeLabel.setFont(new Font(DEFAULT_FONT, Font.PLAIN, FONT_SIZE));
         caesarLabel.setFont(new Font(DEFAULT_FONT, Font.PLAIN, FONT_SIZE));
@@ -107,6 +110,7 @@ public class TextToolSettings extends JPanel {
      * @param isVisible specifies visibility level for all comonents.
      */
     public void setVisibility(Boolean isVisible) {
+        encryptionPanel.setVisible(isVisible);
         encryptionsLabel.setVisible(isVisible);
         morseCodeLabel.setVisible(isVisible);
         caesarLabel.setVisible(isVisible);
