@@ -216,6 +216,11 @@ public class GeneratorFunctions {
 
         shift = shift % ALPHABET_LENGTH;
 
+        // Early exit on no shift required
+        if (shift == 0) {
+            return letter;
+        }
+
         // Define boundaries
         if ((letter >= LETTER_a) && (letter <= LETTER_z)) {
             lower_inclusive_bound = LETTER_a;
@@ -249,7 +254,7 @@ public class GeneratorFunctions {
             }
         }
 
-        return (char) letter;
+        return letter;
 
     }
 

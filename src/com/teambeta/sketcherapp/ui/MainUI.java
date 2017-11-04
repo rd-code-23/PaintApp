@@ -2,8 +2,6 @@ package com.teambeta.sketcherapp.ui;
 
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.ImportExport;
-import com.teambeta.sketcherapp.model.AboutMenu;
-import javafx.stage.FileChooser;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -13,6 +11,8 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 
 /**
@@ -140,6 +140,10 @@ public class MainUI {
                 }
             } else if (e.getSource() == textToolSettings.getFontSelector()) {
                 textTool.setFont(textToolSettings.getFontFromSelector());
+            } else if (e.getSource() == textToolSettings.getCaesarSelector()) {
+                textTool.setCaesarConvert(textToolSettings.getCaesarSelected());
+            } else if (e.getSource() == textToolSettings.getMorseCodeSelector()) {
+                textTool.setMorseConvert(textToolSettings.getMorseSelected());
             } else if (e.getSource() == widthChanger.getFillBox()) {
                 widthChanger.setFill(!widthChanger.isFill());
                 selectedDrawingTool.setFillState(widthChanger.isFill());
@@ -208,7 +212,6 @@ public class MainUI {
             }
         }
     }
-
 
     public JFrame getMainFrame() {
         return mainFrame;
@@ -382,6 +385,14 @@ public class MainUI {
         editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
         mainContent.add(editorPanel, BorderLayout.EAST);
         mainContent.add(northPanel, BorderLayout.NORTH);
+
+        // Standard ActionListeners do not properly send updates to the text tool. PropertyChangeListeners work better.
+        textToolSettings.getNumberInputField().addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                textTool.setCaesarShiftValue(textToolSettings.getCaesarShiftValue());
+            }
+        });
     }
 
     /**

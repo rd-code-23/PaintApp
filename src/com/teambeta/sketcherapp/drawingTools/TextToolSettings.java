@@ -1,35 +1,42 @@
 package com.teambeta.sketcherapp.drawingTools;
 
 import javax.swing.*;
+import javax.swing.text.NumberFormatter;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 
 /**
  * Text settings including font, and other encryption options.
  */
 public class TextToolSettings extends JPanel {
-    private JPanel encryptionPanel;
+    private JPanel transformPanel;
     private JLabel encryptionsLabel;
     private JLabel morseCodeLabel;
     private JLabel caesarLabel;
     private JLabel numberInputLabel;
     private JCheckBox morseCodeSelector;
     private JCheckBox caesarSelector;
-    private JTextField numberInputField;
+    private JFormattedTextField numberInputField;
+    private NumberFormat integerFormat;
+    private NumberFormatter integerFormatter;
     private JComboBox<String> fontSelector;
 
     private static final int COMPONENT_SPACING = 20;
-    private static final int ENCRYPTION_PANEL_HEIGHT = 40;
+    private static final int TRANSFORM_PANEL_HEIGHT = 40;
     private static final int HEADER_FONT_SIZE = 16;
     private static final int FONT_SIZE = 12;
     private static final int ELEMENT_SPACING = 10;
     private static final int NUMBER_FIELD_WIDTH = 40;
     private static final int NUMBER_FIELD_HEIGHT = 25;
+    private static final int DEFAULT_SHIFT_VALUE = 0;
+    private static final int MAX_SHIFT_VALUE = 100;
+    private static final int MIN_SHIFT_VALUE = -100;
     private static final String DEFAULT_FONT = "Arial";
-    private static final String MORSE_CODE_LABEL = "Morse code";
+    private static final String MORSE_CODE_LABEL = "Morse Code";
     private static final String CAESAR_LABEL = "Caesar";
-    private static final String NUMBER_LABEL = "Number";
-    private static final String ENCRYPTIONS_LABEL = "Encryption";
+    private static final String NUMBER_LABEL = "Caesar Shift";
+    private static final String TRANSFORM_LABEL = "Transform Text";
 
     /**
      * Constructor.
@@ -39,8 +46,8 @@ public class TextToolSettings extends JPanel {
         String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
         setBackground(Color.DARK_GRAY);
 
-        encryptionPanel = new JPanel();
-        encryptionsLabel = new JLabel(ENCRYPTIONS_LABEL);
+        transformPanel = new JPanel();
+        encryptionsLabel = new JLabel(TRANSFORM_LABEL);
         morseCodeLabel = new JLabel(MORSE_CODE_LABEL);
         caesarLabel = new JLabel(CAESAR_LABEL);
         numberInputLabel = new JLabel(NUMBER_LABEL);
@@ -51,9 +58,19 @@ public class TextToolSettings extends JPanel {
 
         morseCodeSelector = new JCheckBox();
         caesarSelector = new JCheckBox();
-        numberInputField = new JTextField();
+
+        integerFormat = NumberFormat.getIntegerInstance();
+        integerFormatter = new NumberFormatter(integerFormat);
+        integerFormatter.setAllowsInvalid(false);
+        integerFormatter.setValueClass(Integer.class);
+        integerFormatter.setCommitsOnValidEdit(true);
+        integerFormatter.setMaximum(MAX_SHIFT_VALUE);
+        integerFormatter.setMinimum(MIN_SHIFT_VALUE);
+
+        numberInputField = new JFormattedTextField(integerFormatter);
         numberInputField.setPreferredSize(new Dimension(NUMBER_FIELD_WIDTH, NUMBER_FIELD_HEIGHT));
         numberInputField.setMaximumSize(new Dimension(NUMBER_FIELD_WIDTH, NUMBER_FIELD_HEIGHT));
+        numberInputField.setValue(new Integer(DEFAULT_SHIFT_VALUE));
         morseCodeSelector.setBackground(Color.DARK_GRAY);
         caesarSelector.setBackground(Color.DARK_GRAY);
 
@@ -66,32 +83,33 @@ public class TextToolSettings extends JPanel {
         add(encryptionsLabel);
         add(Box.createRigidArea(new Dimension(COMPONENT_SPACING, 0)));
 
-        buildEncryptionPanel();
+        buildTransformPanel();
 
-        add(encryptionPanel);
+        add(transformPanel);
         add(Box.createRigidArea(new Dimension(COMPONENT_SPACING, 0)));
         add(fontSelector);
+
     }
 
     /**
-     * Helper function to build encryption panel and its components.
+     * Helper function to build transform panel and its components.
      */
-    private void buildEncryptionPanel() {
-        encryptionPanel.setLayout(new BoxLayout(encryptionPanel, BoxLayout.X_AXIS));
-        encryptionPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, ENCRYPTION_PANEL_HEIGHT));
-        encryptionPanel.setBackground(Color.DARK_GRAY);
-        encryptionPanel.add(Box.createRigidArea(new Dimension(COMPONENT_SPACING, 0)));
-        encryptionPanel.add(morseCodeLabel);
-        encryptionPanel.add(morseCodeSelector);
-        encryptionPanel.add(Box.createRigidArea(new Dimension(COMPONENT_SPACING, 0)));
-        encryptionPanel.add(caesarLabel);
-        encryptionPanel.add(caesarSelector);
-        encryptionPanel.add(Box.createRigidArea(new Dimension(COMPONENT_SPACING, 0)));
-        encryptionPanel.add(numberInputLabel);
-        encryptionPanel.add(Box.createRigidArea(new Dimension(ELEMENT_SPACING, 0)));
-        encryptionPanel.add(numberInputField);
-        encryptionPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        encryptionPanel.add(Box.createRigidArea(new Dimension(COMPONENT_SPACING, 0)));
+    private void buildTransformPanel() {
+        transformPanel.setLayout(new BoxLayout(transformPanel, BoxLayout.X_AXIS));
+        transformPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, TRANSFORM_PANEL_HEIGHT));
+        transformPanel.setBackground(Color.DARK_GRAY);
+        transformPanel.add(Box.createRigidArea(new Dimension(COMPONENT_SPACING, 0)));
+        transformPanel.add(morseCodeLabel);
+        transformPanel.add(morseCodeSelector);
+        transformPanel.add(Box.createRigidArea(new Dimension(COMPONENT_SPACING, 0)));
+        transformPanel.add(caesarLabel);
+        transformPanel.add(caesarSelector);
+        transformPanel.add(Box.createRigidArea(new Dimension(COMPONENT_SPACING, 0)));
+        transformPanel.add(numberInputLabel);
+        transformPanel.add(Box.createRigidArea(new Dimension(ELEMENT_SPACING, 0)));
+        transformPanel.add(numberInputField);
+        transformPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        transformPanel.add(Box.createRigidArea(new Dimension(COMPONENT_SPACING, 0)));
     }
 
     /**
@@ -110,7 +128,7 @@ public class TextToolSettings extends JPanel {
      * @param isVisible specifies visibility level for all components.
      */
     public void setVisibility(Boolean isVisible) {
-        encryptionPanel.setVisible(isVisible);
+        transformPanel.setVisible(isVisible);
         encryptionsLabel.setVisible(isVisible);
         morseCodeLabel.setVisible(isVisible);
         caesarLabel.setVisible(isVisible);
@@ -132,6 +150,7 @@ public class TextToolSettings extends JPanel {
         numberInputField.addActionListener(actionListener);
         fontSelector.addActionListener(actionListener);
     }
+
 
     /**
      * Returns morse code checkbox component.
@@ -177,4 +196,32 @@ public class TextToolSettings extends JPanel {
     public String getFontFromSelector() {
         return (String) fontSelector.getSelectedItem();
     }
+
+    /**
+     * Return the state of the Caesar Encrypt checkbox.
+     *
+     * @return state of Caesar Encrypt checkbox.
+     */
+    public boolean getCaesarSelected() {
+        return caesarSelector.isSelected();
+    }
+
+    /**
+     * Return the state of the Morse Code checkbox.
+     *
+     * @return state of Morse Code checkbox.
+     */
+    public boolean getMorseSelected() {
+        return morseCodeSelector.isSelected();
+    }
+
+    /**
+     * Return the value of the Caesar Encrypt shift field.
+     *
+     * @return value of the Caesar Encrypt shift field.
+     */
+    public int getCaesarShiftValue() {
+        return (int) numberInputField.getValue();
+    }
+
 }
