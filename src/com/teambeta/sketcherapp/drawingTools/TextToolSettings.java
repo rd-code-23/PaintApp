@@ -27,9 +27,9 @@ public class TextToolSettings extends JPanel {
     private static final int NUMBER_FIELD_HEIGHT = 25;
     private static final String DEFAULT_FONT = "Arial";
     private static final String MORSE_CODE_LABEL = "Morse code";
-    private static final String CEASAR_LABEL = "Caesar";
+    private static final String CAESAR_LABEL = "Caesar";
     private static final String NUMBER_LABEL = "Number";
-    private static final String ENCRYPTIONS_LABEL = "Encryptions";
+    private static final String ENCRYPTIONS_LABEL = "Encryption";
 
     /**
      * Constructor.
@@ -42,7 +42,7 @@ public class TextToolSettings extends JPanel {
         encryptionPanel = new JPanel();
         encryptionsLabel = new JLabel(ENCRYPTIONS_LABEL);
         morseCodeLabel = new JLabel(MORSE_CODE_LABEL);
-        caesarLabel = new JLabel(CEASAR_LABEL);
+        caesarLabel = new JLabel(CAESAR_LABEL);
         numberInputLabel = new JLabel(NUMBER_LABEL);
         encryptionsLabel.setForeground(Color.WHITE);
         morseCodeLabel.setForeground(Color.WHITE);
@@ -107,7 +107,7 @@ public class TextToolSettings extends JPanel {
     /**
      * Sets visibility to all components.
      *
-     * @param isVisible specifies visibility level for all comonents.
+     * @param isVisible specifies visibility level for all components.
      */
     public void setVisibility(Boolean isVisible) {
         encryptionPanel.setVisible(isVisible);
