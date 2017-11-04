@@ -69,7 +69,7 @@ public class DB_KBShortcuts {
                             "(SHORTCUT_NAME,KEY_STROKE,IS_CTRL,IS_SHIFT,IS_ALT)" +
                             "VALUES(?,?,?,?,?) ");
 
-            pst.setString(1, shortcutName); // 1 = first column
+            pst.setString(1, shortcutName); // 1 the first ?
             pst.setString(2, keyStroke);
             pst.setString(3, isCTRL);
             pst.setString(4, isSHIFT);

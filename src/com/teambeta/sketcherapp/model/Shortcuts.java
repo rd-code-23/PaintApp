@@ -53,7 +53,6 @@ public class Shortcuts {
         this.mainUI = mainUI;
     }
 
-
     /**
      * adds a new key binding that does not exists in the database
      */
@@ -68,7 +67,6 @@ public class Shortcuts {
             }
         });
     }
-
 
     /**
      * changes a  key binding that exists and updates the database
