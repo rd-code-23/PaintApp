@@ -2,7 +2,6 @@ package com.teambeta.sketcherapp.Database;
 
 import com.teambeta.sketcherapp.model.Shortcuts;
 
-import java.awt.*;
 import java.sql.*;
 //todo bug with the
 public class DB_KBShortcuts {
@@ -78,7 +77,6 @@ public class DB_KBShortcuts {
 
     public void update(String shortcutName, String keyStroke, String isCTRL, String isALT, String isSHIFT) {
         Connection connection = null;
-        PreparedStatement preparedStatement = null; // protects from SQL injection attacks
 
         try {
 
@@ -149,7 +147,7 @@ public class DB_KBShortcuts {
 
             System.out.println();
 
-            //   preparedStatement.close();
+
 
             rs.close();
             st.close();
@@ -176,8 +174,9 @@ public class DB_KBShortcuts {
         try {
             stmt = connection.createStatement();
             stmt.execute(sqlCreate);
-            connection.close();
             stmt.close();
+            connection.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -186,7 +185,7 @@ public class DB_KBShortcuts {
 
     public void generateDBKeyBindings () {
 
-        printTable();
+      //  printTable();
 
         Connection connection = null;
         ResultSet rset = null; //table of record from DB
@@ -194,11 +193,12 @@ public class DB_KBShortcuts {
             connection =    ConnectionConfiguration.getConnection();
             Statement s2 = connection.createStatement();
             rset = s2.executeQuery("select * from " + KB_SHORTCUTS_TABLE);
-
-            while(rset.next()){
-                System.out.println("from db:  " + rset.getString(SHORTCUT_NAME));
-                System.out.println("from db:  " + rset.getString(KEY_STROKE));
-                System.out.println("from db:  " + rset.getBoolean(IS_CTRL));
+            System.out.println("------------------------------");
+            System.out.println("generating DB shortcuts");
+          while(rset.next()){
+               // System.out.println("from db:  " + rset.getString(SHORTCUT_NAME));
+               // System.out.println("from db:  " + rset.getString(KEY_STROKE));
+               // System.out.println("from db:  " + rset.getBoolean(IS_CTRL));
 
                 boolean isCtrl = false;
                 boolean isShift = false;
@@ -208,7 +208,7 @@ public class DB_KBShortcuts {
                     isCtrl = true;
                 }
 
-                if(rset.getString(IS_SHIFT).equals("true")){
+             if(rset.getString(IS_SHIFT).equals("true")){
                     isShift = true;
                 }
 
@@ -216,12 +216,21 @@ public class DB_KBShortcuts {
                     isAlt = true;
                 }
 
+                int keyCode;
+                keyCode = rset.getString(KEY_STROKE).charAt(0);
+            //    System.out.println(keyCode);
+                  shortcuts.removeBinding(keyCode,  isCtrl , isShift, isAlt);
 
+              //keyCode = rset.getString(KEY_STROKE).charAt(0);
 
-                shortcuts.removeBinding2(rset.getString(KEY_STROKE),  isCtrl , isShift, isAlt);
-                shortcuts.changeKeyBinding2(rset.getString(KEY_STROKE),  isCtrl , isShift, isAlt,rset.getString(SHORTCUT_NAME));
-             //   shortcuts.setKBShortcut(rset.getString(SHORTCUT_NAME), rset.getInt(KEY_STROKE), rset.getBoolean(IS_CTRL) , rset.getBoolean(IS_SHIFT), rset.getBoolean(IS_ALT));
-            }
+                shortcuts.getDBShortcuts(keyCode,  isCtrl , isShift, isAlt,rset.getString(SHORTCUT_NAME));
+    /*         //   shortcuts.setKBShortcut(rset.getString(SHORTCUT_NAME), rset.getInt(KEY_STROKE), rset.getBoolean(IS_CTRL) , rset.getBoolean(IS_SHIFT), rset.getBoolean(IS_ALT));
+            */
+        }
+            System.out.println();
+            System.out.println();
+            System.out.println("------------------------------");
+            s2.close();
             rset.close();
             connection.close();
         } catch (Exception e){
@@ -235,7 +244,7 @@ public class DB_KBShortcuts {
         Connection connection = null;
         //  PreparedStatement preparedStatement = null; // protects from SQL injection attacks
 
-        Statement st = null;
+
         ResultSetMetaData rsmd = null;
 
 
@@ -270,6 +279,7 @@ public class DB_KBShortcuts {
     public boolean isTableExists(){
         Connection connection = null;
         connection = ConnectionConfiguration.getConnection();
+        ResultSet tables = null;
         try{
           /*  DatabaseMetaData md =  connection.getMetaData();
             ResultSet rs = md.getTables(null, null,KB_SHORTCUTS_TABLE, null);
@@ -280,8 +290,9 @@ public class DB_KBShortcuts {
 
             DatabaseMetaData dbm = connection.getMetaData();
             // check if "employee" table is there
-            ResultSet tables = dbm.getTables(null, null, KB_SHORTCUTS_TABLE, null);
+             tables = dbm.getTables(null, null, KB_SHORTCUTS_TABLE, null);
             if (tables.next()) {
+
                 tables.close();
                 connection.close();
                 return true;
@@ -300,6 +311,7 @@ public class DB_KBShortcuts {
             e.printStackTrace();
 
         }
+
         return false;
     }
     /*

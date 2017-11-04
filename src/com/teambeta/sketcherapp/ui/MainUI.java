@@ -5,6 +5,7 @@ import com.teambeta.sketcherapp.Database.DB_KBShortcuts;
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.ImportExport;
 import com.teambeta.sketcherapp.model.Shortcuts;
+import sun.security.provider.SHA;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -418,20 +419,19 @@ public class MainUI {
         mainContent.add(northPanel, BorderLayout.NORTH);
 
 
-        db_kbShortcuts.printTable();
+     //   db_kbShortcuts.printTable();
         System.out.println();
         System.out.println();
 
-        setDefaultActionMap();
-        generateDefaultKeyBindings();
-       // db_kbShortcuts.dropTable();
+
+
+
         if(db_kbShortcuts.isTableExists()){
+            generateDBDefaultKeyBindings();
             db_kbShortcuts.generateDBKeyBindings();
         } else {
             db_kbShortcuts.createTable();
             generateDefaultKeyBindings();
-
-            //mainUI.generateDefaultKeyBindings();
         }
 
         db_kbShortcuts.printTable();
@@ -508,7 +508,7 @@ public class MainUI {
     /**
      * generates the default key binding for shortcut keys
      */
-
+/*
     public void setDefaultActionMap() {
 
 
@@ -534,25 +534,19 @@ public class MainUI {
             updateSizeSlider();
         });
 
-    }
+    }*/
     public void generateDefaultKeyBindings() {
 
-        //TODO ctrl+c doesnt work unless you press something on the canvas tools ???
-        //TODO I THINK THE ANSWER IS HERE  https://stackoverflow.com/questions/16229526/how-do-you-remove-the-ctrlc-action-on-a-jfilechooser
-        //TODO also https://coderanch.com/t/341695/java/enable-CTRL-perform-action-coping
-
-
-     //   db_kbShortcuts.insert(Shortcuts.CLEAR_TOOL_SHORTCUT,"C","F","T","T");
-        shortcuts.addKeyBinding( KeyEvent.VK_C, false, true, true, Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding( KeyEvent.VK_C, true, false, false, Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
             drawArea.clear();
         });
 
-      //  db_kbShortcuts.insert(Shortcuts.EXPORT_SHORTCUT,"O","T","F","F");
+
         shortcuts.addKeyBinding( KeyEvent.VK_O, true, false, false, Shortcuts.EXPORT_SHORTCUT, (evt) -> {
             importExport.exportImage();
         });
 
-       // db_kbShortcuts.insert(Shortcuts.IMPORT_SHORTCUT,"I","T","F","F");
+
         shortcuts.addKeyBinding( KeyEvent.VK_I, true, false, false, Shortcuts.IMPORT_SHORTCUT, (evt) -> {
             importExport.importImage();
         });
@@ -563,7 +557,7 @@ public class MainUI {
             updateSizeSlider();
         });
 
-      //  db_kbShortcuts.insert(Shortcuts.LINE_TOOL_SHORTCUT,"L","T","F","F");
+
         shortcuts.addKeyBinding( KeyEvent.VK_L, true, false, false, Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = lineTool;
             updateSizeSlider();
@@ -616,37 +610,31 @@ public class MainUI {
             updateSizeSlider();
         });*/
     }
-/*
+
     public void generateDBDefaultKeyBindings() {
 
-        //TODO ctrl+c doesnt work unless you press something on the canvas tools ???
-        //TODO I THINK THE ANSWER IS HERE  https://stackoverflow.com/questions/16229526/how-do-you-remove-the-ctrlc-action-on-a-jfilechooser
-        //TODO also https://coderanch.com/t/341695/java/enable-CTRL-perform-action-coping
-
-
-        //   db_kbShortcuts.insert(Shortcuts.CLEAR_TOOL_SHORTCUT,"C","F","T","T");
-        shortcuts.addKeyBinding( db, false, true, true, Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(Shortcuts.getClearToolKeyCode(), Shortcuts.isIsAlt_clearTool(), Shortcuts.isIsShift_clearTool(), Shortcuts.isIsAlt_clearTool(), Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
             drawArea.clear();
         });
 
-        //  db_kbShortcuts.insert(Shortcuts.EXPORT_SHORTCUT,"O","T","F","F");
-        shortcuts.addKeyBinding( KeyEvent.VK_O, true, false, false, Shortcuts.EXPORT_SHORTCUT, (evt) -> {
+
+        shortcuts.addKeyBinding( shortcuts.getExportKeyCode(), shortcuts.isIsCtrl_export(), shortcuts.isIsShift_export(), shortcuts.isIsAlt_export(), Shortcuts.EXPORT_SHORTCUT, (evt) -> {
             importExport.exportImage();
         });
 
-        // db_kbShortcuts.insert(Shortcuts.IMPORT_SHORTCUT,"I","T","F","F");
-        shortcuts.addKeyBinding( KeyEvent.VK_I, true, false, false, Shortcuts.IMPORT_SHORTCUT, (evt) -> {
+
+        shortcuts.addKeyBinding(shortcuts.getImportKeyCode(), shortcuts.isIsCtrl_import(), shortcuts.isIsShift_import(), shortcuts.isIsAlt_import(), Shortcuts.IMPORT_SHORTCUT, (evt) -> {
             importExport.importImage();
         });
 
-        // db_kbShortcuts.insert(Shortcuts.BRUSH_TOOL_SHORTCUT,"B","T","F","F");
-        shortcuts.addKeyBinding( KeyEvent.VK_B, true, false, false, Shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
+
+        shortcuts.addKeyBinding( shortcuts.getBrushToolKeyCode() ,shortcuts.isIsCtrl_brushTool(), shortcuts.isIsShift_brushTool(), shortcuts.isIsAlt_brushTool(),shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = brushTool;
             updateSizeSlider();
         });
 
-        //  db_kbShortcuts.insert(Shortcuts.LINE_TOOL_SHORTCUT,"L","T","F","F");
-        shortcuts.addKeyBinding( KeyEvent.VK_L, true, false, false, Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
+
+        shortcuts.addKeyBinding(shortcuts.getLineToolKeyCode(), shortcuts.isIsCtrl_lineTool(), shortcuts.isIsShift_lineTool(), shortcuts.isIsAlt_lineTool(), Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = lineTool;
             updateSizeSlider();
         });
@@ -696,8 +684,8 @@ public class MainUI {
         addKeyBinding(editorPanel, KeyEvent.VK_A, true, false, false, "AIRBRUSH TOOL", (evt) -> {
             selectedDrawingTool = airBrushTool;
             updateSizeSlider();
-        });
-    }*/
+        });*/
+    }
 
     /**
         Used in Shortcuts class to focus the canvas tools
