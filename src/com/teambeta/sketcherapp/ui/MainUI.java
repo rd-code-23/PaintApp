@@ -19,7 +19,6 @@ import java.io.File;
  * Main UI class to wrap all GUI elements together.
  */
 public class MainUI {
-    private static final String DEFAULT_FONT = "Arial";
     private static final int PANEL_SECTION_SPACING = 20;
     private static final int WEST_PANEL_WIDTH = 120;
     private static final int COLOR_PANEL_HEIGHT = 200;
@@ -79,11 +78,10 @@ public class MainUI {
     private JButton dnaToolButton;
     private JButton airBrushToolButton;
     private JButton triangleToolButton;
-    private JComboBox<String> fontSelector;
-
     private static DrawArea drawArea;
     private static ColorChooser colorChooser;
     private WidthChanger widthChanger;
+    private TextToolSettings textToolSettings;
 
     private static final String APPLICATION_LOGO_IMAGE_DIRECTORY = "res/BPIcon.png";
 
@@ -140,8 +138,8 @@ public class MainUI {
                 } else {
                     widthChanger.setGlobalSize(true);
                 }
-            } else if (e.getSource() == fontSelector) {
-                textTool.setFont((String) fontSelector.getSelectedItem());
+            } else if (e.getSource() == textToolSettings.getFontSelector()) {
+                textTool.setFont(textToolSettings.getFontFromSelector());
             } else if (e.getSource() == widthChanger.getFillBox()) {
                 widthChanger.setFill(!widthChanger.isFill());
                 selectedDrawingTool.setFillState(widthChanger.isFill());
@@ -161,9 +159,9 @@ public class MainUI {
              */
             if (e.getSource() == textToolButton) {
                 selectedDrawingTool = textTool;
-                fontSelector.setVisible(true);
+                textToolSettings.setVisibility(true);
             } else if ((e.getSource() != textToolButton) && (e.getSource() instanceof JButton)) {
-                fontSelector.setVisible(false);
+                textToolSettings.setVisibility(false);
             }
         }
     };
@@ -172,10 +170,6 @@ public class MainUI {
      * Constructor.
      */
     public MainUI() {
-        String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-        fontSelector = new JComboBox<>(fonts);
-        fontSelector.setSelectedItem(DEFAULT_FONT);
-        fontSelector.setVisible(false);
         initDrawingTools();
         prepareGUI();
     }
@@ -184,6 +178,7 @@ public class MainUI {
      * Create the drawing tool objects and set the pen tool as the default selection.
      */
     private void initDrawingTools() {
+        textToolSettings = new TextToolSettings();
         lineTool = new LineTool();
         brushTool = new BrushTool();
         rectangleTool = new RectangleTool();
@@ -336,15 +331,16 @@ public class MainUI {
         toolSettings.add(widthChanger.getGUI());
         northPanel.add(toolSettings, BorderLayout.CENTER);
 
-        if (fontSelector != null) {
-            northPanel.add(fontSelector, BorderLayout.EAST);
-            textTool.setFont((String) fontSelector.getSelectedItem());
+
+        if (textToolSettings != null) {
+            northPanel.add(textToolSettings, BorderLayout.EAST);
+            textTool.setFont(textToolSettings.getFontFromSelector());
         }
 
         MainUI.listenForSlider listenForSlider = new MainUI.listenForSlider();
         widthChanger.getSliderComponent().addChangeListener(listenForSlider);
         widthChanger.getJTextFieldComponent().addActionListener(actionListener);
-        fontSelector.addActionListener(actionListener);
+        textToolSettings.addActionListener(actionListener);
         widthChanger.getCheckBoxGlobalSizeComponent().addActionListener(actionListener);
         widthChanger.getFillBox().addActionListener(actionListener);
 
