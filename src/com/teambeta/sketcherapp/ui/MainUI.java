@@ -4,6 +4,8 @@ import com.teambeta.sketcherapp.Database.ConnectionConfiguration;
 import com.teambeta.sketcherapp.Database.DB_KBShortcuts;
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.ImportExport;
+import com.teambeta.sketcherapp.model.AboutMenu;
+import javafx.stage.FileChooser;
 import com.teambeta.sketcherapp.model.Shortcuts;
 import sun.security.provider.SHA;
 
@@ -326,7 +328,7 @@ public class MainUI {
                 celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton,
         };
 
-        canvasTools = new JPanel();
+        JPanel canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
         canvasTools.setBackground(Color.DARK_GRAY);
         canvasTools.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
@@ -350,6 +352,7 @@ public class MainUI {
         keboardShortCutPanel = new ShortcutDialog(this, shortcuts);
 
         MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel);
+
         northPanel.add(menuUI, BorderLayout.NORTH);
 
         JPanel toolSettings = new JPanel();

@@ -1,6 +1,7 @@
 package com.teambeta.sketcherapp.ui;
 
 import com.teambeta.sketcherapp.model.ImportExport;
+import com.teambeta.sketcherapp.model.AboutMenu;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -89,7 +90,7 @@ public class MenuUI extends JMenuBar {
     private ShortcutDialog keboardShortCutPanel;
 
     /**
-     * constructor
+     * Constructor
      */
     public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu,
                   NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu,ShortcutDialog keboardShortCutPanel) {
@@ -180,6 +181,7 @@ public class MenuUI extends JMenuBar {
         iExport.addActionListener(menuActionListener);
         iImport.addActionListener(menuActionListener);
         iGreyscale.addActionListener(menuActionListener);
+        hAbout.addActionListener(menuActionListener);
         iGenerateNoise.addActionListener(menuActionListener);
         iCheckerBoard.addActionListener(menuActionListener);
         eKeybordShortCuts.addActionListener(menuActionListener);
@@ -197,6 +199,9 @@ public class MenuUI extends JMenuBar {
             }
             if (e.getSource() == iGreyscale) {
                 greyscaleMenu.showWindow();
+            }
+            if (e.getSource() == hAbout) {
+                AboutMenu.prepareAbout();
             }
             if (e.getSource() == iGenerateNoise) {
                 noiseGeneratorMenu.showWindow();
