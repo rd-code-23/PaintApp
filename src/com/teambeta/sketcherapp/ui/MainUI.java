@@ -179,6 +179,7 @@ public class MainUI {
             }
         }
     };
+    private LayersPanel layersPanel;
 
     /**
      * Constructor.
@@ -207,6 +208,10 @@ public class MainUI {
         airBrushTool = new AirBrushTool();
         triangleTool = new TriangleTool();
         selectedDrawingTool = brushTool;
+    }
+
+    public LayersPanel getLayersPanel() {
+        return layersPanel;
     }
 
     /**
@@ -275,7 +280,7 @@ public class MainUI {
 
         Container mainContent = mainFrame.getContentPane();
         mainContent.setLayout(new BorderLayout());
-        drawArea = new DrawArea();
+        drawArea = new DrawArea(this);
 
         ImportExport importExport = new ImportExport(drawArea, this);
         GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
@@ -344,7 +349,6 @@ public class MainUI {
         toolSettings.add(widthChanger.getGUI());
         northPanel.add(toolSettings, BorderLayout.CENTER);
 
-
         if (textToolSettings != null) {
             northPanel.add(textToolSettings, BorderLayout.EAST);
             textTool.setFont(textToolSettings.getFontFromSelector());
@@ -393,6 +397,8 @@ public class MainUI {
         JPanel editorPanel = new JPanel();
         editorPanel.setLayout(new BorderLayout());
         editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
+        layersPanel = new LayersPanel(drawArea);
+        editorPanel.add(layersPanel, BorderLayout.EAST);
         mainContent.add(editorPanel, BorderLayout.EAST);
         mainContent.add(northPanel, BorderLayout.NORTH);
 

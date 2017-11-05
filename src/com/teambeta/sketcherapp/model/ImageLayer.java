@@ -9,11 +9,15 @@ public class ImageLayer {
     private boolean isVisible;
     private BufferedImage bufferedImage;
     private boolean isSelected;
+    private String name;
+    private static int layerNumber = 1;
 
     public ImageLayer(BufferedImage bufferedImage) {
         this.bufferedImage = bufferedImage;
-        isVisible = false;
+        isVisible = true;
         isSelected = false;
+        name = "Layer " + layerNumber;
+        layerNumber++;
     }
 
     public BufferedImage getBufferedImage() {
@@ -34,5 +38,18 @@ public class ImageLayer {
 
     public boolean isSelected() {
         return isSelected;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }
