@@ -193,8 +193,6 @@ public class Shortcuts {
 
     /**
      * gets any tools key code
-     * @param tool
-     * @return
      */
     public char getKBShortcut(String tool) {
         switch (tool) {
@@ -218,21 +216,21 @@ public class Shortcuts {
      * when the user changes a binding, this function will check to see if there is another tool using the same binding
      */
     public boolean isValidKeyBinding(int keyCode, boolean ctrl, boolean shift, boolean alt) {
-        if (keyCode == brushToolKeyCode && ctrl == isCtrl_brushTool && shift == isIsShift_brushTool() && alt == isIsAlt_brushTool()) {
+        if (keyCode == brushToolKeyCode && ctrl == isCtrl_brushTool && shift == isShift_brushTool() && alt == isAlt_brushTool()) {
             return false;
         }
-        if (keyCode == lineToolKeyCode && ctrl == isCtrl_lineTool && shift == isIsShift_lineTool() && alt == isIsAlt_lineTool()) {
+        if (keyCode == lineToolKeyCode && ctrl == isCtrl_lineTool && shift == isShift_lineTool() && alt == isAlt_lineTool()) {
             return false;
         }
-        if (keyCode == clearToolKeyCode && ctrl == isCtrl_clearTool && shift == isIsShift_clearTool() && alt == isIsAlt_clearTool()) {
-            return false;
-        }
-
-        if (keyCode == importKeyCode && ctrl == isCtrl_import && shift == isIsShift_import() && alt == isIsAlt_import()) {
+        if (keyCode == clearToolKeyCode && ctrl == isCtrl_clearTool && shift == isShift_clearTool() && alt == isAlt_clearTool()) {
             return false;
         }
 
-        if (keyCode == exportKeyCode && ctrl == isCtrl_export && shift == isIsShift_export() && alt == isIsAlt_export()) {
+        if (keyCode == importKeyCode && ctrl == isCtrl_import && shift == isShift_import() && alt == isAlt_import()) {
+            return false;
+        }
+
+        if (keyCode == exportKeyCode && ctrl == isCtrl_export && shift == isShift_export() && alt == isAlt_export()) {
             return false;
         }
         return true;
@@ -287,7 +285,7 @@ public class Shortcuts {
         Shortcuts.clearToolKeyCode = clearToolKeyCode;
     }
 
-    public static boolean isIsCtrl_clearTool() {
+    public static boolean isCtrl_clearTool() {
         return isCtrl_clearTool;
     }
 
@@ -295,7 +293,7 @@ public class Shortcuts {
         Shortcuts.isCtrl_clearTool = isCtrl_clearTool;
     }
 
-    public static boolean isIsShift_clearTool() {
+    public static boolean isShift_clearTool() {
         return isShift_clearTool;
     }
 
@@ -303,7 +301,7 @@ public class Shortcuts {
         Shortcuts.isShift_clearTool = isShift_clearTool;
     }
 
-    public static boolean isIsAlt_clearTool() {
+    public static boolean isAlt_clearTool() {
         return isAlt_clearTool;
     }
 
@@ -311,7 +309,7 @@ public class Shortcuts {
         Shortcuts.isAlt_clearTool = isAlt_clearTool;
     }
 
-    public static boolean isIsCtrl_export() {
+    public static boolean isCtrl_export() {
         return isCtrl_export;
     }
 
@@ -319,7 +317,7 @@ public class Shortcuts {
         Shortcuts.isCtrl_export = isCtrl_export;
     }
 
-    public static boolean isIsShift_export() {
+    public static boolean isShift_export() {
         return isShift_export;
     }
 
@@ -327,7 +325,7 @@ public class Shortcuts {
         Shortcuts.isShift_export = isShift_export;
     }
 
-    public static boolean isIsAlt_export() {
+    public static boolean isAlt_export() {
         return isAlt_export;
     }
 
@@ -335,7 +333,7 @@ public class Shortcuts {
         Shortcuts.isAlt_export = isAlt_export;
     }
 
-    public static boolean isIsCtrl_import() {
+    public static boolean isCtrl_import() {
         return isCtrl_import;
     }
 
@@ -343,7 +341,7 @@ public class Shortcuts {
         Shortcuts.isCtrl_import = isCtrl_import;
     }
 
-    public static boolean isIsShift_import() {
+    public static boolean isShift_import() {
         return isShift_import;
     }
 
@@ -351,7 +349,7 @@ public class Shortcuts {
         Shortcuts.isShift_import = isShift_import;
     }
 
-    public static boolean isIsAlt_import() {
+    public static boolean isAlt_import() {
         return isAlt_import;
     }
 
@@ -359,7 +357,7 @@ public class Shortcuts {
         Shortcuts.isAlt_import = isAlt_import;
     }
 
-    public static boolean isIsCtrl_brushTool() {
+    public static boolean isCtrl_brushTool() {
         return isCtrl_brushTool;
     }
 
@@ -367,7 +365,7 @@ public class Shortcuts {
         Shortcuts.isCtrl_brushTool = isCtrl_brushTool;
     }
 
-    public static boolean isIsShift_brushTool() {
+    public static boolean isShift_brushTool() {
         return isShift_brushTool;
     }
 
@@ -375,7 +373,7 @@ public class Shortcuts {
         Shortcuts.isShift_brushTool = isShift_brushTool;
     }
 
-    public static boolean isIsAlt_brushTool() {
+    public static boolean isAlt_brushTool() {
         return isAlt_brushTool;
     }
 
@@ -383,7 +381,7 @@ public class Shortcuts {
         Shortcuts.isAlt_brushTool = isAlt_brushTool;
     }
 
-    public static boolean isIsCtrl_lineTool() {
+    public static boolean isCtrl_lineTool() {
         return isCtrl_lineTool;
     }
 
@@ -391,7 +389,7 @@ public class Shortcuts {
         Shortcuts.isCtrl_lineTool = isCtrl_lineTool;
     }
 
-    public static boolean isIsShift_lineTool() {
+    public static boolean isShift_lineTool() {
         return isShift_lineTool;
     }
 
@@ -399,7 +397,7 @@ public class Shortcuts {
         Shortcuts.isShift_lineTool = isShift_lineTool;
     }
 
-    public static boolean isIsAlt_lineTool() {
+    public static boolean isAlt_lineTool() {
         return isAlt_lineTool;
     }
 

@@ -1,13 +1,9 @@
 package com.teambeta.sketcherapp.ui;
 
-import com.teambeta.sketcherapp.Database.ConnectionConfiguration;
 import com.teambeta.sketcherapp.Database.DB_KBShortcuts;
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.ImportExport;
-import com.teambeta.sketcherapp.model.AboutMenu;
-import javafx.stage.FileChooser;
 import com.teambeta.sketcherapp.model.Shortcuts;
-import sun.security.provider.SHA;
 
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -550,28 +546,28 @@ public class MainUI {
     }
 
     /**
-     * gets the kebinding for the shortcuts from the database
+     * gets the key binding for the shortcuts from the database
      */
     public void generateDBDefaultKeyBindings() {
 
-        shortcuts.addKeyBinding(Shortcuts.getClearToolKeyCode(), Shortcuts.isIsAlt_clearTool(), Shortcuts.isIsShift_clearTool(), Shortcuts.isIsAlt_clearTool(), Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(Shortcuts.getClearToolKeyCode(), Shortcuts.isAlt_clearTool(), Shortcuts.isShift_clearTool(), Shortcuts.isAlt_clearTool(), Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
             drawArea.clear();
         });
 
-        shortcuts.addKeyBinding(shortcuts.getExportKeyCode(), shortcuts.isIsCtrl_export(), shortcuts.isIsShift_export(), shortcuts.isIsAlt_export(), Shortcuts.EXPORT_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(shortcuts.getExportKeyCode(), shortcuts.isCtrl_export(), shortcuts.isShift_export(), shortcuts.isAlt_export(), Shortcuts.EXPORT_SHORTCUT, (evt) -> {
             importExport.exportImage();
         });
 
-        shortcuts.addKeyBinding(shortcuts.getImportKeyCode(), shortcuts.isIsCtrl_import(), shortcuts.isIsShift_import(), shortcuts.isIsAlt_import(), Shortcuts.IMPORT_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(shortcuts.getImportKeyCode(), shortcuts.isCtrl_import(), shortcuts.isShift_import(), shortcuts.isAlt_import(), Shortcuts.IMPORT_SHORTCUT, (evt) -> {
             importExport.importImage();
         });
 
-        shortcuts.addKeyBinding(shortcuts.getBrushToolKeyCode(), shortcuts.isIsCtrl_brushTool(), shortcuts.isIsShift_brushTool(), shortcuts.isIsAlt_brushTool(), shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(shortcuts.getBrushToolKeyCode(), shortcuts.isCtrl_brushTool(), shortcuts.isShift_brushTool(), shortcuts.isAlt_brushTool(), shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = brushTool;
             updateSizeSlider();
         });
 
-        shortcuts.addKeyBinding(shortcuts.getLineToolKeyCode(), shortcuts.isIsCtrl_lineTool(), shortcuts.isIsShift_lineTool(), shortcuts.isIsAlt_lineTool(), Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(shortcuts.getLineToolKeyCode(), shortcuts.isCtrl_lineTool(), shortcuts.isShift_lineTool(), shortcuts.isAlt_lineTool(), Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = lineTool;
             updateSizeSlider();
         });
@@ -640,12 +636,12 @@ public class MainUI {
 
     }
 
+    /**
+     * returns the database for the key board shortcuts
+     */
     public DB_KBShortcuts getDb_kbShortcuts() {
         return db_kbShortcuts;
     }
 
-    public void setDb_kbShortcuts(DB_KBShortcuts db_kbShortcuts) {
-        this.db_kbShortcuts = db_kbShortcuts;
-    }
 
 }

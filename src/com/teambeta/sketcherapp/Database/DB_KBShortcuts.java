@@ -70,6 +70,7 @@ public class DB_KBShortcuts {
                             "VALUES(?,?,?,?,?) ");
 
             pst.setString(1, shortcutName); // 1 the first ?
+
             pst.setString(2, keyStroke);
             pst.setString(3, isCTRL);
             pst.setString(4, isSHIFT);
@@ -232,6 +233,7 @@ public class DB_KBShortcuts {
 
     /**
      * prints a tables contents through the console
+     * For debugging purposes
      */
     public void printTable() {
         ResultSet rs = null;

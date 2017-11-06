@@ -12,7 +12,6 @@ public class ConnectionConfiguration {
      * connects to the database
      * if we run this method, it will create a sqlite file in the project folder
      * must place the  sqlite jar file in libraries through the project structure
-     * @return
      */
     public static Connection getConnection() {
         Connection connection = null;

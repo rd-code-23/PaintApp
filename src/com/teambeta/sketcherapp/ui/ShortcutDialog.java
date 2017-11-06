@@ -12,7 +12,7 @@ import java.awt.event.*;
 
 public class ShortcutDialog {
 
-    private static final int SHORTUCT_DIALOG_WIDTH = 700;
+    private static final int SHORTCUT_DIALOG_WIDTH = 700;
     private static final int SHORTCUT_DIALOG_HEIGHT = 900;
     private static final String KEYBOARD_SHORTCUTS_TITLE = "Keyboard Shortcuts";
     private static final String RE_ASSIGN_BUTTON_TABLE_COL = "Re-Assign";
@@ -50,11 +50,11 @@ public class ShortcutDialog {
 
         DefaultTableModel dm = new DefaultTableModel();
         dm.setDataVector(new Object[][]{
-                        {CLEAR_SHORTCUT_TABLE, printShortcut(sc.getKBShortcut(sc.CLEAR_TOOL_SHORTCUT), sc.isIsCtrl_clearTool(), sc.isIsShift_clearTool(), sc.isIsAlt_clearTool())},
-                        {BRUSH_SHORTCUT_TABLE, printShortcut(sc.getKBShortcut(sc.BRUSH_TOOL_SHORTCUT), sc.isIsCtrl_brushTool(), sc.isIsShift_brushTool(), sc.isIsAlt_brushTool())},
-                        {LINE_SHORTCUT_TABLE, printShortcut(sc.getKBShortcut(sc.LINE_TOOL_SHORTCUT), sc.isIsCtrl_lineTool(), sc.isIsShift_lineTool(), sc.isIsAlt_lineTool())},
-                        {IMPORT_SHORTCUT_TABLE, printShortcut(sc.getKBShortcut(sc.IMPORT_SHORTCUT), sc.isIsCtrl_import(), sc.isIsShift_import(), sc.isIsAlt_import())},
-                        {EXPORT_SHORTCUT_TABLE, printShortcut(sc.getKBShortcut(sc.EXPORT_SHORTCUT), sc.isIsCtrl_export(), sc.isIsShift_export(), sc.isIsAlt_export())},
+                        {CLEAR_SHORTCUT_TABLE, printShortcut(sc.getKBShortcut(sc.CLEAR_TOOL_SHORTCUT), sc.isCtrl_clearTool(), sc.isShift_clearTool(), sc.isAlt_clearTool())},
+                        {BRUSH_SHORTCUT_TABLE, printShortcut(sc.getKBShortcut(sc.BRUSH_TOOL_SHORTCUT), sc.isCtrl_brushTool(), sc.isShift_brushTool(), sc.isAlt_brushTool())},
+                        {LINE_SHORTCUT_TABLE, printShortcut(sc.getKBShortcut(sc.LINE_TOOL_SHORTCUT), sc.isCtrl_lineTool(), sc.isShift_lineTool(), sc.isAlt_lineTool())},
+                        {IMPORT_SHORTCUT_TABLE, printShortcut(sc.getKBShortcut(sc.IMPORT_SHORTCUT), sc.isCtrl_import(), sc.isShift_import(), sc.isAlt_import())},
+                        {EXPORT_SHORTCUT_TABLE, printShortcut(sc.getKBShortcut(sc.EXPORT_SHORTCUT), sc.isCtrl_export(), sc.isShift_export(), sc.isAlt_export())},
                 },
                 new Object[]{ACTION_SHORTCUT_TABLE_COL, RE_ASSIGN_SHORTCUT_TABLE_COL});
 
@@ -68,7 +68,7 @@ public class ShortcutDialog {
         JDialog.setDefaultLookAndFeelDecorated(true);
         shortcutsDialog = new JDialog(mainUI.getMainFrame(), KEYBOARD_SHORTCUTS_TITLE, true);
         shortcutsDialog.setLocationRelativeTo(null);
-        shortcutsDialog.setSize(SHORTUCT_DIALOG_WIDTH, SHORTCUT_DIALOG_HEIGHT);
+        shortcutsDialog.setSize(SHORTCUT_DIALOG_WIDTH, SHORTCUT_DIALOG_HEIGHT);
         shortcutsDialog.setLayout(new GridBagLayout());
 
         setDefaultShortcutsButton = new JButton(DEFAULT_BUTTON);
@@ -118,7 +118,7 @@ public class ShortcutDialog {
     }
 
     /**
-     * prints the shortcut
+     * prints the binding for a shortcut
      */
     String printShortcut(int keyCode, boolean useControl, boolean useShift, boolean useAlt) {
 
@@ -141,7 +141,9 @@ public class ShortcutDialog {
         return string;
     }
 
-
+    /**
+     * renders the button
+     */
     class ButtonRenderer extends JButton implements TableCellRenderer {
 
         public ButtonRenderer() {
@@ -162,7 +164,9 @@ public class ShortcutDialog {
         }
     }
 
-
+    /**
+     * class is used to change the shortcut keys
+     */
     class ButtonEditor extends DefaultCellEditor {
         private static final String EDIT_SHORTCUT_TITLE_EDIT_SHORTCUT_DIALOG = "Edit Shortcut";
         private static final int WIDTH_EDIT_SHORTCUT_DIALOG = 450;
@@ -194,6 +198,9 @@ public class ShortcutDialog {
         private int ROW_SHORTCUT_TABLE;
         private boolean isPushed;
 
+        /**
+         * used to edit the button
+         */
         public ButtonEditor(JCheckBox checkBox) {
             super(checkBox);
             button = new JButton();
@@ -205,6 +212,9 @@ public class ShortcutDialog {
             });
         }
 
+        /**
+         * get the displayed value on the button in the shortcut dialog
+         */
         public Component getTableCellEditorComponent(JTable table, Object value,
                                                      boolean isSelected, int row, int column) {
             ROW_SHORTCUT_TABLE = row;
@@ -224,6 +234,9 @@ public class ShortcutDialog {
             return button;
         }
 
+        /**
+         * get the user new key binding and return it to the shortcut dialog
+         */
         public Object getCellEditorValue() {
             dialog = new JDialog(mainUI.getMainFrame(), EDIT_SHORTCUT_TITLE_EDIT_SHORTCUT_DIALOG, true);
 
@@ -325,6 +338,10 @@ public class ShortcutDialog {
             return new String(label);
         }
 
+        /**
+         * once the user has clicked save and is a valid binding, this method will
+         * change the shortcut and save it to the database
+         */
         public void changeShortcut() {
 
             boolean isCtrl = ctrlKey.isSelected();
@@ -333,23 +350,23 @@ public class ShortcutDialog {
 
             switch (ROW_SHORTCUT_TABLE) {
                 case 0:
-                    sc.removeBinding(sc.getClearToolKeyCode(), sc.isIsCtrl_lineTool(), sc.isIsShift_lineTool(), sc.isIsAlt_lineTool());
+                    sc.removeBinding(sc.getClearToolKeyCode(), sc.isCtrl_lineTool(), sc.isShift_lineTool(), sc.isAlt_lineTool());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.CLEAR_TOOL_SHORTCUT);
                     break;
                 case 1:
-                    sc.removeBinding(sc.getBrushToolKeyCode(), sc.isIsCtrl_brushTool(), sc.isIsShift_brushTool(), sc.isIsAlt_brushTool());
+                    sc.removeBinding(sc.getBrushToolKeyCode(), sc.isCtrl_brushTool(), sc.isShift_brushTool(), sc.isAlt_brushTool());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.BRUSH_TOOL_SHORTCUT);
                     break;
                 case 2:
-                    sc.removeBinding(sc.getLineToolKeyCode(), sc.isIsCtrl_lineTool(), sc.isIsShift_lineTool(), sc.isIsAlt_lineTool());
+                    sc.removeBinding(sc.getLineToolKeyCode(), sc.isCtrl_lineTool(), sc.isShift_lineTool(), sc.isAlt_lineTool());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.LINE_TOOL_SHORTCUT);
                     break;
                 case 3:
-                    sc.removeBinding(sc.getImportKeyCode(), sc.isIsCtrl_import(), sc.isIsShift_import(), sc.isIsAlt_import());
+                    sc.removeBinding(sc.getImportKeyCode(), sc.isCtrl_import(), sc.isShift_import(), sc.isAlt_import());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.IMPORT_SHORTCUT);
                     break;
                 case 4:
-                    sc.removeBinding(sc.getExportKeyCode(), sc.isIsCtrl_export(), sc.isIsShift_export(), sc.isIsAlt_export());
+                    sc.removeBinding(sc.getExportKeyCode(), sc.isCtrl_export(), sc.isShift_export(), sc.isAlt_export());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.EXPORT_SHORTCUT);
                     break;
 
@@ -362,6 +379,9 @@ public class ShortcutDialog {
 
     }
 
+    /**
+     * can change the width of the columns for the button table
+     */
     //taken from https://stackoverflow.com/questions/953972/java-jtable-setting-column-width
     public static void setColumnWidths(JTable table, int... widths) {
         TableColumnModel columnModel = table.getColumnModel();
