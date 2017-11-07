@@ -13,3 +13,9 @@ https://thenounproject.com/search/?q=paintbrush&i=1082011
 
 6. Java Swing API documentation provided by Oracle Corporation.
 http://docs.oracle.com/javase/tutorial/uiswing/
+
+7. Java Swing JFormattedTextField documentation provided on Stack Overflow.
+https://stackoverflow.com/questions/11093326/restricting-jtextfield-input-to-integers
+
+8. Java Swing DocumentListener documentation provided on Stack Overflow.
+https://stackoverflow.com/questions/3953208/value-change-listener-to-jtextfield

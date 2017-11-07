@@ -2,6 +2,7 @@ package com.teambeta.sketcherapp.drawingTools;
 
 
 import com.teambeta.sketcherapp.model.GeneralObserver;
+import com.teambeta.sketcherapp.model.GeneratorFunctions;
 import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.ui.DrawArea;
 
@@ -21,12 +22,19 @@ public class TextTool extends DrawingTool {
     private String font;
     private final int DEFAULT_WIDTH_VALUE = 20;
 
+    private boolean morseConvert;
+    private boolean caesarConvert;
+    private int caesarShiftValue;
+
     public TextTool() {
         color = Color.black;
         registerObservers();
         currentX = 0;
         textSize = DEFAULT_WIDTH_VALUE;
         currentY = 0;
+        morseConvert = false;
+        caesarConvert = false;
+        caesarShiftValue = 0;
     }
 
     @Override
@@ -109,7 +117,15 @@ public class TextTool extends DrawingTool {
             TextFieldInput textFieldInput = new TextFieldInput(color,
                     (int) location.getX(), (int) location.getY(), customFont);
             textFieldInput.setFontType(customFont.getFontName());
+
             String userInput = textFieldInput.getUserInput();
+            if (caesarConvert) {
+                userInput = GeneratorFunctions.getCaesarEncrypt(userInput, caesarShiftValue);
+            }
+            if (morseConvert) {
+                userInput = GeneratorFunctions.getStringToMorse(userInput);
+            }
+
             if (!userInput.equals("")) {
                 selectedLayerGraphics.drawString(userInput, currentX, currentY);
                 DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
@@ -132,4 +148,32 @@ public class TextTool extends DrawingTool {
     @Override
     public void setFillState(boolean fillState) {
     }
+
+    /**
+     * Set the enable state of the Caesar Encrypt generator.
+     *
+     * @param state enable state of the Caesar Cipher-text generator.
+     */
+    public void setCaesarConvert(boolean state) {
+        caesarConvert = state;
+    }
+
+    /**
+     * Set the enable state of the Morse Code generator.
+     *
+     * @param state enable state of the Morse Code generator.
+     */
+    public void setMorseConvert(boolean state) {
+        morseConvert = state;
+    }
+
+    /**
+     * Set the shift value of the Caesar Encrypt generator.
+     *
+     * @param value shift value of the Caesar Encrypt generator.
+     */
+    public void setCaesarShiftValue(int value) {
+        caesarShiftValue = value;
+    }
+
 }
