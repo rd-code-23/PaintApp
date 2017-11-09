@@ -117,6 +117,7 @@ public class BrushTool extends DrawingTool {
         });
     }
 
+
     /**
      * Initialize the parameters required for layer1Graphics.
      */

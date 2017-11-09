@@ -204,6 +204,7 @@ public class GeneratorFunctions {
     private static char getEncryptedCaesarChar(char letter, int shift) {
 
         final int ALPHABET_LENGTH = 26;
+        final int INTEGER_LENGTH = 10;
         final char LETTER_a = 'a';
         final char LETTER_z = 'z';
         final char LETTER_A = 'A';
@@ -214,20 +215,26 @@ public class GeneratorFunctions {
         int lower_inclusive_bound = 0;
         int upper_inclusive_bound = 0;
 
-        shift = shift % ALPHABET_LENGTH;
-
         // Define boundaries
         if ((letter >= LETTER_a) && (letter <= LETTER_z)) {
             lower_inclusive_bound = LETTER_a;
             upper_inclusive_bound = LETTER_z;
+            shift %= ALPHABET_LENGTH;
         } else if ((letter >= LETTER_A) && (letter <= LETTER_Z)) {
             lower_inclusive_bound = LETTER_A;
             upper_inclusive_bound = LETTER_Z;
+            shift %= ALPHABET_LENGTH;
         } else if ((letter >= LETTER_0) && (letter <= LETTER_9)) {
             lower_inclusive_bound = LETTER_0;
             upper_inclusive_bound = LETTER_9;
+            shift %= INTEGER_LENGTH;
         } else {
             // Explicit return on non-letters
+            return letter;
+        }
+
+        // Early exit on no shift required
+        if (shift == 0) {
             return letter;
         }
 
@@ -249,7 +256,7 @@ public class GeneratorFunctions {
             }
         }
 
-        return (char) letter;
+        return letter;
 
     }
 

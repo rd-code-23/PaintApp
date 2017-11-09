@@ -26,7 +26,6 @@ public class WidthChanger {
     private static final int MINOR_TICK_SPACING = 100;
     private static final int TEXT_PANEL_SPACING = 225;
 
-
     private JPanel textPanel = new JPanel();
     private JPanel widthPanel = new JPanel();
     private JSlider widthSlider;          // lets user change currentWidthValue
