@@ -76,8 +76,10 @@ public class RectangleSelectionTool extends DrawingTool {
             if (e.getY() > initY && e.getY() < (selectedCanvas.getHeight() + initY)
                     && e.getX() > initX && e.getX() < (selectedCanvas.getWidth() + initX)) {
 
-                isOverSelection = true;
-                MouseCursor.dragCursor();
+                if(isDrawn) {
+                    isOverSelection = true;
+                    MouseCursor.dragCursor();
+                }
 
             } else {
 
@@ -175,39 +177,12 @@ public class RectangleSelectionTool extends DrawingTool {
             }
         } else {
 
-            //cut the image into clicked location
-
-            if (selectedLayer != null) {
-                Graphics2D selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
-                selectedLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                selectedLayerGraphics.setColor(color);
-                selectedLayerGraphics.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_BUTT,
-                        BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
-
-
-                selectedLayerGraphics.drawImage(selectedCanvas, e.getX(), e.getY(), null);
-                DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
-
-                clearSelection(canvas, drawingLayers);
-                DrawArea.clearBufferImageToTransparent(previewLayer);
-                initX = 0;
-                initY = 0;
-                currentX = 0;
-                currentY = 0;
-                mouseOriginX = 0;
-                mouseOriginY = 0;
-                drawWidthX = 0;
-                drawHeightY = 0;
-                xAxisMagnitudeDelta = 0;
-                yAxisMagnitudeDelta = 0;
-            }
-
-            isDrawn = false;
+            pasteSelection(canvas, drawingLayers, selectedLayer, e);
 
         }
     }
 
-    public void clearSelection(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers) {
+    private void clearSelection(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers) {
         ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
         Graphics2D selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
         selectedLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -217,6 +192,36 @@ public class RectangleSelectionTool extends DrawingTool {
         selectedLayerGraphics.drawRect(initX, initY, drawWidthX, drawHeightY);
         DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
 
+    }
+
+    private void pasteSelection(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers, ImageLayer selectedLayer, MouseEvent e) {
+        //cut and paste the image into clicked location
+        if (selectedLayer != null) {
+            Graphics2D selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
+            selectedLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            selectedLayerGraphics.setColor(color);
+            selectedLayerGraphics.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_BUTT,
+                    BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
+
+
+            selectedLayerGraphics.drawImage(selectedCanvas, e.getX(), e.getY(), null);
+            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+
+            clearSelection(canvas, drawingLayers);
+            DrawArea.clearBufferImageToTransparent(previewLayer);
+            initX = 0;
+            initY = 0;
+            currentX = 0;
+            currentY = 0;
+            mouseOriginX = 0;
+            mouseOriginY = 0;
+            drawWidthX = 0;
+            drawHeightY = 0;
+            xAxisMagnitudeDelta = 0;
+            yAxisMagnitudeDelta = 0;
+        }
+
+        isDrawn = false;
     }
 
 
