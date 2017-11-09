@@ -28,19 +28,40 @@ public class CheckerboardMenu {
         int dialogWindow = JOptionPane.YES_NO_OPTION;
         int dialogOption = JOptionPane.showConfirmDialog(null,
                 DIALOG_MESSAGE, DIALOG_WINDOW_TITLE, dialogWindow);
+        String horizontalInput;
+        String verticalInput;
+
         int horizontalCount = 0;
         int verticalCount = 0;
 
         if (dialogOption == JOptionPane.YES_OPTION) {
+
+            horizontalInput = JOptionPane.showInputDialog(DIALOG_HORIZONTAL);
+            if (horizontalInput == null) {
+                return; // Explicit quit on cancel or escape operation
+            }
             try {
-                horizontalCount = Integer.parseInt(JOptionPane.showInputDialog(DIALOG_HORIZONTAL));
-                verticalCount = Integer.parseInt(JOptionPane.showInputDialog(DIALOG_VERTICAL));
+                horizontalCount = Integer.parseInt(horizontalInput);
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, DIALOG_WARNING);
+                return; // Explicit quit
             }
+
+            verticalInput = JOptionPane.showInputDialog(DIALOG_VERTICAL);
+            if (verticalInput == null) {
+                return; // Explicit quit on cancel or escape operation
+            }
+            try {
+                verticalCount = Integer.parseInt(verticalInput);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, DIALOG_WARNING);
+                return; // Explicit quit
+            }
+
             if (horizontalCount > 0 && verticalCount > 0) {
                 drawArea.drawCheckerPattern(horizontalCount, verticalCount);
             }
+
         }
     }
 }
