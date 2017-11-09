@@ -183,7 +183,8 @@ public class MainUI {
             if (e.getSource() == textToolButton) {
                 selectedDrawingTool = textTool;
                 textToolSettings.setVisibility(true);
-            } else if ((e.getSource() != textToolButton) && (e.getSource() instanceof JButton)) {
+            } else if ((e.getSource() != textToolButton && e.getSource() != clearButton)
+                    && (e.getSource() instanceof JButton)) {
                 textToolSettings.setVisibility(false);
             }
         }
