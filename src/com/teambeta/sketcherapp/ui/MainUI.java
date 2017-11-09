@@ -3,6 +3,7 @@ package com.teambeta.sketcherapp.ui;
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.ImportExport;
 import com.teambeta.sketcherapp.model.AboutMenu;
+import com.teambeta.sketcherapp.model.MouseCursor;
 import javafx.stage.FileChooser;
 
 import javax.sound.sampled.AudioSystem;
@@ -394,6 +395,8 @@ public class MainUI {
         editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
         mainContent.add(editorPanel, BorderLayout.EAST);
         mainContent.add(northPanel, BorderLayout.NORTH);
+
+        MouseCursor mouseCursor = new MouseCursor(drawArea);
     }
 
     /**
