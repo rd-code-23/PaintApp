@@ -74,6 +74,11 @@ public class FanTool extends DrawingTool {
     }
 
     @Override
+    public void onMove(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+
+    }
+
+    @Override
     public void onPress(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         x_start = e.getX();
         y_start = e.getY();

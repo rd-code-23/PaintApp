@@ -35,6 +35,11 @@ public class EyeDropperTool extends DrawingTool {
     public void onClick(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
     }
 
+    @Override
+    public void onMove(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+
+    }
+
     private ImageLayer getSelectedLayer(LinkedList<ImageLayer> drawingLayers) {
         //get the selected layer, this assumes there is only one selected layer.
         for (int i = 0; i < drawingLayers.size(); i++) {

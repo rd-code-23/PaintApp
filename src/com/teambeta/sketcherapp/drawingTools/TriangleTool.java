@@ -133,6 +133,11 @@ public class TriangleTool extends DrawingTool {
     }
 
     @Override
+    public void onMove(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+
+    }
+
+    @Override
     public void onPress(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         //set the coordinates to the current pixel clicked
         currentX = e.getX();

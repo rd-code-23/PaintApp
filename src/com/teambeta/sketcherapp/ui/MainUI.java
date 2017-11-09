@@ -104,6 +104,9 @@ public class MainUI {
 
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
+
+            MouseCursor.setDefaultCursor();
+
             if (e.getSource() == clearButton) {
                 drawArea.clear();
             } else if (e.getSource() == brushToolButton) {
