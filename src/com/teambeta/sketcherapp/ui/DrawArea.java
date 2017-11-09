@@ -376,4 +376,21 @@ public class DrawArea extends JComponent {
         drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
         repaint();
     }
+
+    public void clearSelection(int x, int y, int width, int height){
+        if (currentlySelectedLayer != null) {
+            System.out.println("clearin");
+            Graphics2D layerGraphics = (Graphics2D) currentlySelectedLayer.getBufferedImage().getGraphics();
+            layerGraphics.setPaint(Color.white);
+            graphics.setPaint(Color.white);
+            // draw white on entire draw area to clear
+            graphics.fillRect(x, y, width, height);
+            layerGraphics.fillRect(x, y, width, height);
+            graphics.setPaint(black);
+            layerGraphics.setPaint(black);
+        }
+        isCanvasAltered = false;
+        repaint();
+    }
+
 }
