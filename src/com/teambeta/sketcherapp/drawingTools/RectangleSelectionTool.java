@@ -44,6 +44,15 @@ public class RectangleSelectionTool extends DrawingTool {
     BufferedImage originalSelectedCanvas;
     DrawArea drawArea;
 
+    int startX;
+    int startY;
+
+    int oldMouseX;
+    int oldMouseY;
+    int preX, preY;
+
+
+    boolean isDragSelection = false;
     /**
      * The constructor sets the properties of the tool to their default values
      */
@@ -113,7 +122,21 @@ public class RectangleSelectionTool extends DrawingTool {
             mouseOriginY = currentY;
         } else {
 
+            startX = initX;
+            startY = initY;
+            previewLayer = DrawArea.getPreviewBufferedImage();
+            previewLayer = selectedCanvas;
+            oldMouseX = e.getX();
+            oldMouseY = e.getY();
 
+            preX = startX - e.getX();
+            preY = startY - e.getY();
+
+            if(isOverSelection){
+                isDragSelection = true;
+            } else {
+                isDragSelection = false;
+            }
         }
     }
 
@@ -147,6 +170,8 @@ public class RectangleSelectionTool extends DrawingTool {
             canvasGraphics.setComposite(alphaComposite);
             DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
             canvasGraphics.drawImage(previewLayer, 0, 0, null);
+        } else {
+              dragImage(canvas,e,drawingLayers);
         }
 
     }
@@ -165,19 +190,28 @@ public class RectangleSelectionTool extends DrawingTool {
                 selectedLayerGraphics.setColor(color);
                 selectedLayerGraphics.setStroke(new BasicStroke(1.0f, BasicStroke.CAP_BUTT,
                         BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
-                // Draw a filled rectangle/square if the alt key is down on release.
-                if (fillShape) {
-                    selectedLayerGraphics.fillRect(initX, initY, drawWidthX, drawHeightY);
-                }
+
                 selectedLayerGraphics.drawRect(initX, initY, drawWidthX, drawHeightY);
                 DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
                 isDrawn = true;
-                originalSelectedCanvas = canvas.getSubimage(initX, initY, drawWidthX, drawHeightY);
+//                originalSelectedCanvas = canvas.getSubimage(initX, initY, drawWidthX, drawHeightY);
                 selectedCanvas = canvas.getSubimage(initX + 2, initY + 2, drawWidthX - 2, drawHeightY - 2);
             }
         } else {
 
-            pasteSelection(canvas, drawingLayers, selectedLayer, e);
+            isDrawn = false;
+            if(isDragSelection){
+                pasteDragSelection(canvas,drawingLayers,selectedLayer,e);
+            } else {
+                pasteSelection(canvas, drawingLayers, selectedLayer, e);
+            }
+
+            clearSelection(canvas,drawingLayers);
+
+
+            previewLayer = null;
+         //   pasteSelection(canvas, drawingLayers, selectedLayer, e);
+
 
         }
     }
@@ -192,6 +226,64 @@ public class RectangleSelectionTool extends DrawingTool {
         selectedLayerGraphics.drawRect(initX, initY, drawWidthX, drawHeightY);
         DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
 
+    }
+
+    private void dragImage(BufferedImage canvas,MouseEvent e ,LinkedList<ImageLayer> drawingLayers){
+        // MouseCursor.setDefaultCursor();
+        if (previewLayer == null) {
+            previewLayer = DrawArea.getPreviewBufferedImage();
+        }
+        //clear preview layer
+        // DrawArea.clearBufferImageToTransparent(previewLayer);
+
+        //init graphics objects
+        Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
+        canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        canvasGraphics.setColor(color);
+        Graphics2D previewLayerGraphics = (Graphics2D) previewLayer.getGraphics();
+        canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        previewLayerGraphics.setColor(color);
+        previewLayerGraphics.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
+
+        previewLayerGraphics.drawRect(preX + e.getX(), preY + e.getY(), drawWidthX, drawHeightY);
+        //info: https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
+        //draw the preview layer on top of the drawing layer(s)
+        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
+        canvasGraphics.setComposite(alphaComposite);
+        DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+        canvasGraphics.drawImage(previewLayer, preX + e.getX(),preY + e.getY(), null);
+
+    }
+
+    void pasteDragSelection(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers, ImageLayer selectedLayer, MouseEvent e){
+        //cut and paste the image into clicked location
+        if (selectedLayer != null) {
+            Graphics2D selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
+            selectedLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            selectedLayerGraphics.setColor(color);
+            selectedLayerGraphics.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_BUTT,
+                    BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
+
+
+            selectedLayerGraphics.drawImage(selectedCanvas, preX + e.getX(), preY + e.getY(), null);
+            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+
+            clearSelection(canvas, drawingLayers);
+            DrawArea.clearBufferImageToTransparent(previewLayer);
+            initX = 0;
+            initY = 0;
+            currentX = 0;
+            currentY = 0;
+            mouseOriginX = 0;
+            mouseOriginY = 0;
+            drawWidthX = 0;
+            drawHeightY = 0;
+            xAxisMagnitudeDelta = 0;
+            yAxisMagnitudeDelta = 0;
+        }
+
+        isDrawn = false;
     }
 
     private void pasteSelection(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers, ImageLayer selectedLayer, MouseEvent e) {
