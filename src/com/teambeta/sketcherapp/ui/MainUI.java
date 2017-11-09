@@ -36,6 +36,7 @@ public class MainUI {
     private static DNATool dnaTool;
     private static AirBrushTool airBrushTool;
     private static TriangleTool triangleTool;
+    private  static RectangleSelectionTool rectangleSelectionTool;
     private static DrawingTool selectedDrawingTool;
     private static EyeDropperStats eyeDropperStats;
 
@@ -79,6 +80,7 @@ public class MainUI {
     private JButton dnaToolButton;
     private JButton airBrushToolButton;
     private JButton triangleToolButton;
+    private JButton rectangleSelectionToolButton;
     private JComboBox<String> fontSelector;
 
     private static DrawArea drawArea;
@@ -149,6 +151,10 @@ public class MainUI {
                 selectedDrawingTool = triangleTool;
                 updateSizeSlider();
                 updateFillState();
+            }else if (e.getSource() == rectangleSelectionToolButton) {
+                selectedDrawingTool = rectangleSelectionTool;
+                updateSizeSlider();
+                updateFillState();
             }
 
             /* We can also make it so that instead of hiding tool components when another is selected,
@@ -197,6 +203,7 @@ public class MainUI {
         dnaTool = new DNATool();
         airBrushTool = new AirBrushTool();
         triangleTool = new TriangleTool();
+        rectangleSelectionTool = new RectangleSelectionTool();
         selectedDrawingTool = brushTool;
     }
 
@@ -299,13 +306,14 @@ public class MainUI {
         dnaToolButton = new JButton(DNA_TOOL_BUTTON_TEXT);
         airBrushToolButton = new JButton(AIR_BRUSH_TOOL_BUTTON_TEXT);
         triangleToolButton = new JButton(TRIANGLE_TOOL_BUTTON_TEXT);
+        rectangleSelectionToolButton = new JButton("Selection");
 
         // Add a button to this array to register to actionListener and canvasTools
         // The order of this list determines the order of the buttons in the generated UI. Index -> 0 = Position -> First
         JButton[] buttonContainer = {
                 clearButton, brushToolButton, airBrushToolButton, eraserToolButton, lineToolButton,
                 fanToolButton, rectangleToolButton, ellipseToolButton, triangleToolButton, paintBucketToolButton,
-                celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton,
+                celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton,rectangleSelectionToolButton
         };
 
         JPanel canvasTools = new JPanel();
