@@ -493,7 +493,7 @@ public class MainUI {
      * Play the start up sound when the application is launched or when user switches out of minimode
      */
     private void playStartUpSound() {
-        File startUpSound = new File(START_SOUND_PATH);
+    /*    File startUpSound = new File(START_SOUND_PATH);
         Thread thread = new Thread() {
             @Override
             public void run() {
@@ -506,7 +506,7 @@ public class MainUI {
                 }
             }
         };
-        thread.start();
+        thread.start();*/
     }
 
     /**

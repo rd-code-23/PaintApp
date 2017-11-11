@@ -1,6 +1,5 @@
 package com.teambeta.sketcherapp.drawingTools;
 
-import com.sun.org.apache.xml.internal.security.utils.resolver.implementations.ResolverXPointer;
 import com.teambeta.sketcherapp.model.GeneralObserver;
 import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.model.MouseCursor;
@@ -36,56 +35,40 @@ public class RectangleSelectionTool extends DrawingTool {
     private final int DEFAULT_WIDTH_VALUE = 10;
     private boolean fillShape;
     private float dash[] = {10.0f};
-    boolean isOverSelection;
-    boolean isDrawn;
-    private int mouseX; // the current mouse position
-    private int mouseY;
-    BufferedImage selectedCanvas;
-    BufferedImage originalSelectedCanvas;
-    DrawArea drawArea;
+    private BufferedImage originalSelectedCanvas;
+    private DrawArea drawArea;
 
-    int startX;
-    int startY;
+    private BufferedImage selectedCanvas; // the selection that the user has made
+    private boolean isOverSelection; // is the mouse over the selectedCanvas
+    private boolean isDrawn;// has the user selected somthing
+    private int prevX, prevY;
+    private boolean isDragSelection = false; // is the user choosing to drag the image
 
-    int oldMouseX;
-    int oldMouseY;
-    int preX, preY;
+    //TODO BUG: fix preview glitch when dragging just below and to the right of the selected canvas
+    //TODO BUG: pasting on the selected canvas turns selected canvas white
+    //TODO BUG: sometimes when you draw a straight selection line it copies it self
+    //TODO FEATURE: add copy function to duplicate images. add 2 radio buttons in  north panel for cut or copy
 
-
-    boolean isDragSelection = false;
     /**
      * The constructor sets the properties of the tool to their default values
      */
     public RectangleSelectionTool(DrawArea drawArea) {
         registerObservers();
-        color = Color.black;
-        initX = 0;
-        initY = 0;
-        currentX = 0;
-        currentY = 0;
-        mouseOriginX = 0;
-        mouseOriginY = 0;
-        drawWidthX = 0;
-        drawHeightY = 0;
-        xAxisMagnitudeDelta = 0;
-        yAxisMagnitudeDelta = 0;
-        squareWidth = DEFAULT_WIDTH_VALUE;
-        fillShape = false;
-        isDrawn = false;
+        initializeVariables();
         this.drawArea = drawArea;
     }
 
+    /**
+     * Checks to see where the user mouse is
+     */
     @Override
     public void onMove(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
 
-        mouseX = e.getX();
-        mouseY = e.getY();
-
         if (selectedCanvas != null) {
-            if (e.getY() > initY && e.getY() < (selectedCanvas.getHeight() + initY)
-                    && e.getX() > initX && e.getX() < (selectedCanvas.getWidth() + initX)) {
+            if (e.getY() >= initY - 40 && e.getY() <= (selectedCanvas.getHeight() + initY - 40)
+                    && e.getX() >= initX - 40 && e.getX() <= (selectedCanvas.getWidth() + initX - 40)) {
 
-                if(isDrawn) {
+                if (isDrawn) {
                     isOverSelection = true;
                     MouseCursor.dragCursor();
                 }
@@ -104,15 +87,9 @@ public class RectangleSelectionTool extends DrawingTool {
 
 
     @Override
-    public void onClick(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
-    }
-
-
-    @Override
     public void onPress(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
 
         if (!isDrawn) {
-
             canvas.getGraphics().setColor(color);
             currentX = e.getX();
             currentY = e.getY();
@@ -122,24 +99,21 @@ public class RectangleSelectionTool extends DrawingTool {
             mouseOriginY = currentY;
         } else {
 
-            startX = initX;
-            startY = initY;
             previewLayer = DrawArea.getPreviewBufferedImage();
             previewLayer = selectedCanvas;
-            oldMouseX = e.getX();
-            oldMouseY = e.getY();
 
-            preX = startX - e.getX();
-            preY = startY - e.getY();
+            prevX = initX - e.getX();
+            prevY = initY - e.getY();
 
-            if(isOverSelection){
+            if (isOverSelection) {
                 isDragSelection = true;
             } else {
                 isDragSelection = false;
+
             }
+
         }
     }
-
 
     @Override
     public void onDrag(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
@@ -170,10 +144,10 @@ public class RectangleSelectionTool extends DrawingTool {
             canvasGraphics.setComposite(alphaComposite);
             DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
             canvasGraphics.drawImage(previewLayer, 0, 0, null);
-        } else {
-              dragImage(canvas,e,drawingLayers);
-        }
 
+        } else {
+            dragImage(canvas, e, drawingLayers);
+        }
     }
 
 
@@ -181,6 +155,7 @@ public class RectangleSelectionTool extends DrawingTool {
     public void onRelease(BufferedImage canvas, MouseEvent e,
                           LinkedList<ImageLayer> drawingLayers) {
         ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
+
         if (!isDrawn) {
             calcSquareCoordinateData(e);
             MouseCursor.setDefaultCursor();
@@ -193,48 +168,87 @@ public class RectangleSelectionTool extends DrawingTool {
 
                 selectedLayerGraphics.drawRect(initX, initY, drawWidthX, drawHeightY);
                 DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+
+                checkBounds(canvas);
                 isDrawn = true;
-//                originalSelectedCanvas = canvas.getSubimage(initX, initY, drawWidthX, drawHeightY);
-                selectedCanvas = canvas.getSubimage(initX + 2, initY + 2, drawWidthX - 2, drawHeightY - 2);
+                selectedCanvas = canvas.getSubimage(initX + 1, initY + 1, drawWidthX - 1, drawHeightY - 1);
+
             }
+
         } else {
 
-            isDrawn = false;
-            if(isDragSelection){
-                pasteDragSelection(canvas,drawingLayers,selectedLayer,e);
+            if (isDragSelection) {
+                pasteDragSelection(canvas, drawingLayers, selectedLayer, e);
             } else {
                 pasteSelection(canvas, drawingLayers, selectedLayer, e);
             }
-
-            clearSelection(canvas,drawingLayers);
-
-
+            clearSelection(canvas, drawingLayers);
             previewLayer = null;
-         //   pasteSelection(canvas, drawingLayers, selectedLayer, e);
-
-
+            isDrawn = false;
         }
+
+
     }
 
+    /**
+     * if the user selects the canvas that goes out of bounds this function will correct the results
+     */
+    private void checkBounds(BufferedImage canvas) {
+        if (initX + drawWidthX > canvas.getWidth()) {
+            drawWidthX = canvas.getWidth() - initX;
+        }
+
+        if (initX < 0) {
+            drawWidthX = drawWidthX - Math.abs(initX);
+            initX = 0;
+        }
+
+        if ((initY + drawHeightY) > canvas.getHeight()) {
+            drawHeightY = Math.abs(canvas.getHeight() - initY);
+        }
+
+        if (initY < 0) {
+            drawHeightY = drawHeightY - Math.abs(initY);
+            initY = 0;
+        }
+
+        //canvas.getSubimage function will only take numbers >0 need minimum of 2 as we are going to subtract 1
+        //in order to remove the preview border
+        if (drawWidthX <= 1) {
+            drawWidthX = 2;
+        }
+
+        if (drawHeightY <= 1) {
+            drawHeightY = 2;
+        }
+
+    }
+
+    /**
+     * clears the space where the user selected the canvas
+     */
     private void clearSelection(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers) {
         ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
         Graphics2D selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
         selectedLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         selectedLayerGraphics.setColor(Color.WHITE);
         selectedLayerGraphics.setStroke(new BasicStroke(getToolWidth()));
+
         selectedLayerGraphics.fillRect(initX, initY, drawWidthX, drawHeightY);
         selectedLayerGraphics.drawRect(initX, initY, drawWidthX, drawHeightY);
         DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
-
     }
 
-    private void dragImage(BufferedImage canvas,MouseEvent e ,LinkedList<ImageLayer> drawingLayers){
+    /**
+     * drags the selected canvas to its new location
+     */
+    private void dragImage(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         // MouseCursor.setDefaultCursor();
         if (previewLayer == null) {
             previewLayer = DrawArea.getPreviewBufferedImage();
         }
         //clear preview layer
-        // DrawArea.clearBufferImageToTransparent(previewLayer);
+        DrawArea.clearBufferImageToTransparent(previewLayer);
 
         //init graphics objects
         Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
@@ -246,17 +260,20 @@ public class RectangleSelectionTool extends DrawingTool {
         previewLayerGraphics.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
 
-        previewLayerGraphics.drawRect(preX + e.getX(), preY + e.getY(), drawWidthX, drawHeightY);
+        previewLayerGraphics.drawRect(prevX + e.getX(), prevY + e.getY(), drawWidthX, drawHeightY);
         //info: https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
         //draw the preview layer on top of the drawing layer(s)
         AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
         canvasGraphics.setComposite(alphaComposite);
         DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
-        canvasGraphics.drawImage(previewLayer, preX + e.getX(),preY + e.getY(), null);
+        canvasGraphics.drawImage(previewLayer, prevX + e.getX(), prevY + e.getY(), null);
 
     }
 
-    void pasteDragSelection(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers, ImageLayer selectedLayer, MouseEvent e){
+    /**
+     * places the selected canvas where the user has dragged it to its new location
+     */
+    void pasteDragSelection(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers, ImageLayer selectedLayer, MouseEvent e) {
         //cut and paste the image into clicked location
         if (selectedLayer != null) {
             Graphics2D selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
@@ -265,88 +282,38 @@ public class RectangleSelectionTool extends DrawingTool {
             selectedLayerGraphics.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_BUTT,
                     BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
 
-
-            selectedLayerGraphics.drawImage(selectedCanvas, preX + e.getX(), preY + e.getY(), null);
+            selectedLayerGraphics.drawImage(selectedCanvas, prevX + e.getX(), prevY + e.getY(), null);
             DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
 
             clearSelection(canvas, drawingLayers);
             DrawArea.clearBufferImageToTransparent(previewLayer);
-            initX = 0;
-            initY = 0;
-            currentX = 0;
-            currentY = 0;
-            mouseOriginX = 0;
-            mouseOriginY = 0;
-            drawWidthX = 0;
-            drawHeightY = 0;
-            xAxisMagnitudeDelta = 0;
-            yAxisMagnitudeDelta = 0;
+            initializeVariables();
         }
 
         isDrawn = false;
     }
 
+    /**
+     * cut and paste the image into clicked location
+     */
     private void pasteSelection(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers, ImageLayer selectedLayer, MouseEvent e) {
-        //cut and paste the image into clicked location
+
         if (selectedLayer != null) {
             Graphics2D selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
             selectedLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             selectedLayerGraphics.setColor(color);
             selectedLayerGraphics.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_BUTT,
                     BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
-
 
             selectedLayerGraphics.drawImage(selectedCanvas, e.getX(), e.getY(), null);
             DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
 
             clearSelection(canvas, drawingLayers);
             DrawArea.clearBufferImageToTransparent(previewLayer);
-            initX = 0;
-            initY = 0;
-            currentX = 0;
-            currentY = 0;
-            mouseOriginX = 0;
-            mouseOriginY = 0;
-            drawWidthX = 0;
-            drawHeightY = 0;
-            xAxisMagnitudeDelta = 0;
-            yAxisMagnitudeDelta = 0;
+            initializeVariables();
         }
 
         isDrawn = false;
-    }
-
-
-    private void calcSquareCoordinateData(MouseEvent e) {
-        // Get the coordinates of where the user released the mouse.
-        currentX = e.getX();
-        currentY = e.getY();
-
-        // Draw the square with the longest side as long as the shortest side.
-        xAxisMagnitudeDelta = Math.abs(currentX - mouseOriginX);
-        yAxisMagnitudeDelta = Math.abs(currentY - mouseOriginY);
-
-        // Detect shift-down by the MouseEvent, e.
-        if (e.isShiftDown()) {
-            if (xAxisMagnitudeDelta > yAxisMagnitudeDelta) {
-                drawWidthX = yAxisMagnitudeDelta;
-                drawHeightY = yAxisMagnitudeDelta;
-            } else {
-                drawWidthX = xAxisMagnitudeDelta;
-                drawHeightY = xAxisMagnitudeDelta;
-            }
-        } else {
-            drawWidthX = xAxisMagnitudeDelta;
-            drawHeightY = yAxisMagnitudeDelta;
-        }
-
-        // Handle cases where the square lies in a quadrant (with origin 0,0 at click) other than IV.
-        if (currentY < mouseOriginY) {
-            initY = mouseOriginY - drawHeightY;
-        }
-        if (currentX < mouseOriginX) {
-            initX = mouseOriginX - drawWidthX;
-        }
     }
 
 
@@ -396,5 +363,59 @@ public class RectangleSelectionTool extends DrawingTool {
 
     public void setFillState(boolean fillState) {
         fillShape = fillState;
+    }
+
+
+    private void calcSquareCoordinateData(MouseEvent e) {
+        // Get the coordinates of where the user released the mouse.
+        currentX = e.getX();
+        currentY = e.getY();
+
+        // Draw the square with the longest side as long as the shortest side.
+        xAxisMagnitudeDelta = Math.abs(currentX - mouseOriginX);
+        yAxisMagnitudeDelta = Math.abs(currentY - mouseOriginY);
+
+        // Detect shift-down by the MouseEvent, e.
+        if (e.isShiftDown()) {
+            if (xAxisMagnitudeDelta > yAxisMagnitudeDelta) {
+                drawWidthX = yAxisMagnitudeDelta;
+                drawHeightY = yAxisMagnitudeDelta;
+            } else {
+                drawWidthX = xAxisMagnitudeDelta;
+                drawHeightY = xAxisMagnitudeDelta;
+            }
+        } else {
+            drawWidthX = xAxisMagnitudeDelta;
+            drawHeightY = yAxisMagnitudeDelta;
+        }
+
+        // Handle cases where the square lies in a quadrant (with origin 0,0 at click) other than IV.
+        if (currentY < mouseOriginY) {
+            initY = mouseOriginY - drawHeightY;
+        }
+        if (currentX < mouseOriginX) {
+            initX = mouseOriginX - drawWidthX;
+        }
+    }
+
+    private void initializeVariables() {
+        color = Color.black;
+        initX = 0;
+        initY = 0;
+        currentX = 0;
+        currentY = 0;
+        mouseOriginX = 0;
+        mouseOriginY = 0;
+        drawWidthX = 0;
+        drawHeightY = 0;
+        xAxisMagnitudeDelta = 0;
+        yAxisMagnitudeDelta = 0;
+        squareWidth = DEFAULT_WIDTH_VALUE;
+        fillShape = false;
+        isDrawn = false;
+    }
+
+    @Override
+    public void onClick(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
     }
 }

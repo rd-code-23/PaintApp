@@ -39,6 +39,8 @@ public class WidthChanger {
     private JCheckBox fillBox;
     private boolean isFill = false;
 
+
+
     /**
      * Constructor.
      */
