@@ -11,10 +11,11 @@ public class ImageLayer {
     private boolean isSelected;
     private String name;
     private static int layerNumber = 1;
+    private String HIDDEN = "[Hidden]";
 
- /**
+    /**
      * Constructor.
-     * 
+     *
      * @param bufferedImage for the image layer.
      */
     public ImageLayer(BufferedImage bufferedImage) {
@@ -27,7 +28,7 @@ public class ImageLayer {
 
     /**
      * Get the buffered image.
-     * 
+     *
      * @return bufferedImage
      */
     public BufferedImage getBufferedImage() {
@@ -36,8 +37,8 @@ public class ImageLayer {
 
     /**
      * Checks if layer is visible.
-     * 
-     * @return true if layer if visible, false otherwise. 
+     *
+     * @return true if layer if visible, false otherwise.
      */
     public boolean isVisible() {
         return isVisible;
@@ -45,7 +46,7 @@ public class ImageLayer {
 
     /**
      * Set visibility of the layer.
-     * 
+     *
      * @param visible sets visibility of layer.
      */
     public void setVisible(boolean visible) {
@@ -54,7 +55,7 @@ public class ImageLayer {
 
     /**
      * Specifies if layer is selected.
-     * 
+     *
      * @param selected sets layer to selected.
      */
     public void setSelected(boolean selected) {
@@ -63,7 +64,7 @@ public class ImageLayer {
 
     /**
      * Checks if layer is selected.
-     * 
+     *
      * @return true if layer is selected, false otherwise.
      */
     public boolean isSelected() {
@@ -72,7 +73,7 @@ public class ImageLayer {
 
     /**
      * Get the name of the image layer.
-     * 
+     *
      * @return name of layer.
      */
     public String getName() {
@@ -81,7 +82,7 @@ public class ImageLayer {
 
     /**
      * Set the name of the image layer.
-     * 
+     *
      * @param name for the layer.
      */
     public void setName(String name) {
@@ -90,6 +91,10 @@ public class ImageLayer {
 
     @Override
     public String toString() {
-        return name;
+        String string = "" + name;
+        if (!isVisible) {
+            string += " " + HIDDEN;
+        }
+        return string;
     }
 }

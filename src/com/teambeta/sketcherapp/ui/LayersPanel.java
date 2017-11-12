@@ -74,7 +74,8 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                     ImageLayer selectedLayer = drawArea.getDrawingLayers().get(listOfLayers.getSelectedIndex());
                     selectedLayer.setVisible(!selectedLayer.isVisible());
                     //TODO: add GUI element that shows the layer is hidden
-                    drawArea.refreshLayers();
+                    listOfLayers.repaint();
+                    drawArea.redrawLayers();
                     drawArea.repaint();
                 }
             }
@@ -106,7 +107,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                 if (selectedIndex != -1) {
                     listModel.remove(selectedIndex);
                     drawingLayers.remove(selectedIndex);
-                    drawArea.refreshLayers();
+                    drawArea.redrawLayers();
                 }
             }
         };

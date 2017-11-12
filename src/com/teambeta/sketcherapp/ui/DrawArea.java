@@ -100,7 +100,7 @@ public class DrawArea extends JComponent {
     /**
      * Redraws the layers onto the canvas.
      */
-    public void refreshLayers() {
+    public void redrawLayers() {
         drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
     }
 
