@@ -22,7 +22,6 @@ public class FanTool extends DrawingTool {
     private int lineWidth;
     private final int DEFAULT_STOKE_VALUE = 10;
     private Color lineColor;
-    private Graphics2D layer1Graphics;
 
     /**
      * Constructor.
