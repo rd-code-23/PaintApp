@@ -97,7 +97,9 @@ public class MainUI {
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == clearButton) {
-                drawArea.clear();
+                if (drawArea.getCurrentlySelectedLayer().isVisible()) {
+                    drawArea.clear();
+                }
             } else if (e.getSource() == brushToolButton) {
                 widthChanger.showPanel();
                 selectedDrawingTool = brushTool;

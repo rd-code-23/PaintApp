@@ -45,31 +45,39 @@ public class DrawArea extends JComponent {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                MainUI.getSelectedDrawingTool().onClick(canvasBufferedImage, e, drawingLayers);
-                isCanvasAltered = true;
-                repaint();
+                if (currentlySelectedLayer.isVisible()) {
+                    MainUI.getSelectedDrawingTool().onClick(canvasBufferedImage, e, drawingLayers);
+                    isCanvasAltered = true;
+                    repaint();
+                }
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                MainUI.getSelectedDrawingTool().onPress(canvasBufferedImage, e, drawingLayers);
-                isCanvasAltered = true;
-                repaint();
+                if (currentlySelectedLayer.isVisible()) {
+                    MainUI.getSelectedDrawingTool().onPress(canvasBufferedImage, e, drawingLayers);
+                    isCanvasAltered = true;
+                    repaint();
+                }
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
-                MainUI.getSelectedDrawingTool().onRelease(canvasBufferedImage, e, drawingLayers);
-                isCanvasAltered = true;
-                repaint();
+                if (currentlySelectedLayer.isVisible()) {
+                    MainUI.getSelectedDrawingTool().onRelease(canvasBufferedImage, e, drawingLayers);
+                    isCanvasAltered = true;
+                    repaint();
+                }
             }
         });
         addMouseMotionListener(new MouseMotionAdapter() {
             public void mouseDragged(MouseEvent e) {
-                MainUI.getSelectedDrawingTool().onDrag(canvasBufferedImage, e, drawingLayers);
-                repaint();
+                if (currentlySelectedLayer.isVisible()) {
+                    MainUI.getSelectedDrawingTool().onDrag(canvasBufferedImage, e, drawingLayers);
+                    repaint();
+                }
             }
         });
         drawingLayers = new LinkedList<>();
@@ -89,12 +97,19 @@ public class DrawArea extends JComponent {
     }
 
     /**
+     * Redraws the layers onto the canvas.
+     */
+    public void refreshLayers() {
+        drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
+    }
+
+    /**
      * Draws the provided layers onto the provided canvasBufferedImage.
      *
      * @param layers the layers to draw
      * @param canvas the canvasBufferedImage to draw to
      */
-    public static void drawLayersOntoCanvas(BufferedImage[] layers, BufferedImage canvas) {
+    private static void drawLayersOntoCanvas(BufferedImage[] layers, BufferedImage canvas) {
         Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
         //TODO:change to get actual color
         //clear the canvasBufferedImage to its default color
@@ -131,6 +146,10 @@ public class DrawArea extends JComponent {
             firstTimeInit();
         }
         canvasGraphics.drawImage(canvasBufferedImage, 0, 0, null);
+    }
+
+    public ImageLayer getCurrentlySelectedLayer() {
+        return currentlySelectedLayer;
     }
 
     private void firstTimeInit() {
@@ -220,13 +239,13 @@ public class DrawArea extends JComponent {
     /**
      * lets user import an image
      *
-     * @param image
+     * @param image The BufferedImage to draw on the layer.
      */
     public void setImportedImage(BufferedImage image) {
         Graphics2D selectedLayerGraphics = (Graphics2D) currentlySelectedLayer.getBufferedImage().getGraphics();
         selectedLayerGraphics.drawImage(image, 0, 0, this);
         graphics.drawImage(image, 0, 0, this);
-        graphics.finalize();
+        //graphics.finalize();
         isCanvasAltered = false;
         repaint();
     }
@@ -234,7 +253,7 @@ public class DrawArea extends JComponent {
     /**
      * checks to see if the user has altered the canvasBufferedImage
      *
-     * @return
+     * @return return if the canvas has been altered or not.
      */
     public boolean isCanvasAltered() {
         return isCanvasAltered;
@@ -243,7 +262,7 @@ public class DrawArea extends JComponent {
     /**
      * sets whether the canvasBufferedImage has been altered
      *
-     * @param canvasAltered
+     * @param canvasAltered Set a boolean that represents if the canvas BufferedImage has been altered.
      */
     public void setCanvasAltered(boolean canvasAltered) {
         isCanvasAltered = canvasAltered;
