@@ -35,6 +35,11 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         return listOfLayers;
     }
 
+    /**
+     * The constructor for the LayersPanel class.
+     *
+     * @param drawArea The drawArea the layersPanel is utilizing.
+     */
     public LayersPanel(DrawArea drawArea) {
         super(new BorderLayout());
         this.drawArea = drawArea;
@@ -111,6 +116,11 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         this.add(buttonsPanel, BorderLayout.SOUTH);
     }
 
+    /**
+     * Access the listModel for the list of ImageLayers.
+     *
+     * @return The listModel for the list of ImageLayers.
+     */
     public DefaultListModel<ImageLayer> getListModel() {
         return listModel;
     }

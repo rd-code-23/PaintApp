@@ -112,8 +112,7 @@ public class DrawArea extends JComponent {
      */
     private static void drawLayersOntoCanvas(BufferedImage[] layers, BufferedImage canvas) {
         Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
-        //TODO:change to get actual color
-        //clear the canvasBufferedImage to its default color
+        //clear the canvasBufferedImage.
         clearBufferImageToTransparent(canvas);
         //draw the layers in order
         AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
@@ -125,6 +124,12 @@ public class DrawArea extends JComponent {
         }
     }
 
+    /**
+     * Draws the provided layers onto the provided canvasBufferedImage.
+     *
+     * @param layers the layers to draw
+     * @param canvas the canvasBufferedImage to draw to
+     */
     public static void drawLayersOntoCanvas(LinkedList<ImageLayer> layers, BufferedImage canvas) {
         BufferedImage[] bufferedImages = new BufferedImage[layers.size()];
         for (int i = 0; i < bufferedImages.length; i++) {
@@ -136,7 +141,7 @@ public class DrawArea extends JComponent {
     }
 
     /**
-     * Creates a canvasBufferedImage for drawable elements.
+     * Defines how the DrawArea component is painted.
      *
      * @param canvasGraphics graphics for canvasBufferedImage
      */
@@ -144,16 +149,24 @@ public class DrawArea extends JComponent {
         if (canvasBufferedImage == null) {
             firstTimeInit();
         }
-        //draw the checkerboard pattern to represent transparent pixels
+        //draw the checkerboard pattern to represent transparency.
         canvasGraphics.drawImage(checkerboardImage, 0, 0, null);
         //draw the canvas image
         canvasGraphics.drawImage(canvasBufferedImage, 0, 0, null);
     }
 
+    /**
+     * Allows access to the ImageLayer the user has currently selected.
+     *
+     * @return The ImageLayer the user has currently selected.
+     */
     public ImageLayer getCurrentlySelectedLayer() {
         return currentlySelectedLayer;
     }
 
+    /**
+     * Creates the BufferedImages and other objects that the DrawArea needs to function.
+     */
     private void firstTimeInit() {
         // create a canvasBufferedImage to draw on
         canvasBufferedImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
