@@ -19,6 +19,7 @@ import static java.awt.Color.black;
  * https://www.youtube.com/watch?v=OOb1eil4PCo
  */
 public class DrawArea extends JComponent {
+    private static final int TRANSPARENCY_CHECKER_BOARD_SIZE = 35;
     private MainUI mainUI;
     private BufferedImage canvasBufferedImage;
     private LinkedList<ImageLayer> drawingLayers;
@@ -27,11 +28,11 @@ public class DrawArea extends JComponent {
     private Graphics2D graphics;
     private Color backgroundColor;
     private boolean isCanvasAltered = false;
-
     private static final double RED_LUMA_COEFFICIENT = 0.2126;
     private static final double GREEN_LUMA_COEFFICIENT = 0.7152;
     private static final double BLUE_LUMA_COEFFICIENT = 0.0722;
     private static final Color transparentColor = new Color(0x00FFFFFF, true);
+    private BufferedImage checkerboardImage;
 
     /**
      * Constructor. Set actions upon mouse press events.
@@ -113,8 +114,6 @@ public class DrawArea extends JComponent {
         Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
         //TODO:change to get actual color
         //clear the canvasBufferedImage to its default color
-        canvasGraphics.setColor(Color.WHITE);
-        canvasGraphics.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         clearBufferImageToTransparent(canvas);
         //draw the layers in order
         AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
@@ -145,6 +144,9 @@ public class DrawArea extends JComponent {
         if (canvasBufferedImage == null) {
             firstTimeInit();
         }
+        //draw the checkerboard pattern to represent transparent pixels
+        canvasGraphics.drawImage(checkerboardImage, 0, 0, null);
+        //draw the canvas image
         canvasGraphics.drawImage(canvasBufferedImage, 0, 0, null);
     }
 
@@ -156,6 +158,12 @@ public class DrawArea extends JComponent {
         // create a canvasBufferedImage to draw on
         canvasBufferedImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
         previewBufferedImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+        checkerboardImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+        fillCheckerPattern(checkerboardImage,
+                this.getWidth() / TRANSPARENCY_CHECKER_BOARD_SIZE,
+                this.getHeight() / TRANSPARENCY_CHECKER_BOARD_SIZE,
+                Color.GRAY, Color.darkGray
+        );
         graphics = (Graphics2D) canvasBufferedImage.getGraphics();
         // enable antialiasing
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -173,6 +181,55 @@ public class DrawArea extends JComponent {
         // clear draw area
         clear();
         drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
+    }
+
+    /**
+     * Fill in a black and white checkerboard pattern to the layer.
+     *
+     * @param layer            The BufferedImage layer to write on
+     * @param horizontal_count The amount of squares horizontally
+     * @param vertical_count   The amount of squares vertically
+     * @param color1           The color of the odd tiles.
+     * @param color2           The color of the even tiles.
+     */
+    private void fillCheckerPattern(BufferedImage layer, int horizontal_count, int vertical_count,
+                                    Color color1, Color color2) {
+        Graphics2D layerGraphics = (Graphics2D) layer.getGraphics();
+        Color old_color = layerGraphics.getColor();
+
+        int square_width = layer.getWidth() / horizontal_count;
+        int square_height = layer.getHeight() / vertical_count;
+        int row = 0;
+        boolean isBlack;
+
+        for (int y = 0; y < layer.getHeight(); y += square_height) {
+            if (y >= layer.getHeight()) y = layer.getHeight() - 1;
+            // Alternate start colour for each row
+            if (row % 2 == 0) {
+                isBlack = true;
+                layerGraphics.setColor(color1);
+            } else {
+                isBlack = false;
+                layerGraphics.setColor(color2);
+            }
+
+            for (int x = 0; x < layer.getWidth(); x += square_width) {
+                if (x >= layer.getWidth()) x = layer.getWidth() - 1;
+
+                // TODO: The bottom and right edges aren't drawing properly due to integer division data loss
+                // Maybe just draw the bottom and right edge squares up to their respective sides
+                layerGraphics.fillRect(x, y, square_width, square_height);
+
+                if (isBlack) {
+                    layerGraphics.setColor(color2);
+                } else {
+                    layerGraphics.setColor(color1);
+                }
+                isBlack = !isBlack;
+            }
+            ++row;
+        }
+        layerGraphics.setColor(old_color);
     }
 
     /**
@@ -343,42 +400,7 @@ public class DrawArea extends JComponent {
      * @param vertical_count   The amount of squares vertically
      */
     private void fillCheckerPattern(BufferedImage layer, int horizontal_count, int vertical_count) {
-        Graphics2D layerGraphics = (Graphics2D) layer.getGraphics();
-        Color old_color = layerGraphics.getColor();
-
-        int square_width = layer.getWidth() / horizontal_count;
-        int square_height = layer.getHeight() / vertical_count;
-        int row = 0;
-        boolean isBlack;
-
-        for (int y = 0; y < layer.getHeight(); y += square_height) {
-            if (y >= layer.getHeight()) y = layer.getHeight() - 1;
-            // Alternate start colour for each row
-            if (row % 2 == 0) {
-                isBlack = true;
-                layerGraphics.setColor(Color.BLACK);
-            } else {
-                isBlack = false;
-                layerGraphics.setColor(Color.WHITE);
-            }
-
-            for (int x = 0; x < layer.getWidth(); x += square_width) {
-                if (x >= layer.getWidth()) x = layer.getWidth() - 1;
-
-                // TODO: The bottom and right edges aren't drawing properly due to integer division data loss
-                // Maybe just draw the bottom and right edge squares up to their respective sides
-                layerGraphics.fillRect(x, y, square_width, square_height);
-
-                if (isBlack) {
-                    layerGraphics.setColor(Color.WHITE);
-                } else {
-                    layerGraphics.setColor(Color.BLACK);
-                }
-                isBlack = !isBlack;
-            }
-            ++row;
-        }
-        layerGraphics.setColor(old_color);
+        fillCheckerPattern(layer, horizontal_count, vertical_count, Color.BLACK, Color.WHITE);
     }
 
     /**

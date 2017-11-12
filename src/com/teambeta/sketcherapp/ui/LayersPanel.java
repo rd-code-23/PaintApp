@@ -13,9 +13,9 @@ import java.util.LinkedList;
 
 public class LayersPanel extends JPanel implements ListSelectionListener {
 
-    private static final String HIDE_SHOW_LAYER_BUTTON_TEXT = "Hide/Show Layer";
-    private static final String ADD_LAYER_BUTTON_TEXT = "Add Layer";
-    private static final String DELETE_LAYER_BUTTON_TEXT = "Delete Layer";
+    private static final String HIDE_SHOW_LAYER_BUTTON_TEXT = "Hide/Show";
+    private static final String ADD_LAYER_BUTTON_TEXT = "Add";
+    private static final String DELETE_LAYER_BUTTON_TEXT = "Delete";
     private static final int MAX_NUM_OF_LAYERS = 10;
     private DrawArea drawArea;
     private LinkedList<ImageLayer> drawingLayers;
@@ -39,8 +39,8 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         super(new BorderLayout());
         this.drawArea = drawArea;
         this.drawingLayers = drawArea.getDrawingLayers();
-        // listOfLayers.setFixedCellWidth(270);
-        listOfLayers.setFixedCellHeight(200);
+        listOfLayers.setFixedCellWidth(270);
+        listOfLayers.setFixedCellHeight(150);
         listOfLayers.setModel(listModel);
         listOfLayers.setVisibleRowCount(-1);
         listOfLayers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -48,7 +48,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         layersScrollPane = new JScrollPane(listOfLayers);
         layersScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         layersScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        this.add(layersScrollPane, BorderLayout.CENTER);
+        this.add(layersScrollPane, BorderLayout.EAST);
         addLayerButtons(drawArea);
     }
 
@@ -107,7 +107,6 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         };
         deleteLayerButton.addActionListener(deleteLayerButtonActionListener);
         buttonsPanel.add(deleteLayerButton);
-
 
         this.add(buttonsPanel, BorderLayout.SOUTH);
     }
