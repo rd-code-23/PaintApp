@@ -108,7 +108,9 @@ public class MainUI {
             MouseCursor.setDefaultCursor();
 
             if (e.getSource() == clearButton) {
-                drawArea.clear();
+                if (drawArea.getCurrentlySelectedLayer().isVisible()) {
+                    drawArea.clear();
+                }
             } else if (e.getSource() == brushToolButton) {
                 widthChanger.showPanel();
                 selectedDrawingTool = brushTool;
@@ -198,11 +200,13 @@ public class MainUI {
             if (e.getSource() == textToolButton) {
                 selectedDrawingTool = textTool;
                 textToolSettings.setVisibility(true);
-            } else if ((e.getSource() != textToolButton) && (e.getSource() instanceof JButton)) {
+            } else if ((e.getSource() != textToolButton && e.getSource() != clearButton)
+                    && (e.getSource() instanceof JButton)) {
                 textToolSettings.setVisibility(false);
             }
         }
     };
+    private LayersPanel layersPanel;
 
     /**
      * Constructor.
@@ -233,6 +237,10 @@ public class MainUI {
         triangleTool = new TriangleTool();
         rectangleSelectionTool = new RectangleSelectionTool(drawArea);
         selectedDrawingTool = brushTool;
+    }
+
+    public LayersPanel getLayersPanel() {
+        return layersPanel;
     }
 
     /**
@@ -303,7 +311,7 @@ public class MainUI {
 
         Container mainContent = mainFrame.getContentPane();
         mainContent.setLayout(new BorderLayout());
-        drawArea = new DrawArea();
+        drawArea = new DrawArea(this);
 
         importExport = new ImportExport(drawArea, this);
         GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
@@ -380,7 +388,6 @@ public class MainUI {
         toolSettings.add(widthChanger.getGUI());
         northPanel.add(toolSettings, BorderLayout.CENTER);
 
-
         if (textToolSettings != null) {
             northPanel.add(textToolSettings, BorderLayout.EAST);
             textTool.setFont(textToolSettings.getFontFromSelector());
@@ -429,6 +436,8 @@ public class MainUI {
         JPanel editorPanel = new JPanel();
         editorPanel.setLayout(new BorderLayout());
         editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
+        layersPanel = new LayersPanel(drawArea);
+        editorPanel.add(layersPanel, BorderLayout.EAST);
         mainContent.add(editorPanel, BorderLayout.EAST);
         mainContent.add(northPanel, BorderLayout.NORTH);
 
