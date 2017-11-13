@@ -97,7 +97,6 @@ public class AirBrushTool extends DrawingTool {
         }
     }
 
-
     /**
      * getColor returns the current color the brush tool is set to.
      *

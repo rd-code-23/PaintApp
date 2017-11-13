@@ -56,34 +56,36 @@ public class RectangleTool extends DrawingTool {
 
     @Override
     public void onDrag(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
-        if (previewLayer == null) {
-            previewLayer = DrawArea.getPreviewBufferedImage();
-        }
-        //clear preview layer
-        DrawArea.clearBufferImageToTransparent(previewLayer);
+        if (!drawingLayers.isEmpty()) {
+            if (previewLayer == null) {
+                previewLayer = DrawArea.getPreviewBufferedImage();
+            }
+            //clear preview layer
+            DrawArea.clearBufferImageToTransparent(previewLayer);
 
-        //init graphics objects
-        Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
-        canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        canvasGraphics.setColor(color);
-        Graphics2D previewLayerGraphics = (Graphics2D) previewLayer.getGraphics();
-        canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        previewLayerGraphics.setColor(color);
-        previewLayerGraphics.setStroke(new BasicStroke(getToolWidth()));
+            //init graphics objects
+            Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
+            canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            canvasGraphics.setColor(color);
+            Graphics2D previewLayerGraphics = (Graphics2D) previewLayer.getGraphics();
+            canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            previewLayerGraphics.setColor(color);
+            previewLayerGraphics.setStroke(new BasicStroke(getToolWidth()));
 
-        calcSquareCoordinateData(e);
-        //draw the square preview onto its layer.
-        // Draw a filled rectangle/square if the alt key is down on release.
-        if (fillShape) {
-            previewLayerGraphics.fillRect(initX, initY, drawWidthX, drawHeightY);
+            calcSquareCoordinateData(e);
+            //draw the square preview onto its layer.
+            // Draw a filled rectangle/square if the alt key is down on release.
+            if (fillShape) {
+                previewLayerGraphics.fillRect(initX, initY, drawWidthX, drawHeightY);
+            }
+            previewLayerGraphics.drawRect(initX, initY, drawWidthX, drawHeightY);
+            //info: https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
+            //draw the preview layer on top of the drawing layer(s)
+            AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
+            canvasGraphics.setComposite(alphaComposite);
+            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+            canvasGraphics.drawImage(previewLayer, 0, 0, null);
         }
-        previewLayerGraphics.drawRect(initX, initY, drawWidthX, drawHeightY);
-        //info: https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
-        //draw the preview layer on top of the drawing layer(s)
-        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
-        canvasGraphics.setComposite(alphaComposite);
-        DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
-        canvasGraphics.drawImage(previewLayer, 0, 0, null);
     }
 
     private ImageLayer getSelectedLayer(LinkedList<ImageLayer> drawingLayers) {
