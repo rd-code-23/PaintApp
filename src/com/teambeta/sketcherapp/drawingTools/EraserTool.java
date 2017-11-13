@@ -21,6 +21,7 @@ public class EraserTool extends DrawingTool {
     private int lastX;
     private int lastY;
     private Color color;
+    private static final Color transparentColor = new Color(0x00FFFFFF, true);
     private int eraserWidth;
     private final int DEFAULT_WIDTH_VALUE = 10;
 
@@ -64,6 +65,8 @@ public class EraserTool extends DrawingTool {
 
     @Override
     public void onRelease(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+        Graphics2D graphics = (Graphics2D) canvas.getGraphics();
+        graphics.setComposite(AlphaComposite.Src);
     }
 
     @Override
@@ -114,13 +117,11 @@ public class EraserTool extends DrawingTool {
      */
     private Graphics2D initLayerGraphics(BufferedImage layer) {
         Graphics2D layerGraphics = (Graphics2D) layer.getGraphics();
+        layerGraphics.setComposite(AlphaComposite.Clear);
         layerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        layerGraphics.setColor(color);
+        layerGraphics.setColor(transparentColor);
         layerGraphics.setStroke(new BasicStroke(getToolWidth(), BasicStroke.CAP_ROUND,    // End-cap style
                 BasicStroke.CAP_BUTT));
-        if (MainUI.getDrawArea() != null) {
-            color = MainUI.getDrawArea().getBackground();
-        }
         return layerGraphics;
     }
 

@@ -6,7 +6,7 @@ public class NoiseGeneratorMenu {
 
     private DrawArea drawArea;
     private static final String DIALOG_MESSAGE = "Generate random noise?\n" +
-            "This will overwrite the entire canvas";
+            "This will overwrite the entire layer";
     private static final String DIALOG_WINDOW_TITLE = "Confirm Noise";
 
     /*
