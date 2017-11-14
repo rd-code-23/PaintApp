@@ -4,6 +4,7 @@ import com.teambeta.sketcherapp.model.GeneralObserver;
 import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.model.MouseCursor;
 import com.teambeta.sketcherapp.ui.DrawArea;
+import com.teambeta.sketcherapp.ui.LayersPanel;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -43,7 +44,7 @@ public class RectangleSelectionTool extends DrawingTool {
     private boolean isDrawn;// has the user selected somthing
     private int prevX, prevY;
     private boolean isDragSelection = false; // is the user choosing to drag the image
-
+    private LayersPanel layersPanel;
     //TODO BUG: fix preview glitch when dragging just below and to the right of the selected canvas
     //TODO BUG: pasting on the selected canvas turns selected canvas white
     //TODO BUG: sometimes when you draw a straight selection line it copies it self
@@ -52,10 +53,11 @@ public class RectangleSelectionTool extends DrawingTool {
     /**
      * The constructor sets the properties of the tool to their default values
      */
-    public RectangleSelectionTool(DrawArea drawArea) {
+    public RectangleSelectionTool(DrawArea drawArea, LayersPanel layersPanel) {
         registerObservers();
         initializeVariables();
         this.drawArea = drawArea;
+        this.layersPanel = layersPanel;
     }
 
     /**

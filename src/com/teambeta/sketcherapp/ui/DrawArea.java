@@ -83,9 +83,11 @@ public class DrawArea extends JComponent {
 
             @Override
             public void mouseMoved(MouseEvent e) {
-                MainUI.getSelectedDrawingTool().onMove(canvasBufferedImage, e, drawingLayers);
-                isCanvasAltered = true;
-                repaint();
+                if (currentlySelectedLayer.isVisible()) {
+                    MainUI.getSelectedDrawingTool().onMove(canvasBufferedImage, e, drawingLayers);
+                    isCanvasAltered = true;
+                    repaint();
+                }
             }
 
 

@@ -235,7 +235,7 @@ public class MainUI {
         dnaTool = new DNATool();
         airBrushTool = new AirBrushTool();
         triangleTool = new TriangleTool();
-        rectangleSelectionTool = new RectangleSelectionTool(drawArea);
+        rectangleSelectionTool = new RectangleSelectionTool(drawArea,layersPanel);
         selectedDrawingTool = brushTool;
     }
 
