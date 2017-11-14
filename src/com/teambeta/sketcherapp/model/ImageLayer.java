@@ -1,6 +1,7 @@
 package com.teambeta.sketcherapp.model;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
 
 /**
  * The Layer class represents a drawing layer for our painting app.
@@ -97,4 +98,5 @@ public class ImageLayer {
         }
         return string;
     }
+
 }
