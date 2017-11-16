@@ -64,8 +64,6 @@ public class MainUI {
     private static final int EDITOR_PANEL_HEIGHT = 300;
     public static final int CANVAS_WIDTH = 1600;
     public static final int CANVAS_HEIGHT = 900;
-    private static final String RES_PATH = System.getProperty("user.dir") + File.separator + "src" +
-            File.separator + "res";
 
     private JButton clearButton;
     private JButton brushToolButton;
@@ -89,10 +87,73 @@ public class MainUI {
     private Shortcuts shortcuts;
     private ImportExport importExport;
     private JPanel canvasTools;
-
     private DB_KBShortcuts db_kbShortcuts;
 
+    private static final String RES_PATH = System.getProperty("user.dir") + File.separator + "src" +
+            File.separator + "res";
     private static final String APPLICATION_LOGO_IMAGE_DIRECTORY = RES_PATH + File.separator + "BPIcon.png";
+    private static final String AIR_BRUSH_ICON_DEFAULT = RES_PATH + File.separator + "airbrush.png";
+    private static final String AIR_BRUSH_ICON_HIGHLIGHT = RES_PATH + File.separator + "airbrush_highlighted.png";
+    private static final String AIR_BRUSH_ICON_HOVER = RES_PATH + File.separator + "airbrush_hover.png";
+    private static final String BRIGHTNESS_ICON_DEFAULT = RES_PATH + File.separator + "brightness.png";
+    private static final String BRIGHTNESS_ICON_HIGHLIGHTED = RES_PATH + File.separator + "brightness_highlighted.png";
+    private static final String BRIGHTNESS_ICON_HOVER = RES_PATH + File.separator + "brightness_hover.png";
+    private static final String BRUSH_ICON_DEFAULT = RES_PATH + File.separator + "brush.png";
+    private static final String BRUSH_ICON_HIGHLIGHTED = RES_PATH + File.separator + "brush_highlighted.png";
+    private static final String BRUSH_ICON_HOVER = RES_PATH + File.separator + "brush_hover.png";
+    private static final String BUCKET_ICON_DEFAULT = RES_PATH + File.separator + "bucket.png";
+    private static final String BUCKET_ICON_HIGHLIGHTED = RES_PATH + File.separator + "bucket_highlighted.png";
+    private static final String BUCKET_ICON_HOVER = RES_PATH + File.separator + "bucket_hover.png";
+    private static final String CIRCLE_ICON_DEFAULT = RES_PATH + File.separator + "circle.png";
+    private static final String CIRCLE_ICON_HIGHLIGHTED = RES_PATH + File.separator + "circle_highlighted.png";
+    private static final String CIRCLE_ICON_HOVER = RES_PATH + File.separator + "circle_hover.png";
+    private static final String CLEAR_ICON_DEFAULT = RES_PATH + File.separator + "clear_canvas.png";
+    private static final String CLEAR_ICON_HIGHLIGHTED = RES_PATH + File.separator + "clear_canvas_highlighted.png";
+    private static final String CLEAR_ICON_HOVER = RES_PATH + File.separator + "clear_canvas_hover.png";
+    private static final String CROP_ICON_DEFAULT = RES_PATH + File.separator + "crop.png";
+    private static final String CROP_ICON_HIGHLIGHTED = RES_PATH + File.separator + "crop_highlighted.png";
+    private static final String CROP_ICON_HOVER = RES_PATH + File.separator + "crop_hover.png";
+    private static final String DNA_ICON_DEFAULT = RES_PATH + File.separator + "dna.png";
+    private static final String DNA_ICON_HIGHLIGHTED = RES_PATH + File.separator + "dna_highlighted.png";
+    private static final String DNA_ICON_HOVER = RES_PATH + File.separator + "dna_hover.png";
+    private static final String ERASER_ICON_DEFAULT = RES_PATH + File.separator + "eraser.png";
+    private static final String ERASER_ICON_HIGHLIGHTED = RES_PATH + File.separator + "eraser_highlighted.png";
+    private static final String ERASER_ICON_HOVER = RES_PATH + File.separator + "eraser_hover.png";
+    private static final String EYEDROP_ICON_DEFAULT = RES_PATH + File.separator + "eyedrop.png";
+    private static final String EYEDROP_ICON_HIGHLIGHTED = RES_PATH + File.separator + "eyedrop_highlighted.png";
+    private static final String EYEDROP_ICON_HOVER = RES_PATH + File.separator + "eyedrop_hover.png";
+    private static final String FAN_ICON_DEFAULT = RES_PATH + File.separator + "fan.png";
+    private static final String FAN_ICON_HIGHLIGHTED = RES_PATH + File.separator + "fan_highlighted.png";
+    private static final String FAN_ICON_HOVER = RES_PATH + File.separator + "fan_hover.png";
+    private static final String HAND_ICON_DEFAULT = RES_PATH + File.separator + "hand.png";
+    private static final String HAND_ICON_HIGHLIGHTED = RES_PATH + File.separator + "hand_highlighted.png";
+    private static final String HAND_ICON_HOVER = RES_PATH + File.separator + "hand_hover.png";
+    private static final String HUE_SATURATION_ICON_DEFAULT = RES_PATH + File.separator + "hue_saturation.png";
+    private static final String HUE_SATURATION_ICON_HIGHLIGHTED = RES_PATH + File.separator +
+            "hue_saturation_highlighted.png";
+    private static final String KELTIC_ICON_DEFAULT = RES_PATH + File.separator + "keltic.png";
+    private static final String KELTIC_ICON_HIGHLIGHTED = RES_PATH + File.separator + "keltic_highlighted.png";
+    private static final String KELTIC_ICON_HOVER = RES_PATH + File.separator + "keltic_hover.png";
+    private static final String LINE_ICON_DEFAULT = RES_PATH + File.separator + "line.png";
+    private static final String LINE_ICON_HIGHLIGHTED = RES_PATH + File.separator + "line_highlighted.png";
+    private static final String LINE_ICON_HOVER = RES_PATH + File.separator + "line_hover.png";
+    private static final String SELECTION_ICON_DEFAULT = RES_PATH + File.separator + "selection.png";
+    private static final String SELECTION_ICON_HIGHLIGHTED = RES_PATH + File.separator + "selection_highlighted.png";
+    private static final String SELECTION_ICON_HOVER = RES_PATH + File.separator + "selection_hover.png";
+    private static final String SHAPES_ICON_DEFAULT = RES_PATH + File.separator + "shapes.png";
+    private static final String SHAPES_ICON_HIGHLIGHTED = RES_PATH + File.separator + "shapes_highlighted.png";
+    private static final String SHAPES_ICON_HOVER = RES_PATH + File.separator + "shapes_hover.png";
+    private static final String SQUARE_ICON_DEFAULT = RES_PATH + File.separator + "square.png";
+    private static final String SQUARE_ICON_HIGHLIGHTED = RES_PATH + File.separator + "square_highlighted.png";
+    private static final String SQUARE_ICON_HOVER = RES_PATH + File.separator + "square_hover.png";
+    private static final String TEXT_ICON_DEFAULT = RES_PATH + File.separator + "text.png";
+    private static final String TEXT_ICON_HIGHLIGHTED = RES_PATH + File.separator + "text_highlighted.png";
+    private static final String TEXT_ICON_HOVER = RES_PATH + File.separator + "text_hover.png";
+    private static final String TRIANGLE_ICON_DEFAULT = RES_PATH + File.separator + "triangle.png";
+    private static final String TRIANGLE_ICON_HIGHLIGHTED = RES_PATH + File.separator + "triangle_highlighted.png";
+    private static final String TRIANGLE_ICON_HOVER = RES_PATH + File.separator + "triangle_hover.png";
+
+
 
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
