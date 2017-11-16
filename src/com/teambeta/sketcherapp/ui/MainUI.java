@@ -457,7 +457,6 @@ public class MainUI {
         mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         mainFrame.setLocationRelativeTo(null);  // positions GUI in center when opened
         mainFrame.setVisible(true);
-        playStartUpSound();
     }
 
     /**
@@ -476,26 +475,6 @@ public class MainUI {
      */
     public static DrawArea getDrawArea() {
         return drawArea;
-    }
-
-    /**
-     * Play the start up sound when the application is launched or when user switches out of minimode
-     */
-    private void playStartUpSound() {
-        File startUpSound = new File(START_SOUND_PATH);
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    Clip clip = AudioSystem.getClip();
-                    clip.open(AudioSystem.getAudioInputStream(startUpSound));
-                    clip.start();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        thread.start();
     }
 
     /**
