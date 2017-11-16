@@ -64,8 +64,8 @@ public class MainUI {
     private static final int EDITOR_PANEL_HEIGHT = 300;
     public static final int CANVAS_WIDTH = 1600;
     public static final int CANVAS_HEIGHT = 900;
-    private static final String START_SOUND_PATH = System.getProperty("user.dir") + File.separator + "src" +
-            File.separator + "res" + File.separator + "start-sound.wav";
+    private static final String RES_PATH = System.getProperty("user.dir") + File.separator + "src" +
+            File.separator + "res";
 
     private JButton clearButton;
     private JButton brushToolButton;
@@ -92,7 +92,7 @@ public class MainUI {
 
     private DB_KBShortcuts db_kbShortcuts;
 
-    private static final String APPLICATION_LOGO_IMAGE_DIRECTORY = "res/BPIcon.png";
+    private static final String APPLICATION_LOGO_IMAGE_DIRECTORY = RES_PATH + File.separator + "BPIcon.png";
 
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
