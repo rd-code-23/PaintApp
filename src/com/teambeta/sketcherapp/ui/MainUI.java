@@ -104,6 +104,9 @@ public class MainUI {
     private static final String BUCKET_ICON_DEFAULT = RES_PATH + File.separator + "bucket.png";
     private static final String BUCKET_ICON_HIGHLIGHTED = RES_PATH + File.separator + "bucket_highlighted.png";
     private static final String BUCKET_ICON_HOVER = RES_PATH + File.separator + "bucket_hover.png";
+    private static final String CELTIC_ICON_DEFAULT = RES_PATH + File.separator + "celtic.png";
+    private static final String CELTIC_ICON_HIGHLIGHTED = RES_PATH + File.separator + "celtic_highlighted.png";
+    private static final String CELTIC_ICON_HOVER = RES_PATH + File.separator + "celtic_hover.png";
     private static final String CIRCLE_ICON_DEFAULT = RES_PATH + File.separator + "circle.png";
     private static final String CIRCLE_ICON_HIGHLIGHTED = RES_PATH + File.separator + "circle_highlighted.png";
     private static final String CIRCLE_ICON_HOVER = RES_PATH + File.separator + "circle_hover.png";
@@ -131,9 +134,6 @@ public class MainUI {
     private static final String HUE_SATURATION_ICON_DEFAULT = RES_PATH + File.separator + "hue_saturation.png";
     private static final String HUE_SATURATION_ICON_HIGHLIGHTED = RES_PATH + File.separator +
             "hue_saturation_highlighted.png";
-    private static final String KELTIC_ICON_DEFAULT = RES_PATH + File.separator + "keltic.png";
-    private static final String KELTIC_ICON_HIGHLIGHTED = RES_PATH + File.separator + "keltic_highlighted.png";
-    private static final String KELTIC_ICON_HOVER = RES_PATH + File.separator + "keltic_hover.png";
     private static final String LINE_ICON_DEFAULT = RES_PATH + File.separator + "line.png";
     private static final String LINE_ICON_HIGHLIGHTED = RES_PATH + File.separator + "line_highlighted.png";
     private static final String LINE_ICON_HOVER = RES_PATH + File.separator + "line_hover.png";
@@ -373,20 +373,20 @@ public class MainUI {
         mainContent.add(drawAreaPanel, BorderLayout.CENTER);
 
         /* START MAINUI BUTTONS */
-        clearButton = new JButton(CLEAR_BUTTON_TEXT);
-        brushToolButton = new JButton(BRUSH_BUTTON_TEXT);
-        lineToolButton = new JButton(LINE_TOOL_BUTTON_TEXT);
-        rectangleToolButton = new JButton(RECTANGLE_TOOL_BUTTON_TEXT);
-        eraserToolButton = new JButton(ERASER_TOOL_BUTTON_TEXT);
-        ellipseToolButton = new JButton(ELLIPSE_TOOL_BUTTON_TEXT);
-        textToolButton = new JButton(TEXT_TOOL_BUTTON_TEXT);
-        eyeDropperToolButton = new JButton(EYEDROPPER_TOOL_BUTTON_TEXT);
-        fanToolButton = new JButton(FAN_TOOL_BUTTON_TEXT);
-        celticKnotToolButton = new JButton(CELTIC_KNOT_TOOL_BUTTON_TEXT);
-        paintBucketToolButton = new JButton(PAINT_BUCKET_BUTTON_TEXT);
-        dnaToolButton = new JButton(DNA_TOOL_BUTTON_TEXT);
-        airBrushToolButton = new JButton(AIR_BRUSH_TOOL_BUTTON_TEXT);
-        triangleToolButton = new JButton(TRIANGLE_TOOL_BUTTON_TEXT);
+        clearButton = new JButton(new ImageIcon(CLEAR_ICON_DEFAULT));
+        brushToolButton = new JButton(new ImageIcon(BRUSH_ICON_DEFAULT));
+        lineToolButton = new JButton(new ImageIcon(LINE_ICON_DEFAULT));
+        rectangleToolButton = new JButton(new ImageIcon(SQUARE_ICON_DEFAULT));
+        eraserToolButton = new JButton(new ImageIcon(ERASER_ICON_DEFAULT));
+        ellipseToolButton = new JButton(new ImageIcon(CIRCLE_ICON_DEFAULT));
+        textToolButton = new JButton(new ImageIcon(TEXT_ICON_DEFAULT));
+        eyeDropperToolButton = new JButton(new ImageIcon(EYEDROP_ICON_DEFAULT));
+        fanToolButton = new JButton(new ImageIcon(FAN_ICON_DEFAULT));
+        celticKnotToolButton = new JButton(new ImageIcon(CELTIC_ICON_DEFAULT));
+        paintBucketToolButton = new JButton(new ImageIcon(BUCKET_ICON_DEFAULT));
+        dnaToolButton = new JButton(new ImageIcon(DNA_ICON_DEFAULT));
+        airBrushToolButton = new JButton(new ImageIcon(AIR_BRUSH_ICON_DEFAULT));
+        triangleToolButton = new JButton(new ImageIcon(TRIANGLE_ICON_DEFAULT));
 
         // Add a button to this array to register to actionListener and canvasTools
         // The order of this list determines the order of the buttons in the generated UI. Index -> 0 = Position -> First
@@ -405,6 +405,9 @@ public class MainUI {
         for (JButton button : buttonContainer) {
             button.addActionListener(actionListener);
             button.setAlignmentX(Component.CENTER_ALIGNMENT);
+            button.setBorderPainted(false);
+            button.setFocusPainted(false);
+            button.setContentAreaFilled(false);
             canvasTools.add(button);
             canvasTools.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
         }
