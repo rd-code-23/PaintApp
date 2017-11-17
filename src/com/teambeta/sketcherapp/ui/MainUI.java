@@ -18,6 +18,8 @@ import java.beans.PropertyChangeListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 
+import static com.sun.java.accessibility.util.AWTEventMonitor.addMouseListener;
+
 /**
  * Main UI class to wrap all GUI elements together.
  */
@@ -396,11 +398,24 @@ public class MainUI {
                 celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton,
         };
 
+        String [] buttonDefaultContainer = {
+                CLEAR_ICON_DEFAULT, BRUSH_ICON_DEFAULT, AIR_BRUSH_ICON_DEFAULT, ERASER_ICON_DEFAULT, LINE_ICON_DEFAULT,
+                FAN_ICON_DEFAULT, SQUARE_ICON_DEFAULT, CIRCLE_ICON_DEFAULT, TRIANGLE_ICON_DEFAULT, BUCKET_ICON_DEFAULT,
+                CELTIC_ICON_DEFAULT, DNA_ICON_DEFAULT, TEXT_ICON_DEFAULT, EYEDROP_ICON_DEFAULT
+        };
+
+        String [] buttonHoverContainer = {
+                CLEAR_ICON_HOVER, BRUSH_ICON_HOVER, AIR_BRUSH_ICON_HOVER, ERASER_ICON_HOVER, LINE_ICON_HOVER,
+                FAN_ICON_HOVER, SQUARE_ICON_HOVER, CIRCLE_ICON_HOVER, TRIANGLE_ICON_HOVER, BUCKET_ICON_HOVER,
+                CELTIC_ICON_HOVER, DNA_ICON_HOVER, TEXT_ICON_HOVER, EYEDROP_ICON_HOVER
+        };
+
         canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
         canvasTools.setBackground(Color.DARK_GRAY);
         canvasTools.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
 
+        int buttonContainerIndex = 0;
         // Register buttons to actionListener and canvasTools
         for (JButton button : buttonContainer) {
             button.addActionListener(actionListener);
@@ -408,6 +423,16 @@ public class MainUI {
             button.setBorderPainted(false);
             button.setFocusPainted(false);
             button.setContentAreaFilled(false);
+            int finalButtonContainerIndex = buttonContainerIndex;
+            button.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseEntered(java.awt.event.MouseEvent evt) {
+                    button.setIcon(new ImageIcon(buttonHoverContainer[finalButtonContainerIndex]));
+                }
+                public void mouseExited(java.awt.event.MouseEvent evt) {
+                    button.setIcon(new ImageIcon(buttonDefaultContainer[finalButtonContainerIndex]));
+                }
+            });
+            buttonContainerIndex ++;
             canvasTools.add(button);
             canvasTools.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
         }
