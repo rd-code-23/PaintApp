@@ -485,8 +485,6 @@ public class MainUI {
                 }
 
                 public void mouseClicked(java.awt.event.MouseEvent evt) {
-                    JButton previousHighlighted = highlightedButton;
-                    previousHighlighted.setIcon(new ImageIcon(buttonDefaultContainer[CURRENT_CONTAINER_INDEX]));
                     originalIcon = new ImageIcon(buttonHighlightedContainer[CURRENT_CONTAINER_INDEX]);
                 }
             });
