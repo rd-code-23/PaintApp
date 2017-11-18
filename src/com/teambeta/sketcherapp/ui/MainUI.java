@@ -440,17 +440,17 @@ public class MainUI {
                 celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton,
         };
 
+        String[] buttonHoverContainer = {
+                CLEAR_ICON_HOVER, SELECTION_ICON_HOVER, BRUSH_ICON_HOVER, AIR_BRUSH_ICON_HOVER, ERASER_ICON_HOVER,
+                LINE_ICON_HOVER, FAN_ICON_HOVER, SQUARE_ICON_HOVER, CIRCLE_ICON_HOVER, TRIANGLE_ICON_HOVER,
+                BUCKET_ICON_HOVER, CELTIC_ICON_HOVER, DNA_ICON_HOVER, TEXT_ICON_HOVER, EYEDROP_ICON_HOVER
+        };
+
         String[] buttonDefaultContainer = {
                 CLEAR_ICON_DEFAULT, SELECTION_ICON_DEFAULT, BRUSH_ICON_DEFAULT, AIR_BRUSH_ICON_DEFAULT,
                 ERASER_ICON_DEFAULT, LINE_ICON_DEFAULT, FAN_ICON_DEFAULT, SQUARE_ICON_DEFAULT, CIRCLE_ICON_DEFAULT,
                 TRIANGLE_ICON_DEFAULT, BUCKET_ICON_DEFAULT, CELTIC_ICON_DEFAULT, DNA_ICON_DEFAULT, TEXT_ICON_DEFAULT,
                 EYEDROP_ICON_DEFAULT
-        };
-
-        String[] buttonHoverContainer = {
-                CLEAR_ICON_HOVER, SELECTION_ICON_HOVER, BRUSH_ICON_HOVER, AIR_BRUSH_ICON_HOVER, ERASER_ICON_HOVER,
-                LINE_ICON_HOVER, FAN_ICON_HOVER, SQUARE_ICON_HOVER, CIRCLE_ICON_HOVER, TRIANGLE_ICON_HOVER,
-                BUCKET_ICON_HOVER, CELTIC_ICON_HOVER, DNA_ICON_HOVER, TEXT_ICON_HOVER, EYEDROP_ICON_HOVER
         };
 
         String[] buttonHighlightedContainer = {
@@ -481,11 +481,15 @@ public class MainUI {
                 }
 
                 public void mouseExited(java.awt.event.MouseEvent evt) {
-                    button.setIcon(originalIcon);
+                    if (button != highlightedButton) {
+                        button.setIcon(new ImageIcon(buttonDefaultContainer[CURRENT_CONTAINER_INDEX]));
+                    }
                 }
 
                 public void mouseClicked(java.awt.event.MouseEvent evt) {
-                    originalIcon = new ImageIcon(buttonHighlightedContainer[CURRENT_CONTAINER_INDEX]);
+                    if (button != clearButton) {
+                        originalIcon = new ImageIcon(buttonHighlightedContainer[CURRENT_CONTAINER_INDEX]);
+                    }
                 }
             });
             buttonContainerIndex++;
@@ -734,9 +738,9 @@ public class MainUI {
     }
 
     /**
-     * gets the key binding for the shortcuts from the database
+     * Gets the key binding for the shortcuts from the database.
      */
-    public void generateDBDefaultKeyBindings() {
+    private void generateDBDefaultKeyBindings() {
 
         shortcuts.addKeyBinding(Shortcuts.getClearToolKeyCode(), Shortcuts.isAlt_clearTool(), Shortcuts.isShift_clearTool(), Shortcuts.isAlt_clearTool(), Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
             drawArea.clear();
