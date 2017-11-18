@@ -16,14 +16,12 @@ public class DB_KBShortcuts {
     private Connection connection = null;
     private Shortcuts shortcuts;
 
-
     /**
      * @param shortcuts used to generate the database
      */
     public DB_KBShortcuts(Shortcuts shortcuts) {
         this.shortcuts = shortcuts;
     }
-
 
     /**
      * creates a table
@@ -48,7 +46,6 @@ public class DB_KBShortcuts {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -60,7 +57,7 @@ public class DB_KBShortcuts {
             return;
         }
 
-        PreparedStatement pst = null;
+        PreparedStatement pst;
 
         try {
             connection = ConnectionConfiguration.getConnection();
@@ -129,7 +126,6 @@ public class DB_KBShortcuts {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -170,13 +166,12 @@ public class DB_KBShortcuts {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     /**
      * checks to see if a record exists
      */
-    public boolean isDataExists(String shortcutName) {
+    private boolean isDataExists(String shortcutName) {
         try {
             connection = ConnectionConfiguration.getConnection();
             String query = "SELECT (count(*) > 0) as found FROM " + KB_SHORTCUTS_TABLE + " WHERE " + SHORTCUT_NAME + " LIKE ? ";
@@ -187,11 +182,7 @@ public class DB_KBShortcuts {
                 // Only expecting a single result
                 if (rs.next()) {
                     boolean found = rs.getBoolean(1); // "found" column
-                    if (found) {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return found;
                 }
             }
 
@@ -264,9 +255,5 @@ public class DB_KBShortcuts {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
     }
-
-
 }
