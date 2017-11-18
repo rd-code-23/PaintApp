@@ -436,8 +436,8 @@ public class MainUI {
         // The order of this list determines the order of the buttons in the generated UI. Index -> 0 = Position -> First
         JButton[] buttonContainer = {
                 clearButton, selectionButton, brushToolButton, airBrushToolButton, eraserToolButton, lineToolButton,
-                fanToolButton, rectangleToolButton, ellipseToolButton, triangleToolButton, paintBucketToolButton,
-                celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton,
+                fanToolButton, rectangleToolButton, ellipseToolButton, triangleToolButton,
+                paintBucketToolButton, celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton
         };
 
         String[] buttonHoverContainer = {
@@ -449,8 +449,8 @@ public class MainUI {
         String[] buttonDefaultContainer = {
                 CLEAR_ICON_DEFAULT, SELECTION_ICON_DEFAULT, BRUSH_ICON_DEFAULT, AIR_BRUSH_ICON_DEFAULT,
                 ERASER_ICON_DEFAULT, LINE_ICON_DEFAULT, FAN_ICON_DEFAULT, SQUARE_ICON_DEFAULT, CIRCLE_ICON_DEFAULT,
-                TRIANGLE_ICON_DEFAULT, BUCKET_ICON_DEFAULT, CELTIC_ICON_DEFAULT, DNA_ICON_DEFAULT, TEXT_ICON_DEFAULT,
-                EYEDROP_ICON_DEFAULT
+                TRIANGLE_ICON_DEFAULT, BUCKET_ICON_DEFAULT, CELTIC_ICON_DEFAULT, DNA_ICON_DEFAULT,
+                TEXT_ICON_DEFAULT, EYEDROP_ICON_DEFAULT
         };
 
         String[] buttonHighlightedContainer = {

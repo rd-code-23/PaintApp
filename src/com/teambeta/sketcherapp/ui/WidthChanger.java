@@ -91,15 +91,18 @@ public class WidthChanger {
      * Build check boxes.
      */
     private void buildCheckBoxes() {
+        Font checkBoxFont = new Font(FONT_TYPE, Font.PLAIN,SIZE_FONT_JLABEL);
         globalSize = new JCheckBox(GLOBAL_WIDTH_CHECKBOX_TEXT);
         globalSize.setBackground(Color.DARK_GRAY);
         globalSize.setForeground(Color.WHITE);
         globalSize.setSelected(true);
+        globalSize.setFont(checkBoxFont);
 
         fillBox = new JCheckBox(FILL_CHECKBOX_TEXT);
         fillBox.setBackground(Color.DARK_GRAY);
         fillBox.setForeground(Color.WHITE);
         fillBox.setSelected(false);
+        fillBox.setFont(checkBoxFont);
         isFill = fillBox.isSelected();
     }
 
