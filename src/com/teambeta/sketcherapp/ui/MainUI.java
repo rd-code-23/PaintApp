@@ -68,6 +68,7 @@ public class MainUI {
     public static final int CANVAS_HEIGHT = 900;
 
     private JButton clearButton;
+    private JButton selectionButton;
     private JButton brushToolButton;
     private JButton lineToolButton;
     private JButton rectangleToolButton;
@@ -90,12 +91,13 @@ public class MainUI {
     private ImportExport importExport;
     private JPanel canvasTools;
     private DB_KBShortcuts db_kbShortcuts;
+    private JButton highlightedButton;
 
     private static final String RES_PATH = System.getProperty("user.dir") + File.separator + "src" +
             File.separator + "res";
     private static final String APPLICATION_LOGO_IMAGE_DIRECTORY = RES_PATH + File.separator + "BPIcon.png";
     private static final String AIR_BRUSH_ICON_DEFAULT = RES_PATH + File.separator + "airbrush.png";
-    private static final String AIR_BRUSH_ICON_HIGHLIGHT = RES_PATH + File.separator + "airbrush_highlighted.png";
+    private static final String AIR_BRUSH_ICON_HIGHLIGHTED = RES_PATH + File.separator + "airbrush_highlighted.png";
     private static final String AIR_BRUSH_ICON_HOVER = RES_PATH + File.separator + "airbrush_hover.png";
     private static final String BRIGHTNESS_ICON_DEFAULT = RES_PATH + File.separator + "brightness.png";
     private static final String BRIGHTNESS_ICON_HIGHLIGHTED = RES_PATH + File.separator + "brightness_highlighted.png";
@@ -156,7 +158,6 @@ public class MainUI {
     private static final String TRIANGLE_ICON_HOVER = RES_PATH + File.separator + "triangle_hover.png";
 
 
-
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == clearButton) {
@@ -166,17 +167,29 @@ public class MainUI {
             } else if (e.getSource() == brushToolButton) {
                 widthChanger.showPanel();
                 selectedDrawingTool = brushTool;
+                setHighlightedToDefault();
+                highlightedButton = brushToolButton;
+                brushToolButton.setIcon(new ImageIcon(BRUSH_ICON_HIGHLIGHTED));
                 updateSizeSlider();
                 drawArea.setColor(brushTool.getColor());
             } else if (e.getSource() == fanToolButton) {
                 selectedDrawingTool = fanTool;
+                setHighlightedToDefault();
+                highlightedButton = fanToolButton;
+                fanToolButton.setIcon(new ImageIcon(FAN_ICON_HIGHLIGHTED));
                 updateSizeSlider();
             } else if (e.getSource() == lineToolButton) {
                 selectedDrawingTool = lineTool;
+                setHighlightedToDefault();
+                highlightedButton = lineToolButton;
+                lineToolButton.setIcon(new ImageIcon(LINE_ICON_HIGHLIGHTED));
                 updateSizeSlider();
                 drawArea.setColor(lineTool.getColor());
             } else if (e.getSource() == rectangleToolButton) {
                 selectedDrawingTool = rectangleTool;
+                setHighlightedToDefault();
+                highlightedButton = rectangleToolButton;
+                rectangleToolButton.setIcon(new ImageIcon(SQUARE_ICON_HIGHLIGHTED));
                 updateSizeSlider();
                 updateFillState(); // Tool supports filling
                 drawArea.setColor(rectangleTool.getColor());
@@ -186,25 +199,46 @@ public class MainUI {
                 drawArea.setColor(brushTool.getColor());
             } else if (e.getSource() == ellipseToolButton) {
                 selectedDrawingTool = ellipseTool;
+                setHighlightedToDefault();
+                highlightedButton = ellipseToolButton;
+                ellipseToolButton.setIcon(new ImageIcon(CIRCLE_ICON_HIGHLIGHTED));
                 updateSizeSlider();
                 updateFillState(); // Tool supports filling
                 drawArea.setColor(ellipseTool.getColor());
             } else if (e.getSource() == eraserToolButton) {
                 selectedDrawingTool = eraserTool;
+                setHighlightedToDefault();
+                highlightedButton = eraserToolButton;
+                eraserToolButton.setIcon(new ImageIcon(ERASER_ICON_HIGHLIGHTED));
                 updateSizeSlider();
             } else if (e.getSource() == paintBucketToolButton) {
                 selectedDrawingTool = paintBucketTool;
+                setHighlightedToDefault();
+                highlightedButton = paintBucketToolButton;
+                paintBucketToolButton.setIcon(new ImageIcon(BUCKET_ICON_HIGHLIGHTED));
                 updateSizeSlider();
             } else if (e.getSource() == eyeDropperToolButton) {
                 selectedDrawingTool = eyeDropperTool;
+                setHighlightedToDefault();
+                highlightedButton = eyeDropperToolButton;
+                eyeDropperToolButton.setIcon(new ImageIcon(EYEDROP_ICON_HIGHLIGHTED));
             } else if (e.getSource() == celticKnotToolButton) {
                 selectedDrawingTool = celticKnotTool;
+                setHighlightedToDefault();
+                highlightedButton = celticKnotToolButton;
+                celticKnotToolButton.setIcon(new ImageIcon(CELTIC_ICON_HIGHLIGHTED));
                 updateSizeSlider();
             } else if (e.getSource() == dnaToolButton) {
                 selectedDrawingTool = dnaTool;
+                setHighlightedToDefault();
+                highlightedButton = dnaToolButton;
+                dnaToolButton.setIcon(new ImageIcon(DNA_ICON_HIGHLIGHTED));
                 updateSizeSlider();
             } else if (e.getSource() == airBrushToolButton) {
                 selectedDrawingTool = airBrushTool;
+                setHighlightedToDefault();
+                highlightedButton = airBrushToolButton;
+                airBrushToolButton.setIcon(new ImageIcon(AIR_BRUSH_ICON_HIGHLIGHTED));
                 updateSizeSlider();
             } else if (e.getSource() == widthChanger.getCheckBoxGlobalSizeComponent()) {
                 if (widthChanger.isGlobalSize()) {
@@ -233,6 +267,9 @@ public class MainUI {
                 selectedDrawingTool.setFillState(widthChanger.isFill());
             } else if (e.getSource() == triangleToolButton) {
                 selectedDrawingTool = triangleTool;
+                setHighlightedToDefault();
+                highlightedButton = triangleToolButton;
+                triangleToolButton.setIcon(new ImageIcon(TRIANGLE_ICON_HIGHLIGHTED));
                 updateSizeSlider();
                 updateFillState();
             }
@@ -247,6 +284,9 @@ public class MainUI {
              */
             if (e.getSource() == textToolButton) {
                 selectedDrawingTool = textTool;
+                setHighlightedToDefault();
+                highlightedButton = textToolButton;
+                textToolButton.setIcon(new ImageIcon(TEXT_ICON_HIGHLIGHTED));
                 textToolSettings.setVisibility(true);
             } else if ((e.getSource() != textToolButton && e.getSource() != clearButton)
                     && (e.getSource() instanceof JButton)) {
@@ -376,6 +416,7 @@ public class MainUI {
 
         /* START MAINUI BUTTONS */
         clearButton = new JButton(new ImageIcon(CLEAR_ICON_DEFAULT));
+        selectionButton = new JButton(new ImageIcon(SELECTION_ICON_DEFAULT));
         brushToolButton = new JButton(new ImageIcon(BRUSH_ICON_DEFAULT));
         lineToolButton = new JButton(new ImageIcon(LINE_ICON_DEFAULT));
         rectangleToolButton = new JButton(new ImageIcon(SQUARE_ICON_DEFAULT));
@@ -389,25 +430,34 @@ public class MainUI {
         dnaToolButton = new JButton(new ImageIcon(DNA_ICON_DEFAULT));
         airBrushToolButton = new JButton(new ImageIcon(AIR_BRUSH_ICON_DEFAULT));
         triangleToolButton = new JButton(new ImageIcon(TRIANGLE_ICON_DEFAULT));
+        highlightedButton = null;
 
         // Add a button to this array to register to actionListener and canvasTools
         // The order of this list determines the order of the buttons in the generated UI. Index -> 0 = Position -> First
         JButton[] buttonContainer = {
-                clearButton, brushToolButton, airBrushToolButton, eraserToolButton, lineToolButton,
+                clearButton, selectionButton, brushToolButton, airBrushToolButton, eraserToolButton, lineToolButton,
                 fanToolButton, rectangleToolButton, ellipseToolButton, triangleToolButton, paintBucketToolButton,
                 celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton,
         };
 
-        String [] buttonDefaultContainer = {
-                CLEAR_ICON_DEFAULT, BRUSH_ICON_DEFAULT, AIR_BRUSH_ICON_DEFAULT, ERASER_ICON_DEFAULT, LINE_ICON_DEFAULT,
-                FAN_ICON_DEFAULT, SQUARE_ICON_DEFAULT, CIRCLE_ICON_DEFAULT, TRIANGLE_ICON_DEFAULT, BUCKET_ICON_DEFAULT,
-                CELTIC_ICON_DEFAULT, DNA_ICON_DEFAULT, TEXT_ICON_DEFAULT, EYEDROP_ICON_DEFAULT
+        String[] buttonDefaultContainer = {
+                CLEAR_ICON_DEFAULT, SELECTION_ICON_DEFAULT, BRUSH_ICON_DEFAULT, AIR_BRUSH_ICON_DEFAULT,
+                ERASER_ICON_DEFAULT, LINE_ICON_DEFAULT, FAN_ICON_DEFAULT, SQUARE_ICON_DEFAULT, CIRCLE_ICON_DEFAULT,
+                TRIANGLE_ICON_DEFAULT, BUCKET_ICON_DEFAULT, CELTIC_ICON_DEFAULT, DNA_ICON_DEFAULT, TEXT_ICON_DEFAULT,
+                EYEDROP_ICON_DEFAULT
         };
 
-        String [] buttonHoverContainer = {
-                CLEAR_ICON_HOVER, BRUSH_ICON_HOVER, AIR_BRUSH_ICON_HOVER, ERASER_ICON_HOVER, LINE_ICON_HOVER,
-                FAN_ICON_HOVER, SQUARE_ICON_HOVER, CIRCLE_ICON_HOVER, TRIANGLE_ICON_HOVER, BUCKET_ICON_HOVER,
-                CELTIC_ICON_HOVER, DNA_ICON_HOVER, TEXT_ICON_HOVER, EYEDROP_ICON_HOVER
+        String[] buttonHoverContainer = {
+                CLEAR_ICON_HOVER, SELECTION_ICON_HOVER, BRUSH_ICON_HOVER, AIR_BRUSH_ICON_HOVER, ERASER_ICON_HOVER,
+                LINE_ICON_HOVER, FAN_ICON_HOVER, SQUARE_ICON_HOVER, CIRCLE_ICON_HOVER, TRIANGLE_ICON_HOVER,
+                BUCKET_ICON_HOVER, CELTIC_ICON_HOVER, DNA_ICON_HOVER, TEXT_ICON_HOVER, EYEDROP_ICON_HOVER
+        };
+
+        String[] buttonHighlightedContainer = {
+                CLEAR_ICON_HIGHLIGHTED, SELECTION_ICON_HIGHLIGHTED, BRUSH_ICON_HIGHLIGHTED, AIR_BRUSH_ICON_HIGHLIGHTED,
+                ERASER_ICON_HIGHLIGHTED, LINE_ICON_HIGHLIGHTED, FAN_ICON_HIGHLIGHTED, SQUARE_ICON_HIGHLIGHTED,
+                CIRCLE_ICON_HIGHLIGHTED, TRIANGLE_ICON_HIGHLIGHTED, BUCKET_ICON_HIGHLIGHTED, CELTIC_ICON_HIGHLIGHTED,
+                DNA_ICON_HIGHLIGHTED, TEXT_ICON_HIGHLIGHTED, EYEDROP_ICON_HIGHLIGHTED
         };
 
         canvasTools = new JPanel();
@@ -423,22 +473,30 @@ public class MainUI {
             button.setBorderPainted(false);
             button.setFocusPainted(false);
             button.setContentAreaFilled(false);
-            int finalButtonContainerIndex = buttonContainerIndex;
+            int CURRENT_CONTAINER_INDEX = buttonContainerIndex;
             button.addMouseListener(new java.awt.event.MouseAdapter() {
+                private Icon originalIcon = button.getIcon();
                 public void mouseEntered(java.awt.event.MouseEvent evt) {
-                    button.setIcon(new ImageIcon(buttonHoverContainer[finalButtonContainerIndex]));
+                    button.setIcon(new ImageIcon(buttonHoverContainer[CURRENT_CONTAINER_INDEX]));
                 }
+
                 public void mouseExited(java.awt.event.MouseEvent evt) {
-                    button.setIcon(new ImageIcon(buttonDefaultContainer[finalButtonContainerIndex]));
+                    button.setIcon(originalIcon);
+                }
+
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    JButton previousHighlighted = highlightedButton;
+                    previousHighlighted.setIcon(new ImageIcon(buttonDefaultContainer[CURRENT_CONTAINER_INDEX]));
+                    originalIcon = new ImageIcon(buttonHighlightedContainer[CURRENT_CONTAINER_INDEX]);
                 }
             });
-            buttonContainerIndex ++;
+            buttonContainerIndex++;
             canvasTools.add(button);
             canvasTools.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
         }
         canvasTools.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
-        /* END MAINUI BUTTONS */
+        /* END MAIN UI BUTTONS */
         JPanel northPanel = new JPanel();
         northPanel.setLayout(new BorderLayout());
 
@@ -530,6 +588,42 @@ public class MainUI {
 
     }
 
+    /**
+     * Sets highlighted tool back to its default icon.
+     */
+    private void setHighlightedToDefault() {
+        if (highlightedButton != null) {
+            if (highlightedButton == selectionButton) {
+                selectionButton.setIcon(new ImageIcon(SELECTION_ICON_DEFAULT));
+            } else if (highlightedButton == brushToolButton) {
+                brushToolButton.setIcon(new ImageIcon(BRUSH_ICON_DEFAULT));
+            } else if (highlightedButton == airBrushToolButton) {
+                airBrushToolButton.setIcon(new ImageIcon(AIR_BRUSH_ICON_DEFAULT));
+            } else if (highlightedButton == eraserToolButton) {
+                eraserToolButton.setIcon(new ImageIcon(ERASER_ICON_DEFAULT));
+            } else if (highlightedButton == lineToolButton) {
+                lineToolButton.setIcon(new ImageIcon(LINE_ICON_DEFAULT));
+            } else if (highlightedButton == fanToolButton) {
+                fanToolButton.setIcon(new ImageIcon(FAN_ICON_DEFAULT));
+            } else if (highlightedButton == rectangleToolButton) {
+                rectangleToolButton.setIcon(new ImageIcon(SQUARE_ICON_DEFAULT));
+            } else if (highlightedButton == ellipseToolButton) {
+                ellipseToolButton.setIcon(new ImageIcon(CIRCLE_ICON_DEFAULT));
+            } else if (highlightedButton == triangleToolButton) {
+                triangleToolButton.setIcon(new ImageIcon(TRIANGLE_ICON_DEFAULT));
+            } else if (highlightedButton ==paintBucketToolButton) {
+                paintBucketToolButton.setIcon(new ImageIcon(BUCKET_ICON_DEFAULT));
+            } else if (highlightedButton == celticKnotToolButton) {
+                celticKnotToolButton.setIcon(new ImageIcon(CELTIC_ICON_DEFAULT));
+            } else if (highlightedButton == dnaToolButton) {
+                dnaToolButton.setIcon(new ImageIcon(DNA_ICON_DEFAULT));
+            } else if (highlightedButton == textToolButton) {
+                textToolButton.setIcon(new ImageIcon(TEXT_ICON_DEFAULT));
+            } else if (highlightedButton == eyeDropperToolButton) {
+                eyeDropperToolButton.setIcon(new ImageIcon(EYEDROP_ICON_DEFAULT));
+            }
+        }
+    }
     /**
      * Return the currently selected drawing tool.
      *
