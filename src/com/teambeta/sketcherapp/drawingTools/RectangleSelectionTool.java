@@ -38,6 +38,7 @@ public class RectangleSelectionTool extends DrawingTool {
     private float dash[] = {10.0f};
     private BufferedImage originalSelectedCanvas;
     private DrawArea drawArea;
+    private static final Color transparentColor = new Color(0x00FFFFFF, true);
 
     private BufferedImage selectedCanvas; // the selection that the user has made
     private boolean isOverSelection; // is the mouse over the selectedCanvas
@@ -207,7 +208,8 @@ public class RectangleSelectionTool extends DrawingTool {
         ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
         Graphics2D selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
         selectedLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        selectedLayerGraphics.setColor(Color.WHITE);
+        selectedLayerGraphics.setComposite(AlphaComposite.Clear);
+        selectedLayerGraphics.setColor(transparentColor);
         selectedLayerGraphics.setStroke(new BasicStroke(getToolWidth()));
 
         selectedLayerGraphics.fillRect(initX, initY, drawWidthX, drawHeightY);
@@ -227,6 +229,7 @@ public class RectangleSelectionTool extends DrawingTool {
         DrawArea.clearBufferImageToTransparent(previewLayer);
 
         //init graphics objects
+        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
         Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
         canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         canvasGraphics.setColor(color);
@@ -235,14 +238,15 @@ public class RectangleSelectionTool extends DrawingTool {
         previewLayerGraphics.setColor(color);
         previewLayerGraphics.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
-
+        previewLayerGraphics.setComposite(alphaComposite);
         previewLayerGraphics.drawRect(prevX + e.getX(), prevY + e.getY(), drawWidthX, drawHeightY);
         //info: https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
         //draw the preview layer on top of the drawing layer(s)
-        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
+
         canvasGraphics.setComposite(alphaComposite);
         DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
         canvasGraphics.drawImage(previewLayer, prevX + e.getX(), prevY + e.getY(), null);
+
     }
 
     /**
