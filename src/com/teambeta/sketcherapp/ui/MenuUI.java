@@ -41,7 +41,7 @@ public class MenuUI extends JMenuBar {
 
     private JMenuItem eUndo;
     private JMenuItem eRedo;
-    private JMenuItem eKeybordShortCuts;
+    private JMenuItem eKeyboardShortCuts;
 
     private static final String EUNDO_MENU_BUTTON_TEXT = "Undo";
     private static final String EREDO_MENU_BUTTON_TEXT = "Redo";
@@ -90,20 +90,20 @@ public class MenuUI extends JMenuBar {
     private GreyscaleMenu greyscaleMenu;
     private NoiseGeneratorMenu noiseGeneratorMenu;
     private CheckerboardMenu checkerboardMenu;
-    private ShortcutDialog keboardShortCutPanel;
+    private ShortcutDialog keyboardShortCutPanel;
 
     /**
      * Constructor
      */
     public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu, BrightnessMenu brightnessMenu,
-                  NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu,ShortcutDialog keboardShortCutPanel) {
+                  NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu,ShortcutDialog keyboardShortCutPanel) {
         this.drawArea = drawArea;
         this.importExport = importExport;
         this.greyscaleMenu = greyscaleMenu;
         this.brightnessMenu = brightnessMenu;
         this.noiseGeneratorMenu = noiseGeneratorMenu;
         this.checkerboardMenu = checkerboardMenu;
-        this.keboardShortCutPanel = keboardShortCutPanel;
+        this.keyboardShortCutPanel = keyboardShortCutPanel;
         prepareMenuBar();
     }
 
@@ -139,11 +139,11 @@ public class MenuUI extends JMenuBar {
 
         eUndo = new JMenuItem(EUNDO_MENU_BUTTON_TEXT);
         eRedo = new JMenuItem(EREDO_MENU_BUTTON_TEXT);
-        eKeybordShortCuts = new JMenuItem(ESHORTCUTS_MENU_BUTTON_TEXT);
+        eKeyboardShortCuts = new JMenuItem(ESHORTCUTS_MENU_BUTTON_TEXT);
 
         editMenu.add(eUndo);
         editMenu.add(eRedo);
-        editMenu.add(eKeybordShortCuts);
+        editMenu.add(eKeyboardShortCuts);
 
         iCanvasSize = new JMenuItem(ICANVASSIZE_MENU_BUTTON_TEXT);
         iRotateCanvas = new JMenuItem(IROTATECANVAS_MENU_BUTTON_TEXT);
@@ -191,38 +191,32 @@ public class MenuUI extends JMenuBar {
         iBrightness.addActionListener(menuActionListener);
         iGenerateNoise.addActionListener(menuActionListener);
         iCheckerBoard.addActionListener(menuActionListener);
-        eKeybordShortCuts.addActionListener(menuActionListener);
+        eKeyboardShortCuts.addActionListener(menuActionListener);
     }
 
     private ActionListener menuActionListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
+
             // Export canvas menu button
             if (e.getSource() == iExport) {
                 importExport.exportImage();
-            }
-            if (e.getSource() == iImport) {
+            } else if (e.getSource() == iImport) {
                 importExport.importImage();
-            }
-            if (e.getSource() == iBrightness) {
+            } else if (e.getSource() == iBrightness) {
                 brightnessMenu.showWindow();
-            }
-            if (e.getSource() == iGreyscale) {
+            } else  if (e.getSource() == iGreyscale) {
                 greyscaleMenu.showWindow();
-            }
-            if (e.getSource() == hAbout) {
+            } else  if (e.getSource() == hAbout) {
                 AboutMenu.prepareAbout();
-            }
-            if (e.getSource() == iGenerateNoise) {
+            } else if (e.getSource() == iGenerateNoise) {
                 noiseGeneratorMenu.showWindow();
-            }
-            if (e.getSource() == iCheckerBoard) {
+            } else if (e.getSource() == iCheckerBoard) {
                 checkerboardMenu.showWindow();
+            } else if (e.getSource() == eKeyboardShortCuts){
+                keyboardShortCutPanel.renderPanel();
             }
 
-            if(e.getSource() == eKeybordShortCuts){
-                keboardShortCutPanel.renderPanel();
-            }
         }
     };
 }

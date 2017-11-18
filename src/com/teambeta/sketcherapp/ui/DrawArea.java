@@ -449,6 +449,7 @@ public class DrawArea extends JComponent {
      *
      * @param scaleFactor factor to adjust BufferedImage contrast
      * @param offset factor to adjust BufferedImage brightness
+     * @param hints the RenderingHints to use
      */
     public void rescaleOperation(float scaleFactor, float offset, RenderingHints hints) {
         RescaleOp transformationOperation = new RescaleOp(scaleFactor, offset, hints);
