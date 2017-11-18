@@ -450,8 +450,8 @@ public class DrawArea extends JComponent {
      * @param scaleFactor factor to adjust BufferedImage contrast
      * @param offset factor to adjust BufferedImage brightness
      */
-    public void rescaleOperation(float scaleFactor, float offset) {
-        RescaleOp transformationOperation = new RescaleOp(scaleFactor, offset, null);
+    public void rescaleOperation(float scaleFactor, float offset, RenderingHints hints) {
+        RescaleOp transformationOperation = new RescaleOp(scaleFactor, offset, hints);
         transformationOperation.filter(this.currentlySelectedLayer.getBufferedImage(),
                 this.currentlySelectedLayer.getBufferedImage());
         drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);

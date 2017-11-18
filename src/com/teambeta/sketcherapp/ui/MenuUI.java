@@ -49,6 +49,7 @@ public class MenuUI extends JMenuBar {
     private JMenuItem iCanvasSize;
     private JMenuItem iRotateCanvas;
     private JMenuItem iColourMode;
+    private JMenuItem iBrightness;
     private JMenuItem iGeneratorsSubMenu;
     private JMenuItem iCheckerBoard;
     private JMenuItem iGreyscale;
@@ -59,6 +60,7 @@ public class MenuUI extends JMenuBar {
     private static final String ICANVASSIZE_MENU_BUTTON_TEXT = "Canvas Size";
     private static final String IROTATECANVAS_MENU_BUTTON_TEXT = "Rotate Canvas";
     private static final String ICOLOURMODE_MENU_BUTTON_TEXT = "Colour Mode";
+    private static final String IBRIGHTNESS_MENU_BUTTON_TEXT = "Brightness";
     private static final String IGENERATORSSUBMENU_MENU_BUTTON_TEXT = "Generators";
     private static final String ICHECKERBOARD_MENU_BUTTON_TEXT = "Checkerboard";
     private static final String IGREYSCALE_MENU_BUTTON_TEXT = "Greyscale";
@@ -84,6 +86,7 @@ public class MenuUI extends JMenuBar {
 
     private DrawArea drawArea;
     private ImportExport importExport;
+    private BrightnessMenu brightnessMenu;
     private GreyscaleMenu greyscaleMenu;
     private NoiseGeneratorMenu noiseGeneratorMenu;
     private CheckerboardMenu checkerboardMenu;
@@ -92,11 +95,12 @@ public class MenuUI extends JMenuBar {
     /**
      * Constructor
      */
-    public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu,
+    public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu, BrightnessMenu brightnessMenu,
                   NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu,ShortcutDialog keboardShortCutPanel) {
         this.drawArea = drawArea;
         this.importExport = importExport;
         this.greyscaleMenu = greyscaleMenu;
+        this.brightnessMenu = brightnessMenu;
         this.noiseGeneratorMenu = noiseGeneratorMenu;
         this.checkerboardMenu = checkerboardMenu;
         this.keboardShortCutPanel = keboardShortCutPanel;
@@ -144,6 +148,7 @@ public class MenuUI extends JMenuBar {
         iCanvasSize = new JMenuItem(ICANVASSIZE_MENU_BUTTON_TEXT);
         iRotateCanvas = new JMenuItem(IROTATECANVAS_MENU_BUTTON_TEXT);
         iColourMode = new JMenuItem(ICOLOURMODE_MENU_BUTTON_TEXT);
+        iBrightness = new JMenuItem(IBRIGHTNESS_MENU_BUTTON_TEXT);
         iGeneratorsSubMenu = new JMenu(IGENERATORSSUBMENU_MENU_BUTTON_TEXT);
         iCheckerBoard = new JMenuItem(ICHECKERBOARD_MENU_BUTTON_TEXT);
         iGreyscale = new JMenuItem(IGREYSCALE_MENU_BUTTON_TEXT);
@@ -154,6 +159,7 @@ public class MenuUI extends JMenuBar {
         imageMenu.add(iCanvasSize);
         imageMenu.add(iRotateCanvas);
         imageMenu.add(iColourMode);
+        imageMenu.add(iBrightness);
         imageMenu.add(iGeneratorsSubMenu);
         iGeneratorsSubMenu.add(iGreyscale);
         iGeneratorsSubMenu.add(iCheckerBoard);
@@ -182,6 +188,7 @@ public class MenuUI extends JMenuBar {
         iImport.addActionListener(menuActionListener);
         iGreyscale.addActionListener(menuActionListener);
         hAbout.addActionListener(menuActionListener);
+        iBrightness.addActionListener(menuActionListener);
         iGenerateNoise.addActionListener(menuActionListener);
         iCheckerBoard.addActionListener(menuActionListener);
         eKeybordShortCuts.addActionListener(menuActionListener);
@@ -196,6 +203,9 @@ public class MenuUI extends JMenuBar {
             }
             if (e.getSource() == iImport) {
                 importExport.importImage();
+            }
+            if (e.getSource() == iBrightness) {
+                brightnessMenu.showWindow();
             }
             if (e.getSource() == iGreyscale) {
                 greyscaleMenu.showWindow();

@@ -297,6 +297,7 @@ public class MainUI {
         drawArea = new DrawArea(this);
 
         importExport = new ImportExport(drawArea, this);
+        BrightnessMenu brightnessMenu = new BrightnessMenu(drawArea);
         GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
         NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
         CheckerboardMenu checkerboardMenu = new CheckerboardMenu(drawArea);
@@ -358,7 +359,7 @@ public class MainUI {
         db_kbShortcuts = new DB_KBShortcuts(shortcuts);
         keboardShortCutPanel = new ShortcutDialog(this, shortcuts);
 
-        MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel);
+        MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, brightnessMenu, noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel);
 
         northPanel.add(menuUI, BorderLayout.NORTH);
 
