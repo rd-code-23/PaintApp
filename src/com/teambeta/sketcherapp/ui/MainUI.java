@@ -3,6 +3,7 @@ package com.teambeta.sketcherapp.ui;
 import com.teambeta.sketcherapp.Database.DB_KBShortcuts;
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.ImportExport;
+import com.teambeta.sketcherapp.model.PrintCanvas;
 import com.teambeta.sketcherapp.model.Shortcuts;
 
 import javax.sound.sampled.AudioSystem;
@@ -89,6 +90,8 @@ public class MainUI {
     private Shortcuts shortcuts;
     private ImportExport importExport;
     private JPanel canvasTools;
+    private PrintCanvas printCanvas;
+
 
     private DB_KBShortcuts db_kbShortcuts;
 
@@ -300,6 +303,7 @@ public class MainUI {
         GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
         NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
         CheckerboardMenu checkerboardMenu = new CheckerboardMenu(drawArea);
+        printCanvas = new PrintCanvas(drawArea);
 
         JPanel drawAreaPanel = new JPanel();
         drawAreaPanel.setLayout(new GridBagLayout());
@@ -358,7 +362,7 @@ public class MainUI {
         db_kbShortcuts = new DB_KBShortcuts(shortcuts);
         keboardShortCutPanel = new ShortcutDialog(this, shortcuts);
 
-        MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel);
+        MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel,printCanvas);
 
         northPanel.add(menuUI, BorderLayout.NORTH);
 

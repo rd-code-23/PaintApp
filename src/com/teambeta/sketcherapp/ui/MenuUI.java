@@ -2,6 +2,7 @@ package com.teambeta.sketcherapp.ui;
 
 import com.teambeta.sketcherapp.model.ImportExport;
 import com.teambeta.sketcherapp.model.AboutMenu;
+import com.teambeta.sketcherapp.model.PrintCanvas;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -88,18 +89,20 @@ public class MenuUI extends JMenuBar {
     private NoiseGeneratorMenu noiseGeneratorMenu;
     private CheckerboardMenu checkerboardMenu;
     private ShortcutDialog keboardShortCutPanel;
+    private PrintCanvas printCanvas;
 
     /**
      * Constructor
      */
     public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu,
-                  NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu,ShortcutDialog keboardShortCutPanel) {
+                  NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu,ShortcutDialog keboardShortCutPanel,PrintCanvas printCanvas) {
         this.drawArea = drawArea;
         this.importExport = importExport;
         this.greyscaleMenu = greyscaleMenu;
         this.noiseGeneratorMenu = noiseGeneratorMenu;
         this.checkerboardMenu = checkerboardMenu;
         this.keboardShortCutPanel = keboardShortCutPanel;
+        this.printCanvas = printCanvas;
         prepareMenuBar();
     }
 
@@ -185,6 +188,7 @@ public class MenuUI extends JMenuBar {
         iGenerateNoise.addActionListener(menuActionListener);
         iCheckerBoard.addActionListener(menuActionListener);
         eKeybordShortCuts.addActionListener(menuActionListener);
+        fPrint.addActionListener(menuActionListener);
     }
 
     private ActionListener menuActionListener = new ActionListener() {
@@ -212,6 +216,11 @@ public class MenuUI extends JMenuBar {
 
             if(e.getSource() == eKeybordShortCuts){
                 keboardShortCutPanel.renderPanel();
+            }
+
+            if(e.getSource() == fPrint){
+                printCanvas.getPrintDimensionsDialog();
+             //  printCanvas.print();
             }
         }
     };
