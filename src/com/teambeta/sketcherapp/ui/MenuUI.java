@@ -95,7 +95,7 @@ public class MenuUI extends JMenuBar {
      * Constructor
      */
     public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu,
-                  NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu,ShortcutDialog keboardShortCutPanel,PrintCanvas printCanvas) {
+                  NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu, ShortcutDialog keboardShortCutPanel, PrintCanvas printCanvas) {
         this.drawArea = drawArea;
         this.importExport = importExport;
         this.greyscaleMenu = greyscaleMenu;
@@ -214,13 +214,12 @@ public class MenuUI extends JMenuBar {
                 checkerboardMenu.showWindow();
             }
 
-            if(e.getSource() == eKeybordShortCuts){
+            if (e.getSource() == eKeybordShortCuts) {
                 keboardShortCutPanel.renderPanel();
             }
 
-            if(e.getSource() == fPrint){
+            if (e.getSource() == fPrint) {
                 printCanvas.getPrintDimensionsDialog();
-             //  printCanvas.print();
             }
         }
     };
