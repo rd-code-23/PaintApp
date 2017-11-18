@@ -17,6 +17,8 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
@@ -87,6 +89,11 @@ public class MainUI {
     private static DrawArea drawArea;
     private static WidthChanger widthChanger;
     private static ColorChooser colorChooser;
+
+
+    private ImportExport importExport;
+
+
 
 
     private ActionListener actionListener = new ActionListener() {
@@ -255,7 +262,27 @@ public class MainUI {
     }
 
     /**
-     * Build main GUI.
+     * This is called when the 'x' is pressed
+     */
+    public void exit() {
+        Object[] exitOptions = {"Cancel",
+                                "Export canvas",
+                                "Exit without exporting"};
+
+        int confirmed = JOptionPane.showOptionDialog(null,
+                "Are you sure you want to quit?", "Confirm Quit",
+                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, exitOptions, null);
+
+        if (confirmed == JOptionPane.CANCEL_OPTION) {
+            mainFrame.dispose();
+        }
+        if (confirmed == JOptionPane.NO_OPTION) {
+            importExport.exportImage();
+        }
+    }
+
+    /**
+     * Build main GUI
      */
     private void prepareGUI() {
         mainFrame = new JFrame(APPLICATION_NAME);
@@ -266,8 +293,19 @@ public class MainUI {
         mainFrame.getContentPane().setBackground(Color.DARK_GRAY);
 
         mainFrame.setLocationByPlatform(true);
-        mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        mainFrame.addWindowListener(
+        new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        exit();
+                    }
+                }
+                );
+
+
         // mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+
 
         drawArea = new DrawArea();
 
