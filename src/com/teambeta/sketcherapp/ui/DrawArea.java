@@ -9,6 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
 import java.util.LinkedList;
 
 import static java.awt.Color.black;
@@ -454,5 +455,19 @@ public class DrawArea extends JComponent {
         this.currentlySelectedLayer = currentlySelectedLayer;
         this.currentlySelectedLayer.setSelected(true);
         drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
+    }
+
+    /**
+     * Use the RescaleOp class to transform an image's brightness and/or contrast
+     *
+     * @param scaleFactor factor to adjust BufferedImage contrast
+     * @param offset factor to adjust BufferedImage brightness
+     */
+    public void rescaleOperation(float scaleFactor, float offset) {
+        RescaleOp transformationOperation = new RescaleOp(scaleFactor, offset, null);
+        transformationOperation.filter(this.currentlySelectedLayer.getBufferedImage(),
+                this.currentlySelectedLayer.getBufferedImage());
+        drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
+        repaint();
     }
 }
