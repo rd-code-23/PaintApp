@@ -4,6 +4,8 @@ import com.teambeta.sketcherapp.ui.DrawArea;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
@@ -27,25 +29,95 @@ public class PrintCanvas implements Printable {
     public PrintCanvas(DrawArea drawArea) {
         this.drawArea = drawArea;
     }
-
+    boolean isValidDimension = false;
+    boolean isPrint = false;
+    JButton autoFit = new JButton("Letter Size");
     /**
      * dialog to get the users preferred print dimensions
      */
     public void getPrintDimensionsDialog() {
-        boolean isValidDimension = false;
-        boolean isPrint = false;
+
+
+
+//TODO USE DIALOG
         while (!isValidDimension) {
             JTextField newWidth = new JTextField(COLUMN_WIDTH_PRINT_DIALOG);
             JTextField newHeight = new JTextField(COLUMN_WIDTH_PRINT_DIALOG);
-            JPanel myPanel = new JPanel();
+            JLabel instructions = new JLabel("Enter preferred print size or auto-fit to Letter Size");
 
-            myPanel.add(new JLabel(WIDTH_PRINT_DIALOG));
-            myPanel.add(newWidth);
-            myPanel.add(Box.createHorizontalStrut(SPACE_TEXTFIELD_PRINT_DIALOG));
-            myPanel.add(new JLabel(HEIGHT_PRINT_DIALOG));
-            myPanel.add(newHeight);
 
-            int result = JOptionPane.showConfirmDialog(null, myPanel,
+
+            JPanel firstLine = new JPanel();
+            firstLine.setLayout(new FlowLayout());
+            GridBagConstraints c = new GridBagConstraints();
+          //  c.anchor = GridBagConstraints.LINE_START;
+            c.weightx = 0;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridx = 0;
+            c.gridy = 0;
+            firstLine.add(instructions, c);
+
+            JPanel secondLine = new JPanel();
+            secondLine.setLayout(new FlowLayout());
+            GridBagConstraints c2 = new GridBagConstraints();
+            c2.gridx = 0;
+            c2.gridy = 0;
+            secondLine.add(new JLabel(WIDTH_PRINT_DIALOG), c2);
+            c2.gridx = 1;
+            c2.gridy = 0;
+            secondLine.add(newWidth, c2);
+            c2.gridx = 2;
+            c2.gridy = 0;
+            secondLine.add(Box.createHorizontalStrut(SPACE_TEXTFIELD_PRINT_DIALOG), c2);
+            c2.gridx = 3;
+            c2.gridy = 0;
+            secondLine.add(new JLabel(HEIGHT_PRINT_DIALOG), c2);
+            c2.gridx = 4;
+            c2.gridy = 0;
+            secondLine.add(newHeight,c2);
+            c2.gridx = 5;
+            c2.gridy = 0;
+            secondLine.add(Box.createHorizontalStrut(SPACE_TEXTFIELD_PRINT_DIALOG), c2);
+            secondLine.add(autoFit,c2);
+
+            JPanel mainPanel = new JPanel();
+            mainPanel.setLayout(new GridBagLayout());
+            GridBagConstraints c3 = new GridBagConstraints();
+            c3.fill = GridBagConstraints.VERTICAL;
+            c3.gridx = 0;
+            c3.gridy = 0;
+            mainPanel.add(firstLine,c3);
+            c3.gridx = 0;
+            c3.gridy = 1;
+            mainPanel.add(secondLine,c3);
+
+
+
+
+            ActionListener actionListener = new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    if (e.getSource() == autoFit ) {
+                        System.out.println("autofit");
+                        isValidDimension = true;
+                        isPrint = true;
+                        scaledHeight = 350;
+                        scaledWidth = 350;
+                    }
+                }
+            };
+            autoFit.addActionListener(actionListener);
+         /*     myPanel.add(Box.createHorizontalStrut(SPACE_TEXTFIELD_PRINT_DIALOG), c);
+            c.gridx = 2;
+            c.gridy = 1;
+            myPanel.add(new JLabel(HEIGHT_PRINT_DIALOG), c);
+             myPanel.add(newHeight,c);
+            c.gridx = 0;
+            c.gridy = 2;
+            JButton autoFit = new JButton("Letter Size");
+            myPanel.add(autoFit,c);(*/
+
+
+            int result = JOptionPane.showConfirmDialog(null, mainPanel,
                     PRINT_DIMENSIONS_PRINT_DIALOG, JOptionPane.OK_CANCEL_OPTION);
             if (result == JOptionPane.OK_OPTION) {
                 if (isInteger(newWidth.getText()) && isInteger(newHeight.getText())) {
@@ -60,6 +132,12 @@ public class PrintCanvas implements Printable {
                 isPrint = false;
                 break;
             }
+
+            if(autoFit.isSelected()){
+                newWidth.setText("");
+
+            }
+
         } // end of while
 
         if (isPrint) {
@@ -116,15 +194,17 @@ public class PrintCanvas implements Printable {
      */
     private void print() {
         PrinterJob job = PrinterJob.getPrinterJob(); //Get the printer's job list
+
         job.setPrintable(this);
         if (job.printDialog() == true) {
             try {
                 job.print();
             } catch (PrinterException e) {
-               e.printStackTrace();
+                e.printStackTrace();
             }
         }
     }
+
     /**
      * Draws the provided layers onto the provided canvasBufferedImage.
      *
@@ -146,6 +226,7 @@ public class PrintCanvas implements Printable {
         }
 
     }
+
     /**
      * Draws the provided layers onto the provided canvasBufferedImage.
      */
@@ -163,6 +244,7 @@ public class PrintCanvas implements Printable {
 
     /**
      * Clears buffer image.
+     *
      * @param bufferedImage canvasBufferedImage to clear.
      */
     private static void clearBufferImageToTransparent(BufferedImage bufferedImage) {
