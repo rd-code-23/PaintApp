@@ -53,7 +53,7 @@ public class MenuUI extends JMenuBar {
     private JMenuItem iGeneratorsSubMenu;
     private JMenuItem iCheckerBoard;
     private JMenuItem iGreyscale;
-    private JMenuItem iGenerateNoise;
+    private JMenuItem iNoise;
     private JMenuItem iImport;
     private JMenuItem iExport;
 
@@ -64,7 +64,7 @@ public class MenuUI extends JMenuBar {
     private static final String IGENERATORSSUBMENU_MENU_BUTTON_TEXT = "Generators";
     private static final String ICHECKERBOARD_MENU_BUTTON_TEXT = "Checkerboard";
     private static final String IGREYSCALE_MENU_BUTTON_TEXT = "Greyscale";
-    private static final String IGENERATENOISE_MENU_BUTTON_TEXT = "Generate Noise";
+    private static final String INOISE_MENU_BUTTON_TEXT = "Noise";
     private static final String IIMPORT_MENU_BUTTON_TEXT = "Import";
     private static final String IEXPORT_MENU_BUTTON_TEXT = "Export";
 
@@ -152,7 +152,7 @@ public class MenuUI extends JMenuBar {
         iGeneratorsSubMenu = new JMenu(IGENERATORSSUBMENU_MENU_BUTTON_TEXT);
         iCheckerBoard = new JMenuItem(ICHECKERBOARD_MENU_BUTTON_TEXT);
         iGreyscale = new JMenuItem(IGREYSCALE_MENU_BUTTON_TEXT);
-        iGenerateNoise = new JMenuItem(IGENERATENOISE_MENU_BUTTON_TEXT);
+        iNoise = new JMenuItem(INOISE_MENU_BUTTON_TEXT);
         iImport = new JMenuItem(IIMPORT_MENU_BUTTON_TEXT);
         iExport = new JMenuItem(IEXPORT_MENU_BUTTON_TEXT);
 
@@ -161,9 +161,9 @@ public class MenuUI extends JMenuBar {
         imageMenu.add(iColourMode);
         imageMenu.add(iBrightness);
         imageMenu.add(iGeneratorsSubMenu);
-        iGeneratorsSubMenu.add(iGreyscale);
+        imageMenu.add(iGreyscale);
         iGeneratorsSubMenu.add(iCheckerBoard);
-        iGeneratorsSubMenu.add(iGenerateNoise);
+        iGeneratorsSubMenu.add(iNoise);
         imageMenu.add(iImport);
         imageMenu.add(iExport);
 
@@ -189,7 +189,7 @@ public class MenuUI extends JMenuBar {
         iGreyscale.addActionListener(menuActionListener);
         hAbout.addActionListener(menuActionListener);
         iBrightness.addActionListener(menuActionListener);
-        iGenerateNoise.addActionListener(menuActionListener);
+        iNoise.addActionListener(menuActionListener);
         iCheckerBoard.addActionListener(menuActionListener);
         eKeyboardShortCuts.addActionListener(menuActionListener);
     }
@@ -209,7 +209,7 @@ public class MenuUI extends JMenuBar {
                 greyscaleMenu.showWindow();
             } else  if (e.getSource() == hAbout) {
                 AboutMenu.prepareAbout();
-            } else if (e.getSource() == iGenerateNoise) {
+            } else if (e.getSource() == iNoise) {
                 noiseGeneratorMenu.showWindow();
             } else if (e.getSource() == iCheckerBoard) {
                 checkerboardMenu.showWindow();
