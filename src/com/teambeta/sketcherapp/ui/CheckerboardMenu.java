@@ -8,7 +8,7 @@ import javax.swing.*;
 public class CheckerboardMenu {
     private DrawArea drawArea;
     private static final String DIALOG_MESSAGE = "Draw checkerboard pattern?\n" +
-            "This will overwrite the entire layer";
+            "This will overwrite the selected layer";
     private static final String DIALOG_WINDOW_TITLE = "Confirm Checkerboard";
     private static final String DIALOG_HORIZONTAL = "Horizontal amount";
     private static final String DIALOG_VERTICAL = "Vertical amount";

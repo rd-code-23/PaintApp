@@ -468,15 +468,44 @@ public class DrawArea extends JComponent {
 
     /**
      * Use the RescaleOp class to transform an image's brightness and/or contrast
+     * This assumes that the alpha layer remain as-is
      *
      * @param scaleFactor factor to adjust BufferedImage contrast
-     * @param offset      factor to adjust BufferedImage brightness
+     * @param offset offset to adjust BufferedImage brightness
+     * @param hints the RenderingHints to use
      */
-    public void rescaleOperation(float scaleFactor, float offset) {
-        RescaleOp transformationOperation = new RescaleOp(scaleFactor, offset, null);
+    public void rescaleOperation(float scaleFactor, float offset, RenderingHints hints) {
+        float scaleFactorArray[] = {scaleFactor, scaleFactor, scaleFactor, 1f};
+        float offsetArray[] = {offset, offset, offset, 0f};
+        rescaleOperation(scaleFactorArray, offsetArray, hints);
+    }
+
+    /**
+     * Use the RescaleOp class to transform an image's brightness and/or contrast
+     * Argument arrays are 4 floats-wide {RED, GREEN, BLUE, ALPHA}
+     *
+     * @param scaleFactor scaleFactor array to adjust BufferedImage contrast
+     * @param offset offset array to adjust BufferedImage brightness
+     * @param hints the RenderingHints to use
+     */
+    public void rescaleOperation(float[] scaleFactor, float[] offset, RenderingHints hints) {
+        RescaleOp transformationOperation = new RescaleOp(scaleFactor, offset, hints);
         transformationOperation.filter(this.currentlySelectedLayer.getBufferedImage(),
                 this.currentlySelectedLayer.getBufferedImage());
         drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
         repaint();
     }
+
+    /**
+     * Scale the current layer's transparency by a factor
+     * (0.5f means half the value, 2.0f means multiply twice)
+     *
+     * @param scaleFactor the factor to adjust the transparency
+     */
+    public void scaleTransparency(float scaleFactor) {
+        float scaleFactorArray[] = {1f, 1f, 1f, scaleFactor};
+        float offsetArray[] = {0f, 0f, 0f, 0f};
+        rescaleOperation(scaleFactorArray, offsetArray, null);
+    }
+
 }
