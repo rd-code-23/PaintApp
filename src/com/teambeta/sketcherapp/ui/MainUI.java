@@ -262,8 +262,6 @@ public class MainUI {
     /**
      * This is called when the 'x' is pressed
      */
-    //ImportExport importExport = new ImportExport(drawArea,this);
-
     private void exit() {
         Object[] exitOptions = {"Cancel",
                 "Export canvas",
@@ -274,12 +272,16 @@ public class MainUI {
                     "Are you sure you want to quit?", "Confirm Quit",
                     JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, exitOptions, null);
 
-            if (confirmed == JOptionPane.CANCEL_OPTION) {
-                System.exit(0);
+            ImportExport importExport = new ImportExport(drawArea,this);
+
+        if (confirmed == JOptionPane.CANCEL_OPTION) {
+                mainFrame.dispose();
+                //System.exit(0);
             }
             if (confirmed == JOptionPane.NO_OPTION) {
-                ImportExport importExport = new ImportExport(drawArea,this);
                 importExport.exportImage();
+                //mainFrame.dispose();  Ideally would use this instead of the following line, but for some reason it
+                //wont properly close the app. If someone knows why, feel free to fix it
                 System.exit(0);
 
             }
