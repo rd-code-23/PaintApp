@@ -62,8 +62,8 @@ public class MainUI {
     private static final int APPLICATION_HEIGHT = 1080;
     private static final int EDITOR_PANEL_WIDTH = 300;
     private static final int EDITOR_PANEL_HEIGHT = 300;
-    public static final int CANVAS_WIDTH = 1600;
-    public static final int CANVAS_HEIGHT = 900;
+    private static final int CANVAS_WIDTH = 1600;
+    private static final int CANVAS_HEIGHT = 900;
     private static final String START_SOUND_PATH = System.getProperty("user.dir") + File.separator + "src" +
             File.separator + "res" + File.separator + "start-sound.wav";
 
@@ -201,7 +201,6 @@ public class MainUI {
         prepareGUI();
     }
 
-
     /**
      * Create the drawing tool objects and set the pen tool as the default selection.
      */
@@ -275,7 +274,6 @@ public class MainUI {
     public void updateFillState() {
         selectedDrawingTool.setFillState(widthChanger.isFill());
     }
-
 
     /**
      * Build main GUI.
@@ -439,7 +437,6 @@ public class MainUI {
             db_kbShortcuts.createTable();
             generateDefaultKeyBindings();
         }
-
     }
 
     /**
