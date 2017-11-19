@@ -8,6 +8,7 @@ import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.GreyscaleMenu;
 import com.teambeta.sketcherapp.model.ImportExport;
 import com.teambeta.sketcherapp.model.AboutMenu;
+import com.teambeta.sketcherapp.model.NewWindow;
 import javafx.stage.FileChooser;
 
 import javax.imageio.ImageIO;
@@ -66,8 +67,8 @@ public class MainUI {
     private static final int APPLICATION_HEIGHT = 1080;
     private static final int EDITOR_PANEL_WIDTH = 100;
     private static final int EDITOR_PANEL_HEIGHT = 300;
-    public static final int CANVAS_WIDTH = 1920;
-    public static final int CANVAS_HEIGHT = 1080;
+    public static int CANVAS_WIDTH = 1920;
+    public static int CANVAS_HEIGHT = 1080;
 
 
     private JButton clearButton;
@@ -90,11 +91,8 @@ public class MainUI {
     private static WidthChanger widthChanger;
     private static ColorChooser colorChooser;
 
-
-    private ImportExport importExport;
-
-
-
+    //private static ImportExport importExport;
+//ImportExport importExport = new ImportExport(DrawArea, MainUI);
 
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -264,21 +262,27 @@ public class MainUI {
     /**
      * This is called when the 'x' is pressed
      */
-    public void exit() {
+    //ImportExport importExport = new ImportExport(drawArea,this);
+
+    private void exit() {
         Object[] exitOptions = {"Cancel",
-                                "Export canvas",
-                                "Exit without exporting"};
+                "Export canvas",
+                "Exit without exporting"};
 
-        int confirmed = JOptionPane.showOptionDialog(null,
-                "Are you sure you want to quit?", "Confirm Quit",
-                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, exitOptions, null);
 
-        if (confirmed == JOptionPane.CANCEL_OPTION) {
-            mainFrame.dispose();
-        }
-        if (confirmed == JOptionPane.NO_OPTION) {
-            importExport.exportImage();
-        }
+            int confirmed = JOptionPane.showOptionDialog(null,
+                    "Are you sure you want to quit?", "Confirm Quit",
+                    JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, exitOptions, null);
+
+            if (confirmed == JOptionPane.CANCEL_OPTION) {
+                System.exit(0);
+            }
+            if (confirmed == JOptionPane.NO_OPTION) {
+                ImportExport importExport = new ImportExport(drawArea,this);
+                importExport.exportImage();
+                System.exit(0);
+
+            }
     }
 
     /**
@@ -296,13 +300,17 @@ public class MainUI {
         mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         mainFrame.addWindowListener(
         new WindowAdapter() {
-                    @Override
-                    public void windowClosing(WindowEvent e) {
-                        exit();
-                    }
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (ImportExport.exported == true) {
+                    System.exit(0);
+                } else if (ImportExport.exported == false) {
+                    exit();
                 }
-                );
 
+            }
+        }
+        );
 
         // mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
@@ -312,6 +320,7 @@ public class MainUI {
         ImportExport importExport = new ImportExport(drawArea,this);
         GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
         AboutMenu aboutMenu = new AboutMenu();
+        NewWindow newWindow = new NewWindow();
 
         // ideally this should be in its own widthPanel with a proper scale, not directly to mainContent
         mainContent.add(drawArea, BorderLayout.CENTER);
@@ -353,7 +362,7 @@ public class MainUI {
 
         JPanel northPanels = new JPanel();
         northPanels.setLayout(new BorderLayout());
-        MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, aboutMenu);
+        MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, aboutMenu, newWindow);
         northPanels.add(menuUI, BorderLayout.NORTH);
 
         widthChanger = new WidthChanger();
@@ -373,6 +382,7 @@ public class MainUI {
         widthChanger.getFillBox().addActionListener(actionListener);
 
         mainContent.add(canvasTools, BorderLayout.WEST);
+
 
         colorChooser = new ColorChooser();
         JPanel editorPanel = new JPanel();

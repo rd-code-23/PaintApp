@@ -3,6 +3,8 @@ package com.teambeta.sketcherapp.ui;
 import com.teambeta.sketcherapp.model.GreyscaleMenu;
 import com.teambeta.sketcherapp.model.ImportExport;
 import com.teambeta.sketcherapp.model.AboutMenu;
+import com.teambeta.sketcherapp.ui.MainUI;
+import com.teambeta.sketcherapp.model.NewWindow;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -18,6 +20,7 @@ import java.io.IOException;
 
 
 public class MenuUI extends JMenuBar {
+
 
     private static final String FILE_MENU_BUTTON_TEXT = "File";
     private static final String EDIT_MENU_BUTTON_TEXT = "Edit";
@@ -85,18 +88,20 @@ public class MenuUI extends JMenuBar {
     private ImportExport importExport;
     private GreyscaleMenu greyscaleMenu;
     private AboutMenu aboutMenu;
+    private NewWindow newWindow;
 
 
     /**
      * constructor
      */
 
-    public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu, AboutMenu aboutMenu) {
+    public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu, AboutMenu aboutMenu, NewWindow newWindow) {
 
         this.drawArea = drawArea;
         this.importExport = importExport;
         this.greyscaleMenu = greyscaleMenu;
         this.aboutMenu = aboutMenu;
+        this.newWindow = newWindow;
         prepareMenuBar();
     }
 
@@ -104,6 +109,8 @@ public class MenuUI extends JMenuBar {
      * The prepareMenuBar function builds the menu and adds submenus.
      */
     public void prepareMenuBar() {
+
+
 
         fileMenu = new JMenu(FILE_MENU_BUTTON_TEXT);
         editMenu = new JMenu(EDIT_MENU_BUTTON_TEXT);
@@ -172,6 +179,8 @@ public class MenuUI extends JMenuBar {
         iImport.addActionListener(menuActionListener);
         iGreyscale.addActionListener(menuActionListener);
         hAbout.addActionListener(menuActionListener);
+        fClose.addActionListener(menuActionListener);
+        fNew.addActionListener(menuActionListener);
 
     }
 
@@ -191,6 +200,12 @@ public class MenuUI extends JMenuBar {
             }
             if (e.getSource() == hAbout) {
                 aboutMenu.PrepareAbout();
+            }
+            if (e.getSource() == fClose) {
+               //MainUI.exit();
+            }
+            if (e.getSource() == fNew) {
+                NewWindow.NewWindow();
             }
         }
 

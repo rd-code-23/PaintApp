@@ -23,6 +23,7 @@ public class ImportExport {
     private static final String JOPTION_DONT_SAVE = "Dont Save";
     private static final String JOPTION_CANCEL = "Cancel";
     private static final String JOPTION_SAVE_YOUR_WORK = "Save your work?";
+    public static boolean exported = false;
 
     private DrawArea drawArea;
     private MainUI mainUI;
@@ -48,6 +49,7 @@ public class ImportExport {
 
         if (retrieval == JFileChooser.APPROVE_OPTION) {
             File file = null;
+            exported = true; //used in MainUI exit()
             //write image to a file
             try {
                 file = new File(fileChooser.getSelectedFile() + PNG_EXTENSION);
