@@ -84,7 +84,7 @@ public class LineTool extends DrawingTool {
     @Override
     public void onRelease(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
-        Graphics2D selectedLayerGraphics = null;
+        Graphics2D selectedLayerGraphics;
         if (selectedLayer != null) {
             selectedLayerGraphics = initLayerGraphics(selectedLayer.getBufferedImage());
 

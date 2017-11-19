@@ -12,11 +12,12 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
 public class LayersPanel extends JPanel implements ListSelectionListener {
-
     private static final String HIDE_SHOW_LAYER_BUTTON_TEXT = "Hide/Show";
     private static final String ADD_LAYER_BUTTON_TEXT = "Add";
     private static final String DELETE_LAYER_BUTTON_TEXT = "Delete";
     private static final String RENAME_LAYER_BUTTON_TEXT = "Rename";
+    private static final String INPUT_POPUP_TEXT = "Input New Name";
+    private static final String DUPLICATE_BUTTON_TEXT = "Duplicate";
     private static final int MAX_NUM_OF_LAYERS = 10;
     private DrawArea drawArea;
     private LinkedList<ImageLayer> drawingLayers;
@@ -27,6 +28,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private JButton addLayerButton;
     private JButton deleteLayerButton;
     private JButton renameLayerButton;
+    private JButton duplicateLayerButton;
 
     /**
      * Return The JList of ImageLayers stored in the LayersPanel
@@ -55,6 +57,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         layersScrollPane = new JScrollPane(listOfLayers);
         layersScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         layersScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        this.add(layersScrollPane);
         this.add(layersScrollPane, BorderLayout.EAST);
         addLayerButtons(drawArea);
     }
@@ -66,7 +69,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
      */
     private void addLayerButtons(DrawArea drawArea) {
         JPanel buttonsPanel = new JPanel();
-        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
+        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.PAGE_AXIS));
 
         hideShowLayerButton = new JButton(HIDE_SHOW_LAYER_BUTTON_TEXT);
         ActionListener hideShowLayerActionListener = new ActionListener() {
@@ -120,7 +123,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //get the new name
-                String name = JOptionPane.showInputDialog("Input New Name");
+                String name = JOptionPane.showInputDialog(INPUT_POPUP_TEXT);
                 if (name != null) {
                     ImageLayer selectedLayer = drawArea.getDrawingLayers().get(listOfLayers.getSelectedIndex());
                     if (selectedLayer != null) {
@@ -132,6 +135,31 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         };
         renameLayerButton.addActionListener(renameLayerButtonActionListener);
         buttonsPanel.add(renameLayerButton);
+
+        duplicateLayerButton = new JButton(DUPLICATE_BUTTON_TEXT);
+        ActionListener duplicateLayerButtonActionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (drawingLayers.size() <= MAX_NUM_OF_LAYERS) {
+                    ImageLayer newImageLayer = new ImageLayer(new BufferedImage(
+                            drawArea.getWidth(),
+                            drawArea.getHeight(),
+                            BufferedImage.TYPE_INT_ARGB)
+                    );
+                    ImageLayer currentlySelectedLayer = drawArea.getCurrentlySelectedLayer();
+                    Graphics newImageLayerGraphics = newImageLayer.getBufferedImage().getGraphics();
+                    newImageLayerGraphics.drawImage(currentlySelectedLayer.getBufferedImage(),
+                            0, 0, null);
+                    drawingLayers.add(newImageLayer);
+                    listModel.addElement(newImageLayer);
+                    listOfLayers.repaint();
+                    drawArea.redrawLayers();
+                    drawArea.repaint();
+                }
+            }
+        };
+        duplicateLayerButton.addActionListener(duplicateLayerButtonActionListener);
+        buttonsPanel.add(duplicateLayerButton);
 
         this.add(buttonsPanel, BorderLayout.SOUTH);
     }

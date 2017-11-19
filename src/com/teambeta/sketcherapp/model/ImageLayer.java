@@ -91,11 +91,10 @@ public class ImageLayer {
 
     @Override
     public String toString() {
-        String string = "" + name;
         if (!isVisible) {
-            string += " " + HIDDEN;
+            return HIDDEN + " " + name;
+        } else {
+            return name;
         }
-        return string;
     }
-
 }
