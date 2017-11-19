@@ -4,9 +4,8 @@ import javax.swing.*;
 
 public class BrightnessMenu {
     private DrawArea drawArea;
-    private static final String DIALOG_MESSAGE = "Change the brightness by what percentage?\n(Numbers only)";
+    private static final String DIALOG_MESSAGE = "Change the brightness to what percentage?\n[0 - Infinity]";
     private static final String DIALOG_WARNING = "That is not a valid value";
-    private static final String DIALOG_WINDOW_TITLE = "Change Brightness";
 
     /*
         Constructor to access the drawArea
@@ -27,6 +26,9 @@ public class BrightnessMenu {
         }
         try {
             scaleFactor = Float.parseFloat(brightnessInput) / 100.0f;
+            if (scaleFactor < 0.0f) {
+                throw new Exception();
+            }
             drawArea.rescaleOperation(scaleFactor, 0, null);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, DIALOG_WARNING);

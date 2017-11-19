@@ -452,7 +452,9 @@ public class DrawArea extends JComponent {
      * @param hints the RenderingHints to use
      */
     public void rescaleOperation(float scaleFactor, float offset, RenderingHints hints) {
-        RescaleOp transformationOperation = new RescaleOp(scaleFactor, offset, hints);
+        float[] scaleFactorArray = {scaleFactor, scaleFactor, scaleFactor, 1f};
+        float[] offsetArray = {offset, offset, offset, 1f};
+        RescaleOp transformationOperation = new RescaleOp(scaleFactorArray, offsetArray, hints);
         transformationOperation.filter(this.currentlySelectedLayer.getBufferedImage(),
                 this.currentlySelectedLayer.getBufferedImage());
         drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
