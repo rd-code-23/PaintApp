@@ -454,7 +454,7 @@ public class DrawArea extends JComponent {
      */
     public void rescaleOperation(float scaleFactor, float offset, RenderingHints hints) {
         float scaleFactorArray[] = {scaleFactor, scaleFactor, scaleFactor, 1f};
-        float offsetArray[] = {offset, offset, offset, 1f};
+        float offsetArray[] = {offset, offset, offset, 0f};
         rescaleOperation(scaleFactorArray, offsetArray, hints);
     }
 
@@ -472,6 +472,18 @@ public class DrawArea extends JComponent {
                 this.currentlySelectedLayer.getBufferedImage());
         drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
         repaint();
+    }
+
+    /**
+     * Scale the current layer's transparency by a factor
+     * (0.5f means half the value, 2.0f means multiply twice)
+     *
+     * @param scaleFactor the factor to adjust the transparency
+     */
+    public void scaleTransparency(float scaleFactor) {
+        float scaleFactorArray[] = {1f, 1f, 1f, scaleFactor};
+        float offsetArray[] = {0f, 0f, 0f, 0f};
+        rescaleOperation(scaleFactorArray, offsetArray, null);
     }
 
 }
