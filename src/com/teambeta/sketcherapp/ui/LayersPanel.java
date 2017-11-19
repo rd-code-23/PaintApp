@@ -18,7 +18,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private static final String RENAME_LAYER_BUTTON_TEXT = "Rename";
     private static final String INPUT_POPUP_TEXT = "Input New Name";
     private static final String DUPLICATE_BUTTON_TEXT = "Duplicate";
-    private static final int MAX_NUM_OF_LAYERS = 10;
+    private static final int MAX_NUM_OF_LAYERS = 32;
     private DrawArea drawArea;
     private LinkedList<ImageLayer> drawingLayers;
     private JList<ImageLayer> listOfLayers = new JList<>();
@@ -91,7 +91,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         ActionListener addLayerButtonActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (drawingLayers.size() <= MAX_NUM_OF_LAYERS) {
+                if (drawingLayers.size() < MAX_NUM_OF_LAYERS) {
                     ImageLayer newImageLayer = new ImageLayer(new BufferedImage(
                             drawArea.getWidth(), drawArea.getHeight(), BufferedImage.TYPE_INT_ARGB)
                     );
@@ -122,13 +122,16 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         ActionListener renameLayerButtonActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //get the new name
-                String name = JOptionPane.showInputDialog(INPUT_POPUP_TEXT);
-                if (name != null) {
-                    ImageLayer selectedLayer = drawArea.getDrawingLayers().get(listOfLayers.getSelectedIndex());
-                    if (selectedLayer != null) {
-                        selectedLayer.setName(name);
-                        listOfLayers.repaint();
+                int selectedIndex = listOfLayers.getSelectedIndex();
+                if (selectedIndex != -1) {
+                    //get the new name
+                    String name = JOptionPane.showInputDialog(INPUT_POPUP_TEXT);
+                    if (name != null) {
+                        ImageLayer selectedLayer = drawArea.getDrawingLayers().get(selectedIndex);
+                        if (selectedLayer != null) {
+                            selectedLayer.setName(name);
+                            listOfLayers.repaint();
+                        }
                     }
                 }
             }
@@ -140,21 +143,23 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         ActionListener duplicateLayerButtonActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (drawingLayers.size() <= MAX_NUM_OF_LAYERS) {
-                    ImageLayer newImageLayer = new ImageLayer(new BufferedImage(
-                            drawArea.getWidth(),
-                            drawArea.getHeight(),
-                            BufferedImage.TYPE_INT_ARGB)
-                    );
-                    ImageLayer currentlySelectedLayer = drawArea.getCurrentlySelectedLayer();
-                    Graphics newImageLayerGraphics = newImageLayer.getBufferedImage().getGraphics();
-                    newImageLayerGraphics.drawImage(currentlySelectedLayer.getBufferedImage(),
-                            0, 0, null);
-                    drawingLayers.add(newImageLayer);
-                    listModel.addElement(newImageLayer);
-                    listOfLayers.repaint();
-                    drawArea.redrawLayers();
-                    drawArea.repaint();
+                if (listOfLayers.getSelectedIndex() != -1) {
+                    if (drawingLayers.size() < MAX_NUM_OF_LAYERS) {
+                        ImageLayer newImageLayer = new ImageLayer(new BufferedImage(
+                                drawArea.getWidth(),
+                                drawArea.getHeight(),
+                                BufferedImage.TYPE_INT_ARGB)
+                        );
+                        ImageLayer currentlySelectedLayer = drawArea.getCurrentlySelectedLayer();
+                        Graphics newImageLayerGraphics = newImageLayer.getBufferedImage().getGraphics();
+                        newImageLayerGraphics.drawImage(currentlySelectedLayer.getBufferedImage(),
+                                0, 0, null);
+                        drawingLayers.add(newImageLayer);
+                        listModel.addElement(newImageLayer);
+                        listOfLayers.repaint();
+                        drawArea.redrawLayers();
+                        drawArea.repaint();
+                    }
                 }
             }
         };
@@ -178,6 +183,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         if (e.getValueIsAdjusting()) {
             int selectedIndex = listOfLayers.getSelectedIndex();
             drawArea.setCurrentlySelectedLayer(drawingLayers.get(selectedIndex));
+            drawArea.redrawLayers();
         }
         drawArea.repaint();
         listOfLayers.repaint();
