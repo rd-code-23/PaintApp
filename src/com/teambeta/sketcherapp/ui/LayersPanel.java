@@ -16,6 +16,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private static final String HIDE_SHOW_LAYER_BUTTON_TEXT = "Hide/Show";
     private static final String ADD_LAYER_BUTTON_TEXT = "Add";
     private static final String DELETE_LAYER_BUTTON_TEXT = "Delete";
+    private static final String RENAME_LAYER_BUTTON_TEXT = "Rename";
     private static final int MAX_NUM_OF_LAYERS = 10;
     private DrawArea drawArea;
     private LinkedList<ImageLayer> drawingLayers;
@@ -25,6 +26,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private JButton hideShowLayerButton;
     private JButton addLayerButton;
     private JButton deleteLayerButton;
+    private JButton renameLayerButton;
 
     /**
      * Return The JList of ImageLayers stored in the LayersPanel
@@ -73,7 +75,6 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                 if (listOfLayers.getSelectedIndex() != -1) {
                     ImageLayer selectedLayer = drawArea.getDrawingLayers().get(listOfLayers.getSelectedIndex());
                     selectedLayer.setVisible(!selectedLayer.isVisible());
-                    //TODO: add GUI element that shows the layer is hidden
                     listOfLayers.repaint();
                     drawArea.redrawLayers();
                     drawArea.repaint();
@@ -114,6 +115,24 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         deleteLayerButton.addActionListener(deleteLayerButtonActionListener);
         buttonsPanel.add(deleteLayerButton);
 
+        renameLayerButton = new JButton(RENAME_LAYER_BUTTON_TEXT);
+        ActionListener renameLayerButtonActionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                //get the new name
+                String name = JOptionPane.showInputDialog("Input New Name");
+                if (name != null) {
+                    ImageLayer selectedLayer = drawArea.getDrawingLayers().get(listOfLayers.getSelectedIndex());
+                    if (selectedLayer != null) {
+                        selectedLayer.setName(name);
+                        listOfLayers.repaint();
+                    }
+                }
+            }
+        };
+        renameLayerButton.addActionListener(renameLayerButtonActionListener);
+        buttonsPanel.add(renameLayerButton);
+
         this.add(buttonsPanel, BorderLayout.SOUTH);
     }
 
@@ -133,5 +152,6 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
             drawArea.setCurrentlySelectedLayer(drawingLayers.get(selectedIndex));
         }
         drawArea.repaint();
+        listOfLayers.repaint();
     }
 }
