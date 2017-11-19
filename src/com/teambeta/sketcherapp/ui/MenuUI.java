@@ -160,8 +160,8 @@ public class MenuUI extends JMenuBar {
         imageMenu.add(iRotateCanvas);
         imageMenu.add(iColourMode);
         imageMenu.add(iBrightness);
-        imageMenu.add(iGeneratorsSubMenu);
         imageMenu.add(iGreyscale);
+        imageMenu.add(iGeneratorsSubMenu);
         iGeneratorsSubMenu.add(iCheckerBoard);
         iGeneratorsSubMenu.add(iNoise);
         imageMenu.add(iImport);
