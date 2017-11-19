@@ -1,11 +1,13 @@
 package com.teambeta.sketcherapp.ui;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class BrightnessMenu {
     private DrawArea drawArea;
-    private static final String DIALOG_MESSAGE = "Change the brightness to what percentage?\n[0 - Infinity]";
+    private static final String DIALOG_MESSAGE = "Scale the current layer brightness to what factor?\n[0.0 - Infinity]";
     private static final String DIALOG_WARNING = "That is not a valid value";
+    private static final String DIALOG_WINDOW_TITLE = "Change Brightness";
 
     /*
         Constructor to access the drawArea
@@ -20,12 +22,13 @@ public class BrightnessMenu {
     public void showWindow() {
         String brightnessInput;
         float scaleFactor = 0f;
-        brightnessInput = JOptionPane.showInputDialog(DIALOG_MESSAGE);
+        brightnessInput = JOptionPane.showInputDialog(null, DIALOG_MESSAGE,
+                DIALOG_WINDOW_TITLE, JOptionPane.QUESTION_MESSAGE);
         if (brightnessInput == null) {
             return;
         }
         try {
-            scaleFactor = Float.parseFloat(brightnessInput) / 100.0f;
+            scaleFactor = Float.parseFloat(brightnessInput);
             if (scaleFactor < 0.0f) {
                 throw new Exception();
             }

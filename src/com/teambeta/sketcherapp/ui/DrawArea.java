@@ -446,18 +446,32 @@ public class DrawArea extends JComponent {
 
     /**
      * Use the RescaleOp class to transform an image's brightness and/or contrast
+     * This assumes that the alpha layer remain as-is
      *
      * @param scaleFactor factor to adjust BufferedImage contrast
-     * @param offset factor to adjust BufferedImage brightness
+     * @param offset offset to adjust BufferedImage brightness
      * @param hints the RenderingHints to use
      */
     public void rescaleOperation(float scaleFactor, float offset, RenderingHints hints) {
-        float[] scaleFactorArray = {scaleFactor, scaleFactor, scaleFactor, 1f};
-        float[] offsetArray = {offset, offset, offset, 1f};
-        RescaleOp transformationOperation = new RescaleOp(scaleFactorArray, offsetArray, hints);
+        float scaleFactorArray[] = {scaleFactor, scaleFactor, scaleFactor, 1f};
+        float offsetArray[] = {offset, offset, offset, 1f};
+        rescaleOperation(scaleFactorArray, offsetArray, hints);
+    }
+
+    /**
+     * Use the RescaleOp class to transform an image's brightness and/or contrast
+     * Argument arrays are 4 floats-wide {RED, GREEN, BLUE, ALPHA}
+     *
+     * @param scaleFactor scaleFactor array to adjust BufferedImage contrast
+     * @param offset offset array to adjust BufferedImage brightness
+     * @param hints the RenderingHints to use
+     */
+    public void rescaleOperation(float[] scaleFactor, float[] offset, RenderingHints hints) {
+        RescaleOp transformationOperation = new RescaleOp(scaleFactor, offset, hints);
         transformationOperation.filter(this.currentlySelectedLayer.getBufferedImage(),
                 this.currentlySelectedLayer.getBufferedImage());
         drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
         repaint();
     }
+
 }
