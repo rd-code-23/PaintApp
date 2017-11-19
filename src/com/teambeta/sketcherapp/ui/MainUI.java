@@ -63,8 +63,8 @@ public class MainUI {
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
-    private static final int APPLICATION_WIDTH = 1920;
-    private static final int APPLICATION_HEIGHT = 1080;
+    private static int APPLICATION_WIDTH = 1920;
+    private static int APPLICATION_HEIGHT = 1080;
     private static final int EDITOR_PANEL_WIDTH = 100;
     private static final int EDITOR_PANEL_HEIGHT = 300;
     public static int CANVAS_WIDTH = 1920;
@@ -179,7 +179,9 @@ public class MainUI {
     /**
      * Constructor.
      */
-    public MainUI() {
+    public MainUI(int applicationWidth, int applicationHeight) {
+        APPLICATION_WIDTH = applicationWidth;
+        APPLICATION_HEIGHT = applicationHeight;
         String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
         fontSelector = new JComboBox<>(fonts);
         fontSelector.setSelectedItem(DEFAULT_FONT);
@@ -322,7 +324,6 @@ public class MainUI {
         ImportExport importExport = new ImportExport(drawArea,this);
         GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
         AboutMenu aboutMenu = new AboutMenu();
-        NewWindow newWindow = new NewWindow();
 
         // ideally this should be in its own widthPanel with a proper scale, not directly to mainContent
         mainContent.add(drawArea, BorderLayout.CENTER);
@@ -364,7 +365,7 @@ public class MainUI {
 
         JPanel northPanels = new JPanel();
         northPanels.setLayout(new BorderLayout());
-        MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, aboutMenu, newWindow);
+        MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, aboutMenu);
         northPanels.add(menuUI, BorderLayout.NORTH);
 
         widthChanger = new WidthChanger();

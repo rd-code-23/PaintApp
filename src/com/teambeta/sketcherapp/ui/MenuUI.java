@@ -3,31 +3,25 @@ package com.teambeta.sketcherapp.ui;
 import com.teambeta.sketcherapp.model.GreyscaleMenu;
 import com.teambeta.sketcherapp.model.ImportExport;
 import com.teambeta.sketcherapp.model.AboutMenu;
-import com.teambeta.sketcherapp.ui.MainUI;
 import com.teambeta.sketcherapp.model.NewWindow;
 
-import javax.imageio.ImageIO;
+
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 /**
  * The MenuUI class adds a menu bar with submenus to the top of the application.
  */
-
-
 public class MenuUI extends JMenuBar {
-
-
     private static final String FILE_MENU_BUTTON_TEXT = "File";
     private static final String EDIT_MENU_BUTTON_TEXT = "Edit";
     private static final String IMAGE_MENU_BUTTON_TEXT = "Image";
     private static final String WINDOW_MENU_BUTTON_TEXT = "Window";
     private static final String HELP_MENU_BUTTON_TEXT = "Help";
 
+    JFrame mainFrame;
     private JMenu fileMenu;
     private JMenu editMenu;
     private JMenu imageMenu;
@@ -95,8 +89,9 @@ public class MenuUI extends JMenuBar {
      * constructor
      */
 
-    public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu, AboutMenu aboutMenu, NewWindow newWindow) {
-
+    public MenuUI(JFrame mainFrame, DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu,
+                  AboutMenu aboutMenu) {
+        this.mainFrame = mainFrame;
         this.drawArea = drawArea;
         this.importExport = importExport;
         this.greyscaleMenu = greyscaleMenu;
@@ -191,27 +186,24 @@ public class MenuUI extends JMenuBar {
             // Export canvas menu button
             if (e.getSource() == iExport) {
                 importExport.exportImage();
-            }
-            if (e.getSource() == iImport) {
+            } else if (e.getSource() == iImport) {
                importExport.importImage();
-            }
-            if (e.getSource() == iGreyscale) {
+            } else if (e.getSource() == iGreyscale) {
                 greyscaleMenu.showWindow();
-            }
-            if (e.getSource() == hAbout) {
+            } else if (e.getSource() == hAbout) {
                 aboutMenu.PrepareAbout();
-            }
-            if (e.getSource() == fClose) {
-               //MainUI.exit();
-            }
-            if (e.getSource() == fNew) {
-                NewWindow.NewWindow();
+            } else if (e.getSource() == fClose) {
+               System.exit(0);
+            } else if (e.getSource() == fNew) {
+                Dimension dimension = NewWindow.displayPrompt();
+                if (dimension != null) {
+                    final int APPLICATION_WIDTH = (int) dimension.getWidth();
+                    final int APPLICATION_HEIGHT = (int) dimension.getHeight();
+                    MainUI mainUI = new MainUI(APPLICATION_WIDTH, APPLICATION_HEIGHT);
+                    mainUI.showGridBagLayoutDemo();
+                    mainFrame.dispose();
+                }
             }
         }
-
     };
-
-
-
 }
-
