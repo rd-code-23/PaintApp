@@ -69,8 +69,6 @@ public class ImportExport {
         fileChooser.setDialogTitle(IMPORT_CANVAS_DIALOG_TITLE);
         int retrieval = fileChooser.showOpenDialog(null);
 
-        int imageWidth;
-        int imageHeight;
 
         if (retrieval == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
@@ -78,7 +76,13 @@ public class ImportExport {
             File imageFile = new File(selectedFile.getAbsolutePath());
             try {
                 image = ImageIO.read(imageFile);
-                image = getScaledImage(image, drawArea.getWidth(), drawArea.getHeight());
+
+                if(image.getWidth()>drawArea.getWidth())
+                    image = getScaledImage(image, drawArea.getWidth(),image.getHeight());
+
+                if(image.getHeight()>drawArea.getHeight())
+                    image = getScaledImage(image, image.getWidth(),drawArea.getHeight());
+
             } catch (IOException exc) {
                 exc.printStackTrace();
             }

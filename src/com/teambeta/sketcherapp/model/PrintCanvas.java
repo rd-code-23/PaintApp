@@ -62,7 +62,6 @@ public class PrintCanvas implements Printable {
         autoFitButton = new JButton(LETTER_SIZE_PRINT_DIALOG);
         okButton = new JButton(OK_BUTTON_TEXT_PRINT_DIALOG);
         cancelButton = new JButton(CANCEL_BUTTON_TEXT_PRINT_DIALOG);
-        JDialog.setDefaultLookAndFeelDecorated(true);
         printDimensionDialog = new JDialog(mainUI.getMainFrame(), PRINT_DIMENSIONS_PRINT_DIALOG, true);
         printDimensionDialog.setLocationRelativeTo(null);
         printDimensionDialog.setSize(SHORTCUT_DIALOG_WIDTH, SHORTCUT_DIALOG_HEIGHT);
@@ -246,7 +245,6 @@ public class PrintCanvas implements Printable {
      * @param canvas the canvasBufferedImage to draw to
      */
     private void drawLayersOntoCanvas(BufferedImage[] layers, BufferedImage canvas) {
-        int g;
         Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
         //clear the canvasBufferedImage.
         clearBufferImageToTransparent(canvas);
