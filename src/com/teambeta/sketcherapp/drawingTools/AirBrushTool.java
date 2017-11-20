@@ -56,7 +56,6 @@ public class AirBrushTool extends DrawingTool {
     public void onClick(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         currentX = e.getX();
         currentY = e.getY();
-        drawDotsAroundPoint(canvas, drawingLayers);
     }
 
     @Override
@@ -64,6 +63,7 @@ public class AirBrushTool extends DrawingTool {
         // Set the coordinates to the current point when the mouse is pressed.
         currentX = e.getX();
         currentY = e.getY();
+        drawDotsAroundPoint(canvas, drawingLayers);
     }
 
     /**

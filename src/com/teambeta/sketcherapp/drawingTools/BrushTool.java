@@ -69,13 +69,6 @@ public class BrushTool extends DrawingTool {
     public void onClick(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         currentX = e.getX();
         currentY = e.getY();
-        ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
-        if (selectedLayer != null) {
-            Graphics2D selectedLayerGraphics = initLayerGraphics(selectedLayer.getBufferedImage());
-            selectedLayerGraphics.fillOval(currentX - (brushWidth / 2), currentY - (brushWidth / 2),
-                    brushWidth, brushWidth);
-            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
-        }
     }
 
     @Override
@@ -83,6 +76,13 @@ public class BrushTool extends DrawingTool {
         // Set the coordinates to the current point when the mouse is pressed.
         currentX = e.getX();
         currentY = e.getY();
+        ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
+        if (selectedLayer != null) {
+            Graphics2D selectedLayerGraphics = initLayerGraphics(selectedLayer.getBufferedImage());
+            selectedLayerGraphics.fillOval(currentX - (brushWidth / 2), currentY - (brushWidth / 2),
+                    brushWidth, brushWidth);
+            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+        }
         lastX = currentX;
         lastY = currentY;
     }
