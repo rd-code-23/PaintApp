@@ -4,8 +4,7 @@ import javax.swing.*;
 
 public class GreyscaleMenu {
     private DrawArea drawArea;
-    private static final String DIALOG_MESSAGE = "Convert all current layer elements to greyscale?\n" +
-            "This will overwrite the entire layer";
+    private static final String DIALOG_MESSAGE = "Convert all elements on the selected layer to greyscale?";
     private static final String DIALOG_WINDOW_TITLE = "Confirm Greyscale";
 
     /*
