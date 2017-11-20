@@ -2,15 +2,17 @@ package com.teambeta.sketcherapp.ui;
 
 import com.teambeta.sketcherapp.model.ImportExport;
 import com.teambeta.sketcherapp.model.AboutMenu;
+import com.teambeta.sketcherapp.model.NewWindow;
+
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
  * The MenuUI class adds a menu bar with submenus to the top of the application.
  */
-
 public class MenuUI extends JMenuBar {
     private static final String FILE_MENU_BUTTON_TEXT = "File";
     private static final String EDIT_MENU_BUTTON_TEXT = "Edit";
@@ -19,6 +21,7 @@ public class MenuUI extends JMenuBar {
     private static final String HELP_MENU_BUTTON_TEXT = "Help";
     public static final String ESHORTCUTS_MENU_BUTTON_TEXT = "Shortcuts";
 
+    JFrame mainFrame;
     private JMenu fileMenu;
     private JMenu editMenu;
     private JMenu imageMenu;
@@ -88,6 +91,9 @@ public class MenuUI extends JMenuBar {
     private ImportExport importExport;
     private BrightnessMenu brightnessMenu;
     private GreyscaleMenu greyscaleMenu;
+    private AboutMenu aboutMenu;
+    private NewWindow newWindow;
+
     private NoiseGeneratorMenu noiseGeneratorMenu;
     private CheckerboardMenu checkerboardMenu;
     private ShortcutDialog keyboardShortCutPanel;
@@ -95,8 +101,9 @@ public class MenuUI extends JMenuBar {
     /**
      * Constructor
      */
-    public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu, BrightnessMenu brightnessMenu,
+    public MenuUI(JFrame mainFrame, DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu, BrightnessMenu brightnessMenu,
                   NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu,ShortcutDialog keyboardShortCutPanel) {
+        this.mainFrame = mainFrame;
         this.drawArea = drawArea;
         this.importExport = importExport;
         this.greyscaleMenu = greyscaleMenu;
@@ -188,6 +195,9 @@ public class MenuUI extends JMenuBar {
         iImport.addActionListener(menuActionListener);
         iGreyscale.addActionListener(menuActionListener);
         hAbout.addActionListener(menuActionListener);
+        fClose.addActionListener(menuActionListener);
+        fNew.addActionListener(menuActionListener);
+
         iBrightness.addActionListener(menuActionListener);
         iNoise.addActionListener(menuActionListener);
         iCheckerBoard.addActionListener(menuActionListener);
@@ -202,11 +212,11 @@ public class MenuUI extends JMenuBar {
             if (e.getSource() == iExport) {
                 importExport.exportImage();
             } else if (e.getSource() == iImport) {
-                importExport.importImage();
+               importExport.importImage();
+            } else if (e.getSource() == iGreyscale) {
+                greyscaleMenu.showWindow();
             } else if (e.getSource() == iBrightness) {
                 brightnessMenu.showWindow();
-            } else  if (e.getSource() == iGreyscale) {
-                greyscaleMenu.showWindow();
             } else  if (e.getSource() == hAbout) {
                 AboutMenu.prepareAbout();
             } else if (e.getSource() == iNoise) {
@@ -215,8 +225,18 @@ public class MenuUI extends JMenuBar {
                 checkerboardMenu.showWindow();
             } else if (e.getSource() == eKeyboardShortCuts){
                 keyboardShortCutPanel.renderPanel();
+            } else if (e.getSource() == fClose) {
+               System.exit(0);
+            } else if (e.getSource() == fNew) {
+                Dimension dimension = NewWindow.displayPrompt();
+                if (dimension != null) {
+                    final int APPLICATION_WIDTH = (int) dimension.getWidth();
+                    final int APPLICATION_HEIGHT = (int) dimension.getHeight();
+                    MainUI mainUI = new MainUI(APPLICATION_WIDTH, APPLICATION_HEIGHT);
+                    mainUI.displayUI();
+                    mainFrame.dispose();
+                }
             }
-
         }
     };
 }

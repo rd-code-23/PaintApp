@@ -3,16 +3,19 @@ package com.teambeta.sketcherapp.ui;
 import com.teambeta.sketcherapp.Database.DB_KBShortcuts;
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.ImportExport;
+import com.teambeta.sketcherapp.model.AboutMenu;
+import com.teambeta.sketcherapp.model.NewWindow;
 import com.teambeta.sketcherapp.model.Shortcuts;
 
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.awt.event.KeyEvent;
@@ -57,15 +60,13 @@ public class MainUI {
     private static final String TRIANGLE_TOOL_BUTTON_TEXT = "Triangle";
     private JFrame mainFrame;
 
-    private static final String APPLICATION_NAME = "Beta Paint";
-    private static final int APPLICATION_WIDTH = 1920;
-    private static final int APPLICATION_HEIGHT = 1080;
-    private static final int EDITOR_PANEL_WIDTH = 300;
+    private static final String APPLICATION_NAME = "Beta Sketcher";
+    private static int APPLICATION_WIDTH = 1920;
+    private static int APPLICATION_HEIGHT = 1080;
+    private static final int EDITOR_PANEL_WIDTH = 100;
     private static final int EDITOR_PANEL_HEIGHT = 300;
-    private static final int CANVAS_WIDTH = 1600;
-    private static final int CANVAS_HEIGHT = 900;
-    private static final String START_SOUND_PATH = System.getProperty("user.dir") + File.separator + "src" +
-            File.separator + "res" + File.separator + "start-sound.wav";
+    public static int CANVAS_WIDTH = 1920;
+    public static int CANVAS_HEIGHT = 1080;
 
     private JButton clearButton;
     private JButton brushToolButton;
@@ -89,7 +90,6 @@ public class MainUI {
     private Shortcuts shortcuts;
     private ImportExport importExport;
     private JPanel canvasTools;
-
     private DB_KBShortcuts db_kbShortcuts;
 
     private static final String APPLICATION_LOGO_IMAGE_DIRECTORY = "res/BPIcon.png";
@@ -196,7 +196,9 @@ public class MainUI {
     /**
      * Constructor.
      */
-    public MainUI() {
+    public MainUI(int applicationWidth, int applicationHeight) {
+        APPLICATION_WIDTH = applicationWidth;
+        APPLICATION_HEIGHT = applicationHeight;
         initDrawingTools();
         prepareGUI();
     }
@@ -276,7 +278,35 @@ public class MainUI {
     }
 
     /**
-     * Build main GUI.
+     * This is called when the 'x' is pressed
+     */
+    private void exit() {
+        Object[] exitOptions = {"Cancel",
+                "Export canvas",
+                "Exit without exporting"};
+
+
+            int confirmed = JOptionPane.showOptionDialog(null,
+                    "Are you sure you want to quit?", "Confirm Quit",
+                    JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, exitOptions, null);
+
+            ImportExport importExport = new ImportExport(drawArea,this);
+
+        if (confirmed == JOptionPane.CANCEL_OPTION) {
+                mainFrame.dispose();
+                //System.exit(0);
+            }
+            if (confirmed == JOptionPane.NO_OPTION) {
+                importExport.exportImage();
+                //mainFrame.dispose();  Ideally would use this instead of the following line, but for some reason it
+                //wont properly close the app. If someone knows why, feel free to fix it
+                System.exit(0);
+
+            }
+    }
+
+    /**
+     * Build main GUI
      */
     private void prepareGUI() {
         mainFrame = new JFrame(APPLICATION_NAME);
@@ -288,7 +318,22 @@ public class MainUI {
         mainFrame.getContentPane().setBackground(Color.DARK_GRAY);
 
         mainFrame.setLocationByPlatform(true);
-        mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        mainFrame.addWindowListener(
+        new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (ImportExport.isExported()) {
+                    System.exit(0);
+                } else {
+                    exit();
+                }
+
+            }
+        }
+        );
+
+        // mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
         Container mainContent = mainFrame.getContentPane();
         mainContent.setLayout(new BorderLayout());
@@ -357,7 +402,9 @@ public class MainUI {
         db_kbShortcuts = new DB_KBShortcuts(shortcuts);
         keboardShortCutPanel = new ShortcutDialog(this, shortcuts);
 
-        MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, brightnessMenu, noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel);
+        MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, brightnessMenu, noiseGeneratorMenu,
+                checkerboardMenu, keboardShortCutPanel);
+
 
         northPanel.add(menuUI, BorderLayout.NORTH);
 
@@ -455,7 +502,6 @@ public class MainUI {
         mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         mainFrame.setLocationRelativeTo(null);  // positions GUI in center when opened
         mainFrame.setVisible(true);
-        playStartUpSound();
     }
 
     /**
@@ -474,26 +520,6 @@ public class MainUI {
      */
     public static DrawArea getDrawArea() {
         return drawArea;
-    }
-
-    /**
-     * Play the start up sound when the application is launched or when user switches out of minimode
-     */
-    private void playStartUpSound() {
-        File startUpSound = new File(START_SOUND_PATH);
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    Clip clip = AudioSystem.getClip();
-                    clip.open(AudioSystem.getAudioInputStream(startUpSound));
-                    clip.start();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        thread.start();
     }
 
     /**
