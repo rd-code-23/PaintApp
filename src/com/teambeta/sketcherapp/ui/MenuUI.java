@@ -91,26 +91,23 @@ public class MenuUI extends JMenuBar {
     private GreyscaleMenu greyscaleMenu;
     private NoiseGeneratorMenu noiseGeneratorMenu;
     private CheckerboardMenu checkerboardMenu;
-    private ShortcutDialog keboardShortCutPanel;
-    private PrintCanvas printCanvas;
     private ShortcutDialog keyboardShortCutPanel;
+    private PrintCanvas printCanvas;
+
 
     /**
      * Constructor
      */
     public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu,
-                  NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu, ShortcutDialog keboardShortCutPanel, PrintCanvas printCanvas) {
-    public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu, BrightnessMenu brightnessMenu,
-                  NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu,ShortcutDialog keyboardShortCutPanel) {
+                  NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu, ShortcutDialog keyboardShortCutPanel, PrintCanvas printCanvas, BrightnessMenu brightnessMenu) {
         this.drawArea = drawArea;
         this.importExport = importExport;
         this.greyscaleMenu = greyscaleMenu;
         this.brightnessMenu = brightnessMenu;
         this.noiseGeneratorMenu = noiseGeneratorMenu;
         this.checkerboardMenu = checkerboardMenu;
-        this.keboardShortCutPanel = keboardShortCutPanel;
-        this.printCanvas = printCanvas;
         this.keyboardShortCutPanel = keyboardShortCutPanel;
+        this.printCanvas = printCanvas;
         prepareMenuBar();
     }
 
@@ -223,9 +220,7 @@ public class MenuUI extends JMenuBar {
                 checkerboardMenu.showWindow();
             } else if (e.getSource() == eKeyboardShortCuts){
                 keyboardShortCutPanel.renderPanel();
-            }
-
-            if (e.getSource() == fPrint) {
+            } else  if (e.getSource() == fPrint) {
                 printCanvas.getPrintDimensionsDialog();
             }
         }

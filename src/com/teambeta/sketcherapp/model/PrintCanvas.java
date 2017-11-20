@@ -28,8 +28,9 @@ public class PrintCanvas implements Printable {
     private static final String LETTER_SIZE_PRINT_DIALOG = "Letter Size";
     private static final String OK_BUTTON_TEXT_PRINT_DIALOG = "Ok";
     private static final String CANCEL_BUTTON_TEXT_PRINT_DIALOG = "Cancel";
-    private static final int HEIGHT_DEFAULT_LETTER_SIZE = 350;
-    private static final int WIDTH_DEFAULT_LETTER_SIZE = 350;
+    private static final int WIDTH_DEFAULT_LETTER_SIZE = 575;
+    private static final int HEIGHT_DEFAULT_LETTER_SIZE = 775;
+
     private static final String ERROR_MESSAGE_PRINT_DIALOG = "Inputs must be an integer";
 
     private DrawArea drawArea;
@@ -190,6 +191,7 @@ public class PrintCanvas implements Printable {
         }
 
         Graphics2D g = (Graphics2D) graphics;
+        g.translate(pageFormat.getImageableX(), pageFormat.getImageableY()); // modifies the Graphics2D object to make its origin (0, 0) match the corner of the imageable area (the area of the page we can print on) so we don't print for nothing in an area.
         BufferedImage canvas = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_RGB);
         drawLayersOntoCanvas(canvas, drawArea);
         g.drawImage(canvas, 0, 0, null);
