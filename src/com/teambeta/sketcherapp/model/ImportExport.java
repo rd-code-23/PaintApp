@@ -1,6 +1,5 @@
 package com.teambeta.sketcherapp.model;
 
-import com.teambeta.sketcherapp.Main;
 import com.teambeta.sketcherapp.ui.DrawArea;
 import com.teambeta.sketcherapp.ui.MainUI;
 
@@ -10,9 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-
 public class ImportExport {
-
     private static final String EXPORT_CANVAS_DIALOG_TITLE = "Export Canvas";
     private static final String IMPORT_CANVAS_DIALOG_TITLE = "Import Canvas";
     private static final String USER_HOME = "user.home";
@@ -30,6 +27,7 @@ public class ImportExport {
 
     /**
      * Constructor so we can can access methods from other classes
+     *
      * @param drawArea
      * @param mainUI
      */
@@ -48,17 +46,17 @@ public class ImportExport {
         int retrieval = fileChooser.showSaveDialog(null);
 
         if (retrieval == JFileChooser.APPROVE_OPTION) {
-            File file = null;
+            File file;
             exported = true; //used in MainUI exit()
+            File file;
             //write image to a file
             try {
                 file = new File(fileChooser.getSelectedFile() + PNG_EXTENSION);
-                ImageIO.write(drawArea.getCanvas(), PNG, file);
+                ImageIO.write(drawArea.getCanvasBufferedImage(), PNG, file);
             } catch (IOException exc) {
                 exc.printStackTrace();
             }
         }
-
         drawArea.setCanvasAltered(false);
     }
 
@@ -83,8 +81,7 @@ public class ImportExport {
                 exc.printStackTrace();
             }
 
-            if (drawArea.isCanvasAltered() == true) {
-
+            if (drawArea.isCanvasAltered()) {
                 Object[] options = {JOPTION_SAVE,
                         JOPTION_DONT_SAVE,
                         JOPTION_CANCEL};
@@ -100,12 +97,8 @@ public class ImportExport {
                 if (userOption == 0) {
                     exportImage();
                 }
-
             }
-
             drawArea.setImportedImage(image);
-
         }
     }
-
 }

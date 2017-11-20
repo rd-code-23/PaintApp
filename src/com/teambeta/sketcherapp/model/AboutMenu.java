@@ -3,9 +3,10 @@ package com.teambeta.sketcherapp.model;
 import javax.swing.*;
 
 
+/** 
+ * Displays About page.
+ */
 public class AboutMenu extends JFrame {
-
-
 private static final String ABOUT_MESSAGE_TEXT = "Simon Fraser University\n" +
                                                  "CMPT 106, Fall 2017\n" +
                                                  "Team Beta Group Project: Beta Paint\n" +
@@ -20,13 +21,14 @@ private static final String ABOUT_MESSAGE_TEXT = "Simon Fraser University\n" +
                                                  "This will ensure BetaPaint is accessible to users with varying levels of experience.\n\n" +
                                                  "Acknowledgements:\n" +
                                                  "Java JDK, IntelliJ IDEA, GitLab";
+private static final String TITLE = "About";
 
 
-
-    public void PrepareAbout() {
-        JOptionPane.showMessageDialog(null, ABOUT_MESSAGE_TEXT, "About", JOptionPane.PLAIN_MESSAGE);
+    /**
+     * Prepare about screen popup
+     */
+    public static void prepareAbout() {
+        JOptionPane.showMessageDialog(null, ABOUT_MESSAGE_TEXT, TITLE, JOptionPane.PLAIN_MESSAGE);
          }
-
-
 
 }

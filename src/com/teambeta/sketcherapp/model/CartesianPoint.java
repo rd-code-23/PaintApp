@@ -5,7 +5,6 @@ package com.teambeta.sketcherapp.model;
  * It can hold the previous position of the point.
  */
 public class CartesianPoint {
-
     private int xCurrent;
     private int yCurrent;
     private int xPrevious;
@@ -78,5 +77,4 @@ public class CartesianPoint {
         xPrevious = xCurrent;
         yPrevious = yCurrent;
     }
-
 }

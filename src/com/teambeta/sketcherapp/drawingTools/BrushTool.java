@@ -1,11 +1,13 @@
 package com.teambeta.sketcherapp.drawingTools;
 
 import com.teambeta.sketcherapp.model.GeneralObserver;
+import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.ui.DrawArea;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
 /**
  * The BrushTool class implements the drawing behavior for when the Brush tool has been selected
@@ -18,9 +20,7 @@ public class BrushTool extends DrawingTool {
     private int lastY;
     private Color color;
     private int brushWidth;
-    private Graphics2D layer1Graphics;
-    private final int DEFAULT_STOKE_VALUE = 10;
-
+    private final static int DEFAULT_STOKE_VALUE = 10;
 
     /**
      * The constructor sets the properties of the tool to their default values
@@ -36,38 +36,53 @@ public class BrushTool extends DrawingTool {
     }
 
     @Override
-    public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         currentX = e.getX();
         currentY = e.getY();
 
-        layer1Graphics.drawLine(lastX, lastY, currentX, currentY);
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
-
+        ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
+        if (selectedLayer != null) {
+            Graphics2D selectedLayerGraphics = initLayerGraphics(selectedLayer.getBufferedImage());
+            selectedLayerGraphics.drawLine(lastX, lastY, currentX, currentY);
+            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+        }
         lastX = currentX;
         lastY = currentY;
     }
 
-    @Override
-    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    private ImageLayer getSelectedLayer(LinkedList<ImageLayer> drawingLayers) {
+        //get the selected layer, this assumes there is only one selected layer.
+        for (int i = 0; i < drawingLayers.size(); i++) {
+            ImageLayer drawingLayer = drawingLayers.get(i);
+            if (drawingLayer.isSelected()) {
+                return drawingLayer;
+            }
+        }
+        return null;
     }
 
     @Override
-    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onRelease(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+    }
+
+    @Override
+    public void onClick(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         currentX = e.getX();
         currentY = e.getY();
-
-        layer1Graphics.fillOval(currentX - (brushWidth / 2), currentY - (brushWidth / 2), brushWidth, brushWidth);
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
 
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        // Initialize canvas settings that the tool will require.
-        initLayer1Graphics(canvas, layers, e);
-
+    public void onPress(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         // Set the coordinates to the current point when the mouse is pressed.
         currentX = e.getX();
         currentY = e.getY();
+        ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
+        if (selectedLayer != null) {
+            Graphics2D selectedLayerGraphics = initLayerGraphics(selectedLayer.getBufferedImage());
+            selectedLayerGraphics.fillOval(currentX - (brushWidth / 2), currentY - (brushWidth / 2),
+                    brushWidth, brushWidth);
+            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+        }
         lastX = currentX;
         lastY = currentY;
     }
@@ -102,23 +117,21 @@ public class BrushTool extends DrawingTool {
         });
     }
 
+
     /**
      * Initialize the parameters required for layer1Graphics.
-     *
-     * @param canvas for drawing the line onto.
-     * @param layers first layer by default is layers[0]
-     * @param e      MouseEvent
      */
-    private void initLayer1Graphics(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        layer1Graphics = (Graphics2D) layers[0].getGraphics();
-        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        layer1Graphics.setColor(color);
-        layer1Graphics.setStroke(new BasicStroke(getToolWidth(), BasicStroke.CAP_ROUND,    // End-cap style
+    private Graphics2D initLayerGraphics(BufferedImage layer) {
+        Graphics2D layerGraphics;
+        layerGraphics = (Graphics2D) layer.getGraphics();
+        layerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        layerGraphics.setColor(color);
+        layerGraphics.setStroke(new BasicStroke(getToolWidth(), BasicStroke.CAP_ROUND,    // End-cap style
                 BasicStroke.CAP_BUTT));
+        return layerGraphics;
     }
 
     @Override
     public void setFillState(boolean fillState) {
-
     }
 }

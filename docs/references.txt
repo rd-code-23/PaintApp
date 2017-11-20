@@ -1,0 +1,21 @@
+1.  Gnatt Chart Template, Template was used from: https://www.officetimeline.com/gantt-chart-template/it-project-management-download
+
+2. Coding convention used: Dr. Brian Fraser, “Java Coding Standard”, Summer 2016 (with slight modifications).
+
+3. Vicki Holmes, “Microsoft Paint Features”, Techwalla, Date unknown.
+https://www.techwalla.com/articles/microsoft-paint-features
+
+4. Basic drawable canvas referenced from YouTube video, "[Java] How to make a Swing Paint and Drawing application” (2014) by Sylvain Saurel.
+https://www.youtube.com/watch?v=OOb1eil4PCo 
+
+5. Paintbrush in BetaPaint logo used under Creative Commons license. Created by IconsGhost from The Noun Project. Modified slightly for app icon by setting on a colored background.
+https://thenounproject.com/search/?q=paintbrush&i=1082011
+
+6. Java Swing API documentation provided by Oracle Corporation.
+http://docs.oracle.com/javase/tutorial/uiswing/
+
+7. Java Swing JFormattedTextField documentation provided on Stack Overflow.
+https://stackoverflow.com/questions/11093326/restricting-jtextfield-input-to-integers
+
+8. Java Swing DocumentListener documentation provided on Stack Overflow.
+https://stackoverflow.com/questions/3953208/value-change-listener-to-jtextfield

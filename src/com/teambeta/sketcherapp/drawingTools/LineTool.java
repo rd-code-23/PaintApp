@@ -1,11 +1,13 @@
 package com.teambeta.sketcherapp.drawingTools;
 
 import com.teambeta.sketcherapp.model.GeneralObserver;
+import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.ui.DrawArea;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.LinkedList;
 
 /**
  * The LineTool class implements the drawing behavior for when the Line tool has been selected
@@ -33,65 +35,76 @@ public class LineTool extends DrawingTool {
         lineWidth = DEFAULT_WIDTH_VALUE;
     }
 
-    @Override
-    public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        if (previewLayer == null) {
-            previewLayer = DrawArea.getPreviewLayer();
+    private ImageLayer getSelectedLayer(LinkedList<ImageLayer> drawingLayers) {
+        //get the selected layer, this assumes there is only one selected layer.
+        for (int i = 0; i < drawingLayers.size(); i++) {
+            ImageLayer drawingLayer = drawingLayers.get(i);
+            if (drawingLayer.isSelected()) {
+                return drawingLayer;
+            }
         }
-        //clear preview layer
-        DrawArea.clearBufferImageToTransparent(previewLayer);
-
-        //init graphics objects
-        Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
-        canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        canvasGraphics.setColor(color);
-        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
-        layer1Graphics.setStroke(new BasicStroke(getToolWidth()));
-        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        layer1Graphics.setColor(color);
-        Graphics2D previewLayerGraphics = (Graphics2D) previewLayer.getGraphics();
-        previewLayerGraphics.setStroke(new BasicStroke(getToolWidth()));
-        canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        previewLayerGraphics.setColor(color);
-
-        //get the current end point for the line preview
-        currentX = e.getX();
-        currentY = e.getY();
-
-        //draw the line preview onto its layer
-        previewLayerGraphics.drawLine(lastX, lastY, currentX, currentY);
-
-        //info: https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
-        //draw the preview layer on top of the drawing layer(s)
-        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
-        canvasGraphics.setComposite(alphaComposite);
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
-        canvasGraphics.drawImage(previewLayer, 0, 0, null);
+        return null;
     }
 
+    @Override
+    public void onDrag(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+        if (!drawingLayers.isEmpty()) {
+            if (previewLayer == null) {
+                previewLayer = DrawArea.getPreviewBufferedImage();
+            }
+            //clear preview layer
+            DrawArea.clearBufferImageToTransparent(previewLayer);
+            //init graphics objects
+            Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
+            canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            canvasGraphics.setColor(color);
+            Graphics2D previewLayerGraphics = initLayerGraphics(previewLayer);
+            //get the current end point for the line preview
+            currentX = e.getX();
+            currentY = e.getY();
+            //draw the line preview onto its layer
+            previewLayerGraphics.drawLine(lastX, lastY, currentX, currentY);
+            //info: https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
+            //draw the preview layer on top of the drawing layer(s)
+            AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
+            canvasGraphics.setComposite(alphaComposite);
+            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+            canvasGraphics.drawImage(previewLayer, 0, 0, null);
+        }
+    }
+
+    private Graphics2D initLayerGraphics(BufferedImage layer) {
+        Graphics2D layerGraphics = (Graphics2D) layer.getGraphics();
+        layerGraphics.setStroke(new BasicStroke(getToolWidth()));
+        layerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        layerGraphics.setColor(color);
+        return layerGraphics;
+    }
 
     @Override
-    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        Graphics2D layer1Graphics = (Graphics2D) layers[0].getGraphics();
-        layer1Graphics.setStroke(new BasicStroke(getToolWidth()));
-        layer1Graphics.setColor(this.getColor());
-        //get the coordinates of where the user released the mouse
-        currentX = e.getX();
-        currentY = e.getY();
-        //draw a line between the start and release points
-        layer1Graphics.drawLine(lastX, lastY, currentX, currentY);
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
+    public void onRelease(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+        ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
+        Graphics2D selectedLayerGraphics;
+        if (selectedLayer != null) {
+            selectedLayerGraphics = initLayerGraphics(selectedLayer.getBufferedImage());
+
+            //get the coordinates of where the user released the mouse
+            currentX = e.getX();
+            currentY = e.getY();
+            //draw a line between the start and release points
+            selectedLayerGraphics.drawLine(lastX, lastY, currentX, currentY);
+            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+        }
         lastX = currentX;
         lastY = currentY;
     }
 
     @Override
-    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        //do nothing
+    public void onClick(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
     }
 
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onPress(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         //set the coordinates to the current pixel clicked
         currentX = e.getX();
         currentY = e.getY();
@@ -133,6 +146,5 @@ public class LineTool extends DrawingTool {
 
     @Override
     public void setFillState(boolean fillState) {
-
     }
 }

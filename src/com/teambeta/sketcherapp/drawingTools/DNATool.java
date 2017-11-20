@@ -2,20 +2,21 @@ package com.teambeta.sketcherapp.drawingTools;
 
 import com.teambeta.sketcherapp.model.CartesianPoint;
 import com.teambeta.sketcherapp.model.GeneralObserver;
+import com.teambeta.sketcherapp.model.GeneratorFunctions;
+import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.ui.DrawArea;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.LinkedList;
 
 /**
  * The DNATool class implements the drawing behavior for when the DNATool has been selected.
- *
+ * <p>
  * The amplitude and period values are currently fixed numbers. Requires dedicated UI to update.
  */
 public class DNATool extends DrawingTool {
-
     private final double TWO_PI = 2.0 * Math.PI;
     private final double DEFAULT_AMPLITUDE = 100.0;
     private final double DEFAULT_PERIOD = 400.0;
@@ -61,7 +62,6 @@ public class DNATool extends DrawingTool {
      * The constructor sets the properties of the tool to their default values
      */
     public DNATool() {
-
         registerObservers();
         color = Color.black;
         currentX = 0;
@@ -80,97 +80,96 @@ public class DNATool extends DrawingTool {
         pointContainer = new CartesianPoint[2];
         pointContainer[0] = upperWave;
         pointContainer[1] = lowerWave;
+    }
 
+    private ImageLayer getSelectedLayer(LinkedList<ImageLayer> drawingLayers) {
+        //get the selected layer, this assumes there is only one selected layer.
+        for (int i = 0; i < drawingLayers.size(); i++) {
+            ImageLayer drawingLayer = drawingLayers.get(i);
+            if (drawingLayer.isSelected()) {
+                return drawingLayer;
+            }
+        }
+        return null;
     }
 
     @Override
-    public void onDrag(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onDrag(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         currentX = e.getX();
         currentY = e.getY();
         xDifferenceToOrigin += (currentX - lastX);
 
-        upperWave.setCurrent(currentX,
-                (currentY +
-                        (int)(amplitude * Math.sin(bValue * (double) xDifferenceToOrigin))));
-        lowerWave.setCurrent(currentX,
-                (currentY +
-                        (int)(amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - LOWER_WAVE_PHASE_SHIFT)))));
+        ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
+        if (selectedLayer != null) {
+            Graphics2D selectedLayerGraphics = initLayerGraphics(selectedLayer.getBufferedImage());
+            upperWave.setCurrent(currentX,
+                    (currentY +
+                            (int) (amplitude * Math.sin(bValue * (double) xDifferenceToOrigin))));
+            lowerWave.setCurrent(currentX,
+                    (currentY +
+                            (int) (amplitude * Math.sin(bValue * ((double) xDifferenceToOrigin - LOWER_WAVE_PHASE_SHIFT)))));
+            currentPeriodRatio = Math.abs(((xDifferenceToOrigin % DEFAULT_PERIOD) / DEFAULT_PERIOD));
+            // Reset tool state if the direction changes and the difference is greater than a certain requirement.
+            if (wasGoingRight != (currentX >= lastX)) {
+                if (!switchPointSet) {
+                    switchPointX = currentX;
+                    switchPointSet = true;
+                }
 
-        currentPeriodRatio = Math.abs(((xDifferenceToOrigin % DEFAULT_PERIOD) / DEFAULT_PERIOD));
-
-        // Reset tool state if the direction changes and the difference is greater than a certain requirement.
-        if (wasGoingRight != (currentX >= lastX)) {
-            if (!switchPointSet) {
-                switchPointX = currentX;
-                switchPointSet = true;
+                if (Math.abs(currentX - switchPointX) > MAXIMUM_ALLOWABLE_X_AXIS_DRIFT) {
+                    for (int i = FIRST_HALF_PERIOD_BAR_START_INDEX; i <= SECOND_HALF_PERIOD_BAR_END_INDEX; ++i) {
+                        periodBars[i] = false;
+                    }
+                    currentPeriodRatio = 0.0;
+                    xDifferenceToOrigin = 0;
+                    switchPointSet = false;
+                }
             }
-
-            if (switchPointSet && ((Math.abs(currentX - switchPointX) > MAXIMUM_ALLOWABLE_X_AXIS_DRIFT))) {
-                for (int i = FIRST_HALF_PERIOD_BAR_START_INDEX; i <= SECOND_HALF_PERIOD_BAR_END_INDEX; ++i) {
+            wasGoingRight = currentX >= lastX;
+            if (Math.abs(currentPeriodRatio) <= HALF_PERIOD_RATIO) {
+                // First half-period
+                // Prepare the second half-period for drawing.
+                for (int i = SECOND_HALF_PERIOD_BAR_START_INDEX; i <= SECOND_HALF_PERIOD_BAR_END_INDEX; ++i) {
                     periodBars[i] = false;
                 }
-                currentPeriodRatio = 0.0;
-                xDifferenceToOrigin = 0;
-                switchPointSet = false;
+                for (int i = FIRST_HALF_PERIOD_BAR_START_INDEX; i <= FIRST_HALF_PERIOD_BAR_END_INDEX; ++i) {
+                    drawLegalBar(i, currentPeriodRatio, selectedLayerGraphics);
+                }
+            } else {
+                // Second half-period
+                // Prepare the first half-period for drawing.
+                for (int i = FIRST_HALF_PERIOD_BAR_START_INDEX; i <= FIRST_HALF_PERIOD_BAR_END_INDEX; ++i) {
+                    periodBars[i] = false;
+                }
+                for (int i = SECOND_HALF_PERIOD_BAR_START_INDEX; i <= SECOND_HALF_PERIOD_BAR_END_INDEX; ++i) {
+                    drawLegalBar(i, currentPeriodRatio, selectedLayerGraphics);
+                }
             }
+            // Finally, draw the computed sinusoidal lines.
+            for (CartesianPoint point : pointContainer) {
+                selectedLayerGraphics.drawLine(point.getXPrevious(), point.getYPrevious(),
+                        point.getXCurrent(), point.getYCurrent());
+                point.setPreviousFromCurrent();
+            }
+            lastX = currentX;
+            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
         }
-
-        wasGoingRight = currentX >= lastX;
-
-        if (Math.abs(currentPeriodRatio) <= HALF_PERIOD_RATIO) {
-            // First half-period
-
-            // Prepare the second half-period for drawing.
-            for (int i = SECOND_HALF_PERIOD_BAR_START_INDEX; i <= SECOND_HALF_PERIOD_BAR_END_INDEX; ++i) {
-                periodBars[i] = false;
-            }
-
-            for (int i = FIRST_HALF_PERIOD_BAR_START_INDEX; i <= FIRST_HALF_PERIOD_BAR_END_INDEX; ++i) {
-                drawLegalBar(i, currentPeriodRatio);
-            }
-
-        } else {
-            // Second half-period
-
-            // Prepare the first half-period for drawing.
-            for (int i = FIRST_HALF_PERIOD_BAR_START_INDEX; i <= FIRST_HALF_PERIOD_BAR_END_INDEX; ++i) {
-                periodBars[i] = false;
-            }
-
-            for (int i = SECOND_HALF_PERIOD_BAR_START_INDEX; i <= SECOND_HALF_PERIOD_BAR_END_INDEX; ++i) {
-                drawLegalBar(i, currentPeriodRatio);
-            }
-        }
-
-        // Finally, draw the computed sinusoidal lines.
-        for (CartesianPoint point : pointContainer) {
-            layer1Graphics.drawLine(point.getXPrevious(), point.getYPrevious(),
-                    point.getXCurrent(), point.getYCurrent());
-            point.setPreviousFromCurrent();
-        }
-
-        lastX = currentX;
-
-        DrawArea.drawLayersOntoCanvas(layers, canvas);
     }
 
     @Override
-    public void onRelease(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onRelease(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         xDifferenceToOrigin = 0;
-
         for (int i = 0; i < periodBars.length; ++i) {
             periodBars[i] = false;
         }
     }
 
     @Override
-    public void onClick(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
+    public void onClick(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
     }
 
     @Override
-    public void onPress(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        // Initialize canvas settings that the tool will require.
-        initLayer1Graphics(canvas, layers, e);
+    public void onPress(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         currentX = e.getX();
         currentY = e.getY();
         lastX = currentX;
@@ -197,6 +196,7 @@ public class DNATool extends DrawingTool {
 
     /**
      * getToolWidth returns the current width that the tool is set to.
+     *
      * @return The current tool width
      */
     public int getToolWidth() {
@@ -205,6 +205,7 @@ public class DNATool extends DrawingTool {
 
     /**
      * setToolWidth sets the tool width
+     *
      * @param brushWidth The tool width
      */
     public void setToolWidth(int brushWidth) {
@@ -225,85 +226,65 @@ public class DNATool extends DrawingTool {
 
     /**
      * Initialize the parameters required for layer1Graphics.
-     *
-     * @param canvas for drawing the line onto.
-     * @param layers first layer by default is layers[0]
-     * @param e      MouseEvent
      */
-    private void initLayer1Graphics(BufferedImage canvas, BufferedImage[] layers, MouseEvent e) {
-        layer1Graphics = (Graphics2D) layers[0].getGraphics();
-        layer1Graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        layer1Graphics.setColor(color);
-        layer1Graphics.setStroke(new BasicStroke(getToolWidth(), BasicStroke.CAP_ROUND,
+    private Graphics2D initLayerGraphics(BufferedImage layer) {
+        Graphics2D layerGraphics;
+        layerGraphics = (Graphics2D) layer.getGraphics();
+        layerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        layerGraphics.setColor(color);
+        layerGraphics.setStroke(new BasicStroke(getToolWidth(), BasicStroke.CAP_ROUND,
                 BasicStroke.CAP_BUTT));
+        return layerGraphics;
     }
 
     @Override
     public void setFillState(boolean fillState) {
-
     }
 
     /**
      * Draw a line between the sine waves at their current render point.
      * This line will be ~75% the brush width of the main wave.
      */
-    private void drawBarBetweenWaves() {
+    private void drawBarBetweenWaves(Graphics2D selectedLayerGraphics) {
         int barMiddleY = (lowerWave.getYCurrent() + upperWave.getYCurrent()) / 2;
         int originalBrushWidth = getToolWidth();
         double barBrushWidth = originalBrushWidth * BAR_REDUCTION_FACTOR; // Expected integer precision loss.
-
         Color originalColor = getColor();
         Color[] atcg_colors = {Color.red, Color.green, Color.blue, Color.yellow};
-
         // Set the color and brush width profiles for ATCG mode.
-        layer1Graphics.setStroke(new BasicStroke((int) barBrushWidth, BasicStroke.CAP_SQUARE,
+        selectedLayerGraphics.setStroke(new BasicStroke((int) barBrushWidth, BasicStroke.CAP_SQUARE,
                 BasicStroke.CAP_BUTT));
-        layer1Graphics.setColor(atcg_colors[randomInt(0, atcg_colors.length - 1)]);
-
+        selectedLayerGraphics.setColor(atcg_colors[GeneratorFunctions.randomInt(0, atcg_colors.length - 1)]);
         // Draw the lower half of the bar with a new color.
-        layer1Graphics.drawLine(lowerWave.getXCurrent(), lowerWave.getYCurrent(),
+        selectedLayerGraphics.drawLine(lowerWave.getXCurrent(), lowerWave.getYCurrent(),
                 upperWave.getXCurrent(), barMiddleY);
-
-        layer1Graphics.setColor(atcg_colors[randomInt(0, atcg_colors.length - 1)]);
-
+        selectedLayerGraphics.setColor(atcg_colors[GeneratorFunctions.randomInt(0, atcg_colors.length - 1)]);
         // Draw the upper half of the bar with another color.
-        layer1Graphics.drawLine(lowerWave.getXCurrent(), barMiddleY,
+        selectedLayerGraphics.drawLine(lowerWave.getXCurrent(), barMiddleY,
                 upperWave.getXCurrent(), upperWave.getYCurrent());
-
         // Return to the normal color and brush width profiles.
-        layer1Graphics.setColor(originalColor);
-        layer1Graphics.setStroke(new BasicStroke(originalBrushWidth, BasicStroke.CAP_ROUND,
+        selectedLayerGraphics.setColor(originalColor);
+        selectedLayerGraphics.setStroke(new BasicStroke(originalBrushWidth, BasicStroke.CAP_ROUND,
                 BasicStroke.CAP_BUTT));
     }
 
     /**
      * Draw a bar between the waves given that it is allowed to.
-     * @param bar_index The bar index number
+     *
+     * @param bar_index    The bar index number
      * @param period_ratio The period ratio at the current point
      */
-    private void drawLegalBar(int bar_index, double period_ratio) {
+    private void drawLegalBar(int bar_index, double period_ratio, Graphics2D selectedLayerGraphics) {
         if (wasGoingRight) {
             if (((Math.abs(period_ratio) >= leftToRightBarRatios[bar_index])) && !(periodBars[bar_index])) {
                 periodBars[bar_index] = true;
-                drawBarBetweenWaves();
+                drawBarBetweenWaves(selectedLayerGraphics);
             }
         } else {
             if (((Math.abs(period_ratio) >= rightToLeftBarRatios[bar_index])) && !(periodBars[bar_index])) {
                 periodBars[bar_index] = true;
-                drawBarBetweenWaves();
+                drawBarBetweenWaves(selectedLayerGraphics);
             }
         }
     }
-
-    /**
-     * Return a random integer within the closed interval of min to max.
-     *
-     * @param min The minimum number
-     * @param max The maximum number
-     * @return The random number from min to max
-     */
-    private int randomInt(int min, int max) {
-        return ThreadLocalRandom.current().nextInt(max - min + 1) + min;
-    }
-
 }

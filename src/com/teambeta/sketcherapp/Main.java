@@ -15,7 +15,7 @@ public class Main {
      */
     public static void main(String[] args) {
         System.setProperty("sun.java2d.opengl", "True");
-        MainUI mainUI = new MainUI(DEFAULT_APPLICATION_WIDTH, DEFAULT_APPLICATION_HEIGHT);
-        mainUI.showGridBagLayoutDemo();
+        MainUI mainUI = new MainUI();
+        mainUI.displayUI();
     }
 }
