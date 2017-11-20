@@ -225,8 +225,6 @@ public class MenuUI extends JMenuBar {
                 checkerboardMenu.showWindow();
             } else if (e.getSource() == eKeyboardShortCuts){
                 keyboardShortCutPanel.renderPanel();
-            } else if (e.getSource() == hAbout) {
-                aboutMenu.PrepareAbout();
             } else if (e.getSource() == fClose) {
                System.exit(0);
             } else if (e.getSource() == fNew) {
@@ -235,7 +233,7 @@ public class MenuUI extends JMenuBar {
                     final int APPLICATION_WIDTH = (int) dimension.getWidth();
                     final int APPLICATION_HEIGHT = (int) dimension.getHeight();
                     MainUI mainUI = new MainUI(APPLICATION_WIDTH, APPLICATION_HEIGHT);
-                    mainUI.showGridBagLayoutDemo();
+                    mainUI.displayUI();
                     mainFrame.dispose();
                 }
             }

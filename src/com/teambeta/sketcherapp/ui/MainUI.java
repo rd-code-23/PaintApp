@@ -199,10 +199,6 @@ public class MainUI {
     public MainUI(int applicationWidth, int applicationHeight) {
         APPLICATION_WIDTH = applicationWidth;
         APPLICATION_HEIGHT = applicationHeight;
-        String fonts[] = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-        fontSelector = new JComboBox<>(fonts);
-        fontSelector.setSelectedItem(DEFAULT_FONT);
-        fontSelector.setVisible(false);
         initDrawingTools();
         prepareGUI();
     }
@@ -327,9 +323,9 @@ public class MainUI {
         new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                if (ImportExport.exported == true) {
+                if (ImportExport.isExported()) {
                     System.exit(0);
-                } else if (ImportExport.exported == false) {
+                } else {
                     exit();
                 }
 
@@ -406,7 +402,8 @@ public class MainUI {
         db_kbShortcuts = new DB_KBShortcuts(shortcuts);
         keboardShortCutPanel = new ShortcutDialog(this, shortcuts);
 
-        MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, brightnessMenu, noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel);
+        MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, brightnessMenu, noiseGeneratorMenu,
+                checkerboardMenu, keboardShortCutPanel);
 
 
         northPanel.add(menuUI, BorderLayout.NORTH);
@@ -505,7 +502,6 @@ public class MainUI {
         mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         mainFrame.setLocationRelativeTo(null);  // positions GUI in center when opened
         mainFrame.setVisible(true);
-        playStartUpSound();
     }
 
     /**
@@ -524,26 +520,6 @@ public class MainUI {
      */
     public static DrawArea getDrawArea() {
         return drawArea;
-    }
-
-    /**
-     * Play the start up sound when the application is launched or when user switches out of minimode
-     */
-    private void playStartUpSound() {
-        File startUpSound = new File(START_SOUND_PATH);
-        Thread thread = new Thread() {
-            @Override
-            public void run() {
-                try {
-                    Clip clip = AudioSystem.getClip();
-                    clip.open(AudioSystem.getAudioInputStream(startUpSound));
-                    clip.start();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        thread.start();
     }
 
     /**
