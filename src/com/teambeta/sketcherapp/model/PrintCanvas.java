@@ -1,6 +1,7 @@
 package com.teambeta.sketcherapp.model;
 
 import com.teambeta.sketcherapp.ui.DrawArea;
+import com.teambeta.sketcherapp.ui.MainUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,130 +22,162 @@ public class PrintCanvas implements Printable {
     private static final int COLUMN_WIDTH_PRINT_DIALOG = 5;
     private static final int SPACE_TEXTFIELD_PRINT_DIALOG = 10;
     private static final String PRINT_DIMENSIONS_PRINT_DIALOG = "Print Dimensions";
+    private static final int SHORTCUT_DIALOG_WIDTH = 400;
+    private static final int SHORTCUT_DIALOG_HEIGHT = 400;
+    private static final String INSTRUCTION_PRINT_DIALOG = "Enter preferred print size or auto-fit to Letter Size";
+    private static final String LETTER_SIZE_PRINT_DIALOG = "Letter Size";
+    private static final String OK_BUTTON_TEXT_PRINT_DIALOG = "Ok";
+    private static final String CANCEL_BUTTON_TEXT_PRINT_DIALOG = "Cancel";
+    private static final int HEIGHT_DEFAULT_LETTER_SIZE = 350;
+    private static final int WIDTH_DEFAULT_LETTER_SIZE = 350;
+    private static final String ERROR_MESSAGE_PRINT_DIALOG = "Inputs must be an integer";
 
     private DrawArea drawArea;
+    private MainUI mainUI;
     private int scaledWidth;
     private int scaledHeight;
+    private JDialog printDimensionDialog;
+    private JLabel notValidPrintDimensionLabel = new JLabel();
+    private boolean isPrint = false;
+    private JButton autoFitButton;
+    private JButton okButton;
+    private JButton cancelButton;
+    private JTextField newWidth;
+    private JTextField newHeight;
+    private JLabel instructions;
 
-    public PrintCanvas(DrawArea drawArea) {
+    public PrintCanvas(DrawArea drawArea, MainUI mainUI) {
         this.drawArea = drawArea;
+        this.mainUI = mainUI;
     }
-    boolean isValidDimension = false;
-    boolean isPrint = false;
-    JButton autoFit = new JButton("Letter Size");
+
+
     /**
      * dialog to get the users preferred print dimensions
      */
     public void getPrintDimensionsDialog() {
+        newWidth = new JTextField(COLUMN_WIDTH_PRINT_DIALOG);
+        newHeight = new JTextField(COLUMN_WIDTH_PRINT_DIALOG);
+        instructions = new JLabel(INSTRUCTION_PRINT_DIALOG);
+        autoFitButton = new JButton(LETTER_SIZE_PRINT_DIALOG);
+        okButton = new JButton(OK_BUTTON_TEXT_PRINT_DIALOG);
+        cancelButton = new JButton(CANCEL_BUTTON_TEXT_PRINT_DIALOG);
+        JDialog.setDefaultLookAndFeelDecorated(true);
+        printDimensionDialog = new JDialog(mainUI.getMainFrame(), PRINT_DIMENSIONS_PRINT_DIALOG, true);
+        printDimensionDialog.setLocationRelativeTo(null);
+        printDimensionDialog.setSize(SHORTCUT_DIALOG_WIDTH, SHORTCUT_DIALOG_HEIGHT);
+        printDimensionDialog.setLayout(new GridBagLayout());
+        isPrint = false;
+        notValidPrintDimensionLabel.setText("");
 
+        JPanel firstLine = new JPanel();
+        firstLine.setLayout(new FlowLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.weightx = 0;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 0;
+        firstLine.add(instructions, c);
 
+        JPanel secondLine = new JPanel();
+        secondLine.setLayout(new FlowLayout());
+        GridBagConstraints c2 = new GridBagConstraints();
+        c2.gridx = 0;
+        c2.gridy = 0;
+        secondLine.add(new JLabel(WIDTH_PRINT_DIALOG), c2);
+        c2.gridx = 1;
+        c2.gridy = 0;
+        secondLine.add(newWidth, c2);
+        c2.gridx = 2;
+        c2.gridy = 0;
+        secondLine.add(Box.createHorizontalStrut(SPACE_TEXTFIELD_PRINT_DIALOG), c2);
+        c2.gridx = 3;
+        c2.gridy = 0;
+        secondLine.add(new JLabel(HEIGHT_PRINT_DIALOG), c2);
+        c2.gridx = 4;
+        c2.gridy = 0;
+        secondLine.add(newHeight, c2);
+        c2.gridx = 5;
+        c2.gridy = 0;
+        secondLine.add(Box.createHorizontalStrut(SPACE_TEXTFIELD_PRINT_DIALOG), c2);
+        secondLine.add(autoFitButton, c2);
 
-//TODO USE DIALOG
-        while (!isValidDimension) {
-            JTextField newWidth = new JTextField(COLUMN_WIDTH_PRINT_DIALOG);
-            JTextField newHeight = new JTextField(COLUMN_WIDTH_PRINT_DIALOG);
-            JLabel instructions = new JLabel("Enter preferred print size or auto-fit to Letter Size");
+        JPanel thirdLine = new JPanel();
+        firstLine.setLayout(new FlowLayout());
+        GridBagConstraints c3 = new GridBagConstraints();
+        c3.gridx = 0;
+        c3.gridy = 0;
+        thirdLine.add(notValidPrintDimensionLabel, c3);
 
+        JPanel fourthLine = new JPanel();
+        firstLine.setLayout(new FlowLayout());
+        GridBagConstraints c4 = new GridBagConstraints();
+        c4.gridx = 0;
+        c4.gridy = 0;
+        fourthLine.add(okButton, c4);
+        c4.gridx = 1;
+        c4.gridy = 0;
+        fourthLine.add(cancelButton, c4);
 
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridBagLayout());
+        GridBagConstraints c5 = new GridBagConstraints();
+        c5.fill = GridBagConstraints.VERTICAL;
+        c5.gridx = 0;
+        c5.gridy = 0;
+        mainPanel.add(firstLine, c5);
+        c5.gridx = 0;
+        c5.gridy = 1;
+        mainPanel.add(secondLine, c5);
+        c5.gridx = 0;
+        c5.gridy = 2;
+        mainPanel.add(thirdLine, c5);
+        c5.gridx = 0;
+        c5.gridy = 3;
+        mainPanel.add(fourthLine, c5);
 
-            JPanel firstLine = new JPanel();
-            firstLine.setLayout(new FlowLayout());
-            GridBagConstraints c = new GridBagConstraints();
-          //  c.anchor = GridBagConstraints.LINE_START;
-            c.weightx = 0;
-            c.fill = GridBagConstraints.HORIZONTAL;
-            c.gridx = 0;
-            c.gridy = 0;
-            firstLine.add(instructions, c);
+        autoFitButton.addActionListener(actionListener);
+        okButton.addActionListener(actionListener);
+        cancelButton.addActionListener(actionListener);
 
-            JPanel secondLine = new JPanel();
-            secondLine.setLayout(new FlowLayout());
-            GridBagConstraints c2 = new GridBagConstraints();
-            c2.gridx = 0;
-            c2.gridy = 0;
-            secondLine.add(new JLabel(WIDTH_PRINT_DIALOG), c2);
-            c2.gridx = 1;
-            c2.gridy = 0;
-            secondLine.add(newWidth, c2);
-            c2.gridx = 2;
-            c2.gridy = 0;
-            secondLine.add(Box.createHorizontalStrut(SPACE_TEXTFIELD_PRINT_DIALOG), c2);
-            c2.gridx = 3;
-            c2.gridy = 0;
-            secondLine.add(new JLabel(HEIGHT_PRINT_DIALOG), c2);
-            c2.gridx = 4;
-            c2.gridy = 0;
-            secondLine.add(newHeight,c2);
-            c2.gridx = 5;
-            c2.gridy = 0;
-            secondLine.add(Box.createHorizontalStrut(SPACE_TEXTFIELD_PRINT_DIALOG), c2);
-            secondLine.add(autoFit,c2);
-
-            JPanel mainPanel = new JPanel();
-            mainPanel.setLayout(new GridBagLayout());
-            GridBagConstraints c3 = new GridBagConstraints();
-            c3.fill = GridBagConstraints.VERTICAL;
-            c3.gridx = 0;
-            c3.gridy = 0;
-            mainPanel.add(firstLine,c3);
-            c3.gridx = 0;
-            c3.gridy = 1;
-            mainPanel.add(secondLine,c3);
-
-
-
-
-            ActionListener actionListener = new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    if (e.getSource() == autoFit ) {
-                        System.out.println("autofit");
-                        isValidDimension = true;
-                        isPrint = true;
-                        scaledHeight = 350;
-                        scaledWidth = 350;
-                    }
-                }
-            };
-            autoFit.addActionListener(actionListener);
-         /*     myPanel.add(Box.createHorizontalStrut(SPACE_TEXTFIELD_PRINT_DIALOG), c);
-            c.gridx = 2;
-            c.gridy = 1;
-            myPanel.add(new JLabel(HEIGHT_PRINT_DIALOG), c);
-             myPanel.add(newHeight,c);
-            c.gridx = 0;
-            c.gridy = 2;
-            JButton autoFit = new JButton("Letter Size");
-            myPanel.add(autoFit,c);(*/
-
-
-            int result = JOptionPane.showConfirmDialog(null, mainPanel,
-                    PRINT_DIMENSIONS_PRINT_DIALOG, JOptionPane.OK_CANCEL_OPTION);
-            if (result == JOptionPane.OK_OPTION) {
-                if (isInteger(newWidth.getText()) && isInteger(newHeight.getText())) {
-                    isValidDimension = true;
-                    isPrint = true;
-                    scaledHeight = Integer.parseInt(newHeight.getText());
-                    scaledWidth = Integer.parseInt(newWidth.getText());
-                }
-            }
-
-            if (result == JOptionPane.CANCEL_OPTION || result == JOptionPane.CLOSED_OPTION) {
-                isPrint = false;
-                break;
-            }
-
-            if(autoFit.isSelected()){
-                newWidth.setText("");
-
-            }
-
-        } // end of while
+        printDimensionDialog.add(mainPanel, c5);
+        printDimensionDialog.setVisible(true);
 
         if (isPrint) {
             print();
         }
     }
 
+    ActionListener actionListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+
+            if (e.getSource() == autoFitButton) {
+                isPrint = true;
+                scaledHeight = HEIGHT_DEFAULT_LETTER_SIZE;
+                scaledWidth = WIDTH_DEFAULT_LETTER_SIZE;
+                printDimensionDialog.dispose();
+            }
+
+            if (e.getSource() == okButton) {
+                if (isInteger(newWidth.getText()) && isInteger(newHeight.getText())) {
+                    isPrint = true;
+                    scaledHeight = Integer.parseInt(newHeight.getText());
+                    scaledWidth = Integer.parseInt(newWidth.getText());
+                    printDimensionDialog.dispose();
+                } else {
+                    notValidPrintDimensionLabel.setForeground(Color.red);
+                    notValidPrintDimensionLabel.setOpaque(true);
+                    notValidPrintDimensionLabel.setText(ERROR_MESSAGE_PRINT_DIALOG);
+                }
+            }
+
+            if (e.getSource() == cancelButton) {
+                isPrint = false;
+                printDimensionDialog.dispose();
+            }
+
+        }
+    };
 
     /**
      * setups the print job

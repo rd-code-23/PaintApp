@@ -303,7 +303,7 @@ public class MainUI {
         GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
         NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
         CheckerboardMenu checkerboardMenu = new CheckerboardMenu(drawArea);
-        printCanvas = new PrintCanvas(drawArea);
+        printCanvas = new PrintCanvas(drawArea,this);
 
         JPanel drawAreaPanel = new JPanel();
         drawAreaPanel.setLayout(new GridBagLayout());
