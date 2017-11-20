@@ -302,7 +302,7 @@ public class MainUI {
         GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
         NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
         CheckerboardMenu checkerboardMenu = new CheckerboardMenu(drawArea);
-        printCanvas = new PrintCanvas(drawArea,this);
+        printCanvas = new PrintCanvas(drawArea, this);
 
         JPanel drawAreaPanel = new JPanel();
         drawAreaPanel.setLayout(new GridBagLayout());
@@ -361,7 +361,7 @@ public class MainUI {
         db_kbShortcuts = new DB_KBShortcuts(shortcuts);
         keboardShortCutPanel = new ShortcutDialog(this, shortcuts);
 
-        MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel,printCanvas, brightnessMenu);
+        MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel, printCanvas, brightnessMenu);
 
         northPanel.add(menuUI, BorderLayout.NORTH);
 

@@ -30,7 +30,6 @@ public class PrintCanvas implements Printable {
     private static final String CANCEL_BUTTON_TEXT_PRINT_DIALOG = "Cancel";
     private static final int WIDTH_DEFAULT_LETTER_SIZE = 575;
     private static final int HEIGHT_DEFAULT_LETTER_SIZE = 775;
-
     private static final String ERROR_MESSAGE_PRINT_DIALOG = "Inputs must be an integer";
 
     private DrawArea drawArea;

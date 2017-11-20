@@ -210,17 +210,17 @@ public class MenuUI extends JMenuBar {
                 importExport.importImage();
             } else if (e.getSource() == iBrightness) {
                 brightnessMenu.showWindow();
-            } else  if (e.getSource() == iGreyscale) {
+            } else if (e.getSource() == iGreyscale) {
                 greyscaleMenu.showWindow();
-            } else  if (e.getSource() == hAbout) {
+            } else if (e.getSource() == hAbout) {
                 AboutMenu.prepareAbout();
             } else if (e.getSource() == iNoise) {
                 noiseGeneratorMenu.showWindow();
             } else if (e.getSource() == iCheckerBoard) {
                 checkerboardMenu.showWindow();
-            } else if (e.getSource() == eKeyboardShortCuts){
+            } else if (e.getSource() == eKeyboardShortCuts) {
                 keyboardShortCutPanel.renderPanel();
-            } else  if (e.getSource() == fPrint) {
+            } else if (e.getSource() == fPrint) {
                 printCanvas.getPrintDimensionsDialog();
             }
         }
