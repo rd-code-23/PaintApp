@@ -509,13 +509,42 @@ public class DrawArea extends JComponent {
     }
 
     /**
+     * Multiply the current layer's hue by some float factor.
+     * (0.0 effectively means set the hue to zero, 0.5 means half hue, 2.0 means double hue)
+     *
+     * @param hueFactor the factor to multiply current hue levels
+     */
+    public void drawLayerHueScaling(float hueFactor) {
+        transformLayerHSB(getCurrentlySelectedLayer().getBufferedImage(),
+                hueFactor, 1f, 1f);
+        drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
+        repaint();
+    }
+
+    /**
      * Multiply the current layer's saturation by some float factor.
      * (0.0 effectively means set the saturation to zero, 0.5 means half saturation, 2.0 means double saturation)
      *
-     * @param scaleFactor the factor to multiply current saturation levels
+     * @param saturationFactor the factor to multiply current saturation levels
      */
-    public void drawLayerSaturationScaling(float scaleFactor) {
-        scaleLayerSaturation(getCurrentlySelectedLayer().getBufferedImage(), scaleFactor);
+    public void drawLayerSaturationScaling(float saturationFactor) {
+        transformLayerHSB(getCurrentlySelectedLayer().getBufferedImage(),
+                1f, saturationFactor, 1f);
+        drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
+        repaint();
+    }
+
+    /**
+     * Multiply the current layer's brightness by some float factor.
+     * (0.0 effectively means set the brightness to zero, 0.5 means half brightness, 2.0 means double brightness)
+     *
+     * NOTE: This may act differently than rescaleOperation.
+     *
+     * @param brightnessFactor the factor to multiply current brightness levels
+     */
+    public void drawLayerBrightnessScaling(float brightnessFactor) {
+        transformLayerHSB(getCurrentlySelectedLayer().getBufferedImage(),
+                1f, 1f, brightnessFactor);
         drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
         repaint();
     }
@@ -525,11 +554,13 @@ public class DrawArea extends JComponent {
      * (0.0 effectively means set the saturation to zero, 0.5 means half saturation, 2.0 means double saturation)
      *
      * @param layer the layer to transform
-     * @param scaleFactor the factor to multiply current saturation levels
+     * @param saturationFactor the factor to multiply current saturation levels
      */
-    private void scaleLayerSaturation(BufferedImage layer, float scaleFactor) {
+    private void transformLayerHSB(BufferedImage layer, float hueFactor, float saturationFactor, float brightnessFactor) {
 
-        scaleFactor = Math.abs(scaleFactor);
+        hueFactor = Math.abs(hueFactor);
+        saturationFactor = Math.abs(saturationFactor);
+        brightnessFactor = Math.abs(brightnessFactor);
 
         Color originalPointColor;
         Color intermediaryTransformation;
@@ -549,13 +580,16 @@ public class DrawArea extends JComponent {
 
                 hsbArray = Color.RGBtoHSB(originalPointColor.getRed(), originalPointColor.getGreen(),
                         originalPointColor.getBlue(), null);
-                hsbArray[1] *= scaleFactor;
+                hsbArray[0] *= hueFactor;
+                hsbArray[1] *= saturationFactor;
+                hsbArray[2] *= brightnessFactor;
                 newRBG = Color.HSBtoRGB(hsbArray[0], hsbArray[1], hsbArray[2]);
 
                 intermediaryTransformation = new Color(newRBG, true);
 
                 newPointColor = new Color(intermediaryTransformation.getRed(), intermediaryTransformation.getGreen(),
                         intermediaryTransformation.getBlue(), alphaPreserve);
+
                 layer.setRGB(x, y, newPointColor.getRGB());
 
             }
