@@ -74,13 +74,6 @@ public class EraserTool extends DrawingTool {
     public void onClick(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         currentX = e.getX();
         currentY = e.getY();
-        ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
-        if (selectedLayer != null) {
-            Graphics2D layerGraphics = initLayerGraphics(selectedLayer.getBufferedImage());
-            layerGraphics.fillOval(currentX - (eraserWidth / 2),
-                    currentY - (eraserWidth / 2), eraserWidth, eraserWidth);
-            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
-        }
     }
 
     @Override
@@ -89,6 +82,13 @@ public class EraserTool extends DrawingTool {
         //set the coordinates to the current point when the mouse is pressed
         currentX = e.getX();
         currentY = e.getY();
+        ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
+        if (selectedLayer != null) {
+            Graphics2D layerGraphics = initLayerGraphics(selectedLayer.getBufferedImage());
+            layerGraphics.fillOval(currentX - (eraserWidth / 2),
+                    currentY - (eraserWidth / 2), eraserWidth, eraserWidth);
+            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+        }
         lastX = currentX;
         lastY = currentY;
 
