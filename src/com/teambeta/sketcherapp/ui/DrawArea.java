@@ -500,10 +500,16 @@ public class DrawArea extends JComponent {
      * Scale the current layer's transparency by a factor
      * (0.5f means half the value, 2.0f means multiply twice)
      *
-     * @param scaleFactor the factor to adjust the transparency
+     * @param transparencyFactor the factor to adjust the transparency
      */
-    public void scaleTransparency(float scaleFactor) {
-        float scaleFactorArray[] = {1f, 1f, 1f, scaleFactor};
+    public void scaleTransparency(float transparencyFactor) {
+        if (transparencyFactor < 0.0f) {
+            transparencyFactor = 0.0f;
+        } else if (transparencyFactor > 1.0f) {
+            transparencyFactor = 1.0f;
+        }
+
+        float scaleFactorArray[] = {1f, 1f, 1f, transparencyFactor};
         float offsetArray[] = {0f, 0f, 0f, 0f};
         rescaleOperation(scaleFactorArray, offsetArray, null);
     }
