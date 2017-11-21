@@ -329,6 +329,7 @@ public class MainUI {
         drawArea = new DrawArea(this);
 
         importExport = new ImportExport(drawArea, this);
+        SaturationMenu saturationMenu = new SaturationMenu(drawArea);
         BrightnessMenu brightnessMenu = new BrightnessMenu(drawArea);
         GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
         NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
@@ -391,7 +392,7 @@ public class MainUI {
         db_kbShortcuts = new DB_KBShortcuts(shortcuts);
         keboardShortCutPanel = new ShortcutDialog(this, shortcuts);
 
-        MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, brightnessMenu, noiseGeneratorMenu,
+        MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, saturationMenu, brightnessMenu, noiseGeneratorMenu,
                 checkerboardMenu, keboardShortCutPanel);
 
 
