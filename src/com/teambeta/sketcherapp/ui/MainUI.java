@@ -282,23 +282,23 @@ public class MainUI {
                 "Exit without exporting"};
 
 
-            int confirmed = JOptionPane.showOptionDialog(null,
-                    "Are you sure you want to quit?", "Confirm Quit",
-                    JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, exitOptions, null);
+        int confirmed = JOptionPane.showOptionDialog(null,
+                "Are you sure you want to quit?", "Confirm Quit",
+                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, exitOptions, null);
 
-            ImportExport importExport = new ImportExport(drawArea,this);
+        ImportExport importExport = new ImportExport(drawArea, this);
 
         if (confirmed == JOptionPane.CANCEL_OPTION) {
-                mainFrame.dispose();
-                //System.exit(0);
-            }
-            if (confirmed == JOptionPane.NO_OPTION) {
-                importExport.exportImage();
-                //mainFrame.dispose();  Ideally would use this instead of the following line, but for some reason it
-                //wont properly close the app. If someone knows why, feel free to fix it
-                System.exit(0);
+            mainFrame.dispose();
+            //System.exit(0);
+        }
+        if (confirmed == JOptionPane.NO_OPTION) {
+            importExport.exportImage();
+            //mainFrame.dispose();  Ideally would use this instead of the following line, but for some reason it
+            //wont properly close the app. If someone knows why, feel free to fix it
+            System.exit(0);
 
-            }
+        }
     }
 
     /**
@@ -313,17 +313,17 @@ public class MainUI {
         mainFrame.setLocationByPlatform(true);
         mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         mainFrame.addWindowListener(
-        new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                if (ImportExport.isExported()) {
-                    System.exit(0);
-                } else {
-                    exit();
-                }
+                new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        if (ImportExport.isExported()) {
+                            System.exit(0);
+                        } else {
+                            exit();
+                        }
 
-            }
-        }
+                    }
+                }
         );
 
         // mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
@@ -397,9 +397,8 @@ public class MainUI {
         keboardShortCutPanel = new ShortcutDialog(this, shortcuts);
 
         MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, brightnessMenu, noiseGeneratorMenu,
-                checkerboardMenu, keboardShortCutPanel);
+                checkerboardMenu, keboardShortCutPanel, printCanvas);
 
-        MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel, printCanvas, brightnessMenu);
 
         northPanel.add(menuUI, BorderLayout.NORTH);
 

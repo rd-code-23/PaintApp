@@ -105,10 +105,8 @@ public class MenuUI extends JMenuBar {
      * Constructor
      */
     public MenuUI(JFrame mainFrame, DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu, BrightnessMenu brightnessMenu,
-                  NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu,ShortcutDialog keyboardShortCutPanel) {
+                  NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu, ShortcutDialog keyboardShortCutPanel, PrintCanvas printCanvas) {
         this.mainFrame = mainFrame;
-    public MenuUI(DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu,
-                  NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu, ShortcutDialog keyboardShortCutPanel, PrintCanvas printCanvas, BrightnessMenu brightnessMenu) {
         this.drawArea = drawArea;
         this.importExport = importExport;
         this.greyscaleMenu = greyscaleMenu;
@@ -219,7 +217,7 @@ public class MenuUI extends JMenuBar {
             if (e.getSource() == iExport) {
                 importExport.exportImage();
             } else if (e.getSource() == iImport) {
-               importExport.importImage();
+                importExport.importImage();
             } else if (e.getSource() == iGreyscale) {
                 importExport.importImage();
             } else if (e.getSource() == iBrightness) {
@@ -228,7 +226,7 @@ public class MenuUI extends JMenuBar {
                 greyscaleMenu.showWindow();
             } else if (e.getSource() == iBrightness) {
                 brightnessMenu.showWindow();
-            } else  if (e.getSource() == hAbout) {
+            } else if (e.getSource() == hAbout) {
             } else if (e.getSource() == hAbout) {
                 AboutMenu.prepareAbout();
             } else if (e.getSource() == iNoise) {
@@ -238,7 +236,7 @@ public class MenuUI extends JMenuBar {
             } else if (e.getSource() == eKeyboardShortCuts) {
                 keyboardShortCutPanel.renderPanel();
             } else if (e.getSource() == fClose) {
-               System.exit(0);
+                System.exit(0);
             } else if (e.getSource() == fNew) {
                 Dimension dimension = NewWindow.displayPrompt();
                 if (dimension != null) {
