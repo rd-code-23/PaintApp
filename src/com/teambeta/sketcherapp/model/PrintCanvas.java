@@ -8,10 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.awt.print.PageFormat;
-import java.awt.print.Printable;
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
+import java.awt.print.*;
 import java.util.LinkedList;
 
 public class PrintCanvas implements Printable {
@@ -24,8 +21,8 @@ public class PrintCanvas implements Printable {
     private static final String PRINT_DIMENSIONS_PRINT_DIALOG = "Print Dimensions";
     private static final int SHORTCUT_DIALOG_WIDTH = 400;
     private static final int SHORTCUT_DIALOG_HEIGHT = 400;
-    private static final String INSTRUCTION_PRINT_DIALOG = "Enter preferred print size or auto-fit to Letter Size";
-    private static final String LETTER_SIZE_PRINT_DIALOG = "Letter Size";
+    private static final String INSTRUCTION_PRINT_DIALOG = "Enter preferred print size or use auto-fit";
+    private static final String AUTO_FIT_PRINT_DIALOG = "Auto-fit";
     private static final String OK_BUTTON_TEXT_PRINT_DIALOG = "Ok";
     private static final String CANCEL_BUTTON_TEXT_PRINT_DIALOG = "Cancel";
     private static final int WIDTH_DEFAULT_LETTER_SIZE = 575;
@@ -59,7 +56,7 @@ public class PrintCanvas implements Printable {
         newWidth = new JTextField(COLUMN_WIDTH_PRINT_DIALOG);
         newHeight = new JTextField(COLUMN_WIDTH_PRINT_DIALOG);
         instructions = new JLabel(INSTRUCTION_PRINT_DIALOG);
-        autoFitButton = new JButton(LETTER_SIZE_PRINT_DIALOG);
+        autoFitButton = new JButton(AUTO_FIT_PRINT_DIALOG);
         okButton = new JButton(OK_BUTTON_TEXT_PRINT_DIALOG);
         cancelButton = new JButton(CANCEL_BUTTON_TEXT_PRINT_DIALOG);
         printDimensionDialog = new JDialog(mainUI.getMainFrame(), PRINT_DIMENSIONS_PRINT_DIALOG, true);
@@ -188,26 +185,38 @@ public class PrintCanvas implements Printable {
             return NO_SUCH_PAGE;
         }
 
-        Graphics2D g = (Graphics2D) graphics;
-        g.translate(pageFormat.getImageableX(), pageFormat.getImageableY()); // modifies the Graphics2D object to make its origin (0, 0) match the corner of the imageable area (the area of the page we can print on) so we don't print for nothing in an area.
-        BufferedImage canvas = new BufferedImage(scaledWidth, scaledHeight, BufferedImage.TYPE_INT_RGB);
+        BufferedImage canvas = new BufferedImage(drawArea.getWidth(), drawArea.getHeight(), BufferedImage.TYPE_INT_RGB);
+        double imageableX = pageFormat.getImageableX();
+        double imageableY = pageFormat.getImageableY();
+        double imageableWidth = pageFormat.getImageableWidth();
+
+        int pageWidth = 0;
+        int pageHeight = 0;
         drawLayersOntoCanvas(canvas, drawArea);
-        g.drawImage(canvas, 0, 0, null);
+        Graphics2D g = (Graphics2D) graphics;
+        //calculation was taken from
+        // https://stackoverflow.com/questions/18404553/proper-way-of-printing-a-bufferedimage-in-java
+        if (pageFormat.getOrientation() == PageFormat.PORTRAIT) {
+            pageWidth = (int) Math.min(imageableWidth, (double) canvas.getWidth());
+            pageHeight = pageWidth * canvas.getHeight() / canvas.getWidth();
+        } else {
+            pageWidth = (int) Math.min(imageableWidth, (double) canvas.getWidth());
+            pageHeight = pageWidth * canvas.getHeight() / canvas.getWidth();
+        }
+
+        g.drawImage(canvas, (int) imageableX, (int) imageableY, pageWidth, pageHeight, null);
         return PAGE_EXISTS;
     }
+    
 
-    /**
-     * scales the canvas
-     * TAKEN FROM
-     * https://stackoverflow.com/questions/11367324/how-do-i-scale-a-bufferedimage?noredirect=1&lq=1
-     */
-    private BufferedImage getScaledImage(Image srcImg, int w, int h) {
-        BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TRANSLUCENT);
-        Graphics2D g2 = resizedImg.createGraphics();
-        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-        g2.drawImage(srcImg, 0, 0, w, h, null);
-        g2.dispose();
-        return resizedImg;
+    public static BufferedImage rotateClockwise90(BufferedImage src) {
+        int w = src.getWidth();
+        int h = src.getHeight();
+        BufferedImage dest = new BufferedImage(h, w, src.getType());
+        for (int y = 0; y < h; y++)
+            for (int x = 0; x < w; x++)
+                dest.setRGB(y, x, src.getRGB(x, y));
+        return dest;
     }
 
     /**
@@ -225,9 +234,8 @@ public class PrintCanvas implements Printable {
     /**
      * prints the canvas
      */
-    private void print() {
+    public void print() {
         PrinterJob job = PrinterJob.getPrinterJob(); //Get the printer's job list
-
         job.setPrintable(this);
         if (job.printDialog() == true) {
             try {
@@ -268,7 +276,7 @@ public class PrintCanvas implements Printable {
         BufferedImage[] bufferedImages = new BufferedImage[layers.size()];
         for (int i = 0; i < bufferedImages.length; i++) {
             if (layers.get(i).isVisible()) {
-                bufferedImages[i] = getScaledImage(layers.get(i).getBufferedImage(), scaledWidth, scaledHeight);
+                bufferedImages[i] = layers.get(i).getBufferedImage();
             }
         }
         drawLayersOntoCanvas(bufferedImages, canvas);
