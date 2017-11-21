@@ -3,8 +3,6 @@ package com.teambeta.sketcherapp.ui;
 import com.teambeta.sketcherapp.Database.DB_KBShortcuts;
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.ImportExport;
-import com.teambeta.sketcherapp.model.AboutMenu;
-import com.teambeta.sketcherapp.model.NewWindow;
 import com.teambeta.sketcherapp.model.Shortcuts;
 
 import javax.swing.*;
@@ -15,11 +13,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.awt.event.KeyEvent;
-import java.io.File;
 
 /**
  * Main UI class to wrap all GUI elements together.
@@ -61,12 +57,12 @@ public class MainUI {
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
-    private static int APPLICATION_WIDTH = 1920;
-    private static int APPLICATION_HEIGHT = 1080;
-    private static final int EDITOR_PANEL_WIDTH = 100;
+    private static final int APPLICATION_WIDTH = 1920;
+    private static final int APPLICATION_HEIGHT = 1080;
+    private static final int EDITOR_PANEL_WIDTH = 300;
     private static final int EDITOR_PANEL_HEIGHT = 300;
-    public static int CANVAS_WIDTH = 1920;
-    public static int CANVAS_HEIGHT = 1080;
+    private int canvasWidth;
+    private int canvasHeight;
 
     private JButton clearButton;
     private JButton brushToolButton;
@@ -92,7 +88,7 @@ public class MainUI {
     private JPanel canvasTools;
     private DB_KBShortcuts db_kbShortcuts;
 
-    private static final String APPLICATION_LOGO_IMAGE_DIRECTORY = "res/BPIcon.png";
+    private static final String APPLICATION_LOGO_IMAGE_DIRECTORY = "src/res/BPIcon.png";
 
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -196,9 +192,9 @@ public class MainUI {
     /**
      * Constructor.
      */
-    public MainUI(int applicationWidth, int applicationHeight) {
-        APPLICATION_WIDTH = applicationWidth;
-        APPLICATION_HEIGHT = applicationHeight;
+    public MainUI(int canvasWidth, int canvasHeight) {
+        this.canvasWidth = canvasWidth;
+        this.canvasHeight = canvasHeight;
         initDrawingTools();
         prepareGUI();
     }
@@ -244,10 +240,6 @@ public class MainUI {
 
     public JFrame getMainFrame() {
         return mainFrame;
-    }
-
-    public void setMainFrame(JFrame mainFrame) {
-        this.mainFrame = mainFrame;
     }
 
     /**
@@ -314,9 +306,6 @@ public class MainUI {
         mainFrame.setSize(APPLICATION_WIDTH, APPLICATION_HEIGHT);
         mainFrame.getContentPane().setBackground(Color.DARK_GRAY);
 
-        mainFrame.setSize(APPLICATION_WIDTH, APPLICATION_HEIGHT);
-        mainFrame.getContentPane().setBackground(Color.DARK_GRAY);
-
         mainFrame.setLocationByPlatform(true);
         mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         mainFrame.addWindowListener(
@@ -349,8 +338,8 @@ public class MainUI {
         drawAreaPanel.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.ipady = CANVAS_HEIGHT;
-        c.ipadx = CANVAS_WIDTH;
+        c.ipady = canvasHeight;
+        c.ipadx = canvasWidth;
         drawAreaPanel.setBackground(Color.decode("#222222"));
         drawAreaPanel.add(drawArea, c);
         mainContent.add(drawAreaPanel, BorderLayout.CENTER);
@@ -694,6 +683,4 @@ public class MainUI {
     public DB_KBShortcuts getDb_kbShortcuts() {
         return db_kbShortcuts;
     }
-
-
 }
