@@ -498,7 +498,7 @@ public class DrawArea extends JComponent {
 
     /**
      * Scale the current layer's transparency by a factor
-     * (0.5f means half the value, 2.0f means multiply twice)
+     * (0.5f means half the value, 1.0 means maintain current alpha, 2.0 means double the alpha value.)
      *
      * @param transparencyFactor the factor to adjust the transparency
      */
