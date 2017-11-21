@@ -508,4 +508,58 @@ public class DrawArea extends JComponent {
         rescaleOperation(scaleFactorArray, offsetArray, null);
     }
 
+    /**
+     * Multiply the current layer's saturation by some float factor.
+     * (0.0 effectively means set the saturation to zero, 0.5 means half saturation, 2.0 means double saturation)
+     *
+     * @param scaleFactor the factor to multiply current saturation levels
+     */
+    public void drawLayerSaturationScaling(float scaleFactor) {
+        scaleLayerSaturation(getCurrentlySelectedLayer().getBufferedImage(), scaleFactor);
+        drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
+        repaint();
+    }
+
+    /**
+     * Multiply the current layer's saturation by some float factor.
+     * (0.0 effectively means set the saturation to zero, 0.5 means half saturation, 2.0 means double saturation)
+     *
+     * @param layer the layer to transform
+     * @param scaleFactor the factor to multiply current saturation levels
+     */
+    private void scaleLayerSaturation(BufferedImage layer, float scaleFactor) {
+
+        scaleFactor = Math.abs(scaleFactor);
+
+        Color originalPointColor;
+        Color intermediaryTransformation;
+        Color newPointColor;
+        float[] hsbArray;
+        int alphaPreserve;
+        int newRBG;
+
+        for (int x = 0; x < layer.getWidth(); ++x) {
+            for (int y = 0; y < layer.getHeight(); ++y) {
+
+                originalPointColor = new Color(layer.getRGB(x, y), true);
+                if (originalPointColor.getRGB() == -1) {
+                    continue;
+                }
+                alphaPreserve = originalPointColor.getAlpha();
+
+                hsbArray = Color.RGBtoHSB(originalPointColor.getRed(), originalPointColor.getGreen(),
+                        originalPointColor.getBlue(), null);
+                hsbArray[1] *= scaleFactor;
+                newRBG = Color.HSBtoRGB(hsbArray[0], hsbArray[1], hsbArray[2]);
+
+                intermediaryTransformation = new Color(newRBG, true);
+
+                newPointColor = new Color(intermediaryTransformation.getRed(), intermediaryTransformation.getGreen(),
+                        intermediaryTransformation.getBlue(), alphaPreserve);
+                layer.setRGB(x, y, newPointColor.getRGB());
+
+            }
+        }
+    }
+
 }
