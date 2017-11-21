@@ -23,6 +23,8 @@ public class DrawArea extends JComponent {
     private static final int TRANSPARENCY_CHECKER_BOARD_SIZE = 35;
     private MainUI mainUI;
     private BufferedImage canvasBufferedImage;
+    private static BufferedImage layersAboveSelectedLayer;
+    private static BufferedImage layersBelowSelectedLayer;
     private LinkedList<ImageLayer> drawingLayers;
     private ImageLayer currentlySelectedLayer;
     private static BufferedImage previewBufferedImage;
@@ -102,6 +104,7 @@ public class DrawArea extends JComponent {
      * Redraws the layers onto the canvas.
      */
     public void redrawLayers() {
+        refreshBufferedImages();
         drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
     }
 
@@ -111,34 +114,24 @@ public class DrawArea extends JComponent {
      * @param layers the layers to draw
      * @param canvas the canvasBufferedImage to draw to
      */
-    private static void drawLayersOntoCanvas(BufferedImage[] layers, BufferedImage canvas) {
+    public static void drawLayersOntoCanvas(LinkedList<ImageLayer> layers, BufferedImage canvas) {
         Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
         //clear the canvasBufferedImage.
         clearBufferImageToTransparent(canvas);
         //draw the layers in order
         AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
         canvasGraphics.setComposite(alphaComposite);
-        for (BufferedImage layer : layers) {
-            if (layer != null) {
-                canvasGraphics.drawImage(layer, 0, 0, null);
-            }
-        }
-    }
 
-    /**
-     * Draws the provided layers onto the provided canvasBufferedImage.
-     *
-     * @param layers the layers to draw
-     * @param canvas the canvasBufferedImage to draw to
-     */
-    public static void drawLayersOntoCanvas(LinkedList<ImageLayer> layers, BufferedImage canvas) {
-        BufferedImage[] bufferedImages = new BufferedImage[layers.size()];
-        for (int i = 0; i < bufferedImages.length; i++) {
-            if (layers.get(i).isVisible()) {
-                bufferedImages[i] = layers.get(i).getBufferedImage();
+        canvasGraphics.drawImage(layersBelowSelectedLayer, 0, 0, null);
+        for (ImageLayer layer : layers) {
+            if (layer != null) {
+                if (layer.isSelected() && layer.isVisible()) {
+                    canvasGraphics.drawImage(layer.getBufferedImage(), 0, 0, null);
+                }
             }
         }
-        drawLayersOntoCanvas(bufferedImages, canvas);
+        canvasGraphics.drawImage(layersAboveSelectedLayer, 0, 0, null);
+
     }
 
     /**
@@ -172,6 +165,8 @@ public class DrawArea extends JComponent {
         // create a canvasBufferedImage to draw on
         canvasBufferedImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
         previewBufferedImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+        layersAboveSelectedLayer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+        layersBelowSelectedLayer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
         checkerboardImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
         fillCheckerPattern(checkerboardImage,
                 this.getWidth() / TRANSPARENCY_CHECKER_BOARD_SIZE,
@@ -183,18 +178,45 @@ public class DrawArea extends JComponent {
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         if (drawingLayers.isEmpty()) {
             drawingLayers.add(new ImageLayer(new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB)));
-            drawingLayers.add(new ImageLayer(new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB)));
             currentlySelectedLayer = drawingLayers.get(0);
             currentlySelectedLayer.setSelected(true);
             LayersPanel layersPanel = mainUI.getLayersPanel();
             DefaultListModel<ImageLayer> listModel = layersPanel.getListModel();
             listModel.addElement(drawingLayers.get(0));
-            listModel.addElement(drawingLayers.get(1));
             layersPanel.getListOfLayers().setSelectedIndex(0);
         }
         // clear draw area
         clear();
+        refreshBufferedImages();
         drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
+    }
+
+    /**
+     * Blend the drawArea layers above and below the selected layer into two BufferedImages.
+     */
+    private void refreshBufferedImages() {
+        Graphics2D layersAboveSelectedLayerGraphics = (Graphics2D) layersAboveSelectedLayer.getGraphics();
+        Graphics2D layersBelowSelectedLayerGraphics = (Graphics2D) layersBelowSelectedLayer.getGraphics();
+        //clear the BufferedImages.
+        clearBufferImageToTransparent(layersAboveSelectedLayer);
+        clearBufferImageToTransparent(layersBelowSelectedLayer);
+        //blend the layers
+        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
+        layersAboveSelectedLayerGraphics.setComposite(alphaComposite);
+        layersBelowSelectedLayerGraphics.setComposite(alphaComposite);
+        int indexOfSelectedLayer = drawingLayers.indexOf(currentlySelectedLayer);
+        for (int i = 0; i < indexOfSelectedLayer; i++) {
+            ImageLayer layer = drawingLayers.get(i);
+            if (layer.isVisible()) {
+                layersBelowSelectedLayerGraphics.drawImage(layer.getBufferedImage(), 0, 0, null);
+            }
+        }
+        for (int i = indexOfSelectedLayer + 1; i < drawingLayers.size(); i++) {
+            ImageLayer layer = drawingLayers.get(i);
+            if (layer.isVisible()) {
+                layersAboveSelectedLayerGraphics.drawImage(layer.getBufferedImage(), 0, 0, null);
+            }
+        }
     }
 
     /**
@@ -446,15 +468,44 @@ public class DrawArea extends JComponent {
 
     /**
      * Use the RescaleOp class to transform an image's brightness and/or contrast
+     * This assumes that the alpha layer remain as-is
      *
      * @param scaleFactor factor to adjust BufferedImage contrast
-     * @param offset factor to adjust BufferedImage brightness
+     * @param offset offset to adjust BufferedImage brightness
+     * @param hints the RenderingHints to use
      */
-    public void rescaleOperation(float scaleFactor, float offset) {
-        RescaleOp transformationOperation = new RescaleOp(scaleFactor, offset, null);
+    public void rescaleOperation(float scaleFactor, float offset, RenderingHints hints) {
+        float scaleFactorArray[] = {scaleFactor, scaleFactor, scaleFactor, 1f};
+        float offsetArray[] = {offset, offset, offset, 0f};
+        rescaleOperation(scaleFactorArray, offsetArray, hints);
+    }
+
+    /**
+     * Use the RescaleOp class to transform an image's brightness and/or contrast
+     * Argument arrays are 4 floats-wide {RED, GREEN, BLUE, ALPHA}
+     *
+     * @param scaleFactor scaleFactor array to adjust BufferedImage contrast
+     * @param offset offset array to adjust BufferedImage brightness
+     * @param hints the RenderingHints to use
+     */
+    public void rescaleOperation(float[] scaleFactor, float[] offset, RenderingHints hints) {
+        RescaleOp transformationOperation = new RescaleOp(scaleFactor, offset, hints);
         transformationOperation.filter(this.currentlySelectedLayer.getBufferedImage(),
                 this.currentlySelectedLayer.getBufferedImage());
         drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
         repaint();
     }
+
+    /**
+     * Scale the current layer's transparency by a factor
+     * (0.5f means half the value, 2.0f means multiply twice)
+     *
+     * @param scaleFactor the factor to adjust the transparency
+     */
+    public void scaleTransparency(float scaleFactor) {
+        float scaleFactorArray[] = {1f, 1f, 1f, scaleFactor};
+        float offsetArray[] = {0f, 0f, 0f, 0f};
+        rescaleOperation(scaleFactorArray, offsetArray, null);
+    }
+
 }
