@@ -91,6 +91,7 @@ public class MainUI {
     private ImportExport importExport;
     private JPanel canvasTools;
     private DB_KBShortcuts db_kbShortcuts;
+    private JScrollPane scroll;
 
     private static final String APPLICATION_LOGO_IMAGE_DIRECTORY = "res/BPIcon.png";
 
@@ -354,6 +355,11 @@ public class MainUI {
         drawAreaPanel.setBackground(Color.decode("#222222"));
         drawAreaPanel.add(drawArea, c);
         mainContent.add(drawAreaPanel, BorderLayout.CENTER);
+        scroll = new JScrollPane(drawAreaPanel);
+        scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        drawAreaPanel.add(scroll);
+
 
         /* START MAINUI BUTTONS */
         clearButton = new JButton(CLEAR_BUTTON_TEXT);
