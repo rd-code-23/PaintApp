@@ -313,10 +313,6 @@ public class MainUI {
         selectedDrawingTool = brushTool;
     }
 
-    public LayersPanel getLayersPanel() {
-        return layersPanel;
-    }
-
     /**
      * Class to listen for changes in the widthChanger slider.
      */
@@ -371,51 +367,30 @@ public class MainUI {
                 "Exit without exporting"};
 
 
-            int confirmed = JOptionPane.showOptionDialog(null,
-                    "Are you sure you want to quit?", "Confirm Quit",
-                    JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, exitOptions, null);
+        int confirmed = JOptionPane.showOptionDialog(null,
+                "Are you sure you want to quit?", "Confirm Quit",
+                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, exitOptions, null);
 
-            ImportExport importExport = new ImportExport(drawArea,this);
+        ImportExport importExport = new ImportExport(drawArea, this);
 
         if (confirmed == JOptionPane.CANCEL_OPTION) {
-                mainFrame.dispose();
-                //System.exit(0);
-            }
-            if (confirmed == JOptionPane.NO_OPTION) {
-                importExport.exportImage();
-                //mainFrame.dispose();  Ideally would use this instead of the following line, but for some reason it
-                //wont properly close the app. If someone knows why, feel free to fix it
-                System.exit(0);
+            mainFrame.dispose();
+            //System.exit(0);
+        }
+        if (confirmed == JOptionPane.NO_OPTION) {
+            importExport.exportImage();
+            //mainFrame.dispose();  Ideally would use this instead of the following line, but for some reason it
+            //wont properly close the app. If someone knows why, feel free to fix it
+            System.exit(0);
 
-            }
+        }
     }
 
     /**
      * Build main GUI
      */
     private void prepareGUI() {
-        mainFrame = new JFrame(APPLICATION_NAME);
-        mainFrame.setIconImage(new ImageIcon(APPLICATION_LOGO_IMAGE_DIRECTORY).getImage());
-        mainFrame.setSize(APPLICATION_WIDTH, APPLICATION_HEIGHT);
-        mainFrame.getContentPane().setBackground(Color.DARK_GRAY);
-
-        mainFrame.setLocationByPlatform(true);
-        mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        mainFrame.addWindowListener(
-        new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                if (ImportExport.isExported()) {
-                    System.exit(0);
-                } else {
-                    exit();
-                }
-
-            }
-        }
-        );
-
-        // mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+        initializeMainFrame();
 
         Container mainContent = mainFrame.getContentPane();
         mainContent.setLayout(new BorderLayout());
@@ -427,6 +402,84 @@ public class MainUI {
         NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
         CheckerboardMenu checkerboardMenu = new CheckerboardMenu(drawArea);
 
+        initializeDrawArea(mainContent);
+        initializeButtons();
+        initializeCanvasTools();
+
+        /* END MAIN UI BUTTONS */
+        JPanel northPanel = new JPanel();
+        northPanel.setLayout(new BorderLayout());
+
+        //setting up the shortcuts and database
+        shortcuts = new Shortcuts(canvasTools, this);
+        db_kbShortcuts = new DB_KBShortcuts(shortcuts);
+        keboardShortCutPanel = new ShortcutDialog(this, shortcuts);
+
+        MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, brightnessMenu, noiseGeneratorMenu,
+                checkerboardMenu, keboardShortCutPanel);
+
+
+        northPanel.add(menuUI, BorderLayout.NORTH);
+        initializeToolSettings(northPanel);
+        initializeWidthChanger();
+
+        JPanel colorPanel = initializeColorPanel();
+        initializeColorChooserPanel(colorPanel);
+
+        JPanel westPanel = initializeWestPanel(colorPanel);
+        mainContent.add(westPanel, BorderLayout.WEST);
+
+        JPanel editorPanel = initializeEditorPanel();
+        mainContent.add(editorPanel, BorderLayout.EAST);
+        mainContent.add(northPanel, BorderLayout.NORTH);
+
+        // Standard ActionListeners do not properly send updates to the text tool. PropertyChangeListeners work better.
+        textToolSettings.getCaesarShiftField().addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                textTool.setCaesarShiftValue(textToolSettings.getCaesarShiftValue());
+            }
+        });
+
+        if (db_kbShortcuts.isTableExists()) {
+            generateDBDefaultKeyBindings();
+            db_kbShortcuts.generateDBKeyBindings();
+        } else {
+            db_kbShortcuts.createTable();
+            generateDefaultKeyBindings();
+        }
+    }
+
+    /**
+     * Set up main frame of the application.
+     */
+    private void initializeMainFrame() {
+        mainFrame = new JFrame(APPLICATION_NAME);
+        mainFrame.setIconImage(new ImageIcon(APPLICATION_LOGO_IMAGE_DIRECTORY).getImage());
+        mainFrame.setSize(APPLICATION_WIDTH, APPLICATION_HEIGHT);
+        mainFrame.getContentPane().setBackground(Color.DARK_GRAY);
+
+        mainFrame.setLocationByPlatform(true);
+        mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        mainFrame.addWindowListener(
+                new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        if (ImportExport.isExported()) {
+                            System.exit(0);
+                        } else {
+                            exit();
+                        }
+                    }
+                });
+    }
+
+    /**
+     * Set up draw area component.
+     *
+     * @param mainContent container.
+     */
+    private void initializeDrawArea(Container mainContent) {
         JPanel drawAreaPanel = new JPanel();
         drawAreaPanel.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -436,8 +489,12 @@ public class MainUI {
         drawAreaPanel.setBackground(Color.decode("#222222"));
         drawAreaPanel.add(drawArea, c);
         mainContent.add(drawAreaPanel, BorderLayout.CENTER);
+    }
 
-        /* START MAINUI BUTTONS */
+    /**
+     * Initialize tool buttons.
+     */
+    private void initializeButtons() {
         clearButton = new JButton(new ImageIcon(CLEAR_ICON_DEFAULT));
         selectionButton = new JButton(new ImageIcon(SELECTION_ICON_DEFAULT));
         brushToolButton = new JButton(new ImageIcon(BRUSH_ICON_DEFAULT));
@@ -454,28 +511,31 @@ public class MainUI {
         airBrushToolButton = new JButton(new ImageIcon(AIR_BRUSH_ICON_DEFAULT));
         triangleToolButton = new JButton(new ImageIcon(TRIANGLE_ICON_DEFAULT));
         highlightedButton = null;
+    }
 
+    /**
+     * Setup tool icons and action listeners for canvas tools.
+     */
+    private void initializeCanvasTools() {
         // Add a button to this array to register to actionListener and canvasTools
-        // The order of this list determines the order of the buttons in the generated UI. Index -> 0 = Position -> First
+        // The order of this list determines the order of the buttons in the generated UI. Index -> 0 = Position ->
+        // First
         JButton[] buttonContainer = {
                 clearButton, selectionButton, brushToolButton, airBrushToolButton, eraserToolButton, lineToolButton,
                 fanToolButton, rectangleToolButton, ellipseToolButton, triangleToolButton,
                 paintBucketToolButton, celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton
         };
-
         String[] buttonHoverContainer = {
                 CLEAR_ICON_HOVER, SELECTION_ICON_HOVER, BRUSH_ICON_HOVER, AIR_BRUSH_ICON_HOVER, ERASER_ICON_HOVER,
                 LINE_ICON_HOVER, FAN_ICON_HOVER, SQUARE_ICON_HOVER, CIRCLE_ICON_HOVER, TRIANGLE_ICON_HOVER,
                 BUCKET_ICON_HOVER, CELTIC_ICON_HOVER, DNA_ICON_HOVER, TEXT_ICON_HOVER, EYEDROP_ICON_HOVER
         };
-
         String[] buttonDefaultContainer = {
                 CLEAR_ICON_DEFAULT, SELECTION_ICON_DEFAULT, BRUSH_ICON_DEFAULT, AIR_BRUSH_ICON_DEFAULT,
                 ERASER_ICON_DEFAULT, LINE_ICON_DEFAULT, FAN_ICON_DEFAULT, SQUARE_ICON_DEFAULT, CIRCLE_ICON_DEFAULT,
                 TRIANGLE_ICON_DEFAULT, BUCKET_ICON_DEFAULT, CELTIC_ICON_DEFAULT, DNA_ICON_DEFAULT,
                 TEXT_ICON_DEFAULT, EYEDROP_ICON_DEFAULT
         };
-
         String[] buttonHighlightedContainer = {
                 CLEAR_ICON_HIGHLIGHTED, SELECTION_ICON_HIGHLIGHTED, BRUSH_ICON_HIGHLIGHTED, AIR_BRUSH_ICON_HIGHLIGHTED,
                 ERASER_ICON_HIGHLIGHTED, LINE_ICON_HIGHLIGHTED, FAN_ICON_HIGHLIGHTED, SQUARE_ICON_HIGHLIGHTED,
@@ -523,22 +583,30 @@ public class MainUI {
             canvasTools.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
         }
         canvasTools.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+    }
 
-        /* END MAIN UI BUTTONS */
-        JPanel northPanel = new JPanel();
-        northPanel.setLayout(new BorderLayout());
+    /**
+     * Set up color panel.
+     *
+     * @return color panel.
+     */
+    private JPanel initializeColorPanel() {
+        JPanel colorPanel = new JPanel();
+        colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.Y_AXIS));
+        colorPanel.setBackground(Color.DARK_GRAY);
+        final Dimension CANVAS_TOOLS_MAX_SIZE = canvasTools.getMaximumSize();
+        colorPanel.setMaximumSize(new Dimension((int) CANVAS_TOOLS_MAX_SIZE.getWidth(), COLOR_PANEL_HEIGHT));
+        colorPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
+        colorChooser = new ColorChooser();
+        return colorPanel;
+    }
 
-        //setting up the shortcuts and database
-        shortcuts = new Shortcuts(canvasTools, this);
-        db_kbShortcuts = new DB_KBShortcuts(shortcuts);
-        keboardShortCutPanel = new ShortcutDialog(this, shortcuts);
-
-        MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, brightnessMenu, noiseGeneratorMenu,
-                checkerboardMenu, keboardShortCutPanel);
-
-
-        northPanel.add(menuUI, BorderLayout.NORTH);
-
+    /**
+     * Set up tool settings panel.
+     *
+     * @param northPanel for the application.
+     */
+    private void initializeToolSettings(JPanel northPanel) {
         JPanel toolSettings = new JPanel();
         toolSettings.setLayout(new BoxLayout(toolSettings, BoxLayout.X_AXIS));
         toolSettings.setBackground(Color.DARK_GRAY);
@@ -551,22 +619,26 @@ public class MainUI {
             northPanel.add(textToolSettings, BorderLayout.EAST);
             textTool.setFont(textToolSettings.getFontFromSelector());
         }
+    }
 
-        MainUI.listenForSlider listenForSlider = new MainUI.listenForSlider();
+    /**
+     * Set up width changer for tools.
+     */
+    private void initializeWidthChanger() {
+        listenForSlider listenForSlider = new listenForSlider();
         widthChanger.getSliderComponent().addChangeListener(listenForSlider);
         widthChanger.getJTextFieldComponent().addActionListener(actionListener);
         textToolSettings.addActionListener(actionListener);
         widthChanger.getCheckBoxGlobalSizeComponent().addActionListener(actionListener);
         widthChanger.getFillBox().addActionListener(actionListener);
+    }
 
-        JPanel colorPanel = new JPanel();
-        colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.Y_AXIS));
-        colorPanel.setBackground(Color.DARK_GRAY);
-        final Dimension CANVAS_TOOLS_MAX_SIZE = canvasTools.getMaximumSize();
-        colorPanel.setMaximumSize(new Dimension((int) CANVAS_TOOLS_MAX_SIZE.getWidth(), COLOR_PANEL_HEIGHT));
-        colorPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
-        colorChooser = new ColorChooser();
-
+    /**
+     * Set up color chooser components.
+     *
+     * @param colorPanel for for the application.
+     */
+    private void initializeColorChooserPanel(JPanel colorPanel) {
         JPanel colorChooserPanel = new JPanel();
         colorChooserPanel.setLayout(new GridBagLayout());
         GridBagConstraints colorChooserConstraints = new GridBagConstraints();
@@ -578,9 +650,30 @@ public class MainUI {
         colorChooserConstraints.insets = new Insets(PANEL_SECTION_SPACING, 0, 0, 0);
         colorChooserPanel.add(eyeDropperStats, colorChooserConstraints);
         colorPanel.add(colorChooserPanel);
-
         colorPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+    }
 
+    /**
+     * Set up editor panel.
+     *
+     * @return editor panel of the application.
+     */
+    private JPanel initializeEditorPanel() {
+        JPanel editorPanel = new JPanel();
+        editorPanel.setLayout(new BorderLayout());
+        editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
+        layersPanel = new LayersPanel(drawArea);
+        editorPanel.add(layersPanel, BorderLayout.EAST);
+        return editorPanel;
+    }
+
+    /**
+     * Set up west panel.
+     *
+     * @param colorPanel of the application.
+     * @return westPanel of the application.
+     */
+    private JPanel initializeWestPanel(JPanel colorPanel) {
         JPanel westPanel = new JPanel();
         westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
         westPanel.setPreferredSize(new Dimension(WEST_PANEL_WIDTH, 0));
@@ -589,32 +682,7 @@ public class MainUI {
         westPanel.add(canvasTools);
         westPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
         westPanel.add(colorPanel);
-
-        mainContent.add(westPanel, BorderLayout.WEST);
-
-        JPanel editorPanel = new JPanel();
-        editorPanel.setLayout(new BorderLayout());
-        editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
-        layersPanel = new LayersPanel(drawArea);
-        editorPanel.add(layersPanel, BorderLayout.EAST);
-        mainContent.add(editorPanel, BorderLayout.EAST);
-        mainContent.add(northPanel, BorderLayout.NORTH);
-
-        // Standard ActionListeners do not properly send updates to the text tool. PropertyChangeListeners work better.
-        textToolSettings.getCaesarShiftField().addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                textTool.setCaesarShiftValue(textToolSettings.getCaesarShiftValue());
-            }
-        });
-
-        if (db_kbShortcuts.isTableExists()) {
-            generateDBDefaultKeyBindings();
-            db_kbShortcuts.generateDBKeyBindings();
-        } else {
-            db_kbShortcuts.createTable();
-            generateDefaultKeyBindings();
-        }
+        return westPanel;
     }
 
     /**
@@ -640,7 +708,7 @@ public class MainUI {
                 ellipseToolButton.setIcon(new ImageIcon(CIRCLE_ICON_DEFAULT));
             } else if (highlightedButton == triangleToolButton) {
                 triangleToolButton.setIcon(new ImageIcon(TRIANGLE_ICON_DEFAULT));
-            } else if (highlightedButton ==paintBucketToolButton) {
+            } else if (highlightedButton == paintBucketToolButton) {
                 paintBucketToolButton.setIcon(new ImageIcon(BUCKET_ICON_DEFAULT));
             } else if (highlightedButton == celticKnotToolButton) {
                 celticKnotToolButton.setIcon(new ImageIcon(CELTIC_ICON_DEFAULT));
@@ -653,6 +721,7 @@ public class MainUI {
             }
         }
     }
+
     /**
      * Return the currently selected drawing tool.
      *
@@ -681,6 +750,15 @@ public class MainUI {
     }
 
     /**
+     * Get the layers panel.
+     *
+     * @return layers panel.
+     */
+    public LayersPanel getLayersPanel() {
+        return layersPanel;
+    }
+
+    /**
      * Temprorary fix to allow the eraser tool to work no matter the order of creation.
      *
      * @return The UI drawArea
@@ -694,24 +772,29 @@ public class MainUI {
      */
     public void generateDefaultKeyBindings() {
 
-        shortcuts.addKeyBinding(KeyEvent.VK_C, true, false, false, Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(KeyEvent.VK_C, true, false, false,
+                Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
             drawArea.clear();
         });
 
-        shortcuts.addKeyBinding(KeyEvent.VK_O, true, false, false, Shortcuts.EXPORT_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(KeyEvent.VK_O, true, false, false,
+                Shortcuts.EXPORT_SHORTCUT, (evt) -> {
             importExport.exportImage();
         });
 
-        shortcuts.addKeyBinding(KeyEvent.VK_I, true, false, false, Shortcuts.IMPORT_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(KeyEvent.VK_I, true, false, false,
+                Shortcuts.IMPORT_SHORTCUT, (evt) -> {
             importExport.importImage();
         });
 
-        shortcuts.addKeyBinding(KeyEvent.VK_B, true, false, false, Shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(KeyEvent.VK_B, true, false, false,
+                Shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = brushTool;
             updateSizeSlider();
         });
 
-        shortcuts.addKeyBinding(KeyEvent.VK_L, true, false, false, Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(KeyEvent.VK_L, true, false, false,
+                Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = lineTool;
             updateSizeSlider();
         });
@@ -769,24 +852,29 @@ public class MainUI {
      */
     private void generateDBDefaultKeyBindings() {
 
-        shortcuts.addKeyBinding(Shortcuts.getClearToolKeyCode(), Shortcuts.isAlt_clearTool(), Shortcuts.isShift_clearTool(), Shortcuts.isAlt_clearTool(), Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(Shortcuts.getClearToolKeyCode(), Shortcuts.isAlt_clearTool(),
+                Shortcuts.isShift_clearTool(), Shortcuts.isAlt_clearTool(), Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
             drawArea.clear();
         });
 
-        shortcuts.addKeyBinding(shortcuts.getExportKeyCode(), shortcuts.isCtrl_export(), shortcuts.isShift_export(), shortcuts.isAlt_export(), Shortcuts.EXPORT_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(shortcuts.getExportKeyCode(), shortcuts.isCtrl_export(), shortcuts.isShift_export(),
+                shortcuts.isAlt_export(), Shortcuts.EXPORT_SHORTCUT, (evt) -> {
             importExport.exportImage();
         });
 
-        shortcuts.addKeyBinding(shortcuts.getImportKeyCode(), shortcuts.isCtrl_import(), shortcuts.isShift_import(), shortcuts.isAlt_import(), Shortcuts.IMPORT_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(shortcuts.getImportKeyCode(), shortcuts.isCtrl_import(), shortcuts.isShift_import(),
+                shortcuts.isAlt_import(), Shortcuts.IMPORT_SHORTCUT, (evt) -> {
             importExport.importImage();
         });
 
-        shortcuts.addKeyBinding(shortcuts.getBrushToolKeyCode(), shortcuts.isCtrl_brushTool(), shortcuts.isShift_brushTool(), shortcuts.isAlt_brushTool(), shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(shortcuts.getBrushToolKeyCode(), shortcuts.isCtrl_brushTool(),
+                shortcuts.isShift_brushTool(), shortcuts.isAlt_brushTool(), shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = brushTool;
             updateSizeSlider();
         });
 
-        shortcuts.addKeyBinding(shortcuts.getLineToolKeyCode(), shortcuts.isCtrl_lineTool(), shortcuts.isShift_lineTool(), shortcuts.isAlt_lineTool(), Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(shortcuts.getLineToolKeyCode(), shortcuts.isCtrl_lineTool(),
+                shortcuts.isShift_lineTool(), shortcuts.isAlt_lineTool(), Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = lineTool;
             updateSizeSlider();
         });
