@@ -63,9 +63,7 @@ public class ShortcutDialog {
         table.getColumn(RE_ASSIGN_SHORTCUT_TABLE_COL).setCellEditor(
                 new ButtonEditor(new JCheckBox()));
         JScrollPane scroll = new JScrollPane(table);
-
-
-        JDialog.setDefaultLookAndFeelDecorated(true);
+        
         shortcutsDialog = new JDialog(mainUI.getMainFrame(), KEYBOARD_SHORTCUTS_TITLE, true);
         shortcutsDialog.setLocationRelativeTo(null);
         shortcutsDialog.setSize(SHORTCUT_DIALOG_WIDTH, SHORTCUT_DIALOG_HEIGHT);
