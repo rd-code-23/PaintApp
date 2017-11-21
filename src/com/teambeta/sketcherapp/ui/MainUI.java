@@ -16,6 +16,7 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
 
 import static com.sun.java.accessibility.util.AWTEventMonitor.addMouseListener;
 
