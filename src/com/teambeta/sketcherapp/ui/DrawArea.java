@@ -505,8 +505,6 @@ public class DrawArea extends JComponent {
     public void scaleTransparency(float transparencyFactor) {
         if (transparencyFactor < 0.0f) {
             transparencyFactor = 0.0f;
-        } else if (transparencyFactor > 1.0f) {
-            transparencyFactor = 1.0f;
         }
 
         float scaleFactorArray[] = {1f, 1f, 1f, transparencyFactor};
