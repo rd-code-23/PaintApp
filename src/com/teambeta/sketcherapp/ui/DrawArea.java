@@ -550,11 +550,12 @@ public class DrawArea extends JComponent {
     }
 
     /**
-     * Multiply the current layer's saturation by some float factor.
-     * (0.0 effectively means set the saturation to zero, 0.5 means half saturation, 2.0 means double saturation)
+     * Multiply the current layer's HSB by some float factors.
      *
      * @param layer the layer to transform
+     * @param hueFactor the factor to multiply current hue levels
      * @param saturationFactor the factor to multiply current saturation levels
+     * @param brightnessFactor the factor to multiply current brightness levels
      */
     private void transformLayerHSB(BufferedImage layer, float hueFactor, float saturationFactor, float brightnessFactor) {
 
