@@ -43,20 +43,6 @@ public class MainUI {
     private static DrawingTool selectedDrawingTool;
     private static EyeDropperStats eyeDropperStats;
 
-    private static final String CLEAR_BUTTON_TEXT = "Clear";
-    private static final String BRUSH_BUTTON_TEXT = "Brush";
-    private static final String RECTANGLE_TOOL_BUTTON_TEXT = "Rectangle";
-    private static final String LINE_TOOL_BUTTON_TEXT = "Line";
-    private static final String ERASER_TOOL_BUTTON_TEXT = "Eraser";
-    private static final String ELLIPSE_TOOL_BUTTON_TEXT = "Ellipse";
-    private static final String TEXT_TOOL_BUTTON_TEXT = "Text";
-    private static final String PAINT_BUCKET_BUTTON_TEXT = "Paint Bucket";
-    private static final String EYEDROPPER_TOOL_BUTTON_TEXT = "Eye Dropper";
-    private static final String FAN_TOOL_BUTTON_TEXT = "Fan-out";
-    private static final String CELTIC_KNOT_TOOL_BUTTON_TEXT = "Celtic Knot";
-    private static final String DNA_TOOL_BUTTON_TEXT = "DNA";
-    private static final String AIR_BRUSH_TOOL_BUTTON_TEXT = "Airbrush";
-    private static final String TRIANGLE_TOOL_BUTTON_TEXT = "Triangle";
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Paint";
@@ -476,6 +462,7 @@ public class MainUI {
             int CURRENT_CONTAINER_INDEX = buttonContainerIndex;
             button.addMouseListener(new java.awt.event.MouseAdapter() {
                 private Icon originalIcon = button.getIcon();
+
                 public void mouseEntered(java.awt.event.MouseEvent evt) {
                     button.setIcon(new ImageIcon(buttonHoverContainer[CURRENT_CONTAINER_INDEX]));
                 }
@@ -483,6 +470,8 @@ public class MainUI {
                 public void mouseExited(java.awt.event.MouseEvent evt) {
                     if (button != highlightedButton) {
                         button.setIcon(new ImageIcon(buttonDefaultContainer[CURRENT_CONTAINER_INDEX]));
+                    } else {
+                        button.setIcon(new ImageIcon(buttonHighlightedContainer[CURRENT_CONTAINER_INDEX]));
                     }
                 }
 
