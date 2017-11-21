@@ -230,9 +230,9 @@ public class MenuUI extends JMenuBar {
             } else if (e.getSource() == fNew) {
                 Dimension dimension = NewWindow.displayPrompt();
                 if (dimension != null) {
-                    final int APPLICATION_WIDTH = (int) dimension.getWidth();
-                    final int APPLICATION_HEIGHT = (int) dimension.getHeight();
-                    MainUI mainUI = new MainUI(APPLICATION_WIDTH, APPLICATION_HEIGHT);
+                    final int CANVAS_WIDTH = (int) dimension.getWidth();
+                    final int CANVAS_HEIGHT = (int) dimension.getHeight();
+                    MainUI mainUI = new MainUI(CANVAS_WIDTH, CANVAS_HEIGHT);
                     mainUI.displayUI();
                     mainFrame.dispose();
                 }
