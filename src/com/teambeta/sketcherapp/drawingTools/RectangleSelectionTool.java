@@ -156,10 +156,10 @@ public class RectangleSelectionTool extends DrawingTool {
 
         if (!isDrawn) {
             isDrawn = true;
-            int offset = 1;
+            int offset = 20;
             checkBounds(canvas);
-            selectedCanvas = copyImage(originalSelectedCanvas.getSubimage(initX + offset, initY + offset,
-                    drawWidthX - offset, drawHeightY - offset));
+            selectedCanvas = copyImage(originalSelectedCanvas.getSubimage(initX, initY,
+                    drawWidthX + offset, drawHeightY + offset));
             DrawArea.clearBufferImageToTransparent(previewLayer);
         } else {
             MouseCursor.setDefaultCursor();
@@ -262,8 +262,6 @@ public class RectangleSelectionTool extends DrawingTool {
 
             selectedLayerGraphics.drawImage(selectedCanvas, prevX + e.getX(), prevY + e.getY(), null);
             DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
-
-
         }
         isDrawn = false;
     }
