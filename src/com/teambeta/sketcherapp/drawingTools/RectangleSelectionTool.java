@@ -85,8 +85,7 @@ public class RectangleSelectionTool extends DrawingTool {
                     && e.getX() >= initX - offset && e.getX() <= (selectedCanvas.getWidth() + initX - offset)) {
                 if (isDrawn) {
                     isOverSelection = true;
-                    // MouseCursor.dragCursor();
-                    MouseCursor.targetCursor();
+                     MouseCursor.dragCursor();
                 }
             } else {
                 if (isDrawn) {
@@ -116,7 +115,7 @@ public class RectangleSelectionTool extends DrawingTool {
             initializeVariables(canvas, e);
             prevX = initX - e.getX();
             prevY = initY - e.getY();
-            //   isDragSelection = isOverSelection;
+              isDragSelection = isOverSelection;
         }
     }
 
@@ -150,7 +149,7 @@ public class RectangleSelectionTool extends DrawingTool {
             DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
             canvasGraphics.drawImage(previewLayer, 0, 0, null);
         } else {
-            //dragImage(canvas, e, drawingLayers);
+            dragImage(canvas, e, drawingLayers);
         }
     }
 
@@ -170,7 +169,11 @@ public class RectangleSelectionTool extends DrawingTool {
         } else {
             MouseCursor.setDefaultCursor();
             isDrawn = false;
-            pasteSelection(canvas, drawingLayers, selectedLayer, e);
+            if (isDragSelection) {
+                pasteDragSelection(canvas, drawingLayers, selectedLayer, e);
+            } else {
+                pasteSelection(canvas, drawingLayers, selectedLayer, e);
+            }
             selectedCanvas = null;
         }
 
@@ -235,6 +238,24 @@ public class RectangleSelectionTool extends DrawingTool {
     private void dragImage(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
 
 
+        //init graphics objects
+        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
+        Graphics2D canvasGraphics = (Graphics2D) canvas.getGraphics();
+        canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        canvasGraphics.setColor(transparentColor);
+        Graphics2D previewLayerGraphics = (Graphics2D) selectedCanvas.getGraphics();
+        canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        previewLayerGraphics.setColor(transparentColor);
+        previewLayerGraphics.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
+        previewLayerGraphics.setComposite(alphaComposite);
+        previewLayerGraphics.drawRect(prevX + e.getX(), prevY + e.getY(), drawWidthX, drawHeightY);
+        //info: https://docs.oracle.com/javase/tutorial/2d/advanced/compositing.html
+        //draw the preview layer on top of the drawing layer(s)
+        canvasGraphics.setComposite(alphaComposite);
+        DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+        canvasGraphics.drawImage(selectedCanvas, prevX + e.getX(), prevY + e.getY(), null);
+     //   DrawArea.clearBufferImageToTransparent(selectedCanvas);
     }
 
     /**
