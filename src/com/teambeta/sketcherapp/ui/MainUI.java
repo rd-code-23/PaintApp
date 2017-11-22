@@ -97,7 +97,7 @@ public class MainUI {
     private Shortcuts shortcuts;
     private ImportExport importExport;
     private JPanel canvasTools;
-
+    JPanel northPanel;
     private DB_KBShortcuts db_kbShortcuts;
 
     private static final String APPLICATION_LOGO_IMAGE_DIRECTORY = "res/BPIcon.png";
@@ -110,6 +110,14 @@ public class MainUI {
 
             if (e.getSource() != rectangleSelectionToolButton) {
                 rectangleSelectionTool.restartSelection();
+                northPanel.remove(rectangleSelectionTool.getPanel());
+                rectangleSelectionTool.hidePanel();
+            }
+
+            if (e.getSource() != textToolButton) {
+
+                northPanel.remove(textToolSettings);
+
             }
 
             if (e.getSource() == clearButton) {
@@ -190,8 +198,10 @@ public class MainUI {
                 updateFillState();
             } else if (e.getSource() == rectangleSelectionToolButton) {
                 selectedDrawingTool = rectangleSelectionTool;
+                northPanel.add(rectangleSelectionTool.getPanel(), BorderLayout.EAST);
                 updateSizeSlider();
                 updateFillState();
+                rectangleSelectionTool.showPanel();
             }
 
             /* We can also make it so that instead of hiding tool components when another is selected,
@@ -204,6 +214,8 @@ public class MainUI {
              */
             if (e.getSource() == textToolButton) {
                 selectedDrawingTool = textTool;
+                northPanel.add(textToolSettings, BorderLayout.EAST);
+                textTool.setFont(textToolSettings.getFontFromSelector());
                 textToolSettings.setVisibility(true);
             } else if ((e.getSource() != textToolButton && e.getSource() != clearButton)
                     && (e.getSource() instanceof JButton)) {
@@ -373,7 +385,7 @@ public class MainUI {
         canvasTools.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
         /* END MAINUI BUTTONS */
-        JPanel northPanel = new JPanel();
+         northPanel = new JPanel();
         northPanel.setLayout(new BorderLayout());
 
         //setting up the shortcuts and database
@@ -392,11 +404,19 @@ public class MainUI {
         widthChanger = new WidthChanger();
         toolSettings.add(widthChanger.getGUI());
         northPanel.add(toolSettings, BorderLayout.CENTER);
+        if (rectangleSelectionTool != null) {
+            rectangleSelectionTool.renderPanel();
+            rectangleSelectionTool.hidePanel();
 
+
+
+        }
         if (textToolSettings != null) {
-            northPanel.add(textToolSettings, BorderLayout.EAST);
+
             textTool.setFont(textToolSettings.getFontFromSelector());
         }
+
+
 
         MainUI.listenForSlider listenForSlider = new MainUI.listenForSlider();
         widthChanger.getSliderComponent().addChangeListener(listenForSlider);

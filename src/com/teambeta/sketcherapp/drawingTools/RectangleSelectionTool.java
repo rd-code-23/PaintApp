@@ -7,6 +7,7 @@ import com.teambeta.sketcherapp.model.MouseCursor;
 import com.teambeta.sketcherapp.ui.DrawArea;
 import com.teambeta.sketcherapp.ui.LayersPanel;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -45,6 +46,43 @@ public class RectangleSelectionTool extends DrawingTool {
     private int prevX, prevY;
     private boolean isDragSelection = false; // is the user choosing to drag the image
     LinkedList<ImageLayer> drawingLayersCopy;
+
+
+    boolean isCut;
+
+    public JPanel getPanel() {
+        return panel;
+    }
+
+    JPanel panel;
+
+    public void renderPanel() {
+
+        panel = new JPanel();
+        panel.setLayout(new FlowLayout());
+
+        JRadioButton option1 = new JRadioButton("Copy");
+        Font newRadioButtonFont=new Font(option1.getFont().getName(),Font.ITALIC+Font.BOLD,option1.getFont().getSize());
+        option1.setFont(newRadioButtonFont);
+        JRadioButton option2 = new JRadioButton("Cut");
+
+        ButtonGroup group = new ButtonGroup();
+        group.add(option1);
+        group.add(option2);
+
+        panel.add(option1);
+        panel.add(option2);
+        panel.setBackground(Color.DARK_GRAY);
+
+
+    }
+    public void hidePanel() {
+        panel.setVisible(false);
+    }
+
+    public void showPanel() {
+        panel.setVisible(true);
+    }
 
     //TODO FEATURE: add copy function to duplicate images. add 2 radio buttons in  north panel for cut or copy
 
@@ -384,13 +422,13 @@ public class RectangleSelectionTool extends DrawingTool {
     }
 
 
-    public void restartSelection(){
+    public void restartSelection() {
         System.out.println("restart");
-     //   DrawArea.drawLayersOntoCanvas(,originalSelectedCanvas);
-        if(previewLayer!=null)
-        DrawArea.clearBufferImageToTransparent(previewLayer);
-        if(selectedCanvas!=null)
-        DrawArea.clearBufferImageToTransparent(selectedCanvas);
+        //   DrawArea.drawLayersOntoCanvas(,originalSelectedCanvas);
+        if (previewLayer != null)
+            DrawArea.clearBufferImageToTransparent(previewLayer);
+        if (selectedCanvas != null)
+            DrawArea.clearBufferImageToTransparent(selectedCanvas);
         isOverSelection = false;
         isDrawn = false;
 
