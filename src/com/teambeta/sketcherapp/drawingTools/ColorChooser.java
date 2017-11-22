@@ -19,7 +19,7 @@ public class ColorChooser extends JPanel {
     private static final int PANEL_LENGTH = 50;
     private static List<GeneralObserver> observers = new ArrayList<>();
 
-    // Constructor that displays default color as a square panel (graphic selector).
+    // Constructor that displays default color as a square selectionOptionPanel (graphic selector).
     public ColorChooser() {
         color = Color.BLACK;
         addMouseListener(new MouseAdapter() {
@@ -52,7 +52,7 @@ public class ColorChooser extends JPanel {
     private void changeColor() {
         Color previousColor = getColor();
         color = JColorChooser.showDialog(null, "Select a Color", color);
-        // Canceling or exiting the colour panel will return null and break everything.
+        // Canceling or exiting the colour selectionOptionPanel will return null and break everything.
         // Store the previous colour and keep it if null is encountered.
         if (color == null) {
             color = previousColor;

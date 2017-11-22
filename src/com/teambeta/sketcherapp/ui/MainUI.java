@@ -3,13 +3,9 @@ package com.teambeta.sketcherapp.ui;
 import com.teambeta.sketcherapp.Database.DB_KBShortcuts;
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.ImportExport;
-import com.teambeta.sketcherapp.model.AboutMenu;
 import com.teambeta.sketcherapp.model.MouseCursor;
-import javafx.stage.FileChooser;
 import com.teambeta.sketcherapp.model.Shortcuts;
 
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -110,7 +106,7 @@ public class MainUI {
 
             if (e.getSource() != rectangleSelectionToolButton) {
                 rectangleSelectionTool.restartSelection();
-                northPanel.remove(rectangleSelectionTool.getPanel());
+                northPanel.remove(rectangleSelectionTool.getSelectionOptionPanel());
                 rectangleSelectionTool.hidePanel();
             }
 
@@ -198,7 +194,7 @@ public class MainUI {
                 updateFillState();
             } else if (e.getSource() == rectangleSelectionToolButton) {
                 selectedDrawingTool = rectangleSelectionTool;
-                northPanel.add(rectangleSelectionTool.getPanel(), BorderLayout.EAST);
+                northPanel.add(rectangleSelectionTool.getSelectionOptionPanel(), BorderLayout.EAST);
                 updateSizeSlider();
                 updateFillState();
                 rectangleSelectionTool.showPanel();

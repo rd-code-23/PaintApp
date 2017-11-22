@@ -1,14 +1,14 @@
 package com.teambeta.sketcherapp.drawingTools;
 
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import com.teambeta.sketcherapp.model.GeneralObserver;
 import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.model.MouseCursor;
 import com.teambeta.sketcherapp.ui.DrawArea;
-import com.teambeta.sketcherapp.ui.LayersPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
@@ -46,45 +46,14 @@ public class RectangleSelectionTool extends DrawingTool {
     private int prevX, prevY;
     private boolean isDragSelection = false; // is the user choosing to drag the image
     LinkedList<ImageLayer> drawingLayersCopy;
-
-
+    JRadioButton cutOption;
+    JRadioButton copyOption;
     boolean isCut;
 
-    public JPanel getPanel() {
-        return panel;
-    }
-
-    JPanel panel;
-
-    public void renderPanel() {
-
-        panel = new JPanel();
-        panel.setLayout(new FlowLayout());
-
-        JRadioButton option1 = new JRadioButton("Copy");
-        Font newRadioButtonFont=new Font(option1.getFont().getName(),Font.ITALIC+Font.BOLD,option1.getFont().getSize());
-        option1.setFont(newRadioButtonFont);
-        JRadioButton option2 = new JRadioButton("Cut");
-
-        ButtonGroup group = new ButtonGroup();
-        group.add(option1);
-        group.add(option2);
-
-        panel.add(option1);
-        panel.add(option2);
-        panel.setBackground(Color.DARK_GRAY);
+    JPanel selectionOptionPanel;
 
 
-    }
-    public void hidePanel() {
-        panel.setVisible(false);
-    }
 
-    public void showPanel() {
-        panel.setVisible(true);
-    }
-
-    //TODO FEATURE: add copy function to duplicate images. add 2 radio buttons in  north panel for cut or copy
 
     /**
      * The constructor sets the properties of the tool to their default values
@@ -104,6 +73,7 @@ public class RectangleSelectionTool extends DrawingTool {
         yAxisMagnitudeDelta = 0;
         squareWidth = DEFAULT_WIDTH_VALUE;
         fillShape = false;
+        isCut = true;
     }
 
     /**
@@ -144,6 +114,7 @@ public class RectangleSelectionTool extends DrawingTool {
             mouseOriginY = currentY;
             originalSelectedCanvas = copyImage(canvas);
         } else {
+            if(isCut)
             clearSelection(canvas, drawingLayers);
             prevX = initX - e.getX();
             prevY = initY - e.getY();
@@ -193,10 +164,12 @@ public class RectangleSelectionTool extends DrawingTool {
 
         if (!isDrawn) {
             isDrawn = true;
-            int offset = 20;
+            int offset =0;
+            drawWidthX = drawWidthX + offset;
+            drawHeightY = drawHeightY + offset;
             checkBounds(canvas);
             selectedCanvas = copyImage(selectedLayer.getBufferedImage().getSubimage(initX, initY,
-                    drawWidthX + offset, drawHeightY + offset));
+                    drawWidthX, drawHeightY));
             DrawArea.clearBufferImageToTransparent(previewLayer);
         } else {
             MouseCursor.setDefaultCursor();
@@ -215,15 +188,17 @@ public class RectangleSelectionTool extends DrawingTool {
     /**
      * if the user selects the canvas that goes out of bounds this function will correct the results
      */
+//TODO needs fixing
     private void checkBounds(BufferedImage canvas) {
-        if (initX + drawWidthX > canvas.getWidth()) {
-            drawWidthX = canvas.getWidth() - initX;
+        if (initX + (drawWidthX) > canvas.getWidth()) {
+            drawWidthX = (canvas.getWidth() - initX);
+
         }
         if (initX < 0) {
             drawWidthX = drawWidthX - Math.abs(initX);
             initX = 0;
         }
-        if ((initY + drawHeightY) > canvas.getHeight()) {
+        if ((initY + (drawHeightY)) > canvas.getHeight()) {
             drawHeightY = Math.abs(canvas.getHeight() - initY);
         }
         if (initY < 0) {
@@ -258,8 +233,9 @@ public class RectangleSelectionTool extends DrawingTool {
         selectedLayerGraphics.setComposite(AlphaComposite.Clear);
         selectedLayerGraphics.setColor(transparentColor);
         selectedLayerGraphics.setStroke(new BasicStroke(getToolWidth()));
-        selectedLayerGraphics.fillRect(initX, initY, drawWidthX, drawHeightY);
-        selectedLayerGraphics.drawRect(initX, initY, drawWidthX, drawHeightY);
+        int offset =13;
+        selectedLayerGraphics.fillRect(initX, initY, drawWidthX-offset, drawHeightY-offset);
+        selectedLayerGraphics.drawRect(initX, initY, drawWidthX-offset, drawHeightY-offset);
         DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
     }
 
@@ -419,6 +395,7 @@ public class RectangleSelectionTool extends DrawingTool {
         initY = currentY;
         mouseOriginX = currentX;
         mouseOriginY = currentY;
+        isCut = cutOption.isSelected();
     }
 
 
@@ -434,4 +411,56 @@ public class RectangleSelectionTool extends DrawingTool {
 
     }
 
+    public void renderPanel() {
+
+        selectionOptionPanel = new JPanel();
+        selectionOptionPanel.setLayout(new FlowLayout());
+
+        cutOption = new JRadioButton("Cut");
+        cutOption.setSelected(true);
+        cutOption.setFont(new Font("David", Font.PLAIN, 24));
+        copyOption = new JRadioButton("Copy");
+        copyOption.setFont(new Font("David", Font.PLAIN, 24));
+        ButtonGroup group = new ButtonGroup();
+        group.add(cutOption);
+        group.add(copyOption);
+
+        selectionOptionPanel.add(cutOption);
+        selectionOptionPanel.add(copyOption);
+
+        selectionOptionPanel.setBackground(Color.DARK_GRAY);
+
+        cutOption.addActionListener(actionListener);
+        copyOption.addActionListener(actionListener);
+
+
+    }
+
+    public void hidePanel() {
+        selectionOptionPanel.setVisible(false);
+    }
+
+    public void showPanel() {
+        selectionOptionPanel.setVisible(true);
+    }
+
+    ActionListener actionListener = new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == cutOption) {
+                System.out.println("cut");
+                isCut = true;
+            }
+
+            if (e.getSource() == copyOption) {
+                System.out.println("copy");
+                isCut = false;
+            }
+
+
+        }
+    };
+
+    public JPanel getSelectionOptionPanel() {
+        return selectionOptionPanel;
+    }
 }

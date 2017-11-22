@@ -94,7 +94,7 @@ public class TextToolSettings extends JPanel {
     }
 
     /**
-     * Helper function to build transform panel and its components.
+     * Helper function to build transform selectionOptionPanel and its components.
      */
     private void buildTransformPanel() {
         transformPanel.setLayout(new BoxLayout(transformPanel, BoxLayout.X_AXIS));
