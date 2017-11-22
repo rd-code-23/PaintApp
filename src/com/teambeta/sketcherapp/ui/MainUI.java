@@ -107,6 +107,11 @@ public class MainUI {
 
             MouseCursor.setDefaultCursor();
 
+
+            if(e.getSource() != rectangleSelectionToolButton){
+                rectangleSelectionTool.restartSelection();
+            }
+
             if (e.getSource() == clearButton) {
                 if (drawArea.getCurrentlySelectedLayer().isVisible()) {
                     drawArea.clear();

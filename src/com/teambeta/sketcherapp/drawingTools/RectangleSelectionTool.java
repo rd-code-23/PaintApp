@@ -44,6 +44,7 @@ public class RectangleSelectionTool extends DrawingTool {
     private boolean isDrawn;// has the user selected somthing
     private int prevX, prevY;
     private boolean isDragSelection = false; // is the user choosing to drag the image
+    LinkedList<ImageLayer> drawingLayersCopy;
 
     //TODO BUG: selction should only be on the current layer
     //TODO BUG: sometimes when you draw a straight selection line it copies it self
@@ -158,7 +159,7 @@ public class RectangleSelectionTool extends DrawingTool {
             isDrawn = true;
             int offset = 20;
             checkBounds(canvas);
-            selectedCanvas = copyImage(originalSelectedCanvas.getSubimage(initX, initY,
+            selectedCanvas = copyImage(selectedLayer.getBufferedImage().getSubimage(initX, initY,
                     drawWidthX + offset, drawHeightY + offset));
             DrawArea.clearBufferImageToTransparent(previewLayer);
         } else {
@@ -281,7 +282,6 @@ public class RectangleSelectionTool extends DrawingTool {
         }
         DrawArea.clearBufferImageToTransparent(selectedCanvas);
         isDrawn = false;
-
     }
 
     @Override
@@ -383,6 +383,19 @@ public class RectangleSelectionTool extends DrawingTool {
         initY = currentY;
         mouseOriginX = currentX;
         mouseOriginY = currentY;
+    }
+
+
+    public void restartSelection(){
+        System.out.println("restart");
+     //   DrawArea.drawLayersOntoCanvas(,originalSelectedCanvas);
+        if(previewLayer!=null)
+        DrawArea.clearBufferImageToTransparent(previewLayer);
+        if(selectedCanvas!=null)
+        DrawArea.clearBufferImageToTransparent(selectedCanvas);
+        isOverSelection = false;
+        isDrawn = false;
+
     }
 
 }
