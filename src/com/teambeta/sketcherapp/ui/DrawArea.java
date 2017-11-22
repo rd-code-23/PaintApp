@@ -383,7 +383,7 @@ public class DrawArea extends JComponent {
         for (int x = 0; x < layer.getWidth(); ++x) {
             for (int y = 0; y < layer.getHeight(); ++y) {
                 color_at_point = new Color(layer.getRGB(x, y), true);
-                if (color_at_point.getRGB() != -1) {
+                if (color_at_point.getAlpha() != 0) {
                     lumaValue = (int) (
                             RED_LUMA_COEFFICIENT * color_at_point.getRed()
                                     + GREEN_LUMA_COEFFICIENT * color_at_point.getGreen()
@@ -563,6 +563,13 @@ public class DrawArea extends JComponent {
         saturationFactor = Math.abs(saturationFactor);
         brightnessFactor = Math.abs(brightnessFactor);
 
+        // For consistency, use the greyscale algorithm if the HSB transformation is a saturation transformation
+        // multiplying zero.
+        if ((hueFactor == 1.0f) && (saturationFactor == 0.0f) && (brightnessFactor == 1.0f)) {
+            redrawToGreyscale();
+            return;
+        }
+
         Color originalPointColor;
         Color intermediaryTransformation;
         Color newPointColor;
@@ -574,7 +581,7 @@ public class DrawArea extends JComponent {
             for (int y = 0; y < layer.getHeight(); ++y) {
 
                 originalPointColor = new Color(layer.getRGB(x, y), true);
-                if (originalPointColor.getRGB() == -1) {
+                if (originalPointColor.getAlpha() == 0) {
                     continue;
                 }
                 alphaPreserve = originalPointColor.getAlpha();
@@ -584,6 +591,12 @@ public class DrawArea extends JComponent {
                 hsbArray[0] *= hueFactor;
                 hsbArray[1] *= saturationFactor;
                 hsbArray[2] *= brightnessFactor;
+
+                // Bound HSB values
+                for (int i = 0; i < 3; ++i) {
+                    hsbArray[i] = Math.max(Math.min(hsbArray[i], 1.0f), 0.0f);
+                }
+
                 newRBG = Color.HSBtoRGB(hsbArray[0], hsbArray[1], hsbArray[2]);
 
                 intermediaryTransformation = new Color(newRBG, true);
