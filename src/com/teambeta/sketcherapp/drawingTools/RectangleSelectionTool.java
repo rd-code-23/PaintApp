@@ -112,6 +112,7 @@ public class RectangleSelectionTool extends DrawingTool {
             mouseOriginY = currentY;
             originalSelectedCanvas = copyImage(canvas);
         } else {
+            clearSelection(canvas, drawingLayers);
             initializeVariables(canvas, e);
             prevX = initX - e.getX();
             prevY = initY - e.getY();
@@ -162,7 +163,7 @@ public class RectangleSelectionTool extends DrawingTool {
             isDrawn = true;
             int offset = 1;
             checkBounds(canvas);
-            clearSelection(canvas, drawingLayers);
+
             selectedCanvas = copyImage(originalSelectedCanvas.getSubimage(initX + offset, initY + offset,
                     drawWidthX - offset, drawHeightY - offset));
             DrawArea.clearBufferImageToTransparent(previewLayer);
