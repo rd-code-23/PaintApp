@@ -32,7 +32,7 @@ public class BrightnessMenu {
             if (scaleFactor < 0.0f) {
                 throw new Exception();
             }
-            drawArea.rescaleOperation(scaleFactor, 0, null);
+            drawArea.drawLayerBrightnessScaling(scaleFactor);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, DIALOG_WARNING);
         }
