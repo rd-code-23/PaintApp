@@ -358,6 +358,7 @@ public class MainUI {
         scroll = new JScrollPane(drawAreaPanel);
         scroll.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scroll.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        drawAreaPanel.add(scroll);
 
 
         /* START MAINUI BUTTONS */
