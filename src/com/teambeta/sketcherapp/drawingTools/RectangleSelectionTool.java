@@ -158,7 +158,6 @@ public class RectangleSelectionTool extends DrawingTool {
             isDrawn = true;
             int offset = 1;
             checkBounds(canvas);
-
             selectedCanvas = copyImage(originalSelectedCanvas.getSubimage(initX + offset, initY + offset,
                     drawWidthX - offset, drawHeightY - offset));
             DrawArea.clearBufferImageToTransparent(previewLayer);
@@ -279,11 +278,8 @@ public class RectangleSelectionTool extends DrawingTool {
             selectedLayerGraphics.setColor(color);
             selectedLayerGraphics.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_BUTT,
                     BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
-            //  DrawArea.clearBufferImageToTransparent(originalSelectedCanvas);
             selectedLayerGraphics.drawImage(selectedCanvas, e.getX(), e.getY(), null);
             DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
-
-            //  initializeVariables();
         }
         DrawArea.clearBufferImageToTransparent(selectedCanvas);
         isDrawn = false;
