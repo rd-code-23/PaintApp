@@ -42,7 +42,7 @@ public class MainUI {
     private static DNATool dnaTool;
     private static AirBrushTool airBrushTool;
     private static TriangleTool triangleTool;
-    private  static RectangleSelectionTool rectangleSelectionTool;
+    private static RectangleSelectionTool rectangleSelectionTool;
     private static DrawingTool selectedDrawingTool;
     private static EyeDropperStats eyeDropperStats;
 
@@ -108,7 +108,7 @@ public class MainUI {
             MouseCursor.setDefaultCursor();
 
 
-            if(e.getSource() != rectangleSelectionToolButton){
+            if (e.getSource() != rectangleSelectionToolButton) {
                 rectangleSelectionTool.restartSelection();
             }
 
@@ -188,7 +188,7 @@ public class MainUI {
                 selectedDrawingTool = triangleTool;
                 updateSizeSlider();
                 updateFillState();
-            }else if (e.getSource() == rectangleSelectionToolButton) {
+            } else if (e.getSource() == rectangleSelectionToolButton) {
                 selectedDrawingTool = rectangleSelectionTool;
                 updateSizeSlider();
                 updateFillState();
@@ -355,7 +355,7 @@ public class MainUI {
         JButton[] buttonContainer = {
                 clearButton, brushToolButton, airBrushToolButton, eraserToolButton, lineToolButton,
                 fanToolButton, rectangleToolButton, ellipseToolButton, triangleToolButton, paintBucketToolButton,
-                celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton,rectangleSelectionToolButton
+                celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton, rectangleSelectionToolButton
         };
 
         canvasTools = new JPanel();

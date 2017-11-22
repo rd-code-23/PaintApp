@@ -46,8 +46,6 @@ public class RectangleSelectionTool extends DrawingTool {
     private boolean isDragSelection = false; // is the user choosing to drag the image
     LinkedList<ImageLayer> drawingLayersCopy;
 
-    //TODO BUG: selction should only be on the current layer
-    //TODO BUG: sometimes when you draw a straight selection line it copies it self
     //TODO FEATURE: add copy function to duplicate images. add 2 radio buttons in  north panel for cut or copy
 
     /**
