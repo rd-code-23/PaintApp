@@ -131,7 +131,6 @@ public class DrawArea extends JComponent {
             }
         }
         canvasGraphics.drawImage(layersAboveSelectedLayer, 0, 0, null);
-
     }
 
     /**
@@ -340,6 +339,7 @@ public class DrawArea extends JComponent {
         graphics.drawImage(image, 0, 0, this);
         //graphics.finalize();
         isCanvasAltered = false;
+        redrawLayers();
         repaint();
     }
 
