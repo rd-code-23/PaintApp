@@ -563,13 +563,6 @@ public class DrawArea extends JComponent {
         saturationFactor = Math.abs(saturationFactor);
         brightnessFactor = Math.abs(brightnessFactor);
 
-        // For consistency, use the greyscale algorithm if the HSB transformation is a saturation transformation
-        // multiplying zero.
-        if ((hueFactor == 1.0f) && (saturationFactor == 0.0f) && (brightnessFactor == 1.0f)) {
-            redrawToGreyscale();
-            return;
-        }
-
         Color originalPointColor;
         Color intermediaryTransformation;
         Color newPointColor;
