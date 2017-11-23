@@ -11,7 +11,7 @@ public class ImageLayer {
     private boolean isSelected;
     private String name;
     private static int layerNumber = 1;
-    private String HIDDEN = "[Hidden]";
+    private String HIDDEN = "  [Hidden]";
 
     /**
      * Constructor.
@@ -22,7 +22,7 @@ public class ImageLayer {
         this.bufferedImage = bufferedImage;
         isVisible = true;
         isSelected = false;
-        name = "Layer " + layerNumber;
+        name = "  Layer " + layerNumber;
         layerNumber++;
     }
 

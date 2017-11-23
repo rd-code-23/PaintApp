@@ -24,7 +24,8 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private static final String DUPLICATE_BUTTON_TEXT = "Duplicate";
     private static final String LAYER_UP_BUTTON_TEXT = "Move Up";
     private static final String LAYER_DOWN_BUTTON_TEXT = "Move Down";
-    private static final String DARK_GREY_CANVAS = "#222222";
+    private static final String LAYER_BG_COLOR = "#4B4B4B";
+    private static final String LAYER_SELECT_COLOR = "#909090";
     private static final String FONT_TYPE = "Arial";
     private static final int FONT_SIZE = 16;
     private static final int MAX_NUM_OF_LAYERS = 32;
@@ -32,7 +33,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private static final int LAYER_MOVEMENT_BUTTONS_PADDING = 20;
     private static final int LAYER_MOVEMENT_PANEL_WIDTH = 300;
     private static final int LAYER_MOVEMENT_PANEL_HEIGHT = 100;
-    private static final int LAYER_PANEL_WIDTH = 380;
+    private static final int LAYER_PANEL_WIDTH = 382;
     private static final int LAYER_PANEL_HEIGHT = 150;
     private DrawArea drawArea;
     private LinkedList<ImageLayer> drawingLayers;
@@ -96,9 +97,17 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         listOfLayers.setVisibleRowCount(-1);
         listOfLayers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listOfLayers.addListSelectionListener(this);
+        listOfLayers.setBackground(Color.decode(LAYER_BG_COLOR));
+        listOfLayers.setForeground(Color.WHITE);
+        listOfLayers.setSelectionBackground(Color.decode(LAYER_SELECT_COLOR));
+        listOfLayers.setSelectionForeground(Color.WHITE);
+        listOfLayers.setFont(new Font(FONT_TYPE, Font.BOLD, FONT_SIZE));
+        UIManager.put("List.focusCellHighlightBorder", BorderFactory.createEmptyBorder());
+        listOfLayers.setBorder(null);
         layersScrollPane = new JScrollPane(listOfLayers);
         layersScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         layersScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        layersScrollPane.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.GRAY));
         this.add(layersScrollPane);
         this.add(layersScrollPane, BorderLayout.EAST);
         addLayerButtons(drawArea);
