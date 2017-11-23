@@ -22,12 +22,6 @@ import java.io.File;
  * Main UI class to wrap all GUI elements together.
  */
 public class MainUI {
-    private static final int PANEL_SECTION_SPACING = 20;
-    private static final int WEST_PANEL_WIDTH = 120;
-    private static final int COLOR_PANEL_HEIGHT = 250;
-    private static final String DARK_GREY_CANVAS = "#222222";
-    private static final String FONT_TYPE = "Arial";
-    private static final int FONT_SIZE = 16;
     private static LineTool lineTool;
     private static BrushTool brushTool;
     private static RectangleTool rectangleTool;
@@ -61,6 +55,8 @@ public class MainUI {
     private static final String AIR_BRUSH_TOOL_BUTTON_TEXT = "Airbrush";
     private static final String TRIANGLE_TOOL_BUTTON_TEXT = "Triangle";
     private static final String SPIRAL_TOOL_BUTTON_TEXT = "Spiral";
+    private static final String BRIGHTNESS_CONTRAST_BUTTON_TEXT = "Brightness/Contrast";
+    private static final String HUE_SATURATION_BUTTON_TEXT = "Hue/Saturation";
 
     private JFrame mainFrame;
 
@@ -69,6 +65,13 @@ public class MainUI {
     private static final int APPLICATION_HEIGHT = 1080;
     private static final int EDITOR_PANEL_WIDTH = 300;
     private static final int EDITOR_PANEL_HEIGHT = 300;
+    private static final int PANEL_SECTION_SPACING = 20;
+    private static final int WEST_PANEL_WIDTH = 120;
+    private static final int COLOR_PANEL_HEIGHT = 250;
+    private static final int IMAGE_EDITOR_PANEL_HEIGHT = 180;
+    private static final String DARK_GREY_CANVAS = "#222222";
+    private static final String FONT_TYPE = "Arial";
+    private static final int FONT_SIZE = 16;
     private int canvasWidth;
     private int canvasHeight;
 
@@ -88,6 +91,8 @@ public class MainUI {
     private JButton airBrushToolButton;
     private JButton triangleToolButton;
     private JButton spiralToolButton;
+    private JButton brightnessContrastButton;
+    private JButton hueSaturationButton;
 
     private static DrawArea drawArea;
     private static ColorChooser colorChooser;
@@ -99,6 +104,8 @@ public class MainUI {
     private JPanel canvasTools;
     private DB_KBShortcuts db_kbShortcuts;
     private JButton highlightedButton;
+    private BrightnessMenu brightnessMenu;
+    private SaturationMenu saturationMenu;
 
     private static final String RES_PATH = System.getProperty("user.dir") + File.separator + "src" +
             File.separator + "res";
@@ -145,6 +152,8 @@ public class MainUI {
     private static final String HUE_SATURATION_ICON_DEFAULT = RES_PATH + File.separator + "hue_saturation.png";
     private static final String HUE_SATURATION_ICON_HIGHLIGHTED = RES_PATH + File.separator +
             "hue_saturation_highlighted.png";
+    private static final String HUE_SATURATION_ICON_HOVER = RES_PATH + File.separator +
+            "hue_saturation_highlighted.png";
     private static final String LINE_ICON_DEFAULT = RES_PATH + File.separator + "line.png";
     private static final String LINE_ICON_HIGHLIGHTED = RES_PATH + File.separator + "line_highlighted.png";
     private static final String LINE_ICON_HOVER = RES_PATH + File.separator + "line_hover.png";
@@ -166,7 +175,6 @@ public class MainUI {
     private static final String TRIANGLE_ICON_DEFAULT = RES_PATH + File.separator + "triangle.png";
     private static final String TRIANGLE_ICON_HIGHLIGHTED = RES_PATH + File.separator + "triangle_highlighted.png";
     private static final String TRIANGLE_ICON_HOVER = RES_PATH + File.separator + "triangle_hover.png";
-
 
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -288,6 +296,10 @@ public class MainUI {
                 highlightedButton = spiralToolButton;
                 spiralToolButton.setIcon(new ImageIcon(SPIRAL_ICON_HIGHLIGHTED));
                 updateSizeSlider();
+            } else if (e.getSource() == brightnessContrastButton) {
+                brightnessMenu.showWindow();
+            } else if (e.getSource() == hueSaturationButton) {
+                saturationMenu.showWindow();
             }
 
             /* We can also make it so that instead of hiding tool components when another is selected,
@@ -428,8 +440,8 @@ public class MainUI {
         drawArea = new DrawArea(this);
 
         importExport = new ImportExport(drawArea, this);
-        SaturationMenu saturationMenu = new SaturationMenu(drawArea);
-        BrightnessMenu brightnessMenu = new BrightnessMenu(drawArea);
+        brightnessMenu = new BrightnessMenu(drawArea);
+        saturationMenu = new SaturationMenu(drawArea);
         GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
         NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
         CheckerboardMenu checkerboardMenu = new CheckerboardMenu(drawArea);
@@ -459,7 +471,9 @@ public class MainUI {
         JPanel colorPanel = initializeColorPanel();
         initializeColorChooserPanel(colorPanel);
 
-        JPanel westPanel = initializeWestPanel(colorPanel);
+        JPanel imageEditingPanel = initializeImageEditingPanel();
+
+        JPanel westPanel = initializeWestPanel(colorPanel, imageEditingPanel);
         mainContent.add(westPanel, BorderLayout.WEST);
 
         JPanel editorPanel = initializeEditorPanel();
@@ -544,6 +558,8 @@ public class MainUI {
         airBrushToolButton = createButton(AIR_BRUSH_ICON_DEFAULT);
         triangleToolButton = createButton(TRIANGLE_ICON_DEFAULT);
         spiralToolButton = createButton(SPIRAL_ICON_DEFAULT);
+        brightnessContrastButton = createButton(BRIGHTNESS_ICON_DEFAULT);
+        hueSaturationButton = createButton(HUE_SATURATION_ICON_DEFAULT);
         highlightedButton = brushToolButton;
     }
 
@@ -576,31 +592,34 @@ public class MainUI {
         JButton[] buttonContainer = {
                 clearButton, selectionButton, brushToolButton, airBrushToolButton, eraserToolButton, lineToolButton,
                 spiralToolButton, fanToolButton, rectangleToolButton, ellipseToolButton, triangleToolButton,
-                paintBucketToolButton, celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton
+                paintBucketToolButton, celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton,
+                brightnessContrastButton, hueSaturationButton
         };
         String[] buttonTextContainer = {
                 CLEAR_TOOL_BUTTON_TEXT, SELECTION_TOOL_BUTTON_TEXT, BRUSH_TOOL_BUTTON_TEXT, AIR_BRUSH_TOOL_BUTTON_TEXT,
                 ERASER_TOOL_BUTTON_TEXT, LINE_TOOL_BUTTON_TEXT, SPIRAL_TOOL_BUTTON_TEXT, FAN_TOOL_BUTTON_TEXT,
                 RECTANGLE_TOOL_BUTTON_TEXT, ELLIPSE_TOOL_BUTTON_TEXT, TRIANGLE_TOOL_BUTTON_TEXT, BUCKET_BUTTON_TEXT,
-                CELTIC_KNOT_TOOL_BUTTON_TEXT, DNA_TOOL_BUTTON_TEXT, TEXT_TOOL_BUTTON_TEXT, EYEDROPPER_TOOL_BUTTON_TEXT
+                CELTIC_KNOT_TOOL_BUTTON_TEXT, DNA_TOOL_BUTTON_TEXT, TEXT_TOOL_BUTTON_TEXT, EYEDROPPER_TOOL_BUTTON_TEXT,
+                BRIGHTNESS_CONTRAST_BUTTON_TEXT, HUE_SATURATION_BUTTON_TEXT
         };
         String[] buttonHoverContainer = {
                 CLEAR_ICON_HOVER, SELECTION_ICON_HOVER, BRUSH_ICON_HOVER, AIR_BRUSH_ICON_HOVER, ERASER_ICON_HOVER,
                 LINE_ICON_HOVER, SPIRAL_ICON_HOVER, FAN_ICON_HOVER, SQUARE_ICON_HOVER, CIRCLE_ICON_HOVER,
                 TRIANGLE_ICON_HOVER, BUCKET_ICON_HOVER, CELTIC_ICON_HOVER, DNA_ICON_HOVER, TEXT_ICON_HOVER,
-                EYEDROP_ICON_HOVER,
+                EYEDROP_ICON_HOVER, BRIGHTNESS_ICON_HOVER, HUE_SATURATION_ICON_HOVER
         };
         String[] buttonDefaultContainer = {
                 CLEAR_ICON_DEFAULT, SELECTION_ICON_DEFAULT, BRUSH_ICON_DEFAULT, AIR_BRUSH_ICON_DEFAULT,
                 ERASER_ICON_DEFAULT, LINE_ICON_DEFAULT, SPIRAL_ICON_DEFAULT, FAN_ICON_DEFAULT, SQUARE_ICON_DEFAULT,
                 CIRCLE_ICON_DEFAULT, TRIANGLE_ICON_DEFAULT, BUCKET_ICON_DEFAULT, CELTIC_ICON_DEFAULT, DNA_ICON_DEFAULT,
-                TEXT_ICON_DEFAULT, EYEDROP_ICON_DEFAULT
+                TEXT_ICON_DEFAULT, EYEDROP_ICON_DEFAULT, BRIGHTNESS_ICON_DEFAULT, HUE_SATURATION_ICON_DEFAULT
         };
         String[] buttonHighlightedContainer = {
                 CLEAR_ICON_HIGHLIGHTED, SELECTION_ICON_HIGHLIGHTED, BRUSH_ICON_HIGHLIGHTED, AIR_BRUSH_ICON_HIGHLIGHTED,
                 ERASER_ICON_HIGHLIGHTED, LINE_ICON_HIGHLIGHTED, SPIRAL_ICON_HIGHLIGHTED, FAN_ICON_HIGHLIGHTED,
                 SQUARE_ICON_HIGHLIGHTED, CIRCLE_ICON_HIGHLIGHTED, TRIANGLE_ICON_HIGHLIGHTED, BUCKET_ICON_HIGHLIGHTED,
-                CELTIC_ICON_HIGHLIGHTED, DNA_ICON_HIGHLIGHTED, TEXT_ICON_HIGHLIGHTED, EYEDROP_ICON_HIGHLIGHTED
+                CELTIC_ICON_HIGHLIGHTED, DNA_ICON_HIGHLIGHTED, TEXT_ICON_HIGHLIGHTED, EYEDROP_ICON_HIGHLIGHTED,
+                BRIGHTNESS_ICON_HIGHLIGHTED, HUE_SATURATION_ICON_HIGHLIGHTED
         };
 
         canvasTools = new JPanel();
@@ -632,10 +651,10 @@ public class MainUI {
                 }
             });
             buttonContainerIndex++;
-            if (button != eyeDropperToolButton) {
+            if (button != eyeDropperToolButton && button != brightnessContrastButton && button != hueSaturationButton) {
                 canvasTools.add(button);
+                canvasTools.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
             }
-            canvasTools.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
         }
         canvasTools.setBorder(BorderFactory.createLineBorder(Color.GRAY));
     }
@@ -725,12 +744,32 @@ public class MainUI {
     }
 
     /**
+     * Set up image editing panel consisting of the brightness/contrast and hue/saturation buttons.
+     *
+     * @return image editing panel of the application.
+     */
+    private JPanel initializeImageEditingPanel() {
+        JPanel imageEditingPanel = new JPanel();
+        imageEditingPanel.setLayout(new BoxLayout(imageEditingPanel, BoxLayout.Y_AXIS));
+        imageEditingPanel.setBackground(Color.DARK_GRAY);
+        imageEditingPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        final Dimension CANVAS_TOOLS_MAX_SIZE = canvasTools.getMaximumSize();
+        imageEditingPanel.setMaximumSize(new Dimension((int) CANVAS_TOOLS_MAX_SIZE.getWidth(),
+                IMAGE_EDITOR_PANEL_HEIGHT));
+        imageEditingPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
+        imageEditingPanel.add(brightnessContrastButton);
+        imageEditingPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
+        imageEditingPanel.add(hueSaturationButton);
+        return imageEditingPanel;
+    }
+
+    /**
      * Set up west panel.
      *
      * @param colorPanel of the application.
      * @return westPanel of the application.
      */
-    private JPanel initializeWestPanel(JPanel colorPanel) {
+    private JPanel initializeWestPanel(JPanel colorPanel, JPanel imageEditingPanel) {
         JPanel westPanel = new JPanel();
         westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
         westPanel.setPreferredSize(new Dimension(WEST_PANEL_WIDTH, 0));
@@ -739,6 +778,8 @@ public class MainUI {
         westPanel.add(canvasTools);
         westPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
         westPanel.add(colorPanel);
+        westPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
+        westPanel.add(imageEditingPanel);
         return westPanel;
     }
 
