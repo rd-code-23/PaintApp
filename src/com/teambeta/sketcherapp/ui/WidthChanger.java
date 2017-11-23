@@ -97,12 +97,14 @@ public class WidthChanger {
         globalSize.setForeground(Color.WHITE);
         globalSize.setSelected(true);
         globalSize.setFont(checkBoxFont);
+        globalSize.setFocusPainted(false);
 
         fillBox = new JCheckBox(FILL_CHECKBOX_TEXT);
         fillBox.setBackground(Color.DARK_GRAY);
         fillBox.setForeground(Color.WHITE);
         fillBox.setSelected(false);
         fillBox.setFont(checkBoxFont);
+        fillBox.setFocusPainted(false);
         isFill = fillBox.isSelected();
     }
 
