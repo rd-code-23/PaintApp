@@ -51,6 +51,12 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private static final String HIDE_LAYER_ICON_DEFAULT = RES_PATH + File.separator + "hide_layer.png";
     private static final String HIDE_LAYER_ICON_HIGHLIGHTED = RES_PATH + File.separator + "hide_layer_highlighted.png";
     private static final String HIDE_LAYER_ICON_HOVER = RES_PATH + File.separator + "hide_layer_hover.png";
+    private static final String LAYER_UP_ICON_DEFAULT = RES_PATH + File.separator + "layer_up.png";
+    private static final String LAYER_UP_ICON_HIGHLIGHTED = RES_PATH + File.separator + "layer_up_highlighted.png";
+    private static final String LAYER_UP_ICON_HOVER = RES_PATH + File.separator + "layer_up_hover.png";
+    private static final String LAYER_DOWN_ICON_DEFAULT = RES_PATH + File.separator + "layer_down.png";
+    private static final String LAYER_DOWN_ICON_HIGHLIGHTED = RES_PATH + File.separator + "layer_down_highlighted.png";
+    private static final String LAYER_DOWN_ICON_HOVER = RES_PATH + File.separator + "layer_down_hover.png";
 
     /**
      * Return The JList of ImageLayers stored in the LayersPanel
