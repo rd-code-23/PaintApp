@@ -1,8 +1,10 @@
 package com.teambeta.sketcherapp.ui;
 
+import com.sun.org.apache.bcel.internal.generic.DUP;
 import com.teambeta.sketcherapp.model.ImageLayer;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
@@ -19,7 +21,11 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private static final String RENAME_LAYER_BUTTON_TEXT = "Rename";
     private static final String INPUT_POPUP_TEXT = "Input New Name";
     private static final String DUPLICATE_BUTTON_TEXT = "Duplicate";
+    private static final String DARK_GREY_CANVAS = "#222222";
+    private static final String FONT_TYPE = "Arial";
+    private static final int FONT_SIZE = 16;
     private static final int MAX_NUM_OF_LAYERS = 32;
+    private static final int LAYER_OPTIONS_PANEL_PADDING = 30;
     private DrawArea drawArea;
     private LinkedList<ImageLayer> drawingLayers;
     private JList<ImageLayer> listOfLayers = new JList<>();
@@ -76,7 +82,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         super(new BorderLayout());
         this.drawArea = drawArea;
         this.drawingLayers = drawArea.getDrawingLayers();
-        listOfLayers.setFixedCellWidth(270);
+        listOfLayers.setFixedCellWidth(380);
         listOfLayers.setFixedCellHeight(150);
         listOfLayers.setModel(listModel);
         listOfLayers.setVisibleRowCount(-1);
@@ -96,11 +102,16 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
      * @param drawArea A reference to the programs drawArea.
      */
     private void addLayerButtons(DrawArea drawArea) {
+        JPanel layerOptionsPanel = new JPanel(new BorderLayout());
+        layerOptionsPanel.setBorder(new EmptyBorder(LAYER_OPTIONS_PANEL_PADDING,
+                LAYER_OPTIONS_PANEL_PADDING, LAYER_OPTIONS_PANEL_PADDING, LAYER_OPTIONS_PANEL_PADDING));
+        layerOptionsPanel.setBackground(Color.DARK_GRAY);
+
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.setBackground(Color.DARK_GRAY);
-        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.PAGE_AXIS));
+        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
 
-        hideShowLayerButton = new JButton(HIDE_SHOW_LAYER_BUTTON_TEXT);
+        hideShowLayerButton = createButton(HIDE_LAYER_ICON_DEFAULT, HIDE_SHOW_LAYER_BUTTON_TEXT);
         ActionListener hideShowLayerActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -116,7 +127,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         hideShowLayerButton.addActionListener(hideShowLayerActionListener);
         buttonsPanel.add(hideShowLayerButton);
 
-        addLayerButton = new JButton(ADD_LAYER_BUTTON_TEXT);
+        addLayerButton = createButton(ADD_LAYER_ICON_DEFAULT, ADD_LAYER_BUTTON_TEXT);
         ActionListener addLayerButtonActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -132,7 +143,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         addLayerButton.addActionListener(addLayerButtonActionListener);
         buttonsPanel.add(addLayerButton);
 
-        deleteLayerButton = new JButton(DELETE_LAYER_BUTTON_TEXT);
+        deleteLayerButton = createButton(DELETE_LAYER_ICON_DEFAULT, DELETE_LAYER_BUTTON_TEXT);
         ActionListener deleteLayerButtonActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -147,7 +158,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         deleteLayerButton.addActionListener(deleteLayerButtonActionListener);
         buttonsPanel.add(deleteLayerButton);
 
-        renameLayerButton = new JButton(RENAME_LAYER_BUTTON_TEXT);
+        renameLayerButton = createButton(RENAME_LAYER_ICON_DEFAULT, RENAME_LAYER_BUTTON_TEXT);
         ActionListener renameLayerButtonActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -168,7 +179,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         renameLayerButton.addActionListener(renameLayerButtonActionListener);
         buttonsPanel.add(renameLayerButton);
 
-        duplicateLayerButton = new JButton(DUPLICATE_BUTTON_TEXT);
+        duplicateLayerButton = createButton(DUPLICATE_LAYER_ICON_DEFAULT, DUPLICATE_BUTTON_TEXT);
         ActionListener duplicateLayerButtonActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -195,7 +206,26 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         duplicateLayerButton.addActionListener(duplicateLayerButtonActionListener);
         buttonsPanel.add(duplicateLayerButton);
 
-        this.add(buttonsPanel, BorderLayout.SOUTH);
+        layerOptionsPanel.add(buttonsPanel, BorderLayout.CENTER);
+        this.add(layerOptionsPanel, BorderLayout.SOUTH);
+    }
+
+    private JButton createButton(String iconPath, String toolTipText) {
+        JButton button = new JButton(new ImageIcon(iconPath)) {
+            public JToolTip createToolTip() {
+                JToolTip toolTip = super.createToolTip();
+                toolTip.setBackground(Color.decode(DARK_GREY_CANVAS));
+                toolTip.setForeground(Color.WHITE);
+                toolTip.setBorder(null);
+                toolTip.setFont(new Font(FONT_TYPE, Font.PLAIN, FONT_SIZE));
+                return toolTip;
+            }
+        };
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setContentAreaFilled(false);
+        button.setToolTipText(toolTipText);
+        return button;
     }
 
     /**

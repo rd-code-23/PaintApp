@@ -63,7 +63,7 @@ public class MainUI {
     private static final String APPLICATION_NAME = "Beta Sketcher";
     private static final int APPLICATION_WIDTH = 1920;
     private static final int APPLICATION_HEIGHT = 1080;
-    private static final int EDITOR_PANEL_WIDTH = 300;
+    private static final int EDITOR_PANEL_WIDTH = 400;
     private static final int EDITOR_PANEL_HEIGHT = 300;
     private static final int PANEL_SECTION_SPACING = 20;
     private static final int WEST_PANEL_WIDTH = 120;
@@ -106,6 +106,7 @@ public class MainUI {
     private JButton highlightedButton;
     private BrightnessMenu brightnessMenu;
     private SaturationMenu saturationMenu;
+    private LayersPanel layersPanel;
 
     private static final String RES_PATH = System.getProperty("user.dir") + File.separator + "src" +
             File.separator + "res";
@@ -302,9 +303,7 @@ public class MainUI {
                 saturationMenu.showWindow();
             }
 
-            /* We can also make it so that instead of hiding tool components when another is selected,
-               have it so that components replace each other (depending on its position in the panel).
-
+            /*
                Review 1: Default to hiding if the tool isn't the text tool. Use direct checks to see if the current tool
                is allowed to use the font dropdown menu. JButton objects currently are the only ones allowed to hide.
                Subclass JButton if we are going to use them for other purposes. Might as well add helper methods to this
@@ -322,7 +321,6 @@ public class MainUI {
             }
         }
     };
-    private LayersPanel layersPanel;
 
     /**
      * Constructor.
@@ -529,12 +527,12 @@ public class MainUI {
     private void initializeDrawArea(Container mainContent) {
         JPanel drawAreaPanel = new JPanel();
         drawAreaPanel.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.ipady = canvasHeight;
-        c.ipadx = canvasWidth;
+        GridBagConstraints gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipady = canvasHeight;
+        gridBagConstraints.ipadx = canvasWidth;
         drawAreaPanel.setBackground(Color.decode(DARK_GREY_CANVAS));
-        drawAreaPanel.add(drawArea, c);
+        drawAreaPanel.add(drawArea, gridBagConstraints);
         mainContent.add(drawAreaPanel, BorderLayout.CENTER);
     }
 
@@ -737,6 +735,7 @@ public class MainUI {
     private JPanel initializeEditorPanel() {
         JPanel editorPanel = new JPanel();
         editorPanel.setLayout(new BorderLayout());
+        editorPanel.setBackground(Color.DARK_GRAY);
         editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
         layersPanel = new LayersPanel(drawArea);
         editorPanel.add(layersPanel, BorderLayout.EAST);
