@@ -22,3 +22,6 @@ https://stackoverflow.com/questions/3953208/value-change-listener-to-jtextfield
 
 9. Garbage icon (for deleting layers) taken from FreeIconsPng.
 http://www.freeiconspng.com/img/10498
+
+10. Pencil icon (for renaming layers) taken from simpe icon.
+http://simpleicon.com/dev/pencil.html

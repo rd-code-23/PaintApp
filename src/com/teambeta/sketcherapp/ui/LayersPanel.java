@@ -40,6 +40,10 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private static final String DELETE_LAYER_ICON_HIGHLIGHTED = RES_PATH + File.separator +
             "delete_layer_highlighted.png";
     private static final String DELETE_LAYER_ICON_HOVER = RES_PATH + File.separator + "delete_layer_hover.png";
+    private static final String RENAME_LAYER_ICON_DEFAULT = RES_PATH + File.separator + "rename_layer.png";
+    private static final String RENAME_LAYER_ICON_HIGHLIGHTED = RES_PATH + File.separator +
+            "rename_layer_highlighted.png";
+    private static final String RENAME_LAYER_ICON_HOVER = RES_PATH + File.separator + "rename_layer_hover.png";
 
     /**
      * Return The JList of ImageLayers stored in the LayersPanel
