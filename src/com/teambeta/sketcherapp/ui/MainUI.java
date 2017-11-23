@@ -435,6 +435,7 @@ public class MainUI {
         initializeDrawArea(mainContent);
         initializeButtons();
         initializeCanvasTools();
+        brushToolButton.setIcon(new ImageIcon(BRUSH_ICON_HIGHLIGHTED));
 
         /* END MAIN UI BUTTONS */
         JPanel northPanel = new JPanel();
