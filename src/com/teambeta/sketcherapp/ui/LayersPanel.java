@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.LinkedList;
 
 public class LayersPanel extends JPanel implements ListSelectionListener {
@@ -29,6 +30,12 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private JButton deleteLayerButton;
     private JButton renameLayerButton;
     private JButton duplicateLayerButton;
+
+    private static final String RES_PATH = System.getProperty("user.dir") + File.separator + "src" +
+            File.separator + "res";
+    private static final String ADD_LAYER_ICON_DEFAULT = RES_PATH + File.separator + "layer.png";
+    private static final String ADD_LAYER_ICON_HIGHLIGHTED = RES_PATH + File.separator + "layer_highlighted.png";
+    private static final String ADD_LAYER_ICON_HOVER = RES_PATH + File.separator + "layer_hover.png";
 
     /**
      * Return The JList of ImageLayers stored in the LayersPanel
@@ -69,6 +76,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
      */
     private void addLayerButtons(DrawArea drawArea) {
         JPanel buttonsPanel = new JPanel();
+        buttonsPanel.setBackground(Color.DARK_GRAY);
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.PAGE_AXIS));
 
         hideShowLayerButton = new JButton(HIDE_SHOW_LAYER_BUTTON_TEXT);
