@@ -282,6 +282,9 @@ public class MainUI {
                 updateFillState();
             } else if (e.getSource() == spiralToolButton) {
                 selectedDrawingTool = spiralTool;
+                setHighlightedToDefault();
+                highlightedButton = spiralToolButton;
+                spiralToolButton.setIcon(new ImageIcon(SPIRAL_ICON_HIGHLIGHTED));
                 updateSizeSlider();
             }
 
@@ -550,8 +553,8 @@ public class MainUI {
         // First
         JButton[] buttonContainer = {
                 clearButton, selectionButton, brushToolButton, airBrushToolButton, eraserToolButton, lineToolButton,
-                fanToolButton, rectangleToolButton, ellipseToolButton, triangleToolButton,
-                paintBucketToolButton, celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton, spiralToolButton
+                fanToolButton, rectangleToolButton, ellipseToolButton, triangleToolButton, paintBucketToolButton,
+                celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton, spiralToolButton
         };
         String[] buttonHoverContainer = {
                 CLEAR_ICON_HOVER, SELECTION_ICON_HOVER, BRUSH_ICON_HOVER, AIR_BRUSH_ICON_HOVER, ERASER_ICON_HOVER,
@@ -587,8 +590,6 @@ public class MainUI {
             button.setContentAreaFilled(false);
             int CURRENT_CONTAINER_INDEX = buttonContainerIndex;
             button.addMouseListener(new java.awt.event.MouseAdapter() {
-                private Icon originalIcon = button.getIcon();
-
                 public void mouseEntered(java.awt.event.MouseEvent evt) {
                     button.setIcon(new ImageIcon(buttonHoverContainer[CURRENT_CONTAINER_INDEX]));
                 }
@@ -598,12 +599,6 @@ public class MainUI {
                         button.setIcon(new ImageIcon(buttonDefaultContainer[CURRENT_CONTAINER_INDEX]));
                     } else {
                         button.setIcon(new ImageIcon(buttonHighlightedContainer[CURRENT_CONTAINER_INDEX]));
-                    }
-                }
-
-                public void mouseClicked(java.awt.event.MouseEvent evt) {
-                    if (button != clearButton) {
-                        originalIcon = new ImageIcon(buttonHighlightedContainer[CURRENT_CONTAINER_INDEX]);
                     }
                 }
             });
@@ -747,6 +742,8 @@ public class MainUI {
                 textToolButton.setIcon(new ImageIcon(TEXT_ICON_DEFAULT));
             } else if (highlightedButton == eyeDropperToolButton) {
                 eyeDropperToolButton.setIcon(new ImageIcon(EYEDROP_ICON_DEFAULT));
+            } else if (highlightedButton == spiralToolButton) {
+                spiralToolButton.setIcon(new ImageIcon(SPIRAL_ICON_DEFAULT));
             }
         }
     }
