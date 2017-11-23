@@ -27,7 +27,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private static final String LAYER_BG_COLOR = "#4B4B4B";
     private static final String LAYER_SELECT_COLOR = "#909090";
     private static final String FONT_TYPE = "Arial";
-    private static final int FONT_SIZE = 16;
+    private static final int FONT_SIZE = 18;
     private static final int MAX_NUM_OF_LAYERS = 32;
     private static final int LAYER_OPTIONS_PANEL_PADDING = 30;
     private static final int LAYER_MOVEMENT_BUTTONS_PADDING = 20;
@@ -123,22 +123,6 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         buttonsPanel.setBackground(Color.DARK_GRAY);
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
 
-        hideShowLayerButton = createButton(HIDE_LAYER_ICON_DEFAULT, HIDE_SHOW_LAYER_BUTTON_TEXT);
-        ActionListener hideShowLayerActionListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (listOfLayers.getSelectedIndex() != -1) {
-                    ImageLayer selectedLayer = drawArea.getDrawingLayers().get(listOfLayers.getSelectedIndex());
-                    selectedLayer.setVisible(!selectedLayer.isVisible());
-                    listOfLayers.repaint();
-                    drawArea.redrawLayers();
-                    drawArea.repaint();
-                }
-            }
-        };
-        hideShowLayerButton.addActionListener(hideShowLayerActionListener);
-        buttonsPanel.add(hideShowLayerButton);
-
         addLayerButton = createButton(ADD_LAYER_ICON_DEFAULT, ADD_LAYER_BUTTON_TEXT);
         ActionListener addLayerButtonActionListener = new ActionListener() {
             @Override
@@ -169,6 +153,22 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         };
         deleteLayerButton.addActionListener(deleteLayerButtonActionListener);
         buttonsPanel.add(deleteLayerButton);
+
+        hideShowLayerButton = createButton(HIDE_LAYER_ICON_DEFAULT, HIDE_SHOW_LAYER_BUTTON_TEXT);
+        ActionListener hideShowLayerActionListener = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (listOfLayers.getSelectedIndex() != -1) {
+                    ImageLayer selectedLayer = drawArea.getDrawingLayers().get(listOfLayers.getSelectedIndex());
+                    selectedLayer.setVisible(!selectedLayer.isVisible());
+                    listOfLayers.repaint();
+                    drawArea.redrawLayers();
+                    drawArea.repaint();
+                }
+            }
+        };
+        hideShowLayerButton.addActionListener(hideShowLayerActionListener);
+        buttonsPanel.add(hideShowLayerButton);
 
         renameLayerButton = createButton(RENAME_LAYER_ICON_DEFAULT, RENAME_LAYER_BUTTON_TEXT);
         ActionListener renameLayerButtonActionListener = new ActionListener() {
@@ -251,7 +251,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     /**
      * Create a JButton with a specific tooltip format.
      *
-     * @param iconPath path to the button's icon.
+     * @param iconPath    path to the button's icon.
      * @param toolTipText text for the tool tip on mouse over.
      * @return created JButton.
      */
