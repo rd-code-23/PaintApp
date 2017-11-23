@@ -38,6 +38,12 @@ public class SpiralTool extends DrawingTool {
     public void onDrag(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
     }
 
+    /**
+     * Get selected image layer.
+     * 
+     * @param drawingLayers of the canvas.
+     * @return selected layer.
+     */
     private ImageLayer getSelectedLayer(LinkedList<ImageLayer> drawingLayers) {
         //get the selected layer, this assumes there is only one selected layer.
         for (int i = 0; i < drawingLayers.size(); i++) {
@@ -82,10 +88,20 @@ public class SpiralTool extends DrawingTool {
         return ColorChooser.getColor();
     }
 
+    /**
+     * Get the selected tool width.
+     * 
+     * @return brush width.
+     */
     public int getToolWidth() {
         return brushWidth;
     }
 
+    /**
+     * Set the tool width.
+     * 
+     * @param brushWidth size for the brush width.
+     */
     public void setToolWidth(int brushWidth) {
         this.brushWidth = brushWidth;
     }
@@ -166,5 +182,4 @@ public class SpiralTool extends DrawingTool {
             y_prev = y;
         }
     }
-
 }
