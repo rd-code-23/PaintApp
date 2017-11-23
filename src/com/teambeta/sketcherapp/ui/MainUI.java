@@ -40,8 +40,25 @@ public class MainUI {
     private static DNATool dnaTool;
     private static AirBrushTool airBrushTool;
     private static TriangleTool triangleTool;
+    private static SpiralTool spiralTool;
     private static DrawingTool selectedDrawingTool;
     private static EyeDropperStats eyeDropperStats;
+
+    private static final String CLEAR_BUTTON_TEXT = "Clear";
+    private static final String BRUSH_BUTTON_TEXT = "Brush";
+    private static final String RECTANGLE_TOOL_BUTTON_TEXT = "Rectangle";
+    private static final String LINE_TOOL_BUTTON_TEXT = "Line";
+    private static final String ERASER_TOOL_BUTTON_TEXT = "Eraser";
+    private static final String ELLIPSE_TOOL_BUTTON_TEXT = "Ellipse";
+    private static final String TEXT_TOOL_BUTTON_TEXT = "Text";
+    private static final String PAINT_BUCKET_BUTTON_TEXT = "Paint Bucket";
+    private static final String EYEDROPPER_TOOL_BUTTON_TEXT = "Eye Dropper";
+    private static final String FAN_TOOL_BUTTON_TEXT = "Fan-out";
+    private static final String CELTIC_KNOT_TOOL_BUTTON_TEXT = "Celtic Knot";
+    private static final String DNA_TOOL_BUTTON_TEXT = "DNA";
+    private static final String AIR_BRUSH_TOOL_BUTTON_TEXT = "Airbrush";
+    private static final String TRIANGLE_TOOL_BUTTON_TEXT = "Triangle";
+    private static final String SPIRAL_TOOL_BUTTON_TEXT = "Spiral";
 
     private JFrame mainFrame;
 
@@ -68,6 +85,8 @@ public class MainUI {
     private JButton dnaToolButton;
     private JButton airBrushToolButton;
     private JButton triangleToolButton;
+    private JButton spiralToolButton;
+
     private static DrawArea drawArea;
     private static ColorChooser colorChooser;
     private WidthChanger widthChanger;
@@ -133,6 +152,9 @@ public class MainUI {
     private static final String SHAPES_ICON_DEFAULT = RES_PATH + File.separator + "shapes.png";
     private static final String SHAPES_ICON_HIGHLIGHTED = RES_PATH + File.separator + "shapes_highlighted.png";
     private static final String SHAPES_ICON_HOVER = RES_PATH + File.separator + "shapes_hover.png";
+    private static final String SPIRAL_ICON_DEFAULT = RES_PATH + File.separator + "spiral.png";
+    private static final String SPIRAL_ICON_HIGHLIGHTED = RES_PATH + File.separator + "spiral_highlighted.png";
+    private static final String SPIRAL_ICON_HOVER = RES_PATH + File.separator + "spiral_hover.png";
     private static final String SQUARE_ICON_DEFAULT = RES_PATH + File.separator + "square.png";
     private static final String SQUARE_ICON_HIGHLIGHTED = RES_PATH + File.separator + "square_highlighted.png";
     private static final String SQUARE_ICON_HOVER = RES_PATH + File.separator + "square_hover.png";
@@ -258,6 +280,9 @@ public class MainUI {
                 triangleToolButton.setIcon(new ImageIcon(TRIANGLE_ICON_HIGHLIGHTED));
                 updateSizeSlider();
                 updateFillState();
+            } else if (e.getSource() == spiralToolButton) {
+                selectedDrawingTool = spiralTool;
+                updateSizeSlider();
             }
 
             /* We can also make it so that instead of hiding tool components when another is selected,
@@ -310,6 +335,7 @@ public class MainUI {
         dnaTool = new DNATool();
         airBrushTool = new AirBrushTool();
         triangleTool = new TriangleTool();
+        spiralTool = new SpiralTool();
         selectedDrawingTool = brushTool;
     }
 
@@ -397,6 +423,7 @@ public class MainUI {
         drawArea = new DrawArea(this);
 
         importExport = new ImportExport(drawArea, this);
+        SaturationMenu saturationMenu = new SaturationMenu(drawArea);
         BrightnessMenu brightnessMenu = new BrightnessMenu(drawArea);
         GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
         NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
@@ -491,6 +518,7 @@ public class MainUI {
         mainContent.add(drawAreaPanel, BorderLayout.CENTER);
     }
 
+<<<<<<< src/com/teambeta/sketcherapp/ui/MainUI.java
     /**
      * Initialize tool buttons.
      */
@@ -510,7 +538,8 @@ public class MainUI {
         dnaToolButton = new JButton(new ImageIcon(DNA_ICON_DEFAULT));
         airBrushToolButton = new JButton(new ImageIcon(AIR_BRUSH_ICON_DEFAULT));
         triangleToolButton = new JButton(new ImageIcon(TRIANGLE_ICON_DEFAULT));
-        highlightedButton = null;
+        spiralToolButton = new JButton(new ImageIcon(SPIRAL_ICON_DEFAULT);
+        highlightedButton = brushToolButton;
     }
 
     /**
@@ -523,24 +552,25 @@ public class MainUI {
         JButton[] buttonContainer = {
                 clearButton, selectionButton, brushToolButton, airBrushToolButton, eraserToolButton, lineToolButton,
                 fanToolButton, rectangleToolButton, ellipseToolButton, triangleToolButton,
-                paintBucketToolButton, celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton
+                paintBucketToolButton, celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton, spiralToolButton
         };
         String[] buttonHoverContainer = {
                 CLEAR_ICON_HOVER, SELECTION_ICON_HOVER, BRUSH_ICON_HOVER, AIR_BRUSH_ICON_HOVER, ERASER_ICON_HOVER,
                 LINE_ICON_HOVER, FAN_ICON_HOVER, SQUARE_ICON_HOVER, CIRCLE_ICON_HOVER, TRIANGLE_ICON_HOVER,
-                BUCKET_ICON_HOVER, CELTIC_ICON_HOVER, DNA_ICON_HOVER, TEXT_ICON_HOVER, EYEDROP_ICON_HOVER
+                BUCKET_ICON_HOVER, CELTIC_ICON_HOVER, DNA_ICON_HOVER, TEXT_ICON_HOVER, EYEDROP_ICON_HOVER, 
+                SPIRAL_ICON_HOVER
         };
         String[] buttonDefaultContainer = {
                 CLEAR_ICON_DEFAULT, SELECTION_ICON_DEFAULT, BRUSH_ICON_DEFAULT, AIR_BRUSH_ICON_DEFAULT,
                 ERASER_ICON_DEFAULT, LINE_ICON_DEFAULT, FAN_ICON_DEFAULT, SQUARE_ICON_DEFAULT, CIRCLE_ICON_DEFAULT,
                 TRIANGLE_ICON_DEFAULT, BUCKET_ICON_DEFAULT, CELTIC_ICON_DEFAULT, DNA_ICON_DEFAULT,
-                TEXT_ICON_DEFAULT, EYEDROP_ICON_DEFAULT
+                TEXT_ICON_DEFAULT, EYEDROP_ICON_DEFAULT, SPIRAL_ICON_DEFAULT
         };
         String[] buttonHighlightedContainer = {
                 CLEAR_ICON_HIGHLIGHTED, SELECTION_ICON_HIGHLIGHTED, BRUSH_ICON_HIGHLIGHTED, AIR_BRUSH_ICON_HIGHLIGHTED,
                 ERASER_ICON_HIGHLIGHTED, LINE_ICON_HIGHLIGHTED, FAN_ICON_HIGHLIGHTED, SQUARE_ICON_HIGHLIGHTED,
                 CIRCLE_ICON_HIGHLIGHTED, TRIANGLE_ICON_HIGHLIGHTED, BUCKET_ICON_HIGHLIGHTED, CELTIC_ICON_HIGHLIGHTED,
-                DNA_ICON_HIGHLIGHTED, TEXT_ICON_HIGHLIGHTED, EYEDROP_ICON_HIGHLIGHTED
+                DNA_ICON_HIGHLIGHTED, TEXT_ICON_HIGHLIGHTED, EYEDROP_ICON_HIGHLIGHTED, SPIRAL_ICON_HIGHLIGHTED
         };
 
         canvasTools = new JPanel();

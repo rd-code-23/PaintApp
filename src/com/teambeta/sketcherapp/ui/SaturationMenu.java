@@ -1,18 +1,17 @@
 package com.teambeta.sketcherapp.ui;
 
 import javax.swing.*;
-import java.awt.*;
 
-public class BrightnessMenu {
+public class SaturationMenu {
     private DrawArea drawArea;
-    private static final String DIALOG_MESSAGE = "Scale the current layer brightness to what factor?\n[0.0 - Infinity]";
+    private static final String DIALOG_MESSAGE = "Scale the current layer saturation to what factor?\n[0.0 - Infinity]";
     private static final String DIALOG_WARNING = "That is not a valid value";
-    private static final String DIALOG_WINDOW_TITLE = "Change Brightness";
+    private static final String DIALOG_WINDOW_TITLE = "Change Saturation";
 
     /*
         Constructor to access the drawArea
      */
-    public BrightnessMenu(DrawArea drawArea) {
+    public SaturationMenu(DrawArea drawArea) {
         this.drawArea = drawArea;
     }
 
@@ -20,19 +19,19 @@ public class BrightnessMenu {
      * Show the dialog window to confirm current layer brightness change
      */
     public void showWindow() {
-        String brightnessInput;
+        String saturationInput;
         float scaleFactor = 0f;
-        brightnessInput = JOptionPane.showInputDialog(null, DIALOG_MESSAGE,
+        saturationInput = JOptionPane.showInputDialog(null, DIALOG_MESSAGE,
                 DIALOG_WINDOW_TITLE, JOptionPane.QUESTION_MESSAGE);
-        if (brightnessInput == null) {
+        if (saturationInput == null) {
             return;
         }
         try {
-            scaleFactor = Float.parseFloat(brightnessInput);
+            scaleFactor = Float.parseFloat(saturationInput);
             if (scaleFactor < 0.0f) {
                 throw new Exception();
             }
-            drawArea.drawLayerBrightnessScaling(scaleFactor);
+            drawArea.drawLayerSaturationScaling(scaleFactor);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, DIALOG_WARNING);
         }

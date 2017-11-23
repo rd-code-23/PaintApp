@@ -131,7 +131,6 @@ public class DrawArea extends JComponent {
             }
         }
         canvasGraphics.drawImage(layersAboveSelectedLayer, 0, 0, null);
-
     }
 
     /**
@@ -340,6 +339,7 @@ public class DrawArea extends JComponent {
         graphics.drawImage(image, 0, 0, this);
         //graphics.finalize();
         isCanvasAltered = false;
+        redrawLayers();
         repaint();
     }
 
@@ -383,7 +383,7 @@ public class DrawArea extends JComponent {
         for (int x = 0; x < layer.getWidth(); ++x) {
             for (int y = 0; y < layer.getHeight(); ++y) {
                 color_at_point = new Color(layer.getRGB(x, y), true);
-                if (color_at_point.getRGB() != -1) {
+                if (color_at_point.getAlpha() != 0) {
                     lumaValue = (int) (
                             RED_LUMA_COEFFICIENT * color_at_point.getRed()
                                     + GREEN_LUMA_COEFFICIENT * color_at_point.getGreen()
@@ -498,14 +498,113 @@ public class DrawArea extends JComponent {
 
     /**
      * Scale the current layer's transparency by a factor
-     * (0.5f means half the value, 2.0f means multiply twice)
+     * (0.5f means half the value, 1.0 means maintain current alpha, 2.0 means double the alpha value.)
      *
-     * @param scaleFactor the factor to adjust the transparency
+     * @param transparencyFactor the factor to adjust the transparency
      */
-    public void scaleTransparency(float scaleFactor) {
-        float scaleFactorArray[] = {1f, 1f, 1f, scaleFactor};
+    public void scaleTransparency(float transparencyFactor) {
+        if (transparencyFactor < 0.0f) {
+            transparencyFactor = 0.0f;
+        }
+
+        float scaleFactorArray[] = {1f, 1f, 1f, transparencyFactor};
         float offsetArray[] = {0f, 0f, 0f, 0f};
         rescaleOperation(scaleFactorArray, offsetArray, null);
+    }
+
+    /**
+     * Multiply the current layer's hue by some float factor.
+     * (0.0 effectively means set the hue to zero, 0.5 means half hue, 2.0 means double hue)
+     *
+     * @param hueFactor the factor to multiply current hue levels
+     */
+    public void drawLayerHueScaling(float hueFactor) {
+        transformLayerHSB(getCurrentlySelectedLayer().getBufferedImage(),
+                hueFactor, 1f, 1f);
+        drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
+        repaint();
+    }
+
+    /**
+     * Multiply the current layer's saturation by some float factor.
+     * (0.0 effectively means set the saturation to zero, 0.5 means half saturation, 2.0 means double saturation)
+     *
+     * @param saturationFactor the factor to multiply current saturation levels
+     */
+    public void drawLayerSaturationScaling(float saturationFactor) {
+        transformLayerHSB(getCurrentlySelectedLayer().getBufferedImage(),
+                1f, saturationFactor, 1f);
+        drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
+        repaint();
+    }
+
+    /**
+     * Multiply the current layer's brightness by some float factor.
+     * (0.0 effectively means set the brightness to zero, 0.5 means half brightness, 2.0 means double brightness)
+     *
+     * NOTE: This may act differently than rescaleOperation.
+     *
+     * @param brightnessFactor the factor to multiply current brightness levels
+     */
+    public void drawLayerBrightnessScaling(float brightnessFactor) {
+        transformLayerHSB(getCurrentlySelectedLayer().getBufferedImage(),
+                1f, 1f, brightnessFactor);
+        drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
+        repaint();
+    }
+
+    /**
+     * Multiply the current layer's HSB by some float factors.
+     *
+     * @param layer the layer to transform
+     * @param hueFactor the factor to multiply current hue levels
+     * @param saturationFactor the factor to multiply current saturation levels
+     * @param brightnessFactor the factor to multiply current brightness levels
+     */
+    private void transformLayerHSB(BufferedImage layer, float hueFactor, float saturationFactor, float brightnessFactor) {
+
+        hueFactor = Math.abs(hueFactor);
+        saturationFactor = Math.abs(saturationFactor);
+        brightnessFactor = Math.abs(brightnessFactor);
+
+        Color originalPointColor;
+        Color intermediaryTransformation;
+        Color newPointColor;
+        float[] hsbArray;
+        int alphaPreserve;
+        int newRBG;
+
+        for (int x = 0; x < layer.getWidth(); ++x) {
+            for (int y = 0; y < layer.getHeight(); ++y) {
+
+                originalPointColor = new Color(layer.getRGB(x, y), true);
+                if (originalPointColor.getAlpha() == 0) {
+                    continue;
+                }
+                alphaPreserve = originalPointColor.getAlpha();
+
+                hsbArray = Color.RGBtoHSB(originalPointColor.getRed(), originalPointColor.getGreen(),
+                        originalPointColor.getBlue(), null);
+                hsbArray[0] *= hueFactor;
+                hsbArray[1] *= saturationFactor;
+                hsbArray[2] *= brightnessFactor;
+
+                // Bound HSB values
+                for (int i = 0; i < 3; ++i) {
+                    hsbArray[i] = Math.max(Math.min(hsbArray[i], 1.0f), 0.0f);
+                }
+
+                newRBG = Color.HSBtoRGB(hsbArray[0], hsbArray[1], hsbArray[2]);
+
+                intermediaryTransformation = new Color(newRBG, true);
+
+                newPointColor = new Color(intermediaryTransformation.getRed(), intermediaryTransformation.getGreen(),
+                        intermediaryTransformation.getBlue(), alphaPreserve);
+
+                layer.setRGB(x, y, newPointColor.getRGB());
+
+            }
+        }
     }
 
 }
