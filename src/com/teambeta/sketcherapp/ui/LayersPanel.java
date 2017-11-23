@@ -22,11 +22,18 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private static final String RENAME_LAYER_BUTTON_TEXT = "Rename";
     private static final String INPUT_POPUP_TEXT = "Input New Name";
     private static final String DUPLICATE_BUTTON_TEXT = "Duplicate";
+    private static final String LAYER_UP_BUTTON_TEXT = "Move Up";
+    private static final String LAYER_DOWN_BUTTON_TEXT = "Move Down";
     private static final String DARK_GREY_CANVAS = "#222222";
     private static final String FONT_TYPE = "Arial";
     private static final int FONT_SIZE = 16;
     private static final int MAX_NUM_OF_LAYERS = 32;
     private static final int LAYER_OPTIONS_PANEL_PADDING = 30;
+    private static final int LAYER_MOVEMENT_BUTTONS_PADDING = 20;
+    private static final int LAYER_MOVEMENT_PANEL_WIDTH = 300;
+    private static final int LAYER_MOVEMENT_PANEL_HEIGHT = 100;
+    private static final int LAYER_PANEL_WIDTH = 380;
+    private static final int LAYER_PANEL_HEIGHT = 150;
     private DrawArea drawArea;
     private LinkedList<ImageLayer> drawingLayers;
     private JList<ImageLayer> listOfLayers = new JList<>();
@@ -83,8 +90,8 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         super(new BorderLayout());
         this.drawArea = drawArea;
         this.drawingLayers = drawArea.getDrawingLayers();
-        listOfLayers.setFixedCellWidth(380);
-        listOfLayers.setFixedCellHeight(150);
+        listOfLayers.setFixedCellWidth(LAYER_PANEL_WIDTH);
+        listOfLayers.setFixedCellHeight(LAYER_PANEL_HEIGHT);
         listOfLayers.setModel(listModel);
         listOfLayers.setVisibleRowCount(-1);
         listOfLayers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -103,11 +110,6 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
      * @param drawArea A reference to the programs drawArea.
      */
     private void addLayerButtons(DrawArea drawArea) {
-        JPanel layerOptionsPanel = new JPanel(new BorderLayout());
-        layerOptionsPanel.setBorder(new EmptyBorder(LAYER_OPTIONS_PANEL_PADDING,
-                LAYER_OPTIONS_PANEL_PADDING, LAYER_OPTIONS_PANEL_PADDING, LAYER_OPTIONS_PANEL_PADDING));
-        layerOptionsPanel.setBackground(Color.DARK_GRAY);
-
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.setBackground(Color.DARK_GRAY);
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
@@ -207,7 +209,33 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         duplicateLayerButton.addActionListener(duplicateLayerButtonActionListener);
         buttonsPanel.add(duplicateLayerButton);
 
-        layerOptionsPanel.add(buttonsPanel, BorderLayout.CENTER);
+        JPanel layerMovementButtonsPanel = new JPanel();
+        layerMovementButtonsPanel.setLayout(new BoxLayout(layerMovementButtonsPanel, BoxLayout.X_AXIS));
+        layerMovementButtonsPanel.setBackground(Color.DARK_GRAY);
+        layerMovementButtonsPanel.setBorder(new EmptyBorder(LAYER_MOVEMENT_BUTTONS_PADDING,
+                LAYER_MOVEMENT_BUTTONS_PADDING, LAYER_MOVEMENT_BUTTONS_PADDING, LAYER_MOVEMENT_BUTTONS_PADDING));
+
+        JButton layerUpButton = createButton(LAYER_UP_ICON_DEFAULT, LAYER_UP_BUTTON_TEXT);
+        JButton layerDownButton = createButton(LAYER_DOWN_ICON_DEFAULT, LAYER_DOWN_BUTTON_TEXT);
+        layerMovementButtonsPanel.add(layerUpButton);
+        layerMovementButtonsPanel.add(layerDownButton);
+
+        JPanel layerMovementPanel = new JPanel();
+        layerMovementPanel.setLayout(new BoxLayout(layerMovementPanel, BoxLayout.Y_AXIS));
+        layerMovementPanel.setBackground(Color.DARK_GRAY);
+        layerMovementPanel.add(layerMovementButtonsPanel);
+        layerMovementPanel.setMaximumSize(new Dimension(LAYER_MOVEMENT_PANEL_WIDTH, LAYER_MOVEMENT_PANEL_HEIGHT));
+        layerMovementPanel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.GRAY));
+
+        JPanel layerOptionsPanel = new JPanel();
+        layerOptionsPanel.setLayout(new BoxLayout(layerOptionsPanel, BoxLayout.Y_AXIS));
+        layerOptionsPanel.setBorder(new EmptyBorder(LAYER_OPTIONS_PANEL_PADDING,
+                LAYER_OPTIONS_PANEL_PADDING, LAYER_OPTIONS_PANEL_PADDING, LAYER_OPTIONS_PANEL_PADDING));
+        layerOptionsPanel.setBackground(Color.DARK_GRAY);
+        layerOptionsPanel.add(layerMovementPanel);
+        layerOptionsPanel.add(Box.createRigidArea(new Dimension(0, LAYER_OPTIONS_PANEL_PADDING)));
+        layerOptionsPanel.add(buttonsPanel);
+
         this.add(layerOptionsPanel, BorderLayout.SOUTH);
     }
 
