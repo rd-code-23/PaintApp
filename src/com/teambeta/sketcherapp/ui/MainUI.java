@@ -442,8 +442,8 @@ public class MainUI {
         db_kbShortcuts = new DB_KBShortcuts(shortcuts);
         keboardShortCutPanel = new ShortcutDialog(this, shortcuts);
 
-        MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, brightnessMenu, noiseGeneratorMenu,
-                checkerboardMenu, keboardShortCutPanel);
+        MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, saturationMenu, brightnessMenu,
+                noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel);
 
 
         northPanel.add(menuUI, BorderLayout.NORTH);
@@ -518,7 +518,6 @@ public class MainUI {
         mainContent.add(drawAreaPanel, BorderLayout.CENTER);
     }
 
-<<<<<<< src/com/teambeta/sketcherapp/ui/MainUI.java
     /**
      * Initialize tool buttons.
      */
@@ -538,7 +537,7 @@ public class MainUI {
         dnaToolButton = new JButton(new ImageIcon(DNA_ICON_DEFAULT));
         airBrushToolButton = new JButton(new ImageIcon(AIR_BRUSH_ICON_DEFAULT));
         triangleToolButton = new JButton(new ImageIcon(TRIANGLE_ICON_DEFAULT));
-        spiralToolButton = new JButton(new ImageIcon(SPIRAL_ICON_DEFAULT);
+        spiralToolButton = new JButton(new ImageIcon(SPIRAL_ICON_DEFAULT));
         highlightedButton = brushToolButton;
     }
 
