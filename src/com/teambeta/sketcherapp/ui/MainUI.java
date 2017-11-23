@@ -1,5 +1,6 @@
 package com.teambeta.sketcherapp.ui;
 
+import com.sun.org.apache.bcel.internal.generic.DREM;
 import com.teambeta.sketcherapp.Database.DB_KBShortcuts;
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.ImportExport;
@@ -249,7 +250,7 @@ public class MainUI {
         dnaTool = new DNATool();
         airBrushTool = new AirBrushTool();
         triangleTool = new TriangleTool();
-        rectangleSelectionTool = new RectangleSelectionTool();
+        rectangleSelectionTool = new RectangleSelectionTool(this);
         selectedDrawingTool = brushTool;
     }
 
@@ -326,7 +327,6 @@ public class MainUI {
         Container mainContent = mainFrame.getContentPane();
         mainContent.setLayout(new BorderLayout());
         drawArea = new DrawArea(this);
-
         importExport = new ImportExport(drawArea, this);
         GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
         NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
@@ -712,5 +712,10 @@ public class MainUI {
         return db_kbShortcuts;
     }
 
+public  void focusDrawArea(){
+      //  drawArea.setFocusable(true);
+        drawArea.validate();
+        drawArea.repaint();
 
+}
 }

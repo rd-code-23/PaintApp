@@ -1,15 +1,20 @@
 package com.teambeta.sketcherapp.drawingTools;
 
+import com.teambeta.sketcherapp.Main;
 import com.teambeta.sketcherapp.model.GeneralObserver;
 import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.model.MouseCursor;
 import com.teambeta.sketcherapp.ui.DrawArea;
+import com.teambeta.sketcherapp.ui.MainUI;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
@@ -45,9 +50,16 @@ public class RectangleSelectionTool extends DrawingTool {
     private boolean isDrawn;// has the user selected somthing
     private int prevX, prevY;
     private boolean isDragSelection = false; // is the user choosing to drag the image
+DrawArea drawArea;
+MainUI mainUI;
+
     LinkedList<ImageLayer> drawingLayersCopy;
+    BufferedImage canvasCopy;
+    MouseEvent eCopy;
+
     JRadioButton cutOption;
     JRadioButton copyOption;
+    JButton rotate90ClockWiseButton;
     JLabel rightClickInfo;
     boolean doNothing = false;
     boolean isCut;
@@ -61,7 +73,7 @@ public class RectangleSelectionTool extends DrawingTool {
     /**
      * The constructor sets the properties of the tool to their default values
      */
-    public RectangleSelectionTool() {
+    public RectangleSelectionTool(MainUI mainUI) {
         registerObservers();
         color = Color.black;
         initX = 0;
@@ -77,6 +89,7 @@ public class RectangleSelectionTool extends DrawingTool {
         squareWidth = DEFAULT_WIDTH_VALUE;
         fillShape = false;
         isCut = true;
+        this.mainUI = mainUI;
     }
 
     /**
@@ -108,7 +121,9 @@ public class RectangleSelectionTool extends DrawingTool {
     @Override
     public void onPress(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
 
-
+        canvasCopy = canvas;
+        drawingLayersCopy = drawingLayers;
+        eCopy = e;
         if (SwingUtilities.isRightMouseButton(e)) {
             System.out.println("right click ");
             restartSelection();
@@ -128,6 +143,7 @@ public class RectangleSelectionTool extends DrawingTool {
                 mouseOriginY = currentY;
                 originalSelectedCanvas = copyImage(canvas);
             } else {
+
                 if (isCut)
                     clearSelection(canvas, drawingLayers);
                 prevX = initX - e.getX();
@@ -136,6 +152,22 @@ public class RectangleSelectionTool extends DrawingTool {
                 isDragSelection = isOverSelection;
             }
         }
+    }
+
+    private BufferedImage rotate90ClockWise(BufferedImage bufferedImage) {
+        AffineTransform transform = new AffineTransform();
+        transform.rotate(Math.toRadians(90), bufferedImage.getWidth() / 2, bufferedImage.getHeight() / 2);
+        AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
+        return op.filter(bufferedImage, null);
+
+    }
+
+    private BufferedImage rotate90AntiClockWise(BufferedImage bufferedImage) {
+        AffineTransform transform = new AffineTransform();
+        transform.rotate(Math.toRadians(-90), bufferedImage.getWidth() / 2, bufferedImage.getHeight() / 2);
+        AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
+        return op.filter(bufferedImage, null);
+
     }
 
     @Override
@@ -311,7 +343,21 @@ public class RectangleSelectionTool extends DrawingTool {
         }
         isDrawn = false;
     }
+    private void pasteDragSelection2(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers,
+                                    ImageLayer selectedLayer, MouseEvent e) {
+        //cut and paste the image into clicked location
+        if (selectedLayer != null) {
+            Graphics2D selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
+            selectedLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            selectedLayerGraphics.setColor(color);
+            selectedLayerGraphics.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_BUTT,
+                    BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
 
+            selectedLayerGraphics.drawImage(selectedCanvas,  e.getX(), e.getY(), null);
+            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+        }
+        isDrawn = false;
+    }
     /**
      * cut and paste the image into clicked location
      */
@@ -456,6 +502,8 @@ public class RectangleSelectionTool extends DrawingTool {
 
     public void renderPanel() {
 
+        rotate90ClockWiseButton = new JButton("90");
+
         selectionOptionPanel = new JPanel();
         selectionOptionPanel.setLayout(new GridBagLayout());
 
@@ -484,6 +532,9 @@ public class RectangleSelectionTool extends DrawingTool {
         c.gridx = 1;
         c.gridy = 0;
         firstLine.add(copyOption, c);
+        c.gridx = 2;
+        c.gridy = 0;
+        firstLine.add(rotate90ClockWiseButton, c);
 
         JPanel secondLine = new JPanel();
         secondLine.setLayout(new FlowLayout());
@@ -502,6 +553,7 @@ public class RectangleSelectionTool extends DrawingTool {
 
         cutOption.addActionListener(actionListener);
         copyOption.addActionListener(actionListener);
+        rotate90ClockWiseButton.addActionListener(actionListener);
 
 
     }
@@ -517,13 +569,36 @@ public class RectangleSelectionTool extends DrawingTool {
     ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == cutOption) {
-                System.out.println("cut");
                 isCut = true;
             }
 
             if (e.getSource() == copyOption) {
-                System.out.println("copy");
                 isCut = false;
+            }
+
+            if (e.getSource() == rotate90ClockWiseButton) {
+                doNothing = false;
+                selectedCanvas = rotate90ClockWise(selectedCanvas);
+                ImageLayer selectedLayer = getSelectedLayer(drawingLayersCopy);
+                clearSelection(canvasCopy,drawingLayersCopy);
+
+                pasteDragSelection2(canvasCopy,drawingLayersCopy,selectedLayer,eCopy);
+            //MainUI.focusDrawArea();
+                //rotate90ClockWiseButton.doClick();
+                Robot bot = null;
+                try {
+                    bot = new Robot();
+                } catch (AWTException e1) {
+                    e1.printStackTrace();
+                }
+              //  bot.mouseMove(, MainUI.CANVAS_WIDTH);
+              //  bot.mousePress(InputEvent.BUTTON1_MASK);
+               //   bot.mouseRelease(InputEvent.BUTTON1_MASK);
+                  mainUI.focusDrawArea();
+                rotate90ClockWiseButton.setFocusable(false);
+                 // drawArea.validate();
+                  //drawArea.repaint();
+
             }
         }
     };
