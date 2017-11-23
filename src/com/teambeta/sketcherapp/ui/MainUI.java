@@ -18,8 +18,6 @@ import java.beans.PropertyChangeListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 
-import static com.sun.java.accessibility.util.AWTEventMonitor.addMouseListener;
-
 /**
  * Main UI class to wrap all GUI elements together.
  */
@@ -27,6 +25,9 @@ public class MainUI {
     private static final int PANEL_SECTION_SPACING = 20;
     private static final int WEST_PANEL_WIDTH = 120;
     private static final int COLOR_PANEL_HEIGHT = 200;
+    private static final String DARK_GREY_CANVAS = "#222222";
+    private static final String FONT_TYPE = "Arial";
+    private static final int FONT_SIZE = 16;
     private static LineTool lineTool;
     private static BrushTool brushTool;
     private static RectangleTool rectangleTool;
@@ -44,14 +45,15 @@ public class MainUI {
     private static DrawingTool selectedDrawingTool;
     private static EyeDropperStats eyeDropperStats;
 
-    private static final String CLEAR_BUTTON_TEXT = "Clear";
-    private static final String BRUSH_BUTTON_TEXT = "Brush";
+    private static final String CLEAR_TOOL_BUTTON_TEXT = "Clear";
+    private static final String SELECTION_TOOL_BUTTON_TEXT = "Selection";
+    private static final String BRUSH_TOOL_BUTTON_TEXT = "Brush";
     private static final String RECTANGLE_TOOL_BUTTON_TEXT = "Rectangle";
     private static final String LINE_TOOL_BUTTON_TEXT = "Line";
     private static final String ERASER_TOOL_BUTTON_TEXT = "Eraser";
     private static final String ELLIPSE_TOOL_BUTTON_TEXT = "Ellipse";
     private static final String TEXT_TOOL_BUTTON_TEXT = "Text";
-    private static final String PAINT_BUCKET_BUTTON_TEXT = "Paint Bucket";
+    private static final String BUCKET_BUTTON_TEXT = "Paint Bucket";
     private static final String EYEDROPPER_TOOL_BUTTON_TEXT = "Eye Dropper";
     private static final String FAN_TOOL_BUTTON_TEXT = "Fan-out";
     private static final String CELTIC_KNOT_TOOL_BUTTON_TEXT = "Celtic Knot";
@@ -517,7 +519,7 @@ public class MainUI {
         c.fill = GridBagConstraints.HORIZONTAL;
         c.ipady = canvasHeight;
         c.ipadx = canvasWidth;
-        drawAreaPanel.setBackground(Color.decode("#222222"));
+        drawAreaPanel.setBackground(Color.decode(DARK_GREY_CANVAS));
         drawAreaPanel.add(drawArea, c);
         mainContent.add(drawAreaPanel, BorderLayout.CENTER);
     }
@@ -526,23 +528,42 @@ public class MainUI {
      * Initialize tool buttons.
      */
     private void initializeButtons() {
-        clearButton = new JButton(new ImageIcon(CLEAR_ICON_DEFAULT));
-        selectionButton = new JButton(new ImageIcon(SELECTION_ICON_DEFAULT));
-        brushToolButton = new JButton(new ImageIcon(BRUSH_ICON_DEFAULT));
-        lineToolButton = new JButton(new ImageIcon(LINE_ICON_DEFAULT));
-        rectangleToolButton = new JButton(new ImageIcon(SQUARE_ICON_DEFAULT));
-        eraserToolButton = new JButton(new ImageIcon(ERASER_ICON_DEFAULT));
-        ellipseToolButton = new JButton(new ImageIcon(CIRCLE_ICON_DEFAULT));
-        textToolButton = new JButton(new ImageIcon(TEXT_ICON_DEFAULT));
-        eyeDropperToolButton = new JButton(new ImageIcon(EYEDROP_ICON_DEFAULT));
-        fanToolButton = new JButton(new ImageIcon(FAN_ICON_DEFAULT));
-        celticKnotToolButton = new JButton(new ImageIcon(CELTIC_ICON_DEFAULT));
-        paintBucketToolButton = new JButton(new ImageIcon(BUCKET_ICON_DEFAULT));
-        dnaToolButton = new JButton(new ImageIcon(DNA_ICON_DEFAULT));
-        airBrushToolButton = new JButton(new ImageIcon(AIR_BRUSH_ICON_DEFAULT));
-        triangleToolButton = new JButton(new ImageIcon(TRIANGLE_ICON_DEFAULT));
-        spiralToolButton = new JButton(new ImageIcon(SPIRAL_ICON_DEFAULT));
+        clearButton = createButton(CLEAR_ICON_DEFAULT);
+        selectionButton = createButton(SELECTION_ICON_DEFAULT);
+        brushToolButton = createButton(BRIGHTNESS_ICON_DEFAULT);
+        lineToolButton = createButton(LINE_ICON_DEFAULT);
+        rectangleToolButton = createButton(SQUARE_ICON_DEFAULT);
+        eraserToolButton = createButton(ERASER_ICON_DEFAULT);
+        ellipseToolButton = createButton(CIRCLE_ICON_DEFAULT);
+        textToolButton = createButton(TEXT_ICON_DEFAULT);
+        eyeDropperToolButton = createButton(ERASER_ICON_DEFAULT);
+        fanToolButton = createButton(FAN_ICON_DEFAULT);
+        celticKnotToolButton = createButton(CELTIC_ICON_DEFAULT);
+        paintBucketToolButton = createButton(BUCKET_ICON_DEFAULT);
+        dnaToolButton = createButton(DNA_ICON_DEFAULT);
+        airBrushToolButton = createButton(AIR_BRUSH_ICON_DEFAULT);
+        triangleToolButton = createButton(TRIANGLE_ICON_DEFAULT);
+        spiralToolButton = createButton(SPIRAL_ICON_DEFAULT);
         highlightedButton = brushToolButton;
+    }
+
+    /**
+     * Create a JButton with a specific tooltip format.
+     *
+     * @param iconPath path to the button's icon.
+     * @return created JButton.
+     */
+    private JButton createButton(String iconPath) {
+        return new JButton(new ImageIcon(iconPath)) {
+            public JToolTip createToolTip() {
+                JToolTip toolTip = super.createToolTip();
+                toolTip.setBackground(Color.decode(DARK_GREY_CANVAS));
+                toolTip.setForeground(Color.WHITE);
+                toolTip.setBorder(null);
+                toolTip.setFont(new Font(FONT_TYPE, Font.PLAIN, FONT_SIZE));
+                return toolTip;
+            }
+        };
     }
 
     /**
@@ -557,10 +578,16 @@ public class MainUI {
                 fanToolButton, rectangleToolButton, ellipseToolButton, triangleToolButton, paintBucketToolButton,
                 celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton, spiralToolButton
         };
+        String[] buttonTextContainer = {
+                CLEAR_TOOL_BUTTON_TEXT, SELECTION_TOOL_BUTTON_TEXT, BRUSH_TOOL_BUTTON_TEXT, AIR_BRUSH_TOOL_BUTTON_TEXT,
+                ERASER_TOOL_BUTTON_TEXT, LINE_TOOL_BUTTON_TEXT, FAN_TOOL_BUTTON_TEXT, RECTANGLE_TOOL_BUTTON_TEXT,
+                ELLIPSE_TOOL_BUTTON_TEXT, TRIANGLE_TOOL_BUTTON_TEXT, BUCKET_BUTTON_TEXT, CELTIC_KNOT_TOOL_BUTTON_TEXT,
+                DNA_TOOL_BUTTON_TEXT, TEXT_TOOL_BUTTON_TEXT, EYEDROPPER_TOOL_BUTTON_TEXT, SPIRAL_TOOL_BUTTON_TEXT
+        };
         String[] buttonHoverContainer = {
                 CLEAR_ICON_HOVER, SELECTION_ICON_HOVER, BRUSH_ICON_HOVER, AIR_BRUSH_ICON_HOVER, ERASER_ICON_HOVER,
                 LINE_ICON_HOVER, FAN_ICON_HOVER, SQUARE_ICON_HOVER, CIRCLE_ICON_HOVER, TRIANGLE_ICON_HOVER,
-                BUCKET_ICON_HOVER, CELTIC_ICON_HOVER, DNA_ICON_HOVER, TEXT_ICON_HOVER, EYEDROP_ICON_HOVER, 
+                BUCKET_ICON_HOVER, CELTIC_ICON_HOVER, DNA_ICON_HOVER, TEXT_ICON_HOVER, EYEDROP_ICON_HOVER,
                 SPIRAL_ICON_HOVER
         };
         String[] buttonDefaultContainer = {
@@ -589,6 +616,7 @@ public class MainUI {
             button.setBorderPainted(false);
             button.setFocusPainted(false);
             button.setContentAreaFilled(false);
+            button.setToolTipText(buttonTextContainer[buttonContainerIndex]);
             int CURRENT_CONTAINER_INDEX = buttonContainerIndex;
             button.addMouseListener(new java.awt.event.MouseAdapter() {
                 public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -801,30 +829,30 @@ public class MainUI {
 
         shortcuts.addKeyBinding(KeyEvent.VK_C, true, false, false,
                 Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
-            drawArea.clear();
-        });
+                    drawArea.clear();
+                });
 
         shortcuts.addKeyBinding(KeyEvent.VK_O, true, false, false,
                 Shortcuts.EXPORT_SHORTCUT, (evt) -> {
-            importExport.exportImage();
-        });
+                    importExport.exportImage();
+                });
 
         shortcuts.addKeyBinding(KeyEvent.VK_I, true, false, false,
                 Shortcuts.IMPORT_SHORTCUT, (evt) -> {
-            importExport.importImage();
-        });
+                    importExport.importImage();
+                });
 
         shortcuts.addKeyBinding(KeyEvent.VK_B, true, false, false,
                 Shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
-            selectedDrawingTool = brushTool;
-            updateSizeSlider();
-        });
+                    selectedDrawingTool = brushTool;
+                    updateSizeSlider();
+                });
 
         shortcuts.addKeyBinding(KeyEvent.VK_L, true, false, false,
                 Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
-            selectedDrawingTool = lineTool;
-            updateSizeSlider();
-        });
+                    selectedDrawingTool = lineTool;
+                    updateSizeSlider();
+                });
 /*
         addKeyBinding(editorPanel, KeyEvent.VK_R, true, false, false, "RECT TOOL", (evt) -> {
             selectedDrawingTool = rectangleTool;
@@ -881,30 +909,30 @@ public class MainUI {
 
         shortcuts.addKeyBinding(Shortcuts.getClearToolKeyCode(), Shortcuts.isAlt_clearTool(),
                 Shortcuts.isShift_clearTool(), Shortcuts.isAlt_clearTool(), Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
-            drawArea.clear();
-        });
+                    drawArea.clear();
+                });
 
         shortcuts.addKeyBinding(shortcuts.getExportKeyCode(), shortcuts.isCtrl_export(), shortcuts.isShift_export(),
                 shortcuts.isAlt_export(), Shortcuts.EXPORT_SHORTCUT, (evt) -> {
-            importExport.exportImage();
-        });
+                    importExport.exportImage();
+                });
 
         shortcuts.addKeyBinding(shortcuts.getImportKeyCode(), shortcuts.isCtrl_import(), shortcuts.isShift_import(),
                 shortcuts.isAlt_import(), Shortcuts.IMPORT_SHORTCUT, (evt) -> {
-            importExport.importImage();
-        });
+                    importExport.importImage();
+                });
 
         shortcuts.addKeyBinding(shortcuts.getBrushToolKeyCode(), shortcuts.isCtrl_brushTool(),
                 shortcuts.isShift_brushTool(), shortcuts.isAlt_brushTool(), shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
-            selectedDrawingTool = brushTool;
-            updateSizeSlider();
-        });
+                    selectedDrawingTool = brushTool;
+                    updateSizeSlider();
+                });
 
         shortcuts.addKeyBinding(shortcuts.getLineToolKeyCode(), shortcuts.isCtrl_lineTool(),
                 shortcuts.isShift_lineTool(), shortcuts.isAlt_lineTool(), Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
-            selectedDrawingTool = lineTool;
-            updateSizeSlider();
-        });
+                    selectedDrawingTool = lineTool;
+                    updateSizeSlider();
+                });
 /*
         addKeyBinding(editorPanel, KeyEvent.VK_R, true, false, false, "RECT TOOL", (evt) -> {
             selectedDrawingTool = rectangleTool;
