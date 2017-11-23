@@ -1,4 +1,4 @@
-1.  Gnatt Chart Template, Template was used from: https://www.officetimeline.com/gantt-chart-template/it-project-management-download
+﻿1.  Gnatt Chart Template, Template was used from: https://www.officetimeline.com/gantt-chart-template/it-project-management-download
 
 2. Coding convention used: Dr. Brian Fraser, “Java Coding Standard”, Summer 2016 (with slight modifications).
 
@@ -19,3 +19,6 @@ https://stackoverflow.com/questions/11093326/restricting-jtextfield-input-to-int
 
 8. Java Swing DocumentListener documentation provided on Stack Overflow.
 https://stackoverflow.com/questions/3953208/value-change-listener-to-jtextfield
+
+9. Garbage icon (for deleting layers) taken from FreeIconsPng.
+http://www.freeiconspng.com/img/10498
