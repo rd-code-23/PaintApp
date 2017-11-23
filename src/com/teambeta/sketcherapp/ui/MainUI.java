@@ -849,12 +849,18 @@ public class MainUI {
         shortcuts.addKeyBinding(KeyEvent.VK_B, true, false, false,
                 Shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
                     selectedDrawingTool = brushTool;
+                    setHighlightedToDefault();
+                    highlightedButton = brushToolButton;
+                    brushToolButton.setIcon(new ImageIcon(BRUSH_ICON_HIGHLIGHTED));
                     updateSizeSlider();
                 });
 
         shortcuts.addKeyBinding(KeyEvent.VK_L, true, false, false,
                 Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
                     selectedDrawingTool = lineTool;
+                    setHighlightedToDefault();
+                    highlightedButton = lineToolButton;
+                    lineToolButton.setIcon(new ImageIcon(LINE_ICON_HIGHLIGHTED));
                     updateSizeSlider();
                 });
 /*
@@ -929,12 +935,18 @@ public class MainUI {
         shortcuts.addKeyBinding(shortcuts.getBrushToolKeyCode(), shortcuts.isCtrl_brushTool(),
                 shortcuts.isShift_brushTool(), shortcuts.isAlt_brushTool(), shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
                     selectedDrawingTool = brushTool;
+                    setHighlightedToDefault();
+                    highlightedButton = brushToolButton;
+                    brushToolButton.setIcon(new ImageIcon(BRUSH_ICON_HIGHLIGHTED));
                     updateSizeSlider();
                 });
 
         shortcuts.addKeyBinding(shortcuts.getLineToolKeyCode(), shortcuts.isCtrl_lineTool(),
                 shortcuts.isShift_lineTool(), shortcuts.isAlt_lineTool(), Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
                     selectedDrawingTool = lineTool;
+                    setHighlightedToDefault();
+                    highlightedButton = lineToolButton;
+                    lineToolButton.setIcon(new ImageIcon(LINE_ICON_HIGHLIGHTED));
                     updateSizeSlider();
                 });
 /*
