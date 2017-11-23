@@ -104,16 +104,9 @@ public class MainUI {
             MouseCursor.setDefaultCursor();
 
 
-            if (e.getSource() != rectangleSelectionToolButton) {
+            if (selectedDrawingTool == rectangleSelectionTool) {
                 rectangleSelectionTool.restartSelection();
-                northPanel.remove(rectangleSelectionTool.getSelectionOptionPanel());
                 rectangleSelectionTool.hidePanel();
-            }
-
-            if (e.getSource() != textToolButton) {
-
-                northPanel.remove(textToolSettings);
-
             }
 
             if (e.getSource() == clearButton) {
@@ -188,16 +181,22 @@ public class MainUI {
             } else if (e.getSource() == widthChanger.getFillBox()) {
                 widthChanger.setFill(!widthChanger.isFill());
                 selectedDrawingTool.setFillState(widthChanger.isFill());
+            } else if (e.getSource() == rectangleSelectionToolButton) {
+                selectedDrawingTool = rectangleSelectionTool;
+                textToolSettings.setVisibility(false);
+                rectangleSelectionTool.showPanel();
+                northPanel.remove(textToolSettings);
+                northPanel.add(rectangleSelectionTool.getSelectionOptionPanel(), BorderLayout.EAST);
+                northPanel.validate();
+
+                //   northPanel.add(textToolSettings, BorderLayout.EAST);
+                updateSizeSlider();
+                updateFillState();
+                //  rectangleSelectionTool.showPanel();
             } else if (e.getSource() == triangleToolButton) {
                 selectedDrawingTool = triangleTool;
                 updateSizeSlider();
                 updateFillState();
-            } else if (e.getSource() == rectangleSelectionToolButton) {
-                selectedDrawingTool = rectangleSelectionTool;
-                northPanel.add(rectangleSelectionTool.getSelectionOptionPanel(), BorderLayout.EAST);
-                updateSizeSlider();
-                updateFillState();
-                rectangleSelectionTool.showPanel();
             }
 
             /* We can also make it so that instead of hiding tool components when another is selected,
@@ -210,9 +209,11 @@ public class MainUI {
              */
             if (e.getSource() == textToolButton) {
                 selectedDrawingTool = textTool;
-                northPanel.add(textToolSettings, BorderLayout.EAST);
-                textTool.setFont(textToolSettings.getFontFromSelector());
                 textToolSettings.setVisibility(true);
+                northPanel.remove(rectangleSelectionTool.getSelectionOptionPanel());
+                northPanel.add(textToolSettings, BorderLayout.EAST);
+                northPanel.validate();
+                textTool.setFont(textToolSettings.getFontFromSelector());
             } else if ((e.getSource() != textToolButton && e.getSource() != clearButton)
                     && (e.getSource() instanceof JButton)) {
                 textToolSettings.setVisibility(false);
@@ -381,7 +382,7 @@ public class MainUI {
         canvasTools.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
         /* END MAINUI BUTTONS */
-         northPanel = new JPanel();
+        northPanel = new JPanel();
         northPanel.setLayout(new BorderLayout());
 
         //setting up the shortcuts and database
@@ -400,18 +401,17 @@ public class MainUI {
         widthChanger = new WidthChanger();
         toolSettings.add(widthChanger.getGUI());
         northPanel.add(toolSettings, BorderLayout.CENTER);
+
+
         if (rectangleSelectionTool != null) {
             rectangleSelectionTool.renderPanel();
+            northPanel.add(rectangleSelectionTool.getSelectionOptionPanel(), BorderLayout.EAST);
             rectangleSelectionTool.hidePanel();
-
-
-
         }
         if (textToolSettings != null) {
-
+            northPanel.add(textToolSettings, BorderLayout.EAST);
             textTool.setFont(textToolSettings.getFontFromSelector());
         }
-
 
 
         MainUI.listenForSlider listenForSlider = new MainUI.listenForSlider();

@@ -48,11 +48,14 @@ public class RectangleSelectionTool extends DrawingTool {
     LinkedList<ImageLayer> drawingLayersCopy;
     JRadioButton cutOption;
     JRadioButton copyOption;
+    JLabel rightClickInfo;
+
     boolean isCut;
 
     JPanel selectionOptionPanel;
 
-
+    //TODO BUG: north east panel not disappereing for textTool and selection, make empty jpanel to hide it
+//TODO BUG: sometimes if you move the selection a bit above or below selected canvas it drops the image to low
 
 
     /**
@@ -103,23 +106,33 @@ public class RectangleSelectionTool extends DrawingTool {
 
     @Override
     public void onPress(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
-        if (!isDrawn) {
-            MouseCursor.setDefaultCursor();
-            canvas.getGraphics().setColor(color);
-            currentX = e.getX();
-            currentY = e.getY();
-            initX = currentX;
-            initY = currentY;
-            mouseOriginX = currentX;
-            mouseOriginY = currentY;
-            originalSelectedCanvas = copyImage(canvas);
+
+
+        if (SwingUtilities.isRightMouseButton(e)) {
+            System.out.println("right click ");
+            restartSelection();
+            clearSelection2(canvas, drawingLayers);
+            //my code
         } else {
-            if(isCut)
-            clearSelection(canvas, drawingLayers);
-            prevX = initX - e.getX();
-            prevY = initY - e.getY();
-            initializeVariables(canvas, e);
-            isDragSelection = isOverSelection;
+
+            if (!isDrawn) {
+                MouseCursor.setDefaultCursor();
+                canvas.getGraphics().setColor(color);
+                currentX = e.getX();
+                currentY = e.getY();
+                initX = currentX;
+                initY = currentY;
+                mouseOriginX = currentX;
+                mouseOriginY = currentY;
+                originalSelectedCanvas = copyImage(canvas);
+            } else {
+                if (isCut)
+                    clearSelection(canvas, drawingLayers);
+                prevX = initX - e.getX();
+                prevY = initY - e.getY();
+                initializeVariables(canvas, e);
+                isDragSelection = isOverSelection;
+            }
         }
     }
 
@@ -164,7 +177,7 @@ public class RectangleSelectionTool extends DrawingTool {
 
         if (!isDrawn) {
             isDrawn = true;
-            int offset =0;
+            int offset = 0;
             drawWidthX = drawWidthX + offset;
             drawHeightY = drawHeightY + offset;
             checkBounds(canvas);
@@ -188,7 +201,7 @@ public class RectangleSelectionTool extends DrawingTool {
     /**
      * if the user selects the canvas that goes out of bounds this function will correct the results
      */
-//TODO needs fixing
+//TODO needs fixing, doesnt get right and bottom end of the canvas properlly
     private void checkBounds(BufferedImage canvas) {
         if (initX + (drawWidthX) > canvas.getWidth()) {
             drawWidthX = (canvas.getWidth() - initX);
@@ -232,12 +245,27 @@ public class RectangleSelectionTool extends DrawingTool {
         selectedLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         selectedLayerGraphics.setComposite(AlphaComposite.Clear);
         selectedLayerGraphics.setColor(transparentColor);
-        selectedLayerGraphics.setStroke(new BasicStroke(getToolWidth()));
-        int offset =13;
-        selectedLayerGraphics.fillRect(initX, initY, drawWidthX-offset, drawHeightY-offset);
-        selectedLayerGraphics.drawRect(initX, initY, drawWidthX-offset, drawHeightY-offset);
+        selectedLayerGraphics.setStroke(new BasicStroke(0));
+        int offset = 0;
+        selectedLayerGraphics.fillRect(initX, initY, drawWidthX - offset, drawHeightY - offset);
+        selectedLayerGraphics.drawRect(initX, initY, drawWidthX - offset, drawHeightY - offset);
         DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
     }
+
+    private void clearSelection2(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers) {
+        ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
+        Graphics2D selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
+        selectedLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        selectedLayerGraphics.setComposite(AlphaComposite.Clear);
+        selectedLayerGraphics.setColor(transparentColor);
+        selectedLayerGraphics.setStroke(new BasicStroke(0));
+        int offset = 0;
+        selectedLayerGraphics.drawRect(initX, initY, drawWidthX - offset, drawHeightY - offset);
+        //selectedLayerGraphics.fillRect(initX, initY, drawWidthX-offset, drawHeightY-offset);
+        selectedLayerGraphics.drawRect(initX, initY, drawWidthX - offset, drawHeightY - offset);
+        DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
+    }
+
 
     /**
      * drags the selected canvas to its new location
@@ -298,11 +326,18 @@ public class RectangleSelectionTool extends DrawingTool {
 
     @Override
     public void onClick(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
-        if (isDrawn) {
-            isDrawn = false;
-            MouseCursor.setDefaultCursor();
-            initializeVariables(canvas, e);
-            pasteSelection(canvas, drawingLayers, null, e);
+        if (SwingUtilities.isRightMouseButton(e)) {
+            System.out.println("right click ");
+            restartSelection();
+            clearSelection2(canvas, drawingLayers);
+            //my code
+        } else {
+            if (isDrawn) {
+                isDrawn = false;
+                MouseCursor.setDefaultCursor();
+                initializeVariables(canvas, e);
+                pasteSelection(canvas, drawingLayers, null, e);
+            }
         }
     }
 
@@ -401,6 +436,7 @@ public class RectangleSelectionTool extends DrawingTool {
 
     public void restartSelection() {
         System.out.println("restart");
+        MouseCursor.setDefaultCursor();
         //   DrawArea.drawLayersOntoCanvas(,originalSelectedCanvas);
         if (previewLayer != null)
             DrawArea.clearBufferImageToTransparent(previewLayer);
@@ -414,7 +450,11 @@ public class RectangleSelectionTool extends DrawingTool {
     public void renderPanel() {
 
         selectionOptionPanel = new JPanel();
-        selectionOptionPanel.setLayout(new FlowLayout());
+        selectionOptionPanel.setLayout(new GridBagLayout());
+
+        rightClickInfo = new JLabel("Right click to cancel");
+        rightClickInfo.setFont(new Font("David", Font.PLAIN, 24));
+        rightClickInfo.setForeground(Color.RED);
 
         cutOption = new JRadioButton("Cut");
         cutOption.setSelected(true);
@@ -425,10 +465,34 @@ public class RectangleSelectionTool extends DrawingTool {
         group.add(cutOption);
         group.add(copyOption);
 
-        selectionOptionPanel.add(cutOption);
-        selectionOptionPanel.add(copyOption);
 
-        selectionOptionPanel.setBackground(Color.DARK_GRAY);
+        JPanel firstLine = new JPanel();
+        firstLine.setLayout(new FlowLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.weightx = 0;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 0;
+        c.gridy = 0;
+        firstLine.add(cutOption,c);
+        c.gridx = 1;
+        c.gridy = 0;
+        firstLine.add(copyOption,c);
+
+        JPanel secondLine = new JPanel();
+        secondLine.setLayout(new FlowLayout());
+        c.gridx = 0;
+        c.gridy = 1;
+        secondLine.add(rightClickInfo,c);
+
+
+        c.gridx = 0;
+        c.gridy = 0;
+        selectionOptionPanel.add(firstLine,c);
+
+        c.gridx = 0;
+        c.gridy = 1;
+       selectionOptionPanel.add(secondLine,c);
+        selectionOptionPanel.setBackground(Color.white);
 
         cutOption.addActionListener(actionListener);
         copyOption.addActionListener(actionListener);
