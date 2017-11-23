@@ -37,6 +37,7 @@ public class MainUI {
     private static DNATool dnaTool;
     private static AirBrushTool airBrushTool;
     private static TriangleTool triangleTool;
+    private static SpiralTool spiralTool;
     private static DrawingTool selectedDrawingTool;
     private static EyeDropperStats eyeDropperStats;
 
@@ -54,6 +55,7 @@ public class MainUI {
     private static final String DNA_TOOL_BUTTON_TEXT = "DNA";
     private static final String AIR_BRUSH_TOOL_BUTTON_TEXT = "Airbrush";
     private static final String TRIANGLE_TOOL_BUTTON_TEXT = "Triangle";
+    private static final String SPIRAL_TOOL_BUTTON_TEXT = "Spiral";
     private JFrame mainFrame;
 
     private static final String APPLICATION_NAME = "Beta Sketcher";
@@ -78,6 +80,8 @@ public class MainUI {
     private JButton dnaToolButton;
     private JButton airBrushToolButton;
     private JButton triangleToolButton;
+    private JButton spiralToolButton;
+
     private static DrawArea drawArea;
     private static ColorChooser colorChooser;
     private WidthChanger widthChanger;
@@ -168,6 +172,9 @@ public class MainUI {
                 selectedDrawingTool = triangleTool;
                 updateSizeSlider();
                 updateFillState();
+            } else if (e.getSource() == spiralToolButton) {
+                selectedDrawingTool = spiralTool;
+                updateSizeSlider();
             }
 
             /* We can also make it so that instead of hiding tool components when another is selected,
@@ -217,6 +224,7 @@ public class MainUI {
         dnaTool = new DNATool();
         airBrushTool = new AirBrushTool();
         triangleTool = new TriangleTool();
+        spiralTool = new SpiralTool();
         selectedDrawingTool = brushTool;
     }
 
@@ -360,13 +368,14 @@ public class MainUI {
         dnaToolButton = new JButton(DNA_TOOL_BUTTON_TEXT);
         airBrushToolButton = new JButton(AIR_BRUSH_TOOL_BUTTON_TEXT);
         triangleToolButton = new JButton(TRIANGLE_TOOL_BUTTON_TEXT);
+        spiralToolButton = new JButton(SPIRAL_TOOL_BUTTON_TEXT);
 
         // Add a button to this array to register to actionListener and canvasTools
         // The order of this list determines the order of the buttons in the generated UI. Index -> 0 = Position -> First
         JButton[] buttonContainer = {
                 clearButton, brushToolButton, airBrushToolButton, eraserToolButton, lineToolButton,
                 fanToolButton, rectangleToolButton, ellipseToolButton, triangleToolButton, paintBucketToolButton,
-                celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton,
+                celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton, spiralToolButton
         };
 
         canvasTools = new JPanel();
