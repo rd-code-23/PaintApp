@@ -24,7 +24,7 @@ import java.io.File;
 public class MainUI {
     private static final int PANEL_SECTION_SPACING = 20;
     private static final int WEST_PANEL_WIDTH = 120;
-    private static final int COLOR_PANEL_HEIGHT = 200;
+    private static final int COLOR_PANEL_HEIGHT = 250;
     private static final String DARK_GREY_CANVAS = "#222222";
     private static final String FONT_TYPE = "Arial";
     private static final int FONT_SIZE = 16;
@@ -390,7 +390,7 @@ public class MainUI {
     }
 
     /**
-     * This is called when the 'x' is pressed
+     * This is called when the 'x' is pressed.
      */
     private void exit() {
         Object[] exitOptions = {"Cancel",
@@ -418,7 +418,7 @@ public class MainUI {
     }
 
     /**
-     * Build main GUI
+     * Build main GUI.
      */
     private void prepareGUI() {
         initializeMainFrame();
@@ -632,7 +632,9 @@ public class MainUI {
                 }
             });
             buttonContainerIndex++;
-            canvasTools.add(button);
+            if (button != eyeDropperToolButton) {
+                canvasTools.add(button);
+            }
             canvasTools.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
         }
         canvasTools.setBorder(BorderFactory.createLineBorder(Color.GRAY));
@@ -645,12 +647,14 @@ public class MainUI {
      */
     private JPanel initializeColorPanel() {
         JPanel colorPanel = new JPanel();
+        colorChooser = new ColorChooser();
         colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.Y_AXIS));
         colorPanel.setBackground(Color.DARK_GRAY);
         final Dimension CANVAS_TOOLS_MAX_SIZE = canvasTools.getMaximumSize();
         colorPanel.setMaximumSize(new Dimension((int) CANVAS_TOOLS_MAX_SIZE.getWidth(), COLOR_PANEL_HEIGHT));
         colorPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
-        colorChooser = new ColorChooser();
+        colorPanel.add(eyeDropperToolButton);
+        colorPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
         return colorPanel;
     }
 
