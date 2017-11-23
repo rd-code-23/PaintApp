@@ -19,9 +19,11 @@ public class SpiralTool extends DrawingTool {
     private Color color;
     private int brushWidth;
     private final static int DEFAULT_STOKE_VALUE = 10;
-    private final static double T_VAL_INCREMENT = 0.01;
-    private final static double SCALING_FACTOR_REDUCER = 1.0/9.0;
-    private final static double MINIMUM_SCALING_FACTOR = 1.025;
+    private final static int MAXIMUM_PIXEL_MARGIN = 15;
+    private final static float LINE_WIDTH_REDUCER = 1.5f;
+    private final static double T_VAL_INCREMENT = 0.025;
+    private final static double SCALING_FACTOR_REDUCER = 1.0 / 8.0;
+    private final static double MINIMUM_SCALING_FACTOR = 1.01;
 
     /**
      * The constructor sets the properties of the tool to their default values
@@ -73,7 +75,11 @@ public class SpiralTool extends DrawingTool {
 
         ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
         if (selectedLayer != null) {
-            writeParametricSpiral(scalingFactor, currentX, currentY, selectedLayer.getBufferedImage());
+            if (!e.isAltDown()) {
+                writeParametricSpiral(scalingFactor, currentX, currentY, selectedLayer.getBufferedImage(), false);
+            } else {
+                writeParametricSpiral(scalingFactor, currentX, currentY, selectedLayer.getBufferedImage(), true);
+            }
             DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
         }
     }
@@ -130,7 +136,7 @@ public class SpiralTool extends DrawingTool {
      * @param y_centre the y-coordinate of the centre point
      * @param layer the layer to draw on
      */
-    private void writeParametricSpiral(double distalPowerFactor, int x_centre, int y_centre, BufferedImage layer) {
+    private void writeParametricSpiral(double distalPowerFactor, int x_centre, int y_centre, BufferedImage layer, boolean flip) {
         // take arguments for the center point
         // default to the centre of the image if one of them isn't given
         // t-max is equal to the factor root of min(width, height)
@@ -150,12 +156,17 @@ public class SpiralTool extends DrawingTool {
         Graphics2D layerGraphics = (Graphics2D) layer.getGraphics();
         layerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         layerGraphics.setColor(color);
-        layerGraphics.setStroke(new BasicStroke(getToolWidth() / 2f, BasicStroke.CAP_ROUND,    // End-cap style
+        layerGraphics.setStroke(new BasicStroke(getToolWidth() / LINE_WIDTH_REDUCER, BasicStroke.CAP_ROUND,
                 BasicStroke.CAP_BUTT));
 
         while (radius <= radius_max) {
-            x =  Math.pow(t, distalPowerFactor) * Math.sin(t) + x_centre;
-            y =  Math.pow(t, distalPowerFactor) * Math.cos(t) + y_centre;
+            if (!flip) {
+                x = Math.pow(t, distalPowerFactor) * Math.sin(t) + x_centre;
+                y = Math.pow(t, distalPowerFactor) * Math.cos(t) + y_centre;
+            } else {
+                x = Math.pow(t, distalPowerFactor) * Math.cos(t) + x_centre;
+                y = Math.pow(t, distalPowerFactor) * Math.sin(t) + y_centre;
+            }
 
             // Initial setting for first line
             if (x_prev == -1) {
@@ -165,15 +176,16 @@ public class SpiralTool extends DrawingTool {
                 y_prev = y;
             }
 
-            // Range checking for radius computing and line drawing.
-            if (! ((x < 0) && (x >= layer.getWidth()) && (y < 0) && (y >= layer.getHeight())) ) {
-                try {
-                    radius = Math.sqrt(Math.pow(x - x_centre, 2) + Math.pow(y - y_centre, 2));
+            radius = Math.sqrt(Math.pow(x - x_centre, 2) + Math.pow(y - y_centre, 2));
+
+            if ( (x > 0) && (x < layer.getWidth()) && (y > 0) && (y < layer.getHeight())
+                    ||
+                        (
+                            (x > -MAXIMUM_PIXEL_MARGIN) || (y > -MAXIMUM_PIXEL_MARGIN) ||
+                            (x < layer.getWidth() + MAXIMUM_PIXEL_MARGIN) || (y < layer.getHeight() + MAXIMUM_PIXEL_MARGIN)
+                        )
+                    ) {
                     layerGraphics.drawLine((int) x, (int) y, (int) x_prev, (int) y_prev);
-                } catch (Exception e) {
-                    // If the radius max was computed improperly because getDimension returns maximum dimensional value
-                    // but the actual max dimension index is max dimension - 1
-                }
             }
 
             t += T_VAL_INCREMENT;
@@ -182,4 +194,5 @@ public class SpiralTool extends DrawingTool {
             y_prev = y;
         }
     }
+
 }
