@@ -2,6 +2,7 @@ package com.teambeta.sketcherapp.ui;
 
 import com.sun.org.apache.bcel.internal.generic.DUP;
 import com.teambeta.sketcherapp.model.ImageLayer;
+import com.teambeta.sketcherapp.model.ToolButton;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -210,17 +211,15 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         this.add(layerOptionsPanel, BorderLayout.SOUTH);
     }
 
+    /**
+     * Create a JButton with a specific tooltip format.
+     *
+     * @param iconPath path to the button's icon.
+     * @param toolTipText text for the tool tip on mouse over.
+     * @return created JButton.
+     */
     private JButton createButton(String iconPath, String toolTipText) {
-        JButton button = new JButton(new ImageIcon(iconPath)) {
-            public JToolTip createToolTip() {
-                JToolTip toolTip = super.createToolTip();
-                toolTip.setBackground(Color.decode(DARK_GREY_CANVAS));
-                toolTip.setForeground(Color.WHITE);
-                toolTip.setBorder(null);
-                toolTip.setFont(new Font(FONT_TYPE, Font.PLAIN, FONT_SIZE));
-                return toolTip;
-            }
-        };
+        JButton button = new ToolButton(new ImageIcon(iconPath));
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.setContentAreaFilled(false);

@@ -4,6 +4,7 @@ import com.teambeta.sketcherapp.Database.DB_KBShortcuts;
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.ImportExport;
 import com.teambeta.sketcherapp.model.Shortcuts;
+import com.teambeta.sketcherapp.model.ToolButton;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -540,44 +541,25 @@ public class MainUI {
      * Initialize tool buttons.
      */
     private void initializeButtons() {
-        clearButton = createButton(CLEAR_ICON_DEFAULT);
-        selectionButton = createButton(SELECTION_ICON_DEFAULT);
-        brushToolButton = createButton(BRIGHTNESS_ICON_DEFAULT);
-        lineToolButton = createButton(LINE_ICON_DEFAULT);
-        rectangleToolButton = createButton(SQUARE_ICON_DEFAULT);
-        eraserToolButton = createButton(ERASER_ICON_DEFAULT);
-        ellipseToolButton = createButton(CIRCLE_ICON_DEFAULT);
-        textToolButton = createButton(TEXT_ICON_DEFAULT);
-        eyeDropperToolButton = createButton(EYEDROP_ICON_DEFAULT);
-        fanToolButton = createButton(FAN_ICON_DEFAULT);
-        celticKnotToolButton = createButton(CELTIC_ICON_DEFAULT);
-        paintBucketToolButton = createButton(BUCKET_ICON_DEFAULT);
-        dnaToolButton = createButton(DNA_ICON_DEFAULT);
-        airBrushToolButton = createButton(AIR_BRUSH_ICON_DEFAULT);
-        triangleToolButton = createButton(TRIANGLE_ICON_DEFAULT);
-        spiralToolButton = createButton(SPIRAL_ICON_DEFAULT);
-        brightnessContrastButton = createButton(BRIGHTNESS_ICON_DEFAULT);
-        hueSaturationButton = createButton(HUE_SATURATION_ICON_DEFAULT);
+        clearButton = new ToolButton(new ImageIcon(CLEAR_ICON_DEFAULT));
+        selectionButton = new ToolButton(new ImageIcon(SELECTION_ICON_DEFAULT));
+        brushToolButton = new ToolButton(new ImageIcon(BRIGHTNESS_ICON_DEFAULT));
+        lineToolButton = new ToolButton(new ImageIcon(LINE_ICON_DEFAULT));
+        rectangleToolButton = new ToolButton(new ImageIcon(SQUARE_ICON_DEFAULT));
+        eraserToolButton = new ToolButton(new ImageIcon(ERASER_ICON_DEFAULT));
+        ellipseToolButton = new ToolButton(new ImageIcon(CIRCLE_ICON_DEFAULT));
+        textToolButton = new ToolButton(new ImageIcon(TEXT_ICON_DEFAULT));
+        eyeDropperToolButton = new ToolButton(new ImageIcon(EYEDROP_ICON_DEFAULT));
+        fanToolButton = new ToolButton(new ImageIcon(FAN_ICON_DEFAULT));
+        celticKnotToolButton = new ToolButton(new ImageIcon(CELTIC_ICON_DEFAULT));
+        paintBucketToolButton = new ToolButton(new ImageIcon(BUCKET_ICON_DEFAULT));
+        dnaToolButton = new ToolButton(new ImageIcon(DNA_ICON_DEFAULT));
+        airBrushToolButton = new ToolButton(new ImageIcon(AIR_BRUSH_ICON_DEFAULT));
+        triangleToolButton = new ToolButton(new ImageIcon(TRIANGLE_ICON_DEFAULT));
+        spiralToolButton = new ToolButton(new ImageIcon(SPIRAL_ICON_DEFAULT));
+        brightnessContrastButton = new ToolButton(new ImageIcon(BRIGHTNESS_ICON_DEFAULT));
+        hueSaturationButton = new ToolButton(new ImageIcon(HUE_SATURATION_ICON_DEFAULT));
         highlightedButton = brushToolButton;
-    }
-
-    /**
-     * Create a JButton with a specific tooltip format.
-     *
-     * @param iconPath path to the button's icon.
-     * @return created JButton.
-     */
-    private JButton createButton(String iconPath) {
-        return new JButton(new ImageIcon(iconPath)) {
-            public JToolTip createToolTip() {
-                JToolTip toolTip = super.createToolTip();
-                toolTip.setBackground(Color.decode(DARK_GREY_CANVAS));
-                toolTip.setForeground(Color.WHITE);
-                toolTip.setBorder(null);
-                toolTip.setFont(new Font(FONT_TYPE, Font.PLAIN, FONT_SIZE));
-                return toolTip;
-            }
-        };
     }
 
     /**
