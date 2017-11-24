@@ -249,7 +249,6 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                 int selectedIndex = listOfLayers.getSelectedIndex();
                 if (selectedIndex == -1 || selectedIndex == 0) {
                     //early exit if their is no selected layer or no layer above the selected one.
-                    return;
                 } else {
                     ImageLayer imageLayer = listModel.remove(selectedIndex);
                     drawingLayers.remove(selectedIndex);
@@ -258,16 +257,28 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                     listOfLayers.setSelectedIndex(selectedIndex - 1);
 
                     listOfLayers.repaint();
+                    drawArea.redrawLayers();
                 }
             }
         });
-
 
         layerDownButton = createButton(LAYER_DOWN_ICON_DEFAULT, LAYER_DOWN_BUTTON_TEXT);
         layerDownButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("Layer down");
+                int selectedIndex = listOfLayers.getSelectedIndex();
+                if (selectedIndex == -1 || selectedIndex == drawingLayers.size() - 1) {
+                    //early exit if their is no selected layer or no layer below the selected one.
+                } else {
+                    ImageLayer imageLayer = listModel.remove(selectedIndex);
+                    drawingLayers.remove(selectedIndex);
+                    listModel.add(selectedIndex + 1, imageLayer);
+                    drawingLayers.add(selectedIndex + 1, imageLayer);
+                    listOfLayers.setSelectedIndex(selectedIndex + 1);
+
+                    listOfLayers.repaint();
+                    drawArea.redrawLayers();
+                }
             }
         });
         addLayerToolMouseListener(layerUpButton, LAYER_UP_ICON_HIGHLIGHTED, LAYER_UP_ICON_HOVER, LAYER_UP_ICON_DEFAULT);
