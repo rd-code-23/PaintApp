@@ -11,7 +11,7 @@ public class ImageLayer {
     private boolean isSelected;
     private String name;
     private static int layerNumber = 1;
-    private String HIDDEN = "  [Hidden]";
+    private final static String HIDDEN = "  [Hidden]";
 
     /**
      * Constructor.
@@ -24,6 +24,13 @@ public class ImageLayer {
         isSelected = false;
         name = "  Layer " + layerNumber;
         layerNumber++;
+    }
+
+    /**
+     * Resets the layerNumber to 1.
+     */
+    public static void resetLayerNumber() {
+        layerNumber = 1;
     }
 
     /**
