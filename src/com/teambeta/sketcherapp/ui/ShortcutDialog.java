@@ -6,7 +6,6 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
-import javax.swing.text.TableView;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -23,21 +22,6 @@ public class ShortcutDialog {
     private static final String LINE_SHORTCUT_TABLE = "Line";
     private static final String IMPORT_SHORTCUT_TABLE = "Import";
     private static final String EXPORT_SHORTCUT_TABLE = "Export";
-    private static final String AIRBRUSH_SHORTCUT_TABLE = "Air Brush";
-    private static final String ERASER_SHORTCUT_TABLE = "Eraser";
-    private static final String CELTICKNOT_SHORTCUT_TABLE = "Celtic Knot";
-    private static final String COLOR_CHOOSER_SHORTCUT_TABLE = "Color Chooser";
-    private static final String DNA_SHORTCUT_TABLE = "DNA";
-    private static final String ELLIPSE_SHORTCUT_TABLE = "Ellipse";
-    private static final String EYEDROP_SHORTCUT_TABLE = "Eye Drop";
-    private static final String FAN_SHORTCUT_TABLE = "Fan";
-    private static final String PAINTBUCKET_SHORTCUT_TABLE = "Paint Bucket";
-    private static final String SELECTION_SHORTCUT_TABLE = "Selection";
-    private static final String RECTANGLE_SHORTCUT_TABLE = "Rectangle";
-    private static final String TEXT_SHORTCUT_TABLE = "Text";
-    private static final String TRIANGLE_SHORTCUT_TABLE = "Triangle";
-    private static final String PRINT_SHORTCUT_TABLE = "Print";
-
     private static final String ACTION_SHORTCUT_TABLE_COL = "Action";
     private static final String DEFAULT_BUTTON = "Default";
     private static final String APPLY_BUTTON = "Apply";
@@ -65,38 +49,21 @@ public class ShortcutDialog {
     public void renderPanel() {
 
         DefaultTableModel dm = new DefaultTableModel();
-
         dm.setDataVector(new Object[][]{
-                        {CLEAR_SHORTCUT_TABLE, printShortcut(sc.getClearToolKeyCode(), sc.isCtrl_clearTool(), sc.isShift_clearTool(), sc.isAlt_clearTool())},
-                        {BRUSH_SHORTCUT_TABLE, printShortcut(sc.getBrushToolKeyCode(), sc.isCtrl_brushTool(), sc.isShift_brushTool(), sc.isAlt_brushTool())},
-                        {AIRBRUSH_SHORTCUT_TABLE, printShortcut(sc.getAirBrushToolKeyCode(), sc.isCtrl_airBrushTool(), sc.isShift_airBrushTool(), sc.isAlt_airBrushTool())},
-                        {ERASER_SHORTCUT_TABLE, printShortcut(sc.getEraserToolKeyCode(), sc.isCtrl_eraserTool(), sc.isShift_eraserTool(), sc.isAlt_eraserTool())},
-                        {LINE_SHORTCUT_TABLE, printShortcut(sc.getLineToolKeyCode(), sc.isCtrl_lineTool(), sc.isShift_lineTool(), sc.isAlt_lineTool())},
-                        {FAN_SHORTCUT_TABLE, printShortcut(sc.getFanToolKeyCode(), sc.isCtrl_fanTool(), sc.isShift_fanTool(), sc.isAlt_fanTool())},
-                        {RECTANGLE_SHORTCUT_TABLE, printShortcut(sc.getRectToolKeyCode(), sc.isCtrl_rectTool(), sc.isShift_rectTool(), sc.isAlt_rectTool())},
-                        {ELLIPSE_SHORTCUT_TABLE, printShortcut(sc.getEllipseToolKeyCode(), sc.isCtrl_ellipseTool(), sc.isShift_ellipseTool(), sc.isAlt_ellipseTool())},
-                        {TRIANGLE_SHORTCUT_TABLE, printShortcut(sc.getTriangleToolKeyCode(), sc.isCtrl_triangleTool(), sc.isShift_triangleTool(), sc.isAlt_triangleTool())},
-                        {PAINTBUCKET_SHORTCUT_TABLE, printShortcut(sc.getPaintBucketToolKeyCode(), sc.isCtrl_paintBucketTool(), sc.isShift_paintBucketTool(), sc.isAlt_paintBucketTool())},
-                        {CELTICKNOT_SHORTCUT_TABLE, printShortcut(sc.getCelticKnotToolKeyCode(), sc.isCtrl_celticKnotTool(), sc.isShift_celticKnotTool(), sc.isAlt_celticKnotTool())},
-                        {DNA_SHORTCUT_TABLE, printShortcut(sc.getDnaToolKeyCode(), sc.isCtrl_dnaTool(), sc.isShift_dnaTool(), sc.isAlt_dnaTool())},
-                        {TEXT_SHORTCUT_TABLE, printShortcut(sc.getTextToolKeyCode(), sc.isCtrl_textTool(), sc.isShift_textTool(), sc.isAlt_textTool())},
-                        {COLOR_CHOOSER_SHORTCUT_TABLE, printShortcut(sc.getColorChooserToolKeyCode(), sc.isCtrl_colorChooserTool(), sc.isShift_colorChooserTool(), sc.isAlt_colorChooserTool())},
-                        {EYEDROP_SHORTCUT_TABLE, printShortcut(sc.getEyeDropToolKeyCode(), sc.isCtrl_eyeDropTool(), sc.isShift_eyeDropTool(), sc.isAlt_eyeDropTool())},
-                        {SELECTION_SHORTCUT_TABLE, printShortcut(sc.getSelectionToolKeyCode(), sc.isCtrl_selectionTool(), sc.isShift_selectionTool(), sc.isAlt_selectionTool())},
-                        {IMPORT_SHORTCUT_TABLE, printShortcut(sc.getImportKeyCode(), sc.isCtrl_import(), sc.isShift_import(), sc.isAlt_import())},
-                        {EXPORT_SHORTCUT_TABLE, printShortcut(sc.getExportKeyCode(), sc.isCtrl_export(), sc.isShift_export(), sc.isAlt_export())},
-                        {PRINT_SHORTCUT_TABLE, printShortcut(sc.getPrintToolKeyCode(), sc.isCtrl_printTool(), sc.isShift_printTool(), sc.isAlt_printTool())},
+                        {CLEAR_SHORTCUT_TABLE, printShortcut(sc.getKBShortcut(sc.CLEAR_TOOL_SHORTCUT), sc.isCtrl_clearTool(), sc.isShift_clearTool(), sc.isAlt_clearTool())},
+                        {BRUSH_SHORTCUT_TABLE, printShortcut(sc.getKBShortcut(sc.BRUSH_TOOL_SHORTCUT), sc.isCtrl_brushTool(), sc.isShift_brushTool(), sc.isAlt_brushTool())},
+                        {LINE_SHORTCUT_TABLE, printShortcut(sc.getKBShortcut(sc.LINE_TOOL_SHORTCUT), sc.isCtrl_lineTool(), sc.isShift_lineTool(), sc.isAlt_lineTool())},
+                        {IMPORT_SHORTCUT_TABLE, printShortcut(sc.getKBShortcut(sc.IMPORT_SHORTCUT), sc.isCtrl_import(), sc.isShift_import(), sc.isAlt_import())},
+                        {EXPORT_SHORTCUT_TABLE, printShortcut(sc.getKBShortcut(sc.EXPORT_SHORTCUT), sc.isCtrl_export(), sc.isShift_export(), sc.isAlt_export())},
                 },
                 new Object[]{ACTION_SHORTCUT_TABLE_COL, RE_ASSIGN_SHORTCUT_TABLE_COL});
 
         JTable table = new JTable(dm);
-        setColumnHeight(table);
-
         table.getColumn(RE_ASSIGN_SHORTCUT_TABLE_COL).setCellRenderer(new ButtonRenderer());
         table.getColumn(RE_ASSIGN_SHORTCUT_TABLE_COL).setCellEditor(
                 new ButtonEditor(new JCheckBox()));
         JScrollPane scroll = new JScrollPane(table);
-
+        
         shortcutsDialog = new JDialog(mainUI.getMainFrame(), KEYBOARD_SHORTCUTS_TITLE, true);
         shortcutsDialog.setLocationRelativeTo(null);
         shortcutsDialog.setSize(SHORTCUT_DIALOG_WIDTH, SHORTCUT_DIALOG_HEIGHT);
@@ -179,7 +146,6 @@ public class ShortcutDialog {
 
         public ButtonRenderer() {
             setOpaque(true);
-           // setFont(new Font("David", Font.PLAIN, 16));
         }
 
         public Component getTableCellRendererComponent(JTable table, Object value,
@@ -261,8 +227,6 @@ public class ShortcutDialog {
 
             label = (value == null) ? "" : value.toString();
             button.setText(label);
-
-            button.setFont(new Font("David", Font.PLAIN, 16));
             isPushed = true;
 
             return button;
@@ -381,98 +345,32 @@ public class ShortcutDialog {
             boolean isCtrl = ctrlKey.isSelected();
             boolean isAlt = altKey.isSelected();
             boolean isShift = shiftKey.isSelected();
+
             switch (ROW_SHORTCUT_TABLE) {
                 case 0:
-                    sc.removeBinding(sc.getClearToolKeyCode(), sc.isCtrl_clearTool(), sc.isShift_clearTool(), sc.isAlt_clearTool());
+                    sc.removeBinding(sc.getClearToolKeyCode(), sc.isCtrl_lineTool(), sc.isShift_lineTool(), sc.isAlt_lineTool());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.CLEAR_TOOL_SHORTCUT);
                     break;
                 case 1:
                     sc.removeBinding(sc.getBrushToolKeyCode(), sc.isCtrl_brushTool(), sc.isShift_brushTool(), sc.isAlt_brushTool());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.BRUSH_TOOL_SHORTCUT);
                     break;
-
                 case 2:
-                    sc.removeBinding(sc.getAirBrushToolKeyCode(), sc.isCtrl_airBrushTool(), sc.isShift_airBrushTool(), sc.isAlt_airBrushTool());
-                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.AIRBRUSH_TOOL_SHORTCUT);
-                    break;
-                case 3:
-                    sc.removeBinding(sc.getEraserToolKeyCode(), sc.isCtrl_eraserTool(), sc.isShift_eraserTool(), sc.isAlt_eraserTool());
-                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.ERASER_TOOL_SHORTCUT);
-                    break;
-
-                case 4:
                     sc.removeBinding(sc.getLineToolKeyCode(), sc.isCtrl_lineTool(), sc.isShift_lineTool(), sc.isAlt_lineTool());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.LINE_TOOL_SHORTCUT);
                     break;
-
-                case 5:
-                    sc.removeBinding(sc.getFanToolKeyCode(), sc.isCtrl_fanTool(), sc.isShift_fanTool(), sc.isAlt_fanTool());
-                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.FAN_TOOL_SHORTCUT);
-                    break;
-
-                case 6:
-                    sc.removeBinding(sc.getRectToolKeyCode(), sc.isCtrl_rectTool(), sc.isShift_rectTool(), sc.isAlt_rectTool());
-                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.RECTANGLE_TOOL_SHORTCUT);
-                    break;
-
-                case 7:
-                    sc.removeBinding(sc.getEllipseToolKeyCode(), sc.isCtrl_ellipseTool(), sc.isShift_ellipseTool(), sc.isAlt_ellipseTool());
-                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.ELLIPSE_TOOL_SHORTCUT);
-                    break;
-
-                case 8:
-                    sc.removeBinding(sc.getTriangleToolKeyCode(), sc.isCtrl_triangleTool(), sc.isShift_triangleTool(), sc.isAlt_triangleTool());
-                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.TRIANGLE_TOOL_SHORTCUT);
-                    break;
-
-                case 9:
-                    sc.removeBinding(sc.getPaintBucketToolKeyCode(), sc.isCtrl_paintBucketTool(), sc.isShift_paintBucketTool(), sc.isAlt_paintBucketTool());
-                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.PAINTBUCKET_TOOL_SHORTCUT);
-                    break;
-
-                case 10:
-                    sc.removeBinding(sc.getCelticKnotToolKeyCode(), sc.isCtrl_celticKnotTool(), sc.isShift_celticKnotTool(), sc.isAlt_celticKnotTool());
-                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.CELTICKNOT_TOOL_SHORTCUT);
-                    break;
-
-                case 11:
-                    sc.removeBinding(sc.getDnaToolKeyCode(), sc.isCtrl_dnaTool(), sc.isShift_dnaTool(), sc.isAlt_dnaTool());
-                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.DNA_TOOL_SHORTCUT);
-                    break;
-
-                case 12:
-                    sc.removeBinding(sc.getTextToolKeyCode(), sc.isCtrl_textTool(), sc.isShift_textTool(), sc.isAlt_textTool());
-                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.TEXT_TOOL_SHORTCUT);
-                    break;
-                case 13:
-                    sc.removeBinding(sc.getColorChooserToolKeyCode(), sc.isCtrl_colorChooserTool(), sc.isShift_colorChooserTool(), sc.isAlt_colorChooserTool());
-                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.COLOR_CHOOSER_TOOL_SHORTCUT);
-                    break;
-
-                case 14:
-                    sc.removeBinding(sc.getEyeDropToolKeyCode(), sc.isCtrl_eyeDropTool(), sc.isShift_eyeDropTool(), sc.isAlt_eyeDropTool());
-                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.EYE_DROP_TOOL_SHORTCUT);
-                    break;
-
-                case 15:
-                    sc.removeBinding(sc.getSelectionToolKeyCode(), sc.isCtrl_selectionTool(), sc.isShift_selectionTool(), sc.isAlt_selectionTool());
-                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.SELECTION_TOOL_SHORTCUT);
-                    break;
-
-                case 16:
+                case 3:
                     sc.removeBinding(sc.getImportKeyCode(), sc.isCtrl_import(), sc.isShift_import(), sc.isAlt_import());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.IMPORT_SHORTCUT);
                     break;
-                case 17:
+                case 4:
                     sc.removeBinding(sc.getExportKeyCode(), sc.isCtrl_export(), sc.isShift_export(), sc.isAlt_export());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.EXPORT_SHORTCUT);
                     break;
-                case 18:
-                    sc.removeBinding(sc.getPrintToolKeyCode(), sc.isCtrl_printTool(), sc.isShift_printTool(), sc.isAlt_printTool());
-                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.PRINT_SHORTCUT);
-                    break;
+
                 default:
                     System.out.println(NO_SUCH_TOOL);
+
             }
 
         }
@@ -492,14 +390,4 @@ public class ShortcutDialog {
         }
 
     }
-    public static void setColumnHeight(JTable table, int... widths) {
-        int r = table.getRowCount();
-
-        for(int i = 0;i<r;i++){
-            table.setRowHeight (i, 20);
-        }
-
-    }
-
-
 }

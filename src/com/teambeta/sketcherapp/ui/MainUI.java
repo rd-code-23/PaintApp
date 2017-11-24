@@ -4,6 +4,7 @@ import com.sun.org.apache.bcel.internal.generic.DREM;
 import com.teambeta.sketcherapp.Database.DB_KBShortcuts;
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.ImportExport;
+import com.teambeta.sketcherapp.model.PrintCanvas;
 import com.teambeta.sketcherapp.model.MouseCursor;
 import com.teambeta.sketcherapp.model.Shortcuts;
 
@@ -13,10 +14,11 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.awt.event.KeyEvent;
-import java.io.File;
 
 /**
  * Main UI class to wrap all GUI elements together.
@@ -59,15 +61,13 @@ public class MainUI {
     private static final String TRIANGLE_TOOL_BUTTON_TEXT = "Triangle";
     private JFrame mainFrame;
 
-    private static final String APPLICATION_NAME = "Beta Paint";
+    private static final String APPLICATION_NAME = "Beta Sketcher";
     private static final int APPLICATION_WIDTH = 1920;
     private static final int APPLICATION_HEIGHT = 1080;
     private static final int EDITOR_PANEL_WIDTH = 300;
     private static final int EDITOR_PANEL_HEIGHT = 300;
-    public static final int CANVAS_WIDTH = 1600;
-    public static final int CANVAS_HEIGHT = 900;
-    private static final String START_SOUND_PATH = System.getProperty("user.dir") + File.separator + "src" +
-            File.separator + "res" + File.separator + "start-sound.wav";
+    private int canvasWidth;
+    private int canvasHeight;
 
     private JButton clearButton;
     private JButton brushToolButton;
@@ -94,10 +94,13 @@ public class MainUI {
     private Shortcuts shortcuts;
     private ImportExport importExport;
     private JPanel canvasTools;
+    private PrintCanvas printCanvas;
+
+
     JPanel northPanel;
     private DB_KBShortcuts db_kbShortcuts;
 
-    private static final String APPLICATION_LOGO_IMAGE_DIRECTORY = "res/BPIcon.png";
+    private static final String APPLICATION_LOGO_IMAGE_DIRECTORY = "src/res/BPIcon.png";
 
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
@@ -223,11 +226,12 @@ public class MainUI {
     /**
      * Constructor.
      */
-    public MainUI() {
+    public MainUI(int canvasWidth, int canvasHeight) {
+        this.canvasWidth = canvasWidth;
+        this.canvasHeight = canvasHeight;
         initDrawingTools();
         prepareGUI();
     }
-
 
     /**
      * Create the drawing tool objects and set the pen tool as the default selection.
@@ -274,10 +278,6 @@ public class MainUI {
         return mainFrame;
     }
 
-    public void setMainFrame(JFrame mainFrame) {
-        this.mainFrame = mainFrame;
-    }
-
     /**
      * When a new brushTool is selected this method
      * will update the size panel to the current brush tool
@@ -305,9 +305,36 @@ public class MainUI {
         selectedDrawingTool.setFillState(widthChanger.isFill());
     }
 
+    /**
+     * This is called when the 'x' is pressed
+     */
+    private void exit() {
+        Object[] exitOptions = {"Cancel",
+                "Export canvas",
+                "Exit without exporting"};
+
+
+        int confirmed = JOptionPane.showOptionDialog(null,
+                "Are you sure you want to quit?", "Confirm Quit",
+                JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, exitOptions, null);
+
+        ImportExport importExport = new ImportExport(drawArea, this);
+
+        if (confirmed == JOptionPane.CANCEL_OPTION) {
+            mainFrame.dispose();
+            //System.exit(0);
+        }
+        if (confirmed == JOptionPane.NO_OPTION) {
+            importExport.exportImage();
+            //mainFrame.dispose();  Ideally would use this instead of the following line, but for some reason it
+            //wont properly close the app. If someone knows why, feel free to fix it
+            System.exit(0);
+
+        }
+    }
 
     /**
-     * Build main GUI.
+     * Build main GUI
      */
     private void prepareGUI() {
         mainFrame = new JFrame(APPLICATION_NAME);
@@ -315,26 +342,40 @@ public class MainUI {
         mainFrame.setSize(APPLICATION_WIDTH, APPLICATION_HEIGHT);
         mainFrame.getContentPane().setBackground(Color.DARK_GRAY);
 
-        mainFrame.setSize(APPLICATION_WIDTH, APPLICATION_HEIGHT);
-        mainFrame.getContentPane().setBackground(Color.DARK_GRAY);
-
         mainFrame.setLocationByPlatform(true);
-        mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        mainFrame.addWindowListener(
+                new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        if (ImportExport.isExported()) {
+                            System.exit(0);
+                        } else {
+                            exit();
+                        }
+
+                    }
+                }
+        );
+
+        // mainFrame.setExtendedState(mainFrame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 
         Container mainContent = mainFrame.getContentPane();
         mainContent.setLayout(new BorderLayout());
         drawArea = new DrawArea(this);
         importExport = new ImportExport(drawArea, this);
+        BrightnessMenu brightnessMenu = new BrightnessMenu(drawArea);
         GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
         NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
         CheckerboardMenu checkerboardMenu = new CheckerboardMenu(drawArea);
+        printCanvas = new PrintCanvas(drawArea, this);
 
         JPanel drawAreaPanel = new JPanel();
         drawAreaPanel.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.ipady = CANVAS_HEIGHT;
-        c.ipadx = CANVAS_WIDTH;
+        c.ipady = canvasHeight;
+        c.ipadx = canvasWidth;
         drawAreaPanel.setBackground(Color.decode("#222222"));
         drawAreaPanel.add(drawArea, c);
         mainContent.add(drawAreaPanel, BorderLayout.CENTER);
@@ -387,7 +428,9 @@ public class MainUI {
         db_kbShortcuts = new DB_KBShortcuts(shortcuts);
         keboardShortCutPanel = new ShortcutDialog(this, shortcuts);
 
-        MenuUI menuUI = new MenuUI(drawArea, importExport, greyscaleMenu, noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel);
+        MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, brightnessMenu, noiseGeneratorMenu,
+                checkerboardMenu, keboardShortCutPanel, printCanvas);
+
 
         northPanel.add(menuUI, BorderLayout.NORTH);
 
@@ -496,7 +539,6 @@ public class MainUI {
         mainFrame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         mainFrame.setLocationRelativeTo(null);  // positions GUI in center when opened
         mainFrame.setVisible(true);
-        playStartUpSound();
     }
 
     /**
