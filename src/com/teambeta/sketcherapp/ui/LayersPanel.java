@@ -235,6 +235,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         duplicateLayerButton.addActionListener(duplicateLayerButtonActionListener);
         buttonsPanel.add(duplicateLayerButton);
 
+
         JPanel layerMovementButtonsPanel = new JPanel();
         layerMovementButtonsPanel.setLayout(new BoxLayout(layerMovementButtonsPanel, BoxLayout.X_AXIS));
         layerMovementButtonsPanel.setBackground(Color.DARK_GRAY);
@@ -242,7 +243,33 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                 LAYER_MOVEMENT_BUTTONS_PADDING, LAYER_MOVEMENT_BUTTONS_PADDING, LAYER_MOVEMENT_BUTTONS_PADDING));
 
         layerUpButton = createButton(LAYER_UP_ICON_DEFAULT, LAYER_UP_BUTTON_TEXT);
+        layerUpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = listOfLayers.getSelectedIndex();
+                if (selectedIndex == -1 || selectedIndex == 0) {
+                    //early exit if their is no selected layer or no layer above the selected one.
+                    return;
+                } else {
+                    ImageLayer imageLayer = listModel.remove(selectedIndex);
+                    drawingLayers.remove(selectedIndex);
+                    listModel.add(selectedIndex - 1, imageLayer);
+                    drawingLayers.add(selectedIndex - 1, imageLayer);
+                    listOfLayers.setSelectedIndex(selectedIndex - 1);
+
+                    listOfLayers.repaint();
+                }
+            }
+        });
+
+
         layerDownButton = createButton(LAYER_DOWN_ICON_DEFAULT, LAYER_DOWN_BUTTON_TEXT);
+        layerDownButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println("Layer down");
+            }
+        });
         addLayerToolMouseListener(layerUpButton, LAYER_UP_ICON_HIGHLIGHTED, LAYER_UP_ICON_HOVER, LAYER_UP_ICON_DEFAULT);
         addLayerToolMouseListener(layerDownButton, LAYER_DOWN_ICON_HIGHLIGHTED, LAYER_DOWN_ICON_HOVER,
                 LAYER_DOWN_ICON_DEFAULT);
@@ -295,7 +322,6 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                 } else {
                     button.setIcon(new ImageIcon(iconDefaultPath));
                 }
-
             }
 
             @Override
