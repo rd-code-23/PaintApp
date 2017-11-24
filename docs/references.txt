@@ -23,5 +23,8 @@ https://stackoverflow.com/questions/3953208/value-change-listener-to-jtextfield
 9. Garbage icon (for deleting layers) taken from FreeIconsPng.
 http://www.freeiconspng.com/img/10498
 
-10. Pencil icon (for renaming layers) taken from simpe icon.
+10. Pencil icon (for renaming layers) taken from simple icon.
 http://simpleicon.com/dev/pencil.html
+
+11. How to reorder elements in a JList using drag and drop.
+https://stackoverflow.com/questions/3804361/how-to-enable-drag-and-drop-inside-jlist/18543066
