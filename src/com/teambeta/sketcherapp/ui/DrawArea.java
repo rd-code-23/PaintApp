@@ -596,10 +596,9 @@ public class DrawArea extends JComponent {
                 newRBG = Color.HSBtoRGB(hsbArray[0], hsbArray[1], hsbArray[2]);
 
                 newPointColor = new Color(newRBG, false);
-                newPointColor = new Color(newPointColor.getRed(), newPointColor.getGreen(),
-                        newPointColor.getBlue(), alphaPreserve);
 
-                layer.setRGB(x, y, newPointColor.getRGB());
+                layer.setRGB(x, y, new Color(newPointColor.getRed(), newPointColor.getGreen(),
+                        newPointColor.getBlue(), alphaPreserve).getRGB());
 
             }
         }
