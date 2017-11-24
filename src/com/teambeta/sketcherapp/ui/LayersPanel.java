@@ -1,6 +1,5 @@
 package com.teambeta.sketcherapp.ui;
 
-import com.sun.org.apache.bcel.internal.generic.DUP;
 import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.model.ToolButton;
 
@@ -11,6 +10,8 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.LinkedList;
@@ -40,11 +41,13 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private JList<ImageLayer> listOfLayers = new JList<>();
     private DefaultListModel<ImageLayer> listModel = new DefaultListModel<>();
     private JScrollPane layersScrollPane;
-    private JButton hideShowLayerButton;
     private JButton addLayerButton;
     private JButton deleteLayerButton;
+    private JButton hideShowLayerButton;
     private JButton renameLayerButton;
     private JButton duplicateLayerButton;
+    private JButton layerUpButton;
+    private JButton layerDownButton;
 
     private static final String RES_PATH = System.getProperty("user.dir") + File.separator + "src" +
             File.separator + "res";
@@ -124,6 +127,8 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
 
         addLayerButton = createButton(ADD_LAYER_ICON_DEFAULT, ADD_LAYER_BUTTON_TEXT);
+        addLayerToolMouseListener(addLayerButton, ADD_LAYER_ICON_HIGHLIGHTED, ADD_LAYER_ICON_HOVER,
+                ADD_LAYER_ICON_DEFAULT);
         ActionListener addLayerButtonActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -140,6 +145,8 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         buttonsPanel.add(addLayerButton);
 
         deleteLayerButton = createButton(DELETE_LAYER_ICON_DEFAULT, DELETE_LAYER_BUTTON_TEXT);
+        addLayerToolMouseListener(deleteLayerButton, DELETE_LAYER_ICON_HIGHLIGHTED, DELETE_LAYER_ICON_HOVER,
+                DELETE_LAYER_ICON_DEFAULT);
         ActionListener deleteLayerButtonActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -155,6 +162,8 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         buttonsPanel.add(deleteLayerButton);
 
         hideShowLayerButton = createButton(HIDE_LAYER_ICON_DEFAULT, HIDE_SHOW_LAYER_BUTTON_TEXT);
+        addLayerToolMouseListener(hideShowLayerButton, HIDE_LAYER_ICON_HIGHLIGHTED, HIDE_LAYER_ICON_HOVER,
+                HIDE_LAYER_ICON_DEFAULT);
         ActionListener hideShowLayerActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -171,6 +180,8 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         buttonsPanel.add(hideShowLayerButton);
 
         renameLayerButton = createButton(RENAME_LAYER_ICON_DEFAULT, RENAME_LAYER_BUTTON_TEXT);
+        addLayerToolMouseListener(renameLayerButton, RENAME_LAYER_ICON_HIGHLIGHTED, RENAME_LAYER_ICON_HOVER,
+                RENAME_LAYER_ICON_DEFAULT);
         ActionListener renameLayerButtonActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -193,6 +204,8 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         buttonsPanel.add(renameLayerButton);
 
         duplicateLayerButton = createButton(DUPLICATE_LAYER_ICON_DEFAULT, DUPLICATE_BUTTON_TEXT);
+        addLayerToolMouseListener(duplicateLayerButton, DUPLICATE_LAYER_ICON_HIGHLIGHTED, DUPLICATE_LAYER_ICON_HOVER,
+                DUPLICATE_LAYER_ICON_DEFAULT);
         ActionListener duplicateLayerButtonActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -225,8 +238,11 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         layerMovementButtonsPanel.setBorder(new EmptyBorder(LAYER_MOVEMENT_BUTTONS_PADDING,
                 LAYER_MOVEMENT_BUTTONS_PADDING, LAYER_MOVEMENT_BUTTONS_PADDING, LAYER_MOVEMENT_BUTTONS_PADDING));
 
-        JButton layerUpButton = createButton(LAYER_UP_ICON_DEFAULT, LAYER_UP_BUTTON_TEXT);
-        JButton layerDownButton = createButton(LAYER_DOWN_ICON_DEFAULT, LAYER_DOWN_BUTTON_TEXT);
+        layerUpButton = createButton(LAYER_UP_ICON_DEFAULT, LAYER_UP_BUTTON_TEXT);
+        layerDownButton = createButton(LAYER_DOWN_ICON_DEFAULT, LAYER_DOWN_BUTTON_TEXT);
+        addLayerToolMouseListener(layerUpButton, LAYER_UP_ICON_HIGHLIGHTED, LAYER_UP_ICON_HOVER, LAYER_UP_ICON_DEFAULT);
+        addLayerToolMouseListener(layerDownButton, LAYER_DOWN_ICON_HIGHLIGHTED, LAYER_DOWN_ICON_HOVER,
+                LAYER_DOWN_ICON_DEFAULT);
         layerMovementButtonsPanel.add(layerUpButton);
         layerMovementButtonsPanel.add(layerDownButton);
 
@@ -247,6 +263,46 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         layerOptionsPanel.add(buttonsPanel);
 
         this.add(layerOptionsPanel, BorderLayout.SOUTH);
+    }
+
+    /**
+     * Add mouse listener for mouse over and selection effects to layer buttons.
+     * @param button layer tool button.
+     * @param iconHighlightedPath path to highlighted icon.
+     * @param iconHoverPath path to hover icon.
+     * @param iconDefaultPath path to icon.
+     */
+    private void addLayerToolMouseListener(JButton button, String iconHighlightedPath, String iconHoverPath,
+                                           String iconDefaultPath) {
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                button.setIcon(new ImageIcon(iconHighlightedPath));
+            }
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                Point mousePoint = new java.awt.Point(e.getLocationOnScreen());
+                SwingUtilities.convertPointFromScreen(mousePoint, e.getComponent());
+                if(e.getComponent().contains(mousePoint)) {
+                    button.setIcon(new ImageIcon(iconHoverPath));
+                } else {
+                    button.setIcon(new ImageIcon(iconDefaultPath));
+                }
+
+            }
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                button.setIcon(new ImageIcon(iconHoverPath));
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                button.setIcon(new ImageIcon(iconDefaultPath));
+            }
+        });
     }
 
     /**
