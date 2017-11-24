@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.lang.annotation.Inherited;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,14 +15,19 @@ import java.util.List;
  * tools.
  */
 public class ColorChooser extends JPanel {
+    private static final String FONT_TYPE = "Arial";
+    private static final int FONT_SIZE = 16;
+    private static final String COLOR_SELECTOR_TEXT = "Color Selector";
     private static Color color;
     private static final int SQUARE_LENGTH = 50;
     private static final int PANEL_LENGTH = 50;
+    private static final String DARK_GREY_CANVAS = "#222222";
     private static List<GeneralObserver> observers = new ArrayList<>();
 
     // Constructor that displays default color as a square panel (graphic selector).
     public ColorChooser() {
         color = Color.BLACK;
+        setToolTipText(COLOR_SELECTOR_TEXT);
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -31,11 +37,22 @@ public class ColorChooser extends JPanel {
     }
 
     @Override
+    public JToolTip createToolTip() {
+        JToolTip toolTip = new JToolTip();
+        toolTip.setBackground(Color.decode(DARK_GREY_CANVAS));
+        toolTip.setForeground(Color.WHITE);
+        toolTip.setBorder(null);
+        toolTip.setFont(new Font(FONT_TYPE, Font.PLAIN, FONT_SIZE));
+        return toolTip;
+    }
+
+    @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.DARK_GRAY);
         setSize(SQUARE_LENGTH, SQUARE_LENGTH);
+
         graphics.setColor(getColor());
         graphics.fillRect(0, 0, SQUARE_LENGTH, SQUARE_LENGTH);
         graphics.dispose();

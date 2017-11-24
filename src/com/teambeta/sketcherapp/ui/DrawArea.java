@@ -170,7 +170,7 @@ public class DrawArea extends JComponent {
         fillCheckerPattern(checkerboardImage,
                 this.getWidth() / TRANSPARENCY_CHECKER_BOARD_SIZE,
                 this.getHeight() / TRANSPARENCY_CHECKER_BOARD_SIZE,
-                Color.GRAY, Color.darkGray
+                Color.WHITE, Color.LIGHT_GRAY
         );
         graphics = (Graphics2D) canvasBufferedImage.getGraphics();
         // enable antialiasing
