@@ -69,8 +69,8 @@ public class MainUI {
     private static final int PANEL_SECTION_SPACING = 20;
     private static final int WEST_PANEL_WIDTH = 120;
     private static final int COLOR_PANEL_HEIGHT = 250;
-    private static final int IMAGE_EDITOR_PANEL_HEIGHT = 180;
-    private static final int IMAGE_EDITING_PANEL_WIDTH = 230;
+    private static final int IMAGE_EDITING_PANEL_HEIGHT = 180;
+    private static final int IMAGE_EDITING_PANEL_WIDTH = 340;
     private static final String DARK_GREY_CANVAS = "#222222";
     private static final String FONT_TYPE = "Arial";
     private static final int FONT_SIZE = 16;
@@ -711,15 +711,16 @@ public class MainUI {
         JPanel imageEditingPanel = new JPanel();
         imageEditingPanel.setLayout(new GridBagLayout());
         imageEditingPanel.setBackground(Color.DARK_GRAY);
-        imageEditingPanel.setMaximumSize(new Dimension(340,
-                IMAGE_EDITOR_PANEL_HEIGHT));
+        imageEditingPanel.setMaximumSize(new Dimension(IMAGE_EDITING_PANEL_WIDTH,
+                IMAGE_EDITING_PANEL_HEIGHT));
         imageEditingPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY));
 
         GridBagConstraints imageButtonConstraints = new GridBagConstraints();
+        imageButtonConstraints.insets = new Insets(PANEL_SECTION_SPACING, PANEL_SECTION_SPACING, 0, 0);
         imageEditingPanel.add(brightnessContrastButton, imageButtonConstraints);
         imageButtonConstraints.gridx = 1;
         imageButtonConstraints.gridy = 0;
-        imageButtonConstraints.insets = new Insets(0, PANEL_SECTION_SPACING, 0, 0);
+        imageButtonConstraints.insets = new Insets(PANEL_SECTION_SPACING, PANEL_SECTION_SPACING, 0, 0);
         imageEditingPanel.add(hueSaturationButton, imageButtonConstraints);
 
         return imageEditingPanel;
