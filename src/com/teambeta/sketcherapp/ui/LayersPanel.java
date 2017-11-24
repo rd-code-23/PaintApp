@@ -34,7 +34,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private static final int LAYER_MOVEMENT_BUTTONS_PADDING = 20;
     private static final int LAYER_MOVEMENT_PANEL_WIDTH = 400;
     private static final int LAYER_MOVEMENT_PANEL_HEIGHT = 100;
-    private static final int LAYER_PANEL_WIDTH = 382;
+    private static final int LAYER_PANEL_WIDTH = 383;
     private static final int LAYER_PANEL_HEIGHT = 150;
     private DrawArea drawArea;
     private LinkedList<ImageLayer> drawingLayers;
