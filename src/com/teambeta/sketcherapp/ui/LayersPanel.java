@@ -110,7 +110,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         layersScrollPane = new JScrollPane(listOfLayers);
         layersScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         layersScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        layersScrollPane.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.GRAY));
+        layersScrollPane.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.GRAY));
         this.add(layersScrollPane);
         this.add(layersScrollPane, BorderLayout.EAST);
         addLayerButtons(drawArea);
