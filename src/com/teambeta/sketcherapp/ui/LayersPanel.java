@@ -32,7 +32,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private static final int MAX_NUM_OF_LAYERS = 32;
     private static final int LAYER_OPTIONS_PANEL_PADDING = 30;
     private static final int LAYER_MOVEMENT_BUTTONS_PADDING = 20;
-    private static final int LAYER_MOVEMENT_PANEL_WIDTH = 300;
+    private static final int LAYER_MOVEMENT_PANEL_WIDTH = 400;
     private static final int LAYER_MOVEMENT_PANEL_HEIGHT = 100;
     private static final int LAYER_PANEL_WIDTH = 382;
     private static final int LAYER_PANEL_HEIGHT = 150;

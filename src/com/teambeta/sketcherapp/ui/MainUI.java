@@ -680,23 +680,24 @@ public class MainUI {
         colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.X_AXIS));
         colorPanel.setBackground(Color.DARK_GRAY);
         colorPanel.setMaximumSize(new Dimension(EDITOR_PANEL_WIDTH, COLOR_PANEL_HEIGHT));
+        colorPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY));
 
         JPanel colorChooserPanel = new JPanel();
         colorChooserPanel.setLayout(new GridBagLayout());
         GridBagConstraints colorChooserConstraints = new GridBagConstraints();
         colorChooserPanel.setBackground(Color.DARK_GRAY);
-        colorChooserPanel.add(eyeDropperToolButton);
+        colorChooserConstraints.insets = new Insets(PANEL_SECTION_SPACING, 0, 0, 0);
+        colorChooserPanel.add(eyeDropperToolButton, colorChooserConstraints);
         colorChooserConstraints.gridx = 1;
         colorChooserConstraints.gridy = 0;
-        colorChooserConstraints.insets = new Insets(0, PANEL_SECTION_SPACING, 0, 0);
+        colorChooserConstraints.insets = new Insets(PANEL_SECTION_SPACING, PANEL_SECTION_SPACING, 0, 0);
         colorChooserPanel.add(colorChooser, colorChooserConstraints);
         eyeDropperStats = new EyeDropperStats();
         colorChooserConstraints.gridx = 2;
         colorChooserConstraints.gridy = 0;
-        colorChooserConstraints.insets = new Insets(0, PANEL_SECTION_SPACING, 0, 0);
+        colorChooserConstraints.insets = new Insets(PANEL_SECTION_SPACING, PANEL_SECTION_SPACING, 0, 0);
         colorChooserPanel.add(eyeDropperStats, colorChooserConstraints);
         colorPanel.add(colorChooserPanel);
-
 
         return colorPanel;
     }
@@ -708,14 +709,19 @@ public class MainUI {
      */
     private JPanel initializeImageEditingPanel() {
         JPanel imageEditingPanel = new JPanel();
-        imageEditingPanel.setLayout(new BoxLayout(imageEditingPanel, BoxLayout.X_AXIS));
+        imageEditingPanel.setLayout(new GridBagLayout());
         imageEditingPanel.setBackground(Color.DARK_GRAY);
-        imageEditingPanel.setMaximumSize(new Dimension(IMAGE_EDITING_PANEL_WIDTH,
+        imageEditingPanel.setMaximumSize(new Dimension(340,
                 IMAGE_EDITOR_PANEL_HEIGHT));
-        imageEditingPanel.add(Box.createRigidArea(new Dimension(PANEL_SECTION_SPACING, 0)));
-        imageEditingPanel.add(brightnessContrastButton);
-        imageEditingPanel.add(Box.createRigidArea(new Dimension(PANEL_SECTION_SPACING, 0)));
-        imageEditingPanel.add(hueSaturationButton);
+        imageEditingPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY));
+
+        GridBagConstraints imageButtonConstraints = new GridBagConstraints();
+        imageEditingPanel.add(brightnessContrastButton, imageButtonConstraints);
+        imageButtonConstraints.gridx = 1;
+        imageButtonConstraints.gridy = 0;
+        imageButtonConstraints.insets = new Insets(0, PANEL_SECTION_SPACING, 0, 0);
+        imageEditingPanel.add(hueSaturationButton, imageButtonConstraints);
+
         return imageEditingPanel;
     }
 
@@ -730,7 +736,9 @@ public class MainUI {
         editorPanel.setBackground(Color.DARK_GRAY);
         editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
         editorPanel.add(colorPanel);
+        editorPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
         editorPanel.add(imageEditingPanel);
+        editorPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
         layersPanel = new LayersPanel(drawArea);
         editorPanel.add(layersPanel);
         return editorPanel;
