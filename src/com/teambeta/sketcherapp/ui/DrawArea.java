@@ -568,7 +568,6 @@ public class DrawArea extends JComponent {
         brightnessFactor = Math.abs(brightnessFactor);
 
         Color originalPointColor;
-        Color intermediaryTransformation;
         Color newPointColor;
         float[] hsbArray;
         int alphaPreserve;
@@ -596,12 +595,10 @@ public class DrawArea extends JComponent {
 
                 newRBG = Color.HSBtoRGB(hsbArray[0], hsbArray[1], hsbArray[2]);
 
-                intermediaryTransformation = new Color(newRBG, true);
+                newPointColor = new Color(newRBG, false);
 
-                newPointColor = new Color(intermediaryTransformation.getRed(), intermediaryTransformation.getGreen(),
-                        intermediaryTransformation.getBlue(), alphaPreserve);
-
-                layer.setRGB(x, y, newPointColor.getRGB());
+                layer.setRGB(x, y, new Color(newPointColor.getRed(), newPointColor.getGreen(),
+                        newPointColor.getBlue(), alphaPreserve).getRGB());
 
             }
         }
