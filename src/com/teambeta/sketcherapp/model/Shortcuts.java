@@ -360,29 +360,6 @@ public class Shortcuts {
     }
 
     /**
-     * gets any tools key code
-     */
-    public char getKBShortcut(String tool) {
-        switch (tool) {
-            case CLEAR_TOOL_SHORTCUT:
-                return (char) clearToolKeyCode;
-            case EXPORT_SHORTCUT:
-                return (char) exportKeyCode;
-            case IMPORT_SHORTCUT:
-                return (char) importKeyCode;
-            case BRUSH_TOOL_SHORTCUT:
-                return (char) brushToolKeyCode;
-            case LINE_TOOL_SHORTCUT:
-                return (char) lineToolKeyCode;
-            case AIRBRUSH_TOOL_SHORTCUT:
-                return (char) airBrushToolKeyCode;
-            default:
-                System.out.println(NO_SUCH_TOOL);
-                return 0;
-        }
-    }
-
-    /**
      * when the user changes a binding, this function will check to see if there is another tool using the same binding
      */
     public boolean isValidKeyBinding(int keyCode, boolean ctrl, boolean shift, boolean alt) {
