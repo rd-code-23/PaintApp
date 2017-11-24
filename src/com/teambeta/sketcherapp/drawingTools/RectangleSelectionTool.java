@@ -1,20 +1,15 @@
 package com.teambeta.sketcherapp.drawingTools;
 
-import com.teambeta.sketcherapp.Main;
 import com.teambeta.sketcherapp.model.GeneralObserver;
 import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.model.MouseCursor;
 import com.teambeta.sketcherapp.ui.DrawArea;
-import com.teambeta.sketcherapp.ui.MainUI;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
@@ -50,21 +45,17 @@ public class RectangleSelectionTool extends DrawingTool {
     private boolean isDrawn;// has the user selected somthing
     private int prevX, prevY;
     private boolean isDragSelection = false; // is the user choosing to drag the image
-DrawArea drawArea;
-MainUI mainUI;
 
-    LinkedList<ImageLayer> drawingLayersCopy;
-    BufferedImage canvasCopy;
-    MouseEvent eCopy;
+    private LinkedList<ImageLayer> drawingLayersCopy;
+    private BufferedImage canvasCopy;
 
-    JRadioButton cutOption;
-    JRadioButton copyOption;
-    JButton rotate90ClockWiseButton;
-    JLabel rightClickInfo;
-    boolean doNothing = false;
-    boolean isCut;
+    private JRadioButton cutOption;
+    private JRadioButton copyOption;
+    private JLabel rightClickInfo;
+    private boolean doNothing = false;
+    private boolean isCutOption;
 
-    JPanel selectionOptionPanel;
+    private JPanel selectionOptionPanel;
 
     //TODO BUG: north east panel not disappereing for textTool and selection, make empty jpanel to hide it
 //TODO BUG: sometimes if you move the selection a bit above or below selected canvas it drops the image to low
@@ -73,7 +64,7 @@ MainUI mainUI;
     /**
      * The constructor sets the properties of the tool to their default values
      */
-    public RectangleSelectionTool(MainUI mainUI) {
+    public RectangleSelectionTool() {
         registerObservers();
         color = Color.black;
         initX = 0;
@@ -88,8 +79,7 @@ MainUI mainUI;
         yAxisMagnitudeDelta = 0;
         squareWidth = DEFAULT_WIDTH_VALUE;
         fillShape = false;
-        isCut = true;
-        this.mainUI = mainUI;
+        isCutOption = true;
     }
 
     /**
@@ -117,21 +107,16 @@ MainUI mainUI;
         }
     }
 
-
     @Override
     public void onPress(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
 
         canvasCopy = canvas;
         drawingLayersCopy = drawingLayers;
-        eCopy = e;
         if (SwingUtilities.isRightMouseButton(e)) {
-            System.out.println("right click ");
             restartSelection();
-            clearSelection2(canvas, drawingLayers);
             doNothing = true;
             //my code
         } else {
-
             if (!isDrawn) {
                 MouseCursor.setDefaultCursor();
                 canvas.getGraphics().setColor(color);
@@ -143,8 +128,7 @@ MainUI mainUI;
                 mouseOriginY = currentY;
                 originalSelectedCanvas = copyImage(canvas);
             } else {
-
-                if (isCut)
+                if (isCutOption)
                     clearSelection(canvas, drawingLayers);
                 prevX = initX - e.getX();
                 prevY = initY - e.getY();
@@ -152,22 +136,6 @@ MainUI mainUI;
                 isDragSelection = isOverSelection;
             }
         }
-    }
-
-    private BufferedImage rotate90ClockWise(BufferedImage bufferedImage) {
-        AffineTransform transform = new AffineTransform();
-        transform.rotate(Math.toRadians(90), bufferedImage.getWidth() / 2, bufferedImage.getHeight() / 2);
-        AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
-        return op.filter(bufferedImage, null);
-
-    }
-
-    private BufferedImage rotate90AntiClockWise(BufferedImage bufferedImage) {
-        AffineTransform transform = new AffineTransform();
-        transform.rotate(Math.toRadians(-90), bufferedImage.getWidth() / 2, bufferedImage.getHeight() / 2);
-        AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
-        return op.filter(bufferedImage, null);
-
     }
 
     @Override
@@ -213,9 +181,6 @@ MainUI mainUI;
 
             if (!isDrawn) {
                 isDrawn = true;
-                int offset = 0;
-                drawWidthX = drawWidthX + offset;
-                drawHeightY = drawHeightY + offset;
                 checkBounds(canvas);
                 selectedCanvas = copyImage(selectedLayer.getBufferedImage().getSubimage(initX, initY,
                         drawWidthX, drawHeightY));
@@ -242,7 +207,6 @@ MainUI mainUI;
     private void checkBounds(BufferedImage canvas) {
         if (initX + (drawWidthX) > canvas.getWidth()) {
             drawWidthX = (canvas.getWidth() - initX);
-
         }
         if (initX < 0) {
             drawWidthX = drawWidthX - Math.abs(initX);
@@ -265,6 +229,9 @@ MainUI mainUI;
         }
     }
 
+    /**
+     * getting sub-image is pass by reference so this will transform it to pass by value
+     */
     public static BufferedImage copyImage(BufferedImage copyBuffer) {
         BufferedImage bufferedImage = new BufferedImage(copyBuffer.getWidth(), copyBuffer.getHeight(), copyBuffer.getType());
         Graphics2D g = (Graphics2D) bufferedImage.getGraphics();
@@ -288,21 +255,6 @@ MainUI mainUI;
         selectedLayerGraphics.drawRect(initX, initY, drawWidthX - offset, drawHeightY - offset);
         DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
     }
-
-    private void clearSelection2(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers) {
-        ImageLayer selectedLayer = getSelectedLayer(drawingLayers);
-        Graphics2D selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
-        selectedLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        selectedLayerGraphics.setComposite(AlphaComposite.Clear);
-        selectedLayerGraphics.setColor(transparentColor);
-        selectedLayerGraphics.setStroke(new BasicStroke(0));
-        int offset = 0;
-        selectedLayerGraphics.drawRect(initX, initY, drawWidthX - offset, drawHeightY - offset);
-        //selectedLayerGraphics.fillRect(initX, initY, drawWidthX-offset, drawHeightY-offset);
-        selectedLayerGraphics.drawRect(initX, initY, drawWidthX - offset, drawHeightY - offset);
-        DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
-    }
-
 
     /**
      * drags the selected canvas to its new location
@@ -343,21 +295,7 @@ MainUI mainUI;
         }
         isDrawn = false;
     }
-    private void pasteDragSelection2(BufferedImage canvas, LinkedList<ImageLayer> drawingLayers,
-                                    ImageLayer selectedLayer, MouseEvent e) {
-        //cut and paste the image into clicked location
-        if (selectedLayer != null) {
-            Graphics2D selectedLayerGraphics = (Graphics2D) selectedLayer.getBufferedImage().getGraphics();
-            selectedLayerGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            selectedLayerGraphics.setColor(color);
-            selectedLayerGraphics.setStroke(new BasicStroke(3.0f, BasicStroke.CAP_BUTT,
-                    BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
 
-            selectedLayerGraphics.drawImage(selectedCanvas,  e.getX(), e.getY(), null);
-            DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
-        }
-        isDrawn = false;
-    }
     /**
      * cut and paste the image into clicked location
      */
@@ -377,10 +315,10 @@ MainUI mainUI;
 
     @Override
     public void onClick(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+        canvasCopy = canvas;
+        drawingLayersCopy = drawingLayers;
         if (SwingUtilities.isRightMouseButton(e)) {
-            System.out.println("right click ");
             restartSelection();
-            clearSelection2(canvas, drawingLayers);
             doNothing = true;
             //my code
         } else {
@@ -483,26 +421,21 @@ MainUI mainUI;
         initY = currentY;
         mouseOriginX = currentX;
         mouseOriginY = currentY;
-        isCut = cutOption.isSelected();
+        isCutOption = cutOption.isSelected();
     }
 
 
     public void restartSelection() {
-        System.out.println("restart");
         MouseCursor.setDefaultCursor();
-        //   DrawArea.drawLayersOntoCanvas(,originalSelectedCanvas);
-        if (previewLayer != null)
-            DrawArea.clearBufferImageToTransparent(previewLayer);
-        if (selectedCanvas != null)
-            DrawArea.clearBufferImageToTransparent(selectedCanvas);
+        if (drawingLayersCopy != null && canvasCopy != null)
+            DrawArea.drawLayersOntoCanvas(drawingLayersCopy, canvasCopy);
         isOverSelection = false;
         isDrawn = false;
 
     }
 
-    public void renderPanel() {
 
-        rotate90ClockWiseButton = new JButton("90");
+    public void renderPanel() {
 
         selectionOptionPanel = new JPanel();
         selectionOptionPanel.setLayout(new GridBagLayout());
@@ -520,7 +453,6 @@ MainUI mainUI;
         group.add(cutOption);
         group.add(copyOption);
 
-
         JPanel firstLine = new JPanel();
         firstLine.setLayout(new FlowLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -534,7 +466,6 @@ MainUI mainUI;
         firstLine.add(copyOption, c);
         c.gridx = 2;
         c.gridy = 0;
-        firstLine.add(rotate90ClockWiseButton, c);
 
         JPanel secondLine = new JPanel();
         secondLine.setLayout(new FlowLayout());
@@ -553,8 +484,6 @@ MainUI mainUI;
 
         cutOption.addActionListener(actionListener);
         copyOption.addActionListener(actionListener);
-        rotate90ClockWiseButton.addActionListener(actionListener);
-
 
     }
 
@@ -569,36 +498,11 @@ MainUI mainUI;
     ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == cutOption) {
-                isCut = true;
+                isCutOption = true;
             }
 
             if (e.getSource() == copyOption) {
-                isCut = false;
-            }
-
-            if (e.getSource() == rotate90ClockWiseButton) {
-                doNothing = false;
-                selectedCanvas = rotate90ClockWise(selectedCanvas);
-                ImageLayer selectedLayer = getSelectedLayer(drawingLayersCopy);
-                clearSelection(canvasCopy,drawingLayersCopy);
-
-                pasteDragSelection2(canvasCopy,drawingLayersCopy,selectedLayer,eCopy);
-            //MainUI.focusDrawArea();
-                //rotate90ClockWiseButton.doClick();
-                Robot bot = null;
-                try {
-                    bot = new Robot();
-                } catch (AWTException e1) {
-                    e1.printStackTrace();
-                }
-              //  bot.mouseMove(, MainUI.CANVAS_WIDTH);
-              //  bot.mousePress(InputEvent.BUTTON1_MASK);
-               //   bot.mouseRelease(InputEvent.BUTTON1_MASK);
-                  mainUI.focusDrawArea();
-                rotate90ClockWiseButton.setFocusable(false);
-                 // drawArea.validate();
-                  //drawArea.repaint();
-
+                isCutOption = false;
             }
         }
     };

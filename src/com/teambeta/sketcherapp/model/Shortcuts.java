@@ -41,6 +41,90 @@ public class Shortcuts {
     static boolean isShift_lineTool;
     static boolean isAlt_lineTool;
 
+    public static final String RECTANGLE_TOOL_SHORTCUT = "RECT TOOL";
+    static int rectToolKeyCode;
+    static boolean isCtrl_rectTool;
+    static boolean isShift_rectTool;
+    static boolean isAlt_rectTool;
+
+    public static final String AIRBRUSH_TOOL_SHORTCUT = "AIRBRUSH TOOL";
+    static int airBrushToolKeyCode;
+    static boolean isCtrl_airBrushTool;
+    static boolean isShift_airBrushTool;
+    static boolean isAlt_airBrushTool;
+
+    public static final String CELTICKNOT_TOOL_SHORTCUT = "CELTIC TOOL";
+    static int celticKnotToolKeyCode;
+    static boolean isCtrl_celticKnotTool;
+    static boolean isShift_celticKnotTool;
+    static boolean isAlt_celticKnotTool;
+
+    public static final String COLOR_CHOOSER_TOOL_SHORTCUT = "COLOR CHOOSER TOOL";
+    static int colorChooserToolKeyCode;
+    static boolean isCtrl_colorChooserTool;
+    static boolean isShift_colorChooserTool;
+    static boolean isAlt_colorChooserTool;
+
+    public static final String DNA_TOOL_SHORTCUT = "DNA TOOL";
+    static int dnaToolKeyCode;
+    static boolean isCtrl_dnaTool;
+    static boolean isShift_dnaTool;
+    static boolean isAlt_dnaTool;
+
+    public static final String ELLIPSE_TOOL_SHORTCUT = "ELLIPSE TOOL";
+    static int ellipseToolKeyCode;
+    static boolean isCtrl_ellipseTool;
+    static boolean isShift_ellipseTool;
+    static boolean isAlt_ellipseTool;
+
+    public static final String ERASER_TOOL_SHORTCUT = "ERASER TOOL";
+    static int eraserToolKeyCode;
+    static boolean isCtrl_eraserTool;
+    static boolean isShift_eraserTool;
+    static boolean isAlt_eraserTool;
+
+    public static final String EYE_DROP_TOOL_SHORTCUT = "EYE DROP TOOL";
+    static int eyeDropToolKeyCode;
+    static boolean isCtrl_eyeDropTool;
+    static boolean isShift_eyeDropTool;
+    static boolean isAlt_eyeDropTool;
+
+    public static final String FAN_TOOL_SHORTCUT = "FAN TOOL";
+    static int fanToolKeyCode;
+    static boolean isCtrl_fanTool;
+    static boolean isShift_fanTool;
+    static boolean isAlt_fanTool;
+
+    public static final String PAINTBUCKET_TOOL_SHORTCUT = "PAINT BUCKET TOOL";
+    static int paintBucketToolKeyCode;
+    static boolean isCtrl_paintBucketTool;
+    static boolean isShift_paintBucketTool;
+    static boolean isAlt_paintBucketTool;
+
+    public static final String SELECTION_TOOL_SHORTCUT = "SELECTION TOOL";
+    static int selectionToolKeyCode;
+    static boolean isCtrl_selectionTool;
+    static boolean isShift_selectionTool;
+    static boolean isAlt_selectionTool;
+
+    public static final String TEXT_TOOL_SHORTCUT = "TEXT TOOL";
+    static int textToolKeyCode;
+    static boolean isCtrl_textTool;
+    static boolean isShift_textTool;
+    static boolean isAlt_textTool;
+
+    public static final String TRIANGLE_TOOL_SHORTCUT = "TRIANGLE TOOL";
+    static int triangleToolKeyCode;
+    static boolean isCtrl_triangleTool;
+    static boolean isShift_triangleTool;
+    static boolean isAlt_triangleTool;
+
+    public static final String PRINT_SHORTCUT = "PRINT";
+    static int printToolKeyCode;
+    static boolean isCtrl_printTool;
+    static boolean isShift_printTool;
+    static boolean isAlt_printTool;
+
     private JComponent component;
     private MainUI mainUI;
     private ActionMap actionMap;
@@ -175,6 +259,90 @@ public class Shortcuts {
                 isShift_lineTool = useShift;
                 isAlt_lineTool = useAlt;
                 break;
+            case AIRBRUSH_TOOL_SHORTCUT:
+                airBrushToolKeyCode = keyCode;
+                isCtrl_airBrushTool = useControl;
+                isShift_airBrushTool = useShift;
+                isAlt_airBrushTool = useAlt;
+                break;
+            case CELTICKNOT_TOOL_SHORTCUT:
+                celticKnotToolKeyCode = keyCode;
+                isCtrl_celticKnotTool = useControl;
+                isShift_celticKnotTool = useShift;
+                isAlt_celticKnotTool = useAlt;
+                break;
+            case COLOR_CHOOSER_TOOL_SHORTCUT:
+                colorChooserToolKeyCode = keyCode;
+                isCtrl_colorChooserTool = useControl;
+                isShift_colorChooserTool = useShift;
+                isAlt_colorChooserTool = useAlt;
+                break;
+            case DNA_TOOL_SHORTCUT:
+                dnaToolKeyCode = keyCode;
+                isCtrl_dnaTool = useControl;
+                isShift_dnaTool = useShift;
+                isAlt_dnaTool = useAlt;
+                break;
+            case ELLIPSE_TOOL_SHORTCUT:
+                ellipseToolKeyCode = keyCode;
+                isCtrl_ellipseTool = useControl;
+                isShift_ellipseTool = useShift;
+                isAlt_ellipseTool = useAlt;
+                break;
+            case ERASER_TOOL_SHORTCUT:
+                eraserToolKeyCode = keyCode;
+                isCtrl_eraserTool = useControl;
+                isShift_eraserTool = useShift;
+                isAlt_eraserTool = useAlt;
+                break;
+            case EYE_DROP_TOOL_SHORTCUT:
+                eyeDropToolKeyCode = keyCode;
+                isCtrl_eyeDropTool = useControl;
+                isShift_eyeDropTool = useShift;
+                isAlt_eyeDropTool = useAlt;
+                break;
+            case FAN_TOOL_SHORTCUT:
+                fanToolKeyCode = keyCode;
+                isCtrl_fanTool = useControl;
+                isShift_fanTool = useShift;
+                isAlt_fanTool = useAlt;
+                break;
+            case PAINTBUCKET_TOOL_SHORTCUT:
+                paintBucketToolKeyCode = keyCode;
+                isCtrl_paintBucketTool = useControl;
+                isShift_paintBucketTool = useShift;
+                isAlt_paintBucketTool = useAlt;
+                break;
+            case SELECTION_TOOL_SHORTCUT:
+                selectionToolKeyCode = keyCode;
+                isCtrl_selectionTool = useControl;
+                isShift_selectionTool = useShift;
+                isAlt_selectionTool = useAlt;
+                break;
+            case RECTANGLE_TOOL_SHORTCUT:
+                rectToolKeyCode = keyCode;
+                isCtrl_rectTool = useControl;
+                isShift_rectTool = useShift;
+                isAlt_rectTool = useAlt;
+                break;
+            case TEXT_TOOL_SHORTCUT:
+                textToolKeyCode = keyCode;
+                isCtrl_textTool = useControl;
+                isShift_textTool = useShift;
+                isAlt_textTool = useAlt;
+                break;
+            case TRIANGLE_TOOL_SHORTCUT:
+                triangleToolKeyCode = keyCode;
+                isCtrl_triangleTool = useControl;
+                isShift_triangleTool = useShift;
+                isAlt_triangleTool = useAlt;
+                break;
+            case PRINT_SHORTCUT:
+                printToolKeyCode = keyCode;
+                isCtrl_printTool = useControl;
+                isShift_printTool = useShift;
+                isAlt_printTool = useAlt;
+                break;
             default:
                 System.out.println(NO_SUCH_TOOL);
         }
@@ -206,6 +374,8 @@ public class Shortcuts {
                 return (char) brushToolKeyCode;
             case LINE_TOOL_SHORTCUT:
                 return (char) lineToolKeyCode;
+            case AIRBRUSH_TOOL_SHORTCUT:
+                return (char) airBrushToolKeyCode;
             default:
                 System.out.println(NO_SUCH_TOOL);
                 return 0;
@@ -216,21 +386,77 @@ public class Shortcuts {
      * when the user changes a binding, this function will check to see if there is another tool using the same binding
      */
     public boolean isValidKeyBinding(int keyCode, boolean ctrl, boolean shift, boolean alt) {
-        if (keyCode == brushToolKeyCode && ctrl == isCtrl_brushTool && shift == isShift_brushTool() && alt == isAlt_brushTool()) {
+        if (keyCode == brushToolKeyCode && ctrl == isCtrl_brushTool && shift == isShift_brushTool && alt == isAlt_brushTool) {
             return false;
         }
-        if (keyCode == lineToolKeyCode && ctrl == isCtrl_lineTool && shift == isShift_lineTool() && alt == isAlt_lineTool()) {
+        if (keyCode == lineToolKeyCode && ctrl == isCtrl_lineTool && shift == isShift_lineTool && alt == isAlt_lineTool) {
             return false;
         }
-        if (keyCode == clearToolKeyCode && ctrl == isCtrl_clearTool && shift == isShift_clearTool() && alt == isAlt_clearTool()) {
-            return false;
-        }
-
-        if (keyCode == importKeyCode && ctrl == isCtrl_import && shift == isShift_import() && alt == isAlt_import()) {
+        if (keyCode == clearToolKeyCode && ctrl == isCtrl_clearTool && shift == isShift_clearTool && alt == isAlt_clearTool) {
             return false;
         }
 
-        if (keyCode == exportKeyCode && ctrl == isCtrl_export && shift == isShift_export() && alt == isAlt_export()) {
+        if (keyCode == importKeyCode && ctrl == isCtrl_import && shift == isShift_import && alt == isAlt_import) {
+            return false;
+        }
+
+        if (keyCode == exportKeyCode && ctrl == isCtrl_export && shift == isShift_export && alt == isAlt_export) {
+            return false;
+        }
+
+        if (keyCode == airBrushToolKeyCode && ctrl == isCtrl_airBrushTool && shift == isShift_airBrushTool && alt == isAlt_airBrushTool) {
+            return false;
+        }
+
+        if (keyCode == celticKnotToolKeyCode && ctrl == isCtrl_celticKnotTool && shift == isShift_celticKnotTool && alt == isAlt_celticKnotTool) {
+            return false;
+        }
+
+        if (keyCode == colorChooserToolKeyCode && ctrl == isCtrl_colorChooserTool && shift == isShift_colorChooserTool && alt == isAlt_colorChooserTool) {
+            return false;
+        }
+
+        if (keyCode == dnaToolKeyCode && ctrl == isCtrl_dnaTool && shift == isShift_dnaTool && alt == isAlt_dnaTool) {
+            return false;
+        }
+
+        if (keyCode == ellipseToolKeyCode && ctrl == isCtrl_ellipseTool && shift == isShift_ellipseTool && alt == isAlt_ellipseTool) {
+            return false;
+        }
+
+        if (keyCode == eraserToolKeyCode && ctrl == isCtrl_eraserTool && shift == isShift_eraserTool && alt == isAlt_eraserTool) {
+            return false;
+        }
+
+        if (keyCode == eyeDropToolKeyCode && ctrl == isCtrl_eyeDropTool && shift == isShift_eyeDropTool && alt == isAlt_eyeDropTool) {
+            return false;
+        }
+
+        if (keyCode == fanToolKeyCode && ctrl == isCtrl_fanTool && shift == isShift_fanTool && alt == isAlt_fanTool) {
+            return false;
+        }
+
+        if (keyCode == paintBucketToolKeyCode && ctrl == isCtrl_paintBucketTool && shift == isShift_paintBucketTool && alt == isAlt_paintBucketTool) {
+            return false;
+        }
+
+        if (keyCode == selectionToolKeyCode && ctrl == isCtrl_selectionTool && shift == isShift_selectionTool && alt == isAlt_selectionTool) {
+            return false;
+        }
+
+        if (keyCode == rectToolKeyCode && ctrl == isCtrl_rectTool && shift == isShift_rectTool && alt == isAlt_rectTool) {
+            return false;
+        }
+
+        if (keyCode == textToolKeyCode && ctrl == isCtrl_textTool && shift == isShift_textTool && alt == isAlt_textTool) {
+            return false;
+        }
+
+        if (keyCode == triangleToolKeyCode && ctrl == isCtrl_triangleTool && shift == isShift_triangleTool && alt == isAlt_triangleTool) {
+            return false;
+        }
+
+        if (keyCode == printToolKeyCode && ctrl == isCtrl_printTool && shift == isShift_printTool && alt == isAlt_printTool) {
             return false;
         }
         return true;
@@ -403,5 +629,509 @@ public class Shortcuts {
 
     public static void setIsAlt_lineTool(boolean isAlt_lineTool) {
         Shortcuts.isAlt_lineTool = isAlt_lineTool;
+    }
+
+    public static String getRectangleToolShortcut() {
+        return RECTANGLE_TOOL_SHORTCUT;
+    }
+
+    public static int getRectToolKeyCode() {
+        return rectToolKeyCode;
+    }
+
+    public static void setRectToolKeyCode(int rectToolKeyCode) {
+        Shortcuts.rectToolKeyCode = rectToolKeyCode;
+    }
+
+    public static boolean isCtrl_rectTool() {
+        return isCtrl_rectTool;
+    }
+
+    public static void setIsCtrl_rectTool(boolean isCtrl_rectTool) {
+        Shortcuts.isCtrl_rectTool = isCtrl_rectTool;
+    }
+
+    public static boolean isShift_rectTool() {
+        return isShift_rectTool;
+    }
+
+    public static void setIsShift_rectTool(boolean isShift_rectTool) {
+        Shortcuts.isShift_rectTool = isShift_rectTool;
+    }
+
+    public static boolean isAlt_rectTool() {
+        return isAlt_rectTool;
+    }
+
+    public static void setIsAlt_rectTool(boolean isAlt_rectTool) {
+        Shortcuts.isAlt_rectTool = isAlt_rectTool;
+    }
+
+    public static String getAirbrushToolShortcut() {
+        return AIRBRUSH_TOOL_SHORTCUT;
+    }
+
+    public static int getAirBrushToolKeyCode() {
+        return airBrushToolKeyCode;
+    }
+
+    public static void setAirBrushToolKeyCode(int airBrushToolKeyCode) {
+        Shortcuts.airBrushToolKeyCode = airBrushToolKeyCode;
+    }
+
+    public static boolean isCtrl_airBrushTool() {
+        return isCtrl_airBrushTool;
+    }
+
+    public static void setIsCtrl_airBrushTool(boolean isCtrl_airBrushTool) {
+        Shortcuts.isCtrl_airBrushTool = isCtrl_airBrushTool;
+    }
+
+    public static boolean isShift_airBrushTool() {
+        return isShift_airBrushTool;
+    }
+
+    public static void setIsShift_airBrushTool(boolean isShift_airBrushTool) {
+        Shortcuts.isShift_airBrushTool = isShift_airBrushTool;
+    }
+
+    public static boolean isAlt_airBrushTool() {
+        return isAlt_airBrushTool;
+    }
+
+    public static void setIsAlt_airBrushTool(boolean isAlt_airBrushTool) {
+        Shortcuts.isAlt_airBrushTool = isAlt_airBrushTool;
+    }
+
+    public static String getCelticknotToolShortcut() {
+        return CELTICKNOT_TOOL_SHORTCUT;
+    }
+
+    public static int getCelticKnotToolKeyCode() {
+        return celticKnotToolKeyCode;
+    }
+
+    public static void setCelticKnotToolKeyCode(int celticKnotToolKeyCode) {
+        Shortcuts.celticKnotToolKeyCode = celticKnotToolKeyCode;
+    }
+
+    public static boolean isCtrl_celticKnotTool() {
+        return isCtrl_celticKnotTool;
+    }
+
+    public static void setIsCtrl_celticKnotTool(boolean isCtrl_celticKnotTool) {
+        Shortcuts.isCtrl_celticKnotTool = isCtrl_celticKnotTool;
+    }
+
+    public static boolean isShift_celticKnotTool() {
+        return isShift_celticKnotTool;
+    }
+
+    public static void setIsShift_celticKnotTool(boolean isShift_celticKnotTool) {
+        Shortcuts.isShift_celticKnotTool = isShift_celticKnotTool;
+    }
+
+    public static boolean isAlt_celticKnotTool() {
+        return isAlt_celticKnotTool;
+    }
+
+    public static void setIsAlt_celticKnotTool(boolean isAlt_celticKnotTool) {
+        Shortcuts.isAlt_celticKnotTool = isAlt_celticKnotTool;
+    }
+
+    public static String getColorChooserToolShortcut() {
+        return COLOR_CHOOSER_TOOL_SHORTCUT;
+    }
+
+    public static int getColorChooserToolKeyCode() {
+        return colorChooserToolKeyCode;
+    }
+
+    public static void setColorChooserToolKeyCode(int colorChooserToolKeyCode) {
+        Shortcuts.colorChooserToolKeyCode = colorChooserToolKeyCode;
+    }
+
+    public static boolean isCtrl_colorChooserTool() {
+        return isCtrl_colorChooserTool;
+    }
+
+    public static void setIsCtrl_colorChooserTool(boolean isCtrl_colorChooserTool) {
+        Shortcuts.isCtrl_colorChooserTool = isCtrl_colorChooserTool;
+    }
+
+    public static boolean isShift_colorChooserTool() {
+        return isShift_colorChooserTool;
+    }
+
+    public static void setIsShift_colorChooserTool(boolean isShift_colorChooserTool) {
+        Shortcuts.isShift_colorChooserTool = isShift_colorChooserTool;
+    }
+
+    public static boolean isAlt_colorChooserTool() {
+        return isAlt_colorChooserTool;
+    }
+
+    public static void setIsAlt_colorChooserTool(boolean isAlt_colorChooserTool) {
+        Shortcuts.isAlt_colorChooserTool = isAlt_colorChooserTool;
+    }
+
+    public static String getDnaToolShortcut() {
+        return DNA_TOOL_SHORTCUT;
+    }
+
+    public static int getDnaToolKeyCode() {
+        return dnaToolKeyCode;
+    }
+
+    public static void setDnaToolKeyCode(int dnaToolKeyCode) {
+        Shortcuts.dnaToolKeyCode = dnaToolKeyCode;
+    }
+
+    public static boolean isCtrl_dnaTool() {
+        return isCtrl_dnaTool;
+    }
+
+    public static void setIsCtrl_dnaTool(boolean isCtrl_dnaTool) {
+        Shortcuts.isCtrl_dnaTool = isCtrl_dnaTool;
+    }
+
+    public static boolean isShift_dnaTool() {
+        return isShift_dnaTool;
+    }
+
+    public static void setIsShift_dnaTool(boolean isShift_dnaTool) {
+        Shortcuts.isShift_dnaTool = isShift_dnaTool;
+    }
+
+    public static boolean isAlt_dnaTool() {
+        return isAlt_dnaTool;
+    }
+
+    public static void setIsAlt_dnaTool(boolean isAlt_dnaTool) {
+        Shortcuts.isAlt_dnaTool = isAlt_dnaTool;
+    }
+
+    public static String getEllipseToolShortcut() {
+        return ELLIPSE_TOOL_SHORTCUT;
+    }
+
+    public static int getEllipseToolKeyCode() {
+        return ellipseToolKeyCode;
+    }
+
+    public static void setEllipseToolKeyCode(int ellipseToolKeyCode) {
+        Shortcuts.ellipseToolKeyCode = ellipseToolKeyCode;
+    }
+
+    public static boolean isCtrl_ellipseTool() {
+        return isCtrl_ellipseTool;
+    }
+
+    public static void setIsCtrl_ellipseTool(boolean isCtrl_ellipseTool) {
+        Shortcuts.isCtrl_ellipseTool = isCtrl_ellipseTool;
+    }
+
+    public static boolean isShift_ellipseTool() {
+        return isShift_ellipseTool;
+    }
+
+    public static void setIsShift_ellipseTool(boolean isShift_ellipseTool) {
+        Shortcuts.isShift_ellipseTool = isShift_ellipseTool;
+    }
+
+    public static boolean isAlt_ellipseTool() {
+        return isAlt_ellipseTool;
+    }
+
+    public static void setIsAlt_ellipseTool(boolean isAlt_ellipseTool) {
+        Shortcuts.isAlt_ellipseTool = isAlt_ellipseTool;
+    }
+
+    public static String getEraserToolShortcut() {
+        return ERASER_TOOL_SHORTCUT;
+    }
+
+    public static int getEraserToolKeyCode() {
+        return eraserToolKeyCode;
+    }
+
+    public static void setEraserToolKeyCode(int eraserToolKeyCode) {
+        Shortcuts.eraserToolKeyCode = eraserToolKeyCode;
+    }
+
+    public static boolean isCtrl_eraserTool() {
+        return isCtrl_eraserTool;
+    }
+
+    public static void setIsCtrl_eraserTool(boolean isCtrl_eraserTool) {
+        Shortcuts.isCtrl_eraserTool = isCtrl_eraserTool;
+    }
+
+    public static boolean isShift_eraserTool() {
+        return isShift_eraserTool;
+    }
+
+    public static void setIsShift_eraserTool(boolean isShift_eraserTool) {
+        Shortcuts.isShift_eraserTool = isShift_eraserTool;
+    }
+
+    public static boolean isAlt_eraserTool() {
+        return isAlt_eraserTool;
+    }
+
+    public static void setIsAlt_eraserTool(boolean isAlt_eraserTool) {
+        Shortcuts.isAlt_eraserTool = isAlt_eraserTool;
+    }
+
+    public static String getEyeDropToolShortcut() {
+        return EYE_DROP_TOOL_SHORTCUT;
+    }
+
+    public static int getEyeDropToolKeyCode() {
+        return eyeDropToolKeyCode;
+    }
+
+    public static void setEyeDropToolKeyCode(int eyeDropToolKeyCode) {
+        Shortcuts.eyeDropToolKeyCode = eyeDropToolKeyCode;
+    }
+
+    public static boolean isCtrl_eyeDropTool() {
+        return isCtrl_eyeDropTool;
+    }
+
+    public static void setIsCtrl_eyeDropTool(boolean isCtrl_eyeDropTool) {
+        Shortcuts.isCtrl_eyeDropTool = isCtrl_eyeDropTool;
+    }
+
+    public static boolean isShift_eyeDropTool() {
+        return isShift_eyeDropTool;
+    }
+
+    public static void setIsShift_eyeDropTool(boolean isShift_eyeDropTool) {
+        Shortcuts.isShift_eyeDropTool = isShift_eyeDropTool;
+    }
+
+    public static boolean isAlt_eyeDropTool() {
+        return isAlt_eyeDropTool;
+    }
+
+    public static void setIsAlt_eyeDropTool(boolean isAlt_eyeDropTool) {
+        Shortcuts.isAlt_eyeDropTool = isAlt_eyeDropTool;
+    }
+
+    public static String getFanToolShortcut() {
+        return FAN_TOOL_SHORTCUT;
+    }
+
+    public static int getFanToolKeyCode() {
+        return fanToolKeyCode;
+    }
+
+    public static void setFanToolKeyCode(int fanToolKeyCode) {
+        Shortcuts.fanToolKeyCode = fanToolKeyCode;
+    }
+
+    public static boolean isCtrl_fanTool() {
+        return isCtrl_fanTool;
+    }
+
+    public static void setIsCtrl_fanTool(boolean isCtrl_fanTool) {
+        Shortcuts.isCtrl_fanTool = isCtrl_fanTool;
+    }
+
+    public static boolean isShift_fanTool() {
+        return isShift_fanTool;
+    }
+
+    public static void setIsShift_fanTool(boolean isShift_fanTool) {
+        Shortcuts.isShift_fanTool = isShift_fanTool;
+    }
+
+    public static boolean isAlt_fanTool() {
+        return isAlt_fanTool;
+    }
+
+    public static void setIsAlt_fanTool(boolean isAlt_fanTool) {
+        Shortcuts.isAlt_fanTool = isAlt_fanTool;
+    }
+
+    public static String getPaintbucketToolShortcut() {
+        return PAINTBUCKET_TOOL_SHORTCUT;
+    }
+
+    public static int getPaintBucketToolKeyCode() {
+        return paintBucketToolKeyCode;
+    }
+
+    public static void setPaintBucketToolKeyCode(int paintBucketToolKeyCode) {
+        Shortcuts.paintBucketToolKeyCode = paintBucketToolKeyCode;
+    }
+
+    public static boolean isCtrl_paintBucketTool() {
+        return isCtrl_paintBucketTool;
+    }
+
+    public static void setIsCtrl_paintBucketTool(boolean isCtrl_paintBucketTool) {
+        Shortcuts.isCtrl_paintBucketTool = isCtrl_paintBucketTool;
+    }
+
+    public static boolean isShift_paintBucketTool() {
+        return isShift_paintBucketTool;
+    }
+
+    public static void setIsShift_paintBucketTool(boolean isShift_paintBucketTool) {
+        Shortcuts.isShift_paintBucketTool = isShift_paintBucketTool;
+    }
+
+    public static boolean isAlt_paintBucketTool() {
+        return isAlt_paintBucketTool;
+    }
+
+    public static void setIsAlt_paintBucketTool(boolean isAlt_paintBucketTool) {
+        Shortcuts.isAlt_paintBucketTool = isAlt_paintBucketTool;
+    }
+
+    public static String getSelectionToolShortcut() {
+        return SELECTION_TOOL_SHORTCUT;
+    }
+
+    public static int getSelectionToolKeyCode() {
+        return selectionToolKeyCode;
+    }
+
+    public static void setSelectionToolKeyCode(int selectionToolKeyCode) {
+        Shortcuts.selectionToolKeyCode = selectionToolKeyCode;
+    }
+
+    public static boolean isCtrl_selectionTool() {
+        return isCtrl_selectionTool;
+    }
+
+    public static void setIsCtrl_selectionTool(boolean isCtrl_selectionTool) {
+        Shortcuts.isCtrl_selectionTool = isCtrl_selectionTool;
+    }
+
+    public static boolean isShift_selectionTool() {
+        return isShift_selectionTool;
+    }
+
+    public static void setIsShift_selectionTool(boolean isShift_selectionTool) {
+        Shortcuts.isShift_selectionTool = isShift_selectionTool;
+    }
+
+    public static boolean isAlt_selectionTool() {
+        return isAlt_selectionTool;
+    }
+
+    public static void setIsAlt_selectionTool(boolean isAlt_selectionTool) {
+        Shortcuts.isAlt_selectionTool = isAlt_selectionTool;
+    }
+
+    public static String getTextToolShortcut() {
+        return TEXT_TOOL_SHORTCUT;
+    }
+
+    public static int getTextToolKeyCode() {
+        return textToolKeyCode;
+    }
+
+    public static void setTextToolKeyCode(int textToolKeyCode) {
+        Shortcuts.textToolKeyCode = textToolKeyCode;
+    }
+
+    public static boolean isCtrl_textTool() {
+        return isCtrl_textTool;
+    }
+
+    public static void setIsCtrl_textTool(boolean isCtrl_textTool) {
+        Shortcuts.isCtrl_textTool = isCtrl_textTool;
+    }
+
+    public static boolean isShift_textTool() {
+        return isShift_textTool;
+    }
+
+    public static void setIsShift_textTool(boolean isShift_textTool) {
+        Shortcuts.isShift_textTool = isShift_textTool;
+    }
+
+    public static boolean isAlt_textTool() {
+        return isAlt_textTool;
+    }
+
+    public static void setIsAlt_textTool(boolean isAlt_textTool) {
+        Shortcuts.isAlt_textTool = isAlt_textTool;
+    }
+
+    public static String getTriangleToolShortcut() {
+        return TRIANGLE_TOOL_SHORTCUT;
+    }
+
+    public static int getTriangleToolKeyCode() {
+        return triangleToolKeyCode;
+    }
+
+    public static void setTriangleToolKeyCode(int triangleToolKeyCode) {
+        Shortcuts.triangleToolKeyCode = triangleToolKeyCode;
+    }
+
+    public static boolean isCtrl_triangleTool() {
+        return isCtrl_triangleTool;
+    }
+
+    public static void setIsCtrl_triangleTool(boolean isCtrl_triangleTool) {
+        Shortcuts.isCtrl_triangleTool = isCtrl_triangleTool;
+    }
+
+    public static boolean isShift_triangleTool() {
+        return isShift_triangleTool;
+    }
+
+    public static void setIsShift_triangleTool(boolean isShift_triangleTool) {
+        Shortcuts.isShift_triangleTool = isShift_triangleTool;
+    }
+
+    public static boolean isAlt_triangleTool() {
+        return isAlt_triangleTool;
+    }
+
+    public static void setIsAlt_triangleTool(boolean isAlt_triangleTool) {
+        Shortcuts.isAlt_triangleTool = isAlt_triangleTool;
+    }
+
+    public static String getPrintShortcut() {
+        return PRINT_SHORTCUT;
+    }
+
+    public static int getPrintToolKeyCode() {
+        return printToolKeyCode;
+    }
+
+    public static void setPrintToolKeyCode(int printToolKeyCode) {
+        Shortcuts.printToolKeyCode = printToolKeyCode;
+    }
+
+    public static boolean isCtrl_printTool() {
+        return isCtrl_printTool;
+    }
+
+    public static void setIsCtrl_printTool(boolean isCtrl_printTool) {
+        Shortcuts.isCtrl_printTool = isCtrl_printTool;
+    }
+
+    public static boolean isShift_printTool() {
+        return isShift_printTool;
+    }
+
+    public static void setIsShift_printTool(boolean isShift_printTool) {
+        Shortcuts.isShift_printTool = isShift_printTool;
+    }
+
+    public static boolean isAlt_printTool() {
+        return isAlt_printTool;
+    }
+
+    public static void setIsAlt_printTool(boolean isAlt_printTool) {
+        Shortcuts.isAlt_printTool = isAlt_printTool;
     }
 }
