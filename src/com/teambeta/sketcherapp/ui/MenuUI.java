@@ -1,5 +1,6 @@
 package com.teambeta.sketcherapp.ui;
 
+import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.model.ImportExport;
 import com.teambeta.sketcherapp.model.AboutMenu;
 import com.teambeta.sketcherapp.model.NewWindow;
@@ -19,9 +20,9 @@ public class MenuUI extends JMenuBar {
     private static final String IMAGE_MENU_BUTTON_TEXT = "Image";
     private static final String WINDOW_MENU_BUTTON_TEXT = "Window";
     private static final String HELP_MENU_BUTTON_TEXT = "Help";
-    public static final String ESHORTCUTS_MENU_BUTTON_TEXT = "Shortcuts";
+    private static final String ESHORTCUTS_MENU_BUTTON_TEXT = "Shortcuts";
 
-    JFrame mainFrame;
+    private JFrame mainFrame;
     private JMenu fileMenu;
     private JMenu editMenu;
     private JMenu imageMenu;
@@ -105,7 +106,7 @@ public class MenuUI extends JMenuBar {
      * Constructor
      */
     public MenuUI(JFrame mainFrame, DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu, SaturationMenu saturationMenu,
-                  BrightnessMenu brightnessMenu, NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu,ShortcutDialog keyboardShortCutPanel) {
+                  BrightnessMenu brightnessMenu, NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu, ShortcutDialog keyboardShortCutPanel) {
         this.mainFrame = mainFrame;
         this.drawArea = drawArea;
         this.importExport = importExport;
@@ -218,28 +219,29 @@ public class MenuUI extends JMenuBar {
             if (e.getSource() == iExport) {
                 importExport.exportImage();
             } else if (e.getSource() == iImport) {
-               importExport.importImage();
+                importExport.importImage();
             } else if (e.getSource() == iGreyscale) {
                 greyscaleMenu.showWindow();
             } else if (e.getSource() == iSaturation) {
                 saturationMenu.showWindow();
             } else if (e.getSource() == iBrightness) {
                 brightnessMenu.showWindow();
-            } else  if (e.getSource() == hAbout) {
+            } else if (e.getSource() == hAbout) {
                 AboutMenu.prepareAbout();
             } else if (e.getSource() == iNoise) {
                 noiseGeneratorMenu.showWindow();
             } else if (e.getSource() == iCheckerBoard) {
                 checkerboardMenu.showWindow();
-            } else if (e.getSource() == eKeyboardShortCuts){
+            } else if (e.getSource() == eKeyboardShortCuts) {
                 keyboardShortCutPanel.renderPanel();
             } else if (e.getSource() == fClose) {
-               System.exit(0);
+                System.exit(0);
             } else if (e.getSource() == fNew) {
                 Dimension dimension = NewWindow.displayPrompt();
                 if (dimension != null) {
                     final int CANVAS_WIDTH = (int) dimension.getWidth();
                     final int CANVAS_HEIGHT = (int) dimension.getHeight();
+                    ImageLayer.resetLayerNumber();
                     MainUI mainUI = new MainUI(CANVAS_WIDTH, CANVAS_HEIGHT);
                     mainUI.displayUI();
                     mainFrame.dispose();

@@ -154,6 +154,9 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                 if (selectedIndex != -1) {
                     listModel.remove(selectedIndex);
                     drawingLayers.remove(selectedIndex);
+                    if (drawingLayers.isEmpty()) {
+                        ImageLayer.resetLayerNumber();
+                    }
                     drawArea.redrawLayers();
                 }
             }
@@ -267,10 +270,11 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
 
     /**
      * Add mouse listener for mouse over and selection effects to layer buttons.
-     * @param button layer tool button.
+     *
+     * @param button              layer tool button.
      * @param iconHighlightedPath path to highlighted icon.
-     * @param iconHoverPath path to hover icon.
-     * @param iconDefaultPath path to icon.
+     * @param iconHoverPath       path to hover icon.
+     * @param iconDefaultPath     path to icon.
      */
     private void addLayerToolMouseListener(JButton button, String iconHighlightedPath, String iconHoverPath,
                                            String iconDefaultPath) {
@@ -280,23 +284,26 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                 super.mousePressed(e);
                 button.setIcon(new ImageIcon(iconHighlightedPath));
             }
+
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
                 Point mousePoint = new java.awt.Point(e.getLocationOnScreen());
                 SwingUtilities.convertPointFromScreen(mousePoint, e.getComponent());
-                if(e.getComponent().contains(mousePoint)) {
+                if (e.getComponent().contains(mousePoint)) {
                     button.setIcon(new ImageIcon(iconHoverPath));
                 } else {
                     button.setIcon(new ImageIcon(iconDefaultPath));
                 }
 
             }
+
             @Override
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
                 button.setIcon(new ImageIcon(iconHoverPath));
             }
+
             @Override
             public void mouseExited(MouseEvent e) {
                 super.mouseExited(e);
