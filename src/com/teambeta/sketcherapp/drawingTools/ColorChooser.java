@@ -19,8 +19,8 @@ public class ColorChooser extends JPanel {
     private static final int FONT_SIZE = 16;
     private static final String COLOR_SELECTOR_TEXT = "Color Selector";
     private static Color color;
-    private static final int SQUARE_LENGTH = 50;
-    private static final int PANEL_LENGTH = 50;
+    private static final int SQUARE_LENGTH = 80;
+    private static final int PANEL_LENGTH = 80;
     private static final String DARK_GREY_CANVAS = "#222222";
     private static List<GeneralObserver> observers = new ArrayList<>();
 

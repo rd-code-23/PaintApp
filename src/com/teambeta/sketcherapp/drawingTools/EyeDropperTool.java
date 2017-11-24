@@ -54,7 +54,7 @@ public class EyeDropperTool extends DrawingTool {
         Color colorAtPoint = null; // Pull from layer 0 by default.
         if (selectedLayer != null) {
             colorAtPoint = new Color(selectedLayer.getBufferedImage()
-                    .getRGB(e.getX(), e.getY()));
+                    .getRGB(e.getX(), e.getY()), true);
             MainUI.getColorChooser().setColorFromEyeDropper(colorAtPoint); // Update to the color chooser.
         }
     }

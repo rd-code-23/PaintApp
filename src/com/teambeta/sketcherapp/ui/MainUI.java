@@ -69,7 +69,8 @@ public class MainUI {
     private static final int PANEL_SECTION_SPACING = 20;
     private static final int WEST_PANEL_WIDTH = 120;
     private static final int COLOR_PANEL_HEIGHT = 250;
-    private static final int IMAGE_EDITOR_PANEL_HEIGHT = 180;
+    private static final int IMAGE_EDITING_PANEL_HEIGHT = 180;
+    private static final int IMAGE_EDITING_PANEL_WIDTH = 340;
     private static final String DARK_GREY_CANVAS = "#222222";
     private static final String FONT_TYPE = "Arial";
     private static final int FONT_SIZE = 16;
@@ -467,15 +468,12 @@ public class MainUI {
         initializeToolSettings(northPanel);
         initializeWidthChanger();
 
-        JPanel colorPanel = initializeColorPanel();
-        initializeColorChooserPanel(colorPanel);
-
-        JPanel imageEditingPanel = initializeImageEditingPanel();
-
-        JPanel westPanel = initializeWestPanel(colorPanel, imageEditingPanel);
+        JPanel westPanel = initializeWestPanel();
         mainContent.add(westPanel, BorderLayout.WEST);
 
-        JPanel editorPanel = initializeEditorPanel();
+        JPanel colorPanel = initializeColorPanel();
+        JPanel imageEditingPanel = initializeImageEditingPanel();
+        JPanel editorPanel = initializeEditorPanel(colorPanel, imageEditingPanel);
         mainContent.add(editorPanel, BorderLayout.EAST);
         mainContent.add(northPanel, BorderLayout.NORTH);
 
@@ -640,24 +638,6 @@ public class MainUI {
     }
 
     /**
-     * Set up color panel.
-     *
-     * @return color panel.
-     */
-    private JPanel initializeColorPanel() {
-        JPanel colorPanel = new JPanel();
-        colorChooser = new ColorChooser();
-        colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.Y_AXIS));
-        colorPanel.setBackground(Color.DARK_GRAY);
-        final Dimension CANVAS_TOOLS_MAX_SIZE = canvasTools.getMaximumSize();
-        colorPanel.setMaximumSize(new Dimension((int) CANVAS_TOOLS_MAX_SIZE.getWidth(), COLOR_PANEL_HEIGHT));
-        colorPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
-        colorPanel.add(eyeDropperToolButton);
-        colorPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
-        return colorPanel;
-    }
-
-    /**
      * Set up tool settings panel.
      *
      * @param northPanel for the application.
@@ -690,38 +670,36 @@ public class MainUI {
     }
 
     /**
-     * Set up color chooser components.
+     * Set up color panel.
      *
-     * @param colorPanel for for the application.
+     * @return color panel.
      */
-    private void initializeColorChooserPanel(JPanel colorPanel) {
+    private JPanel initializeColorPanel() {
+        JPanel colorPanel = new JPanel();
+        colorChooser = new ColorChooser();
+        colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.X_AXIS));
+        colorPanel.setBackground(Color.DARK_GRAY);
+        colorPanel.setMaximumSize(new Dimension(EDITOR_PANEL_WIDTH, COLOR_PANEL_HEIGHT));
+        colorPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY));
+
         JPanel colorChooserPanel = new JPanel();
         colorChooserPanel.setLayout(new GridBagLayout());
         GridBagConstraints colorChooserConstraints = new GridBagConstraints();
         colorChooserPanel.setBackground(Color.DARK_GRAY);
+        colorChooserConstraints.insets = new Insets(PANEL_SECTION_SPACING, 0, 0, 0);
+        colorChooserPanel.add(eyeDropperToolButton, colorChooserConstraints);
+        colorChooserConstraints.gridx = 1;
+        colorChooserConstraints.gridy = 0;
+        colorChooserConstraints.insets = new Insets(PANEL_SECTION_SPACING, PANEL_SECTION_SPACING, 0, 0);
         colorChooserPanel.add(colorChooser, colorChooserConstraints);
         eyeDropperStats = new EyeDropperStats();
-        colorChooserConstraints.gridx = 0;
-        colorChooserConstraints.gridy = 1;
-        colorChooserConstraints.insets = new Insets(PANEL_SECTION_SPACING, 0, 0, 0);
+        colorChooserConstraints.gridx = 2;
+        colorChooserConstraints.gridy = 0;
+        colorChooserConstraints.insets = new Insets(PANEL_SECTION_SPACING, PANEL_SECTION_SPACING, 0, 0);
         colorChooserPanel.add(eyeDropperStats, colorChooserConstraints);
         colorPanel.add(colorChooserPanel);
-        colorPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-    }
 
-    /**
-     * Set up editor panel.
-     *
-     * @return editor panel of the application.
-     */
-    private JPanel initializeEditorPanel() {
-        JPanel editorPanel = new JPanel();
-        editorPanel.setLayout(new BorderLayout());
-        editorPanel.setBackground(Color.DARK_GRAY);
-        editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
-        layersPanel = new LayersPanel(drawArea);
-        editorPanel.add(layersPanel, BorderLayout.EAST);
-        return editorPanel;
+        return colorPanel;
     }
 
     /**
@@ -731,36 +709,53 @@ public class MainUI {
      */
     private JPanel initializeImageEditingPanel() {
         JPanel imageEditingPanel = new JPanel();
-        imageEditingPanel.setLayout(new BoxLayout(imageEditingPanel, BoxLayout.Y_AXIS));
+        imageEditingPanel.setLayout(new GridBagLayout());
         imageEditingPanel.setBackground(Color.DARK_GRAY);
-        imageEditingPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-        final Dimension CANVAS_TOOLS_MAX_SIZE = canvasTools.getMaximumSize();
-        imageEditingPanel.setMaximumSize(new Dimension((int) CANVAS_TOOLS_MAX_SIZE.getWidth(),
-                IMAGE_EDITOR_PANEL_HEIGHT));
-        imageEditingPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
-        imageEditingPanel.add(brightnessContrastButton);
-        imageEditingPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
-        imageEditingPanel.add(hueSaturationButton);
+        imageEditingPanel.setMaximumSize(new Dimension(IMAGE_EDITING_PANEL_WIDTH,
+                IMAGE_EDITING_PANEL_HEIGHT));
+        imageEditingPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY));
+
+        GridBagConstraints imageButtonConstraints = new GridBagConstraints();
+        imageButtonConstraints.insets = new Insets(PANEL_SECTION_SPACING, PANEL_SECTION_SPACING, 0, 0);
+        imageEditingPanel.add(brightnessContrastButton, imageButtonConstraints);
+        imageButtonConstraints.gridx = 1;
+        imageButtonConstraints.gridy = 0;
+        imageButtonConstraints.insets = new Insets(PANEL_SECTION_SPACING, PANEL_SECTION_SPACING, 0, 0);
+        imageEditingPanel.add(hueSaturationButton, imageButtonConstraints);
+
         return imageEditingPanel;
+    }
+
+    /**
+     * Set up editor panel.
+     *
+     * @return editor panel of the application.
+     */
+    private JPanel initializeEditorPanel(JPanel colorPanel, JPanel imageEditingPanel) {
+        JPanel editorPanel = new JPanel();
+        editorPanel.setLayout(new BoxLayout(editorPanel, BoxLayout.Y_AXIS));
+        editorPanel.setBackground(Color.DARK_GRAY);
+        editorPanel.setPreferredSize(new Dimension(EDITOR_PANEL_WIDTH, EDITOR_PANEL_HEIGHT));
+        editorPanel.add(colorPanel);
+        editorPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
+        editorPanel.add(imageEditingPanel);
+        editorPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
+        layersPanel = new LayersPanel(drawArea);
+        editorPanel.add(layersPanel);
+        return editorPanel;
     }
 
     /**
      * Set up west panel.
      *
-     * @param colorPanel of the application.
      * @return westPanel of the application.
      */
-    private JPanel initializeWestPanel(JPanel colorPanel, JPanel imageEditingPanel) {
+    private JPanel initializeWestPanel() {
         JPanel westPanel = new JPanel();
         westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
         westPanel.setPreferredSize(new Dimension(WEST_PANEL_WIDTH, 0));
         westPanel.setBackground(Color.DARK_GRAY);
-
         westPanel.add(canvasTools);
-        westPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
-        westPanel.add(colorPanel);
-        westPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
-        westPanel.add(imageEditingPanel);
         return westPanel;
     }
 
