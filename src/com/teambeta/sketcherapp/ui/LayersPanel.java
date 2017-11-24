@@ -8,10 +8,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.LinkedList;
@@ -81,7 +78,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
      *
      * @return The stored JList of ImageLayers.
      */
-    public JList<ImageLayer> getListOfLayers() {
+    JList<ImageLayer> getListOfLayers() {
         return listOfLayers;
     }
 
@@ -90,7 +87,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
      *
      * @param drawArea The drawArea the layersPanel is utilizing.
      */
-    public LayersPanel(DrawArea drawArea) {
+    LayersPanel(DrawArea drawArea) {
         super(new BorderLayout());
         this.drawArea = drawArea;
         this.drawingLayers = drawArea.getDrawingLayers();
@@ -107,6 +104,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         listOfLayers.setFont(new Font(FONT_TYPE, Font.BOLD, FONT_SIZE));
         UIManager.put("List.focusCellHighlightBorder", BorderFactory.createEmptyBorder());
         listOfLayers.setBorder(null);
+        initLayersMouseListener();
         layersScrollPane = new JScrollPane(listOfLayers);
         layersScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         layersScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -114,6 +112,53 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         this.add(layersScrollPane);
         this.add(layersScrollPane, BorderLayout.EAST);
         addLayerButtons(drawArea);
+    }
+
+    /**
+     * Implement mouse events for the JList of ImageLayers.
+     */
+    private void initLayersMouseListener() {
+        //derived from: (https://stackoverflow.com/questions/3804361/how-to-enable-drag-and-drop-inside-jlist/18543066)
+        //create anon class to implement mouse events.
+        MouseAdapter mouseAdapter = new MouseAdapter() {
+            int indexOfDraggedLayer;
+            boolean isLayerBeingDragged = false;
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                super.mousePressed(e);
+                isLayerBeingDragged = true;
+                indexOfDraggedLayer = listOfLayers.getSelectedIndex();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                super.mouseReleased(e);
+                isLayerBeingDragged = false;
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                super.mouseDragged(e);
+                if (isLayerBeingDragged) {
+                    int indexOurMouseIsAt = listOfLayers.locationToIndex(e.getPoint());
+                    if (indexOurMouseIsAt != indexOfDraggedLayer) {
+                        //swap layers
+                        int targetIndex = listOfLayers.getSelectedIndex();
+                        ImageLayer draggedElement = listModel.get(indexOfDraggedLayer);
+
+                        //update listModel after drawingLayers to avoid firing the event handler early.
+                        drawingLayers.remove(indexOfDraggedLayer);
+                        listModel.remove(indexOfDraggedLayer);
+                        drawingLayers.add(targetIndex, draggedElement);
+                        listModel.add(targetIndex, draggedElement);
+                        indexOfDraggedLayer = indexOurMouseIsAt;
+                    }
+                }
+            }
+        };
+        listOfLayers.addMouseListener(mouseAdapter);
+        listOfLayers.addMouseMotionListener(mouseAdapter);
     }
 
     /**
@@ -235,6 +280,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         duplicateLayerButton.addActionListener(duplicateLayerButtonActionListener);
         buttonsPanel.add(duplicateLayerButton);
 
+
         JPanel layerMovementButtonsPanel = new JPanel();
         layerMovementButtonsPanel.setLayout(new BoxLayout(layerMovementButtonsPanel, BoxLayout.X_AXIS));
         layerMovementButtonsPanel.setBackground(Color.DARK_GRAY);
@@ -242,7 +288,44 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                 LAYER_MOVEMENT_BUTTONS_PADDING, LAYER_MOVEMENT_BUTTONS_PADDING, LAYER_MOVEMENT_BUTTONS_PADDING));
 
         layerUpButton = createButton(LAYER_UP_ICON_DEFAULT, LAYER_UP_BUTTON_TEXT);
+        layerUpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = listOfLayers.getSelectedIndex();
+                if (selectedIndex == -1 || selectedIndex == 0) {
+                    //early exit if there is no selected layer or no layer above the selected one.
+                } else {
+                    ImageLayer imageLayer = listModel.remove(selectedIndex);
+                    drawingLayers.remove(selectedIndex);
+                    listModel.add(selectedIndex - 1, imageLayer);
+                    drawingLayers.add(selectedIndex - 1, imageLayer);
+                    listOfLayers.setSelectedIndex(selectedIndex - 1);
+
+                    listOfLayers.repaint();
+                    drawArea.redrawLayers();
+                }
+            }
+        });
+
         layerDownButton = createButton(LAYER_DOWN_ICON_DEFAULT, LAYER_DOWN_BUTTON_TEXT);
+        layerDownButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int selectedIndex = listOfLayers.getSelectedIndex();
+                if (selectedIndex == -1 || selectedIndex == drawingLayers.size() - 1) {
+                    //early exit if there is no selected layer or no layer below the selected one.
+                } else {
+                    ImageLayer imageLayer = listModel.remove(selectedIndex);
+                    drawingLayers.remove(selectedIndex);
+                    listModel.add(selectedIndex + 1, imageLayer);
+                    drawingLayers.add(selectedIndex + 1, imageLayer);
+                    listOfLayers.setSelectedIndex(selectedIndex + 1);
+
+                    listOfLayers.repaint();
+                    drawArea.redrawLayers();
+                }
+            }
+        });
         addLayerToolMouseListener(layerUpButton, LAYER_UP_ICON_HIGHLIGHTED, LAYER_UP_ICON_HOVER, LAYER_UP_ICON_DEFAULT);
         addLayerToolMouseListener(layerDownButton, LAYER_DOWN_ICON_HIGHLIGHTED, LAYER_DOWN_ICON_HOVER,
                 LAYER_DOWN_ICON_DEFAULT);
@@ -295,7 +378,6 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                 } else {
                     button.setIcon(new ImageIcon(iconDefaultPath));
                 }
-
             }
 
             @Override
@@ -333,7 +415,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
      *
      * @return The listModel for the list of ImageLayers.
      */
-    public DefaultListModel<ImageLayer> getListModel() {
+    DefaultListModel<ImageLayer> getListModel() {
         return listModel;
     }
 
