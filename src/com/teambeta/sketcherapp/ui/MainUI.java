@@ -466,8 +466,8 @@ public class MainUI {
                 textTool.setCaesarShiftValue(textToolSettings.getCaesarShiftValue());
             }
         });
-
-       // db_kbShortcuts.dropTable();
+        //Any changes to shortcut, drop table first
+      //  db_kbShortcuts.dropTable();
         if (db_kbShortcuts.isTableExists()) {
             generateDBDefaultKeyBindings();
             db_kbShortcuts.generateDBKeyBindings();
@@ -647,8 +647,8 @@ public class MainUI {
         shortcuts.addKeyBinding(KeyEvent.VK_T,true, false, false, Shortcuts.TEXT_TOOL_SHORTCUT, (evt) -> {
             rectangleSelectionTool.restartSelection();
             rectangleSelectionTool.hidePanel();
-            textToolSettings.setVisibility(true);
             northPanel.remove(rectangleSelectionTool.getSelectionOptionPanel());
+            textToolSettings.setVisibility(true);
             northPanel.add(textToolSettings, BorderLayout.EAST);
             northPanel.validate();
             selectedDrawingTool = textTool;
@@ -789,8 +789,10 @@ public class MainUI {
 
         shortcuts.addKeyBinding(shortcuts.getTextToolKeyCode(), shortcuts.isCtrl_textTool(), shortcuts.isShift_textTool(), shortcuts.isAlt_textTool(), Shortcuts.TEXT_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = textTool;
-            textToolSettings.setVisibility(true);
+            rectangleSelectionTool.restartSelection();
+            rectangleSelectionTool.hidePanel();
             northPanel.remove(rectangleSelectionTool.getSelectionOptionPanel());
+            textToolSettings.setVisibility(true);
             northPanel.add(textToolSettings, BorderLayout.EAST);
             northPanel.validate();
             updateFillState();
