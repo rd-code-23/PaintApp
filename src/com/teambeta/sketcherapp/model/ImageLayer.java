@@ -86,7 +86,7 @@ public class ImageLayer {
      * @param name for the layer.
      */
     public void setName(String name) {
-        this.name = name;
+        this.name = "  " + name;
     }
 
     @Override

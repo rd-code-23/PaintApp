@@ -183,6 +183,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                         if (selectedLayer != null) {
                             selectedLayer.setName(name);
                             listOfLayers.repaint();
+                            listOfLayers.setFont(new Font(FONT_TYPE, Font.BOLD, FONT_SIZE));
                         }
                     }
                 }
