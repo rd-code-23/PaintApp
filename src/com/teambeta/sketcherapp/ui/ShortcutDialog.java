@@ -6,6 +6,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
+import javax.swing.text.TableView;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -64,6 +65,7 @@ public class ShortcutDialog {
     public void renderPanel() {
 
         DefaultTableModel dm = new DefaultTableModel();
+
         dm.setDataVector(new Object[][]{
                         {CLEAR_SHORTCUT_TABLE, printShortcut(sc.getClearToolKeyCode(), sc.isCtrl_clearTool(), sc.isShift_clearTool(), sc.isAlt_clearTool())},
                         {BRUSH_SHORTCUT_TABLE, printShortcut(sc.getBrushToolKeyCode(), sc.isCtrl_brushTool(), sc.isShift_brushTool(), sc.isAlt_brushTool())},
@@ -88,13 +90,13 @@ public class ShortcutDialog {
                 new Object[]{ACTION_SHORTCUT_TABLE_COL, RE_ASSIGN_SHORTCUT_TABLE_COL});
 
         JTable table = new JTable(dm);
+        setColumnHeight(table);
+
         table.getColumn(RE_ASSIGN_SHORTCUT_TABLE_COL).setCellRenderer(new ButtonRenderer());
         table.getColumn(RE_ASSIGN_SHORTCUT_TABLE_COL).setCellEditor(
                 new ButtonEditor(new JCheckBox()));
         JScrollPane scroll = new JScrollPane(table);
 
-
-      
         shortcutsDialog = new JDialog(mainUI.getMainFrame(), KEYBOARD_SHORTCUTS_TITLE, true);
         shortcutsDialog.setLocationRelativeTo(null);
         shortcutsDialog.setSize(SHORTCUT_DIALOG_WIDTH, SHORTCUT_DIALOG_HEIGHT);
@@ -177,6 +179,7 @@ public class ShortcutDialog {
 
         public ButtonRenderer() {
             setOpaque(true);
+           // setFont(new Font("David", Font.PLAIN, 16));
         }
 
         public Component getTableCellRendererComponent(JTable table, Object value,
@@ -258,6 +261,7 @@ public class ShortcutDialog {
 
             label = (value == null) ? "" : value.toString();
             button.setText(label);
+
             button.setFont(new Font("David", Font.PLAIN, 16));
             isPushed = true;
 
@@ -488,4 +492,14 @@ public class ShortcutDialog {
         }
 
     }
+    public static void setColumnHeight(JTable table, int... widths) {
+        int r = table.getRowCount();
+
+        for(int i = 0;i<r;i++){
+            table.setRowHeight (i, 20);
+        }
+
+    }
+
+
 }
