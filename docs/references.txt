@@ -28,3 +28,6 @@ http://simpleicon.com/dev/pencil.html
 
 11. How to reorder elements in a JList using drag and drop.
 https://stackoverflow.com/questions/3804361/how-to-enable-drag-and-drop-inside-jlist/18543066
+
+12. Splash screen implementation referenced from JAVAWORLD:
+https://www.javaworld.com/article/2077467/core-java/java-tip-104--make-a-splash-with-swing.html
