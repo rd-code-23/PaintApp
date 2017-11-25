@@ -59,7 +59,7 @@ public class BrightnessContrastMenu {
                 brightnessFactor = Float.parseFloat(brightnessInput.getText());
                 contrastFactor = Float.parseFloat(contrastInput.getText());
 
-                if (brightnessFactor < 0.0 || contrastFactor < 0.0) {
+                if (brightnessFactor < 0.0f || contrastFactor < 0.0f) {
                     throw new NumberFormatException(DIALOG_WARNING);
                 }
 
