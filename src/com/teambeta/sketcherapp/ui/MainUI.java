@@ -304,9 +304,6 @@ public class MainUI {
             } else if (e.getSource() == hueSaturationButton) {
                 saturationMenu.showWindow();
             } else if (e.getSource() == selectionButton) {
-
-                drawArea.clear();
-
                 selectedDrawingTool = rectangleSelectionTool;
                 textToolSettings.setVisibility(false);
                 setHighlightedToDefault();
@@ -318,7 +315,6 @@ public class MainUI {
                 northPanel.validate();
                 updateSizeSlider();
                 updateFillState();
-
             }
             /*
                Review 1: Default to hiding if the tool isn't the text tool. Use direct checks to see if the current tool
