@@ -307,6 +307,8 @@ public class MainUI {
                 saturationMenu.showWindow();
             } else if (e.getSource() == selectionButton) {
                 selectedDrawingTool = rectangleSelectionTool;
+                setHighlightedToDefault();
+                highlightedButton = spiralToolButton;
                 textToolSettings.setVisibility(false);
                 rectangleSelectionTool.showPanel();
                 northPanel.remove(textToolSettings);
@@ -484,9 +486,6 @@ public class MainUI {
         printCanvas = new PrintCanvas(drawArea, this);
         MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, saturationMenu, brightnessContrastMenu,
                 noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel, printCanvas);
-
-
-
 
         northPanel.add(menuUI, BorderLayout.NORTH);
         initializeToolSettings(northPanel);
@@ -943,7 +942,8 @@ public class MainUI {
         //TODO FIX
         shortcuts.addKeyBinding(KeyEvent.VK_C, false, false, true, Shortcuts.COLOR_CHOOSER_TOOL_SHORTCUT, (evt) -> {
             // colorPanel.setVisible(true);
-            updateFillState(); // Tool supports filling
+            Color color = null;
+            color = JColorChooser.showDialog(null, "Select a Color", color);
             updateSizeSlider();
         });
         shortcuts.addKeyBinding(KeyEvent.VK_D, true, false, false, Shortcuts.DNA_TOOL_SHORTCUT, (evt) -> {
@@ -998,6 +998,8 @@ public class MainUI {
         shortcuts.addKeyBinding(KeyEvent.VK_S, true, false, false, Shortcuts.SELECTION_TOOL_SHORTCUT, (evt) -> {
             textToolSettings.setVisibility(false);
             selectedDrawingTool = rectangleSelectionTool;
+            setHighlightedToDefault();
+            highlightedButton = spiralToolButton;
             updateFillState(); // Tool supports filling
             updateSizeSlider();
         });
@@ -1127,10 +1129,12 @@ public class MainUI {
             updateSizeSlider();
             updateNorthEastPanel();
         });
+
         //TODO fix
         shortcuts.addKeyBinding(shortcuts.getColorChooserToolKeyCode(), shortcuts.isCtrl_colorChooserTool(), shortcuts.isShift_colorChooserTool(), shortcuts.isAlt_colorChooserTool(), Shortcuts.COLOR_CHOOSER_TOOL_SHORTCUT, (evt) -> {
-            //  selectedDrawingTool = col;
-            updateFillState();
+            Color color = null;
+            color = JColorChooser.showDialog(null, "Select a Color", color);
+
             updateSizeSlider();
         });
         shortcuts.addKeyBinding(shortcuts.getDnaToolKeyCode(), shortcuts.isCtrl_dnaTool(), shortcuts.isShift_dnaTool(), shortcuts.isAlt_dnaTool(), Shortcuts.DNA_TOOL_SHORTCUT, (evt) -> {
@@ -1184,6 +1188,8 @@ public class MainUI {
         });
         shortcuts.addKeyBinding(shortcuts.getSelectionToolKeyCode(), shortcuts.isCtrl_selectionTool(), shortcuts.isShift_selectionTool(), shortcuts.isAlt_selectionTool(), Shortcuts.SELECTION_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = rectangleSelectionTool;
+            setHighlightedToDefault();
+            highlightedButton = spiralToolButton;
             textToolSettings.setVisibility(false);
             rectangleSelectionTool.showPanel();
             northPanel.remove(textToolSettings);
