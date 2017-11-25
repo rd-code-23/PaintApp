@@ -183,6 +183,7 @@ public class MainUI {
 
             if (e.getSource() == clearButton) {
                 if (drawArea.getCurrentlySelectedLayer().isVisible()) {
+                    rectangleSelectionTool.restartSelection();
                     drawArea.clear();
                 }
             } else if (e.getSource() == brushToolButton) {
