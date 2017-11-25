@@ -88,7 +88,7 @@ public class RectangleSelectionTool extends DrawingTool {
     @Override
     public void onMove(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         if (selectedCanvas != null) {
-            int offset = 0;
+            int offset = 40;
             if (e.getY() >= initY - offset && e.getY() <= (selectedCanvas.getHeight() + initY - offset)
                     && e.getX() >= initX - offset && e.getX() <= (selectedCanvas.getWidth() + initX - offset)) {
                 if (isDrawn) {
@@ -443,17 +443,23 @@ public class RectangleSelectionTool extends DrawingTool {
         rightClickInfo = new JLabel("Right click to cancel");
         rightClickInfo.setFont(new Font("David", Font.PLAIN, 24));
         rightClickInfo.setForeground(Color.RED);
+        rightClickInfo.setBackground(Color.DARK_GRAY);
 
         cutOption = new JRadioButton("Cut");
+        cutOption.setBackground(Color.DARK_GRAY);
         cutOption.setSelected(true);
+        cutOption.setForeground(Color.white);
         cutOption.setFont(new Font("David", Font.PLAIN, 24));
         copyOption = new JRadioButton("Copy");
+        copyOption.setBackground(color.DARK_GRAY);
+        copyOption.setForeground(Color.white);
         copyOption.setFont(new Font("David", Font.PLAIN, 24));
         ButtonGroup group = new ButtonGroup();
         group.add(cutOption);
         group.add(copyOption);
 
         JPanel firstLine = new JPanel();
+        firstLine.setBackground(color.DARK_GRAY);
         firstLine.setLayout(new FlowLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.weightx = 0;
@@ -468,6 +474,7 @@ public class RectangleSelectionTool extends DrawingTool {
         c.gridy = 0;
 
         JPanel secondLine = new JPanel();
+        secondLine.setBackground(Color.DARK_GRAY);
         secondLine.setLayout(new FlowLayout());
         c.gridx = 0;
         c.gridy = 1;
@@ -480,7 +487,7 @@ public class RectangleSelectionTool extends DrawingTool {
         c.gridx = 0;
         c.gridy = 1;
         selectionOptionPanel.add(secondLine, c);
-        selectionOptionPanel.setBackground(Color.white);
+        selectionOptionPanel.setBackground(Color.DARK_GRAY);
 
         cutOption.addActionListener(actionListener);
         copyOption.addActionListener(actionListener);

@@ -485,7 +485,7 @@ public class MainUI {
             }
         });
 
-        //Any changes to shortcut, drop table first
+        //Any changes to shortcuts, drop table first
         // db_kbShortcuts.dropTable();
 
         if (db_kbShortcuts.isTableExists()) {
@@ -856,6 +856,7 @@ public class MainUI {
      */
     public void generateDefaultKeyBindings() {
         shortcuts.addKeyBinding(KeyEvent.VK_C, true, false, false, Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
+
             drawArea.clear();
         });
         shortcuts.addKeyBinding(KeyEvent.VK_O, false, true, false, Shortcuts.EXPORT_SHORTCUT, (evt) -> {
@@ -865,33 +866,49 @@ public class MainUI {
             importExport.importImage();
         });
         shortcuts.addKeyBinding(KeyEvent.VK_B, true, false, false, Shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
+            widthChanger.showPanel();
             selectedDrawingTool = brushTool;
-            updateNorthEastPanel();
+            setHighlightedToDefault();
+            highlightedButton = brushToolButton;
+            brushToolButton.setIcon(new ImageIcon(BRUSH_ICON_HIGHLIGHTED));
             updateSizeSlider();
+            drawArea.setColor(brushTool.getColor());
+            updateNorthEastPanel();
         });
         shortcuts.addKeyBinding(KeyEvent.VK_L, true, false, false, Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = lineTool;
-            updateNorthEastPanel();
+            setHighlightedToDefault();
+            highlightedButton = lineToolButton;
+            lineToolButton.setIcon(new ImageIcon(LINE_ICON_HIGHLIGHTED));
             updateSizeSlider();
+            drawArea.setColor(lineTool.getColor());
+            updateNorthEastPanel();
         });
         shortcuts.addKeyBinding(KeyEvent.VK_R, true, false, false, Shortcuts.RECTANGLE_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = rectangleTool;
-            updateNorthEastPanel();
-            updateFillState(); // Tool supports filling
+            setHighlightedToDefault();
+            highlightedButton = rectangleToolButton;
+            rectangleToolButton.setIcon(new ImageIcon(SQUARE_ICON_HIGHLIGHTED));
             updateSizeSlider();
+            updateFillState(); // Tool supports filling
+            drawArea.setColor(rectangleTool.getColor());
+            updateNorthEastPanel();
         });
         shortcuts.addKeyBinding(KeyEvent.VK_A, true, false, false, Shortcuts.AIRBRUSH_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = airBrushTool;
-            updateNorthEastPanel();
-            updateFillState(); // Tool supports filling
+            setHighlightedToDefault();
+            highlightedButton = airBrushToolButton;
+            airBrushToolButton.setIcon(new ImageIcon(AIR_BRUSH_ICON_HIGHLIGHTED));
             updateSizeSlider();
+            updateNorthEastPanel();
         });
         shortcuts.addKeyBinding(KeyEvent.VK_K, true, false, false, Shortcuts.CELTICKNOT_TOOL_SHORTCUT, (evt) -> {
-            ;
             selectedDrawingTool = celticKnotTool;
-            updateNorthEastPanel();
-            updateFillState(); // Tool supports filling
+            setHighlightedToDefault();
+            highlightedButton = celticKnotToolButton;
+            celticKnotToolButton.setIcon(new ImageIcon(CELTIC_ICON_HIGHLIGHTED));
             updateSizeSlider();
+            updateNorthEastPanel();
         });
         //TODO FIX
         shortcuts.addKeyBinding(KeyEvent.VK_C, false, false, true, Shortcuts.COLOR_CHOOSER_TOOL_SHORTCUT, (evt) -> {
@@ -901,39 +918,52 @@ public class MainUI {
         });
         shortcuts.addKeyBinding(KeyEvent.VK_D, true, false, false, Shortcuts.DNA_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = dnaTool;
-            updateNorthEastPanel();
-            updateFillState(); // Tool supports filling
+            setHighlightedToDefault();
+            highlightedButton = dnaToolButton;
+            dnaToolButton.setIcon(new ImageIcon(DNA_ICON_HIGHLIGHTED));
             updateSizeSlider();
+            updateNorthEastPanel();
         });
         shortcuts.addKeyBinding(KeyEvent.VK_Q, true, false, false, Shortcuts.ELLIPSE_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = ellipseTool;
-            updateNorthEastPanel();
-            updateFillState(); // Tool supports filling
+            setHighlightedToDefault();
+            highlightedButton = ellipseToolButton;
+            ellipseToolButton.setIcon(new ImageIcon(CIRCLE_ICON_HIGHLIGHTED));
             updateSizeSlider();
+            updateFillState(); // Tool supports filling
+            drawArea.setColor(ellipseTool.getColor());
+            updateNorthEastPanel();
         });
         shortcuts.addKeyBinding(KeyEvent.VK_E, true, false, false, Shortcuts.ERASER_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = eraserTool;
-            updateNorthEastPanel();
-            updateFillState(); // Tool supports filling
+            setHighlightedToDefault();
+            highlightedButton = eraserToolButton;
+            eraserToolButton.setIcon(new ImageIcon(ERASER_ICON_HIGHLIGHTED));
             updateSizeSlider();
+            updateNorthEastPanel();
         });
         shortcuts.addKeyBinding(KeyEvent.VK_Y, true, false, false, Shortcuts.EYE_DROP_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = eyeDropperTool;
+            setHighlightedToDefault();
+            highlightedButton = eyeDropperToolButton;
+            eyeDropperToolButton.setIcon(new ImageIcon(EYEDROP_ICON_HIGHLIGHTED));
             updateNorthEastPanel();
-            updateFillState(); // Tool supports filling
-            updateSizeSlider();
         });
         shortcuts.addKeyBinding(KeyEvent.VK_F, true, false, false, Shortcuts.FAN_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = fanTool;
-            updateNorthEastPanel();
-            updateFillState(); // Tool supports filling
+            setHighlightedToDefault();
+            highlightedButton = fanToolButton;
+            fanToolButton.setIcon(new ImageIcon(FAN_ICON_HIGHLIGHTED));
             updateSizeSlider();
+            updateNorthEastPanel();
         });
         shortcuts.addKeyBinding(KeyEvent.VK_P, true, false, false, Shortcuts.PAINTBUCKET_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = paintBucketTool;
-            updateNorthEastPanel();
-            updateFillState(); // Tool supports filling
+            setHighlightedToDefault();
+            highlightedButton = paintBucketToolButton;
+            paintBucketToolButton.setIcon(new ImageIcon(BUCKET_ICON_HIGHLIGHTED));
             updateSizeSlider();
+            updateNorthEastPanel();
         });
         shortcuts.addKeyBinding(KeyEvent.VK_S, true, false, false, Shortcuts.SELECTION_TOOL_SHORTCUT, (evt) -> {
             textToolSettings.setVisibility(false);
@@ -954,9 +984,12 @@ public class MainUI {
         });
         shortcuts.addKeyBinding(KeyEvent.VK_Z, true, false, false, Shortcuts.TRIANGLE_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = triangleTool;
-            updateNorthEastPanel();
-            updateFillState(); // Tool supports filling
+            setHighlightedToDefault();
+            highlightedButton = triangleToolButton;
+            triangleToolButton.setIcon(new ImageIcon(TRIANGLE_ICON_HIGHLIGHTED));
             updateSizeSlider();
+            updateFillState();
+            updateNorthEastPanel();
         });
 
         shortcuts.addKeyBinding(KeyEvent.VK_P, false, true, false, Shortcuts.PRINT_SHORTCUT, (evt) -> {
@@ -994,8 +1027,12 @@ public class MainUI {
             saturationMenu.showWindow();
         });
 
-        shortcuts.addKeyBinding(KeyEvent.VK_S, true, false, false, Shortcuts.SPIRAL_TOOL_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(KeyEvent.VK_I, true, false, false, Shortcuts.SPIRAL_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = spiralTool;
+            setHighlightedToDefault();
+            highlightedButton = spiralToolButton;
+            spiralToolButton.setIcon(new ImageIcon(SPIRAL_ICON_HIGHLIGHTED));
+            updateSizeSlider();
             updateNorthEastPanel();
         });
     }
@@ -1005,6 +1042,8 @@ public class MainUI {
      */
     public void generateDBDefaultKeyBindings() {
         shortcuts.addKeyBinding(Shortcuts.getClearToolKeyCode(), Shortcuts.isAlt_clearTool(), Shortcuts.isShift_clearTool(), Shortcuts.isAlt_clearTool(), Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
+            setHighlightedToDefault();
+            highlightedButton = clearButton;
             drawArea.clear();
         });
         shortcuts.addKeyBinding(shortcuts.getExportKeyCode(), shortcuts.isCtrl_export(), shortcuts.isShift_export(), shortcuts.isAlt_export(), Shortcuts.EXPORT_SHORTCUT, (evt) -> {
@@ -1014,28 +1053,40 @@ public class MainUI {
             importExport.importImage();
         });
         shortcuts.addKeyBinding(shortcuts.getBrushToolKeyCode(), shortcuts.isCtrl_brushTool(), shortcuts.isShift_brushTool(), shortcuts.isAlt_brushTool(), shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
+            widthChanger.showPanel();
             selectedDrawingTool = brushTool;
-            updateNorthEastPanel();
+            setHighlightedToDefault();
+            highlightedButton = brushToolButton;
+            brushToolButton.setIcon(new ImageIcon(BRUSH_ICON_HIGHLIGHTED));
             updateSizeSlider();
+            drawArea.setColor(brushTool.getColor());
+            updateNorthEastPanel();
+
         });
         shortcuts.addKeyBinding(shortcuts.getLineToolKeyCode(), shortcuts.isCtrl_lineTool(), shortcuts.isShift_lineTool(), shortcuts.isAlt_lineTool(), Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
-            textToolSettings.setVisibility(false);
-            rectangleSelectionTool.restartSelection();
-            rectangleSelectionTool.hidePanel();
             selectedDrawingTool = lineTool;
+            setHighlightedToDefault();
+            highlightedButton = lineToolButton;
+            lineToolButton.setIcon(new ImageIcon(LINE_ICON_HIGHLIGHTED));
             updateSizeSlider();
+            drawArea.setColor(lineTool.getColor());
+            updateNorthEastPanel();
         });
         shortcuts.addKeyBinding(shortcuts.getAirBrushToolKeyCode(), shortcuts.isCtrl_airBrushTool(), shortcuts.isShift_airBrushTool(), shortcuts.isAlt_airBrushTool(), Shortcuts.AIRBRUSH_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = airBrushTool;
-            updateNorthEastPanel();
-            updateFillState();
+            setHighlightedToDefault();
+            highlightedButton = airBrushToolButton;
+            airBrushToolButton.setIcon(new ImageIcon(AIR_BRUSH_ICON_HIGHLIGHTED));
             updateSizeSlider();
+            updateNorthEastPanel();
         });
         shortcuts.addKeyBinding(shortcuts.getCelticKnotToolKeyCode(), shortcuts.isCtrl_celticKnotTool(), shortcuts.isShift_celticKnotTool(), shortcuts.isAlt_celticKnotTool(), Shortcuts.CELTICKNOT_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = celticKnotTool;
-            updateNorthEastPanel();
-            updateFillState();
+            setHighlightedToDefault();
+            highlightedButton = celticKnotToolButton;
+            celticKnotToolButton.setIcon(new ImageIcon(CELTIC_ICON_HIGHLIGHTED));
             updateSizeSlider();
+            updateNorthEastPanel();
         });
         //TODO fix
         shortcuts.addKeyBinding(shortcuts.getColorChooserToolKeyCode(), shortcuts.isCtrl_colorChooserTool(), shortcuts.isShift_colorChooserTool(), shortcuts.isAlt_colorChooserTool(), Shortcuts.COLOR_CHOOSER_TOOL_SHORTCUT, (evt) -> {
@@ -1045,39 +1096,52 @@ public class MainUI {
         });
         shortcuts.addKeyBinding(shortcuts.getDnaToolKeyCode(), shortcuts.isCtrl_dnaTool(), shortcuts.isShift_dnaTool(), shortcuts.isAlt_dnaTool(), Shortcuts.DNA_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = dnaTool;
-            updateNorthEastPanel();
-            updateFillState();
+            setHighlightedToDefault();
+            highlightedButton = dnaToolButton;
+            dnaToolButton.setIcon(new ImageIcon(DNA_ICON_HIGHLIGHTED));
             updateSizeSlider();
+            updateNorthEastPanel();
         });
         shortcuts.addKeyBinding(shortcuts.getEllipseToolKeyCode(), shortcuts.isCtrl_ellipseTool(), shortcuts.isShift_ellipseTool(), shortcuts.isAlt_ellipseTool(), Shortcuts.ELLIPSE_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = ellipseTool;
-            updateNorthEastPanel();
-            updateFillState();
+            setHighlightedToDefault();
+            highlightedButton = ellipseToolButton;
+            ellipseToolButton.setIcon(new ImageIcon(CIRCLE_ICON_HIGHLIGHTED));
             updateSizeSlider();
+            updateFillState(); // Tool supports filling
+            drawArea.setColor(ellipseTool.getColor());
+            updateNorthEastPanel();
         });
         shortcuts.addKeyBinding(shortcuts.getEraserToolKeyCode(), shortcuts.isCtrl_eraserTool(), shortcuts.isShift_eraserTool(), shortcuts.isAlt_eraserTool(), Shortcuts.ERASER_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = eraserTool;
-            updateNorthEastPanel();
-            updateFillState();
+            setHighlightedToDefault();
+            highlightedButton = eraserToolButton;
+            eraserToolButton.setIcon(new ImageIcon(ERASER_ICON_HIGHLIGHTED));
             updateSizeSlider();
+            updateNorthEastPanel();
         });
         shortcuts.addKeyBinding(shortcuts.getEyeDropToolKeyCode(), shortcuts.isCtrl_eyeDropTool(), shortcuts.isShift_eyeDropTool(), shortcuts.isAlt_eyeDropTool(), Shortcuts.EYE_DROP_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = eyeDropperTool;
+            setHighlightedToDefault();
+            highlightedButton = eyeDropperToolButton;
+            eyeDropperToolButton.setIcon(new ImageIcon(EYEDROP_ICON_HIGHLIGHTED));
             updateNorthEastPanel();
-            updateFillState();
-            updateSizeSlider();
         });
         shortcuts.addKeyBinding(shortcuts.getFanToolKeyCode(), shortcuts.isCtrl_fanTool(), shortcuts.isShift_fanTool(), shortcuts.isAlt_fanTool(), Shortcuts.FAN_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = fanTool;
-            updateNorthEastPanel();
-            updateFillState();
+            setHighlightedToDefault();
+            highlightedButton = fanToolButton;
+            fanToolButton.setIcon(new ImageIcon(FAN_ICON_HIGHLIGHTED));
             updateSizeSlider();
+            updateNorthEastPanel();
         });
         shortcuts.addKeyBinding(shortcuts.getPaintBucketToolKeyCode(), shortcuts.isCtrl_paintBucketTool(), shortcuts.isShift_paintBucketTool(), shortcuts.isAlt_paintBucketTool(), Shortcuts.PAINTBUCKET_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = paintBucketTool;
-            updateNorthEastPanel();
-            updateFillState();
+            setHighlightedToDefault();
+            highlightedButton = paintBucketToolButton;
+            paintBucketToolButton.setIcon(new ImageIcon(BUCKET_ICON_HIGHLIGHTED));
             updateSizeSlider();
+            updateNorthEastPanel();
         });
         shortcuts.addKeyBinding(shortcuts.getSelectionToolKeyCode(), shortcuts.isCtrl_selectionTool(), shortcuts.isShift_selectionTool(), shortcuts.isAlt_selectionTool(), Shortcuts.SELECTION_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = rectangleSelectionTool;
@@ -1090,9 +1154,14 @@ public class MainUI {
             updateSizeSlider();
         });
         shortcuts.addKeyBinding(shortcuts.getRectToolKeyCode(), shortcuts.isCtrl_rectTool(), shortcuts.isShift_rectTool(), shortcuts.isAlt_rectTool(), Shortcuts.RECTANGLE_TOOL_SHORTCUT, (evt) -> {
-            updateNorthEastPanel();
             selectedDrawingTool = rectangleTool;
+            setHighlightedToDefault();
+            highlightedButton = rectangleToolButton;
+            rectangleToolButton.setIcon(new ImageIcon(SQUARE_ICON_HIGHLIGHTED));
+            updateSizeSlider();
             updateFillState(); // Tool supports filling
+            drawArea.setColor(rectangleTool.getColor());
+            updateNorthEastPanel();
         });
         shortcuts.addKeyBinding(shortcuts.getTextToolKeyCode(), shortcuts.isCtrl_textTool(), shortcuts.isShift_textTool(), shortcuts.isAlt_textTool(), Shortcuts.TEXT_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = textTool;
@@ -1107,9 +1176,12 @@ public class MainUI {
         });
         shortcuts.addKeyBinding(shortcuts.getTriangleToolKeyCode(), shortcuts.isCtrl_triangleTool(), shortcuts.isShift_triangleTool(), shortcuts.isAlt_triangleTool(), Shortcuts.TRIANGLE_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = triangleTool;
-            updateNorthEastPanel();
-            updateFillState();
+            setHighlightedToDefault();
+            highlightedButton = triangleToolButton;
+            triangleToolButton.setIcon(new ImageIcon(TRIANGLE_ICON_HIGHLIGHTED));
             updateSizeSlider();
+            updateFillState();
+            updateNorthEastPanel();
         });
 
         shortcuts.addKeyBinding(shortcuts.getPrintToolKeyCode(), shortcuts.isCtrl_printTool(), shortcuts.isShift_printTool(), shortcuts.isAlt_printTool(), Shortcuts.PRINT_SHORTCUT, (evt) -> {
@@ -1149,8 +1221,12 @@ public class MainUI {
         });
 
         shortcuts.addKeyBinding(shortcuts.getSpiralToolKeyCode(), shortcuts.isCtrl_spiralTool(), shortcuts.isShift_spiralTool(), shortcuts.isAlt_spiralTool(), Shortcuts.SPIRAL_TOOL_SHORTCUT, (evt) -> {
-            updateNorthEastPanel();
             selectedDrawingTool = spiralTool;
+            setHighlightedToDefault();
+            highlightedButton = spiralToolButton;
+            spiralToolButton.setIcon(new ImageIcon(SPIRAL_ICON_HIGHLIGHTED));
+            updateSizeSlider();
+            updateNorthEastPanel();
         });
 
         shortcuts.addKeyBinding(shortcuts.getZoomToolKeyCode(), shortcuts.isCtrl_zoomTool(), shortcuts.isShift_zoomTool(), shortcuts.isAlt_zoomTool(), Shortcuts.ZOOM_TOOL_SHORTCUT, (evt) -> {

@@ -100,10 +100,7 @@ public class ShortcutDialog {
         table.getColumn(RE_ASSIGN_SHORTCUT_TABLE_COL).setCellEditor(
                 new ButtonEditor(new JCheckBox()));
         JScrollPane scroll = new JScrollPane(table);
-        shortcutsDialog = new JDialog(mainUI.getMainFrame(), KEYBOARD_SHORTCUTS_TITLE, true);
-        shortcutsDialog.setLocationRelativeTo(null);
-        shortcutsDialog.setSize(SHORTCUT_DIALOG_WIDTH, SHORTCUT_DIALOG_HEIGHT);
-        shortcutsDialog.setLayout(new GridBagLayout());
+
         setDefaultShortcutsButton = new JButton(DEFAULT_BUTTON);
         ActionListener actionListener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -122,24 +119,36 @@ public class ShortcutDialog {
                 }
             }
         };
+        shortcutsDialog = new JDialog(mainUI.getMainFrame(), KEYBOARD_SHORTCUTS_TITLE, true);
+        shortcutsDialog.setLocationRelativeTo(null);
+        shortcutsDialog.setSize(SHORTCUT_DIALOG_WIDTH, SHORTCUT_DIALOG_HEIGHT);
+        shortcutsDialog.setLayout(new GridBagLayout());
         setDefaultShortcutsButton.addActionListener(actionListener);
         applyButton.addActionListener(actionListener2);
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
-        shortcutsDialog.add(scroll, c);
+        JPanel firstLine = new JPanel();
+        firstLine.setLayout(new FlowLayout());
+        firstLine.add(scroll, c);
+     //   shortcutsDialog.add(scroll, c);
+        JPanel secondLine = new JPanel();
+        secondLine.setLayout(new FlowLayout());
         c.anchor = GridBagConstraints.LINE_START;
-        c.gridx = -1;
-        c.gridy = 3;
-        shortcutsDialog.add(setDefaultShortcutsButton, c);
-        c.gridx = -1;
-        c.gridy = 3;
-        c.anchor = GridBagConstraints.CENTER;
-        //  shortcutsDialog.add(Box.createRigidArea(new Dimension(0, 0)),c);
+        c.gridx = 0;
+        c.gridy = 0;
+        secondLine.add(setDefaultShortcutsButton,c);
+        //shortcutsDialog.add(setDefaultShortcutsButton, c);
         c.gridx = 1;
-        c.gridy = 3;
-        c.anchor = GridBagConstraints.LINE_START;
-        shortcutsDialog.add(applyButton, c);
+        c.gridy = 0;
+        secondLine.add(applyButton,c);
+        //  shortcutsDialog.add(Box.createRigidArea(new Dimension(0, 0)),c);
+        c.gridx = 0;
+        c.gridy = 0;
+        shortcutsDialog.add(firstLine,c);
+        c.gridx = 0;
+        c.gridy = 1;
+        shortcutsDialog.add(secondLine,c);
         shortcutsDialog.setVisible(true);
     }
     /**
