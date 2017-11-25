@@ -90,7 +90,6 @@ public class MainUI {
     private JButton spiralToolButton;
     private JButton brightnessContrastButton;
     private JButton hueSaturationButton;
-    private JButton rectangleSelectionToolButton;
     private static DrawArea drawArea;
     private static ColorChooser colorChooser;
     private WidthChanger widthChanger;
@@ -104,8 +103,8 @@ public class MainUI {
     private BrightnessContrastMenu brightnessContrastMenu;
     private SaturationMenu saturationMenu;
     private GreyscaleMenu greyscaleMenu;
-   private NoiseGeneratorMenu noiseGeneratorMenu;
-   private CheckerboardMenu checkerboardMenu;
+    private NoiseGeneratorMenu noiseGeneratorMenu;
+    private CheckerboardMenu checkerboardMenu;
     private LayersPanel layersPanel;
     private PrintCanvas printCanvas;
     private MouseCursor mouseCursor;
@@ -180,7 +179,6 @@ public class MainUI {
     private static final String TRIANGLE_ICON_HOVER = RES_PATH + File.separator + "triangle_hover.png";
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-
 
 
             if (e.getSource() == clearButton) {
@@ -307,10 +305,11 @@ public class MainUI {
                 saturationMenu.showWindow();
             } else if (e.getSource() == selectionButton) {
                 selectedDrawingTool = rectangleSelectionTool;
-                setHighlightedToDefault();
-                highlightedButton = spiralToolButton;
                 textToolSettings.setVisibility(false);
-                rectangleSelectionTool.showPanel();
+                setHighlightedToDefault();
+               // highlightedButton = selectionButton;
+               // selectionButton.setIcon(new ImageIcon(SELECTION_ICON_HIGHLIGHTED));
+                  rectangleSelectionTool.showPanel();
                 northPanel.remove(textToolSettings);
                 northPanel.add(rectangleSelectionTool.getSelectionOptionPanel(), BorderLayout.EAST);
                 northPanel.validate();
@@ -467,8 +466,8 @@ public class MainUI {
         importExport = new ImportExport(drawArea, this);
         brightnessContrastMenu = new BrightnessContrastMenu(drawArea);
         saturationMenu = new SaturationMenu(drawArea);
-         greyscaleMenu = new GreyscaleMenu(drawArea);
-         noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
+        greyscaleMenu = new GreyscaleMenu(drawArea);
+        noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
         checkerboardMenu = new CheckerboardMenu(drawArea);
         initializeDrawArea(mainContent);
         initializeButtons();
@@ -509,7 +508,7 @@ public class MainUI {
         });
 
         //Any changes to shortcuts, drop table first
-      //   db_kbShortcuts.dropTable();
+        //  db_kbShortcuts.dropTable();
 
         if (db_kbShortcuts.isTableExists()) {
             generateDBDefaultKeyBindings();
@@ -519,7 +518,7 @@ public class MainUI {
             generateDefaultKeyBindings();
         }
 
-         mouseCursor = new MouseCursor(drawArea);
+        mouseCursor = new MouseCursor(drawArea);
 
         if (rectangleSelectionTool != null) {
             rectangleSelectionTool.renderPanel();
@@ -593,7 +592,6 @@ public class MainUI {
         spiralToolButton = new ToolButton(new ImageIcon(SPIRAL_ICON_DEFAULT));
         brightnessContrastButton = new ToolButton(new ImageIcon(BRIGHTNESS_ICON_DEFAULT));
         hueSaturationButton = new ToolButton(new ImageIcon(HUE_SATURATION_ICON_DEFAULT));
-        rectangleSelectionTool = new RectangleSelectionTool();
         highlightedButton = brushToolButton;
     }
 
@@ -999,8 +997,8 @@ public class MainUI {
             textToolSettings.setVisibility(false);
             selectedDrawingTool = rectangleSelectionTool;
             setHighlightedToDefault();
-            highlightedButton = spiralToolButton;
-            updateFillState(); // Tool supports filling
+          //  highlightedButton = selectionButton;
+          //  selectionButton.setIcon(new ImageIcon(SELECTION_ICON_HIGHLIGHTED));
             updateSizeSlider();
         });
         shortcuts.addKeyBinding(KeyEvent.VK_T, true, false, false, Shortcuts.TEXT_TOOL_SHORTCUT, (evt) -> {
@@ -1009,6 +1007,9 @@ public class MainUI {
             rectangleSelectionTool.hidePanel();
             northPanel.remove(rectangleSelectionTool.getSelectionOptionPanel());
             textToolSettings.setVisibility(true);
+            setHighlightedToDefault();
+            highlightedButton = textToolButton;
+            textToolButton.setIcon(new ImageIcon(TEXT_ICON_HIGHLIGHTED));
             northPanel.add(textToolSettings, BorderLayout.EAST);
             northPanel.validate();
             selectedDrawingTool = textTool;
@@ -1060,11 +1061,11 @@ public class MainUI {
             saturationMenu.showWindow();
         });
 
-        shortcuts.addKeyBinding(KeyEvent.VK_K,false, true, false, Shortcuts.CHECKERBOARD_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(KeyEvent.VK_K, false, true, false, Shortcuts.CHECKERBOARD_SHORTCUT, (evt) -> {
             checkerboardMenu.showWindow();
         });
 
-        shortcuts.addKeyBinding(KeyEvent.VK_E,false, true, false, Shortcuts.NOISE_SHORTCUT, (evt) -> {
+        shortcuts.addKeyBinding(KeyEvent.VK_E, false, true, false, Shortcuts.NOISE_SHORTCUT, (evt) -> {
             noiseGeneratorMenu.showWindow();
         });
 
@@ -1188,14 +1189,14 @@ public class MainUI {
         });
         shortcuts.addKeyBinding(shortcuts.getSelectionToolKeyCode(), shortcuts.isCtrl_selectionTool(), shortcuts.isShift_selectionTool(), shortcuts.isAlt_selectionTool(), Shortcuts.SELECTION_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = rectangleSelectionTool;
-            setHighlightedToDefault();
-            highlightedButton = spiralToolButton;
             textToolSettings.setVisibility(false);
+            setHighlightedToDefault();
+          //  highlightedButton = selectionButton;
+           // selectionButton.setIcon(new ImageIcon(SELECTION_ICON_HIGHLIGHTED));
             rectangleSelectionTool.showPanel();
             northPanel.remove(textToolSettings);
             northPanel.add(rectangleSelectionTool.getSelectionOptionPanel(), BorderLayout.EAST);
             northPanel.validate();
-            updateFillState();
             updateSizeSlider();
         });
         shortcuts.addKeyBinding(shortcuts.getRectToolKeyCode(), shortcuts.isCtrl_rectTool(), shortcuts.isShift_rectTool(), shortcuts.isAlt_rectTool(), Shortcuts.RECTANGLE_TOOL_SHORTCUT, (evt) -> {
@@ -1215,6 +1216,9 @@ public class MainUI {
             rectangleSelectionTool.hidePanel();
             northPanel.remove(rectangleSelectionTool.getSelectionOptionPanel());
             textToolSettings.setVisibility(true);
+            setHighlightedToDefault();
+            highlightedButton = textToolButton;
+            textToolButton.setIcon(new ImageIcon(TEXT_ICON_HIGHLIGHTED));
             northPanel.add(textToolSettings, BorderLayout.EAST);
             northPanel.validate();
             updateFillState();

@@ -14,14 +14,11 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
 /**
- * The RectangleTool class implements the drawing behavior for when the Rectangle tool has been selected
- * <p>
- * Behaviour of the rectangle tool:
- * - The longest side will take the length of the shortest side.
- * - The end-point relative to the init-point can be in any 4 quadrants.
- * - Draw a square when the shift button is held on mouse release.
+ * The Rectangle Selection tool class is used to select an image by a rectangle and drag them to another location
+ * on the canvas
  */
 public class RectangleSelectionTool extends DrawingTool {
+
     private int currentY;
     private int currentX;
     private int initX;
@@ -45,21 +42,20 @@ public class RectangleSelectionTool extends DrawingTool {
     private boolean isDrawn;// has the user selected somthing
     private int prevX, prevY;
     private boolean isDragSelection = false; // is the user choosing to drag the image
-
     private LinkedList<ImageLayer> drawingLayersCopy;
     private BufferedImage canvasCopy;
 
+    private static final String INSTRUCTION_SELECTION_CANCEL_LABEL = "Right click to cancel";
+    private static final String CUT_TEXT_RADIO_BUTTON = "Cut";
+    private static final String COPY_TEXT_RADIO_BUTTON = "Copy";
+    private static final int FONT_SIZE_TEXT_PANEL = 24;
+    private static final String FONT_NAME_PANEL = "David";
     private JRadioButton cutOption;
     private JRadioButton copyOption;
     private JLabel rightClickInfo;
     private boolean doNothing = false;
     private boolean isCutOption;
-
     private JPanel selectionOptionPanel;
-
-    //TODO BUG: north east panel not disappereing for textTool and selection, make empty jpanel to hide it
-//TODO BUG: sometimes if you move the selection a bit above or below selected canvas it drops the image to low
-
 
     /**
      * The constructor sets the properties of the tool to their default values
@@ -169,7 +165,10 @@ public class RectangleSelectionTool extends DrawingTool {
                 DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
                 canvasGraphics.drawImage(previewLayer, 0, 0, null);
             } else {
-                dragImage(canvas, e, drawingLayers);
+
+                if (selectedCanvas != null) {
+                    dragImage(canvas, e, drawingLayers);
+                }
             }
         }
     }
@@ -188,13 +187,17 @@ public class RectangleSelectionTool extends DrawingTool {
             } else {
                 MouseCursor.setDefaultCursor();
                 isDrawn = false;
+
                 if (isDragSelection) {
                     pasteDragSelection(canvas, drawingLayers, selectedLayer, e);
                 } else {
                     pasteSelection(canvas, drawingLayers, selectedLayer, e);
                 }
+
                 selectedCanvas = null;
             }
+        } else {
+            doNothing = false;
         }
 
 
@@ -203,7 +206,6 @@ public class RectangleSelectionTool extends DrawingTool {
     /**
      * if the user selects the canvas that goes out of bounds this function will correct the results
      */
-//TODO needs fixing, doesnt get right and bottom end of the canvas properlly
     private void checkBounds(BufferedImage canvas) {
         if (initX + (drawWidthX) > canvas.getWidth()) {
             drawWidthX = (canvas.getWidth() - initX);
@@ -413,6 +415,9 @@ public class RectangleSelectionTool extends DrawingTool {
         }
     }
 
+    /**
+     * initializes variables for this class
+     */
     private void initializeVariables(BufferedImage canvas, MouseEvent e) {
         canvas.getGraphics().setColor(color);
         currentX = e.getX();
@@ -424,7 +429,9 @@ public class RectangleSelectionTool extends DrawingTool {
         isCutOption = cutOption.isSelected();
     }
 
-
+    /**
+     * when we switch to another tool, restart the selection
+     */
     public void restartSelection() {
         MouseCursor.setDefaultCursor();
         if (drawingLayersCopy != null && canvasCopy != null)
@@ -434,26 +441,28 @@ public class RectangleSelectionTool extends DrawingTool {
 
     }
 
-
+    /**
+     * gui for the north east panel
+     */
     public void renderPanel() {
 
         selectionOptionPanel = new JPanel();
         selectionOptionPanel.setLayout(new GridBagLayout());
 
-        rightClickInfo = new JLabel("Right click to cancel");
-        rightClickInfo.setFont(new Font("David", Font.PLAIN, 24));
+        rightClickInfo = new JLabel(INSTRUCTION_SELECTION_CANCEL_LABEL);
+        rightClickInfo.setFont(new Font(FONT_NAME_PANEL, Font.PLAIN, FONT_SIZE_TEXT_PANEL));
         rightClickInfo.setForeground(Color.RED);
         rightClickInfo.setBackground(Color.DARK_GRAY);
 
-        cutOption = new JRadioButton("Cut");
+        cutOption = new JRadioButton(CUT_TEXT_RADIO_BUTTON);
         cutOption.setBackground(Color.DARK_GRAY);
         cutOption.setSelected(true);
         cutOption.setForeground(Color.white);
-        cutOption.setFont(new Font("David", Font.PLAIN, 24));
-        copyOption = new JRadioButton("Copy");
+        cutOption.setFont(new Font(FONT_NAME_PANEL, Font.PLAIN, FONT_SIZE_TEXT_PANEL));
+        copyOption = new JRadioButton(COPY_TEXT_RADIO_BUTTON);
         copyOption.setBackground(color.DARK_GRAY);
         copyOption.setForeground(Color.white);
-        copyOption.setFont(new Font("David", Font.PLAIN, 24));
+        copyOption.setFont(new Font(FONT_NAME_PANEL, Font.PLAIN, FONT_SIZE_TEXT_PANEL));
         ButtonGroup group = new ButtonGroup();
         group.add(cutOption);
         group.add(copyOption);
@@ -514,6 +523,9 @@ public class RectangleSelectionTool extends DrawingTool {
         }
     };
 
+    /**
+     * returns a panel tom display message, and cut/paste options
+     */
     public JPanel getSelectionOptionPanel() {
         return selectionOptionPanel;
     }
