@@ -1,7 +1,5 @@
 package com.teambeta.sketcherapp.model;
-
 import java.awt.image.BufferedImage;
-
 /**
  * The Layer class represents a drawing layer for our painting app.
  */
@@ -11,8 +9,7 @@ public class ImageLayer {
     private boolean isSelected;
     private String name;
     private static int layerNumber = 1;
-    private String HIDDEN = "[Hidden]";
-
+    private final static String HIDDEN = "  [Hidden]";
     /**
      * Constructor.
      *
@@ -22,10 +19,15 @@ public class ImageLayer {
         this.bufferedImage = bufferedImage;
         isVisible = true;
         isSelected = false;
-        name = "Layer " + layerNumber;
+        name = "  Layer " + layerNumber;
         layerNumber++;
     }
-
+    /**
+     * Resets the layerNumber to 1.
+     */
+    public static void resetLayerNumber() {
+        layerNumber = 1;
+    }
     /**
      * Get the buffered image.
      *
@@ -34,7 +36,6 @@ public class ImageLayer {
     public BufferedImage getBufferedImage() {
         return bufferedImage;
     }
-
     /**
      * Checks if layer is visible.
      *
@@ -43,7 +44,6 @@ public class ImageLayer {
     public boolean isVisible() {
         return isVisible;
     }
-
     /**
      * Set visibility of the layer.
      *
@@ -52,7 +52,6 @@ public class ImageLayer {
     public void setVisible(boolean visible) {
         isVisible = visible;
     }
-
     /**
      * Specifies if layer is selected.
      *
@@ -61,7 +60,6 @@ public class ImageLayer {
     public void setSelected(boolean selected) {
         this.isSelected = selected;
     }
-
     /**
      * Checks if layer is selected.
      *
@@ -70,7 +68,6 @@ public class ImageLayer {
     public boolean isSelected() {
         return isSelected;
     }
-
     /**
      * Get the name of the image layer.
      *
@@ -79,16 +76,14 @@ public class ImageLayer {
     public String getName() {
         return name;
     }
-
     /**
      * Set the name of the image layer.
      *
      * @param name for the layer.
      */
     public void setName(String name) {
-        this.name = name;
+        this.name = "  " + name;
     }
-
     @Override
     public String toString() {
         if (!isVisible) {

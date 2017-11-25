@@ -305,7 +305,7 @@ public class MainUI {
                 brightnessContrastMenu.showWindow();
             } else if (e.getSource() == hueSaturationButton) {
                 saturationMenu.showWindow();
-            } else if (e.getSource() == rectangleSelectionToolButton) {
+            } else if (e.getSource() == selectionButton) {
                 selectedDrawingTool = rectangleSelectionTool;
                 textToolSettings.setVisibility(false);
                 rectangleSelectionTool.showPanel();
@@ -375,6 +375,7 @@ public class MainUI {
         airBrushTool = new AirBrushTool();
         triangleTool = new TriangleTool();
         spiralTool = new SpiralTool();
+        rectangleSelectionTool = new RectangleSelectionTool();
         selectedDrawingTool = brushTool;
     }
 
@@ -509,7 +510,7 @@ public class MainUI {
         });
 
         //Any changes to shortcuts, drop table first
-         db_kbShortcuts.dropTable();
+      //   db_kbShortcuts.dropTable();
 
         if (db_kbShortcuts.isTableExists()) {
             generateDBDefaultKeyBindings();
