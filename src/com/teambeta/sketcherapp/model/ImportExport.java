@@ -90,7 +90,7 @@ public class ImportExport {
                 exc.printStackTrace();
             }
 
-            if (drawArea.isCanvasAltered()) {
+          /*  if (drawArea.isCanvasAltered()) {
                 Object[] options = {JOPTION_SAVE,
                         JOPTION_DONT_SAVE,
                         JOPTION_CANCEL};
@@ -106,7 +106,7 @@ public class ImportExport {
                 if (userOption == 0) {
                     exportImage();
                 }
-            }
+            }*/
             drawArea.setImportedImage(image);
         }
     }
