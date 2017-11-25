@@ -101,7 +101,7 @@ public class MainUI {
     private JPanel canvasTools;
     private DB_KBShortcuts db_kbShortcuts;
     private JButton highlightedButton;
-    private BrightnessMenu brightnessMenu;
+    private BrightnessContrastMenu brightnessContrastMenu;
     private SaturationMenu saturationMenu;
     private GreyscaleMenu greyscaleMenu;
    private NoiseGeneratorMenu noiseGeneratorMenu;
@@ -302,7 +302,7 @@ public class MainUI {
                 spiralToolButton.setIcon(new ImageIcon(SPIRAL_ICON_HIGHLIGHTED));
                 updateSizeSlider();
             } else if (e.getSource() == brightnessContrastButton) {
-                brightnessMenu.showWindow();
+                brightnessContrastMenu.showWindow();
             } else if (e.getSource() == hueSaturationButton) {
                 saturationMenu.showWindow();
             } else if (e.getSource() == rectangleSelectionToolButton) {
@@ -375,7 +375,6 @@ public class MainUI {
         airBrushTool = new AirBrushTool();
         triangleTool = new TriangleTool();
         spiralTool = new SpiralTool();
-        rectangleSelectionTool = new RectangleSelectionTool();
         selectedDrawingTool = brushTool;
     }
 
@@ -431,10 +430,14 @@ public class MainUI {
         Object[] exitOptions = {"Cancel",
                 "Export canvas",
                 "Exit without exporting"};
+
+
         int confirmed = JOptionPane.showOptionDialog(null,
                 "Are you sure you want to quit?", "Confirm Quit",
                 JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.WARNING_MESSAGE, null, exitOptions, null);
+
         ImportExport importExport = new ImportExport(drawArea, this);
+
         if (confirmed == JOptionPane.CANCEL_OPTION) {
             mainFrame.dispose();
             //System.exit(0);
@@ -444,6 +447,7 @@ public class MainUI {
             //mainFrame.dispose();  Ideally would use this instead of the following line, but for some reason it
             //wont properly close the app. If someone knows why, feel free to fix it
             System.exit(0);
+
         }
     }
 
@@ -452,11 +456,13 @@ public class MainUI {
      */
     private void prepareGUI() {
         initializeMainFrame();
+
         Container mainContent = mainFrame.getContentPane();
         mainContent.setLayout(new BorderLayout());
         drawArea = new DrawArea(this);
+
         importExport = new ImportExport(drawArea, this);
-        brightnessMenu = new BrightnessMenu(drawArea);
+        brightnessContrastMenu = new BrightnessContrastMenu(drawArea);
         saturationMenu = new SaturationMenu(drawArea);
          greyscaleMenu = new GreyscaleMenu(drawArea);
          noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
@@ -465,26 +471,36 @@ public class MainUI {
         initializeButtons();
         initializeCanvasTools();
         brushToolButton.setIcon(new ImageIcon(BRUSH_ICON_HIGHLIGHTED));
+
         /* END MAIN UI BUTTONS */
         northPanel = new JPanel();
         northPanel.setLayout(new BorderLayout());
+
         //setting up the shortcuts and database
         shortcuts = new Shortcuts(canvasTools, this);
         db_kbShortcuts = new DB_KBShortcuts(shortcuts);
         keboardShortCutPanel = new ShortcutDialog(this, shortcuts);
+
+        MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, saturationMenu, brightnessContrastMenu,
+                noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel);
+
+
         printCanvas = new PrintCanvas(drawArea, this);
         MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, brightnessMenu, saturationMenu,
                 noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel, printCanvas);
         northPanel.add(menuUI, BorderLayout.NORTH);
         initializeToolSettings(northPanel);
         initializeWidthChanger();
+
         JPanel westPanel = initializeWestPanel();
         mainContent.add(westPanel, BorderLayout.WEST);
+
         JPanel colorPanel = initializeColorPanel();
         JPanel imageEditingPanel = initializeImageEditingPanel();
         JPanel editorPanel = initializeEditorPanel(colorPanel, imageEditingPanel);
         mainContent.add(editorPanel, BorderLayout.EAST);
         mainContent.add(northPanel, BorderLayout.NORTH);
+
         // Standard ActionListeners do not properly send updates to the text tool. PropertyChangeListeners work better.
         textToolSettings.getCaesarShiftField().addPropertyChangeListener(new PropertyChangeListener() {
             @Override
@@ -523,6 +539,7 @@ public class MainUI {
         mainFrame.setIconImage(new ImageIcon(APPLICATION_LOGO_IMAGE_DIRECTORY).getImage());
         mainFrame.setSize(APPLICATION_WIDTH, APPLICATION_HEIGHT);
         mainFrame.getContentPane().setBackground(Color.DARK_GRAY);
+
         mainFrame.setLocationByPlatform(true);
         mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         mainFrame.addWindowListener(
@@ -620,10 +637,12 @@ public class MainUI {
                 CELTIC_ICON_HIGHLIGHTED, DNA_ICON_HIGHLIGHTED, TEXT_ICON_HIGHLIGHTED, EYEDROP_ICON_HIGHLIGHTED,
                 BRIGHTNESS_ICON_HIGHLIGHTED, HUE_SATURATION_ICON_HIGHLIGHTED
         };
+
         canvasTools = new JPanel();
         canvasTools.setLayout(new BoxLayout(canvasTools, BoxLayout.Y_AXIS));
         canvasTools.setBackground(Color.DARK_GRAY);
         canvasTools.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
+
         int buttonContainerIndex = 0;
         // Register buttons to actionListener and canvasTools
         for (JButton button : buttonContainer) {
@@ -700,6 +719,7 @@ public class MainUI {
         colorPanel.setBackground(Color.DARK_GRAY);
         colorPanel.setMaximumSize(new Dimension(EDITOR_PANEL_WIDTH, COLOR_PANEL_HEIGHT));
         colorPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY));
+
         JPanel colorChooserPanel = new JPanel();
         colorChooserPanel.setLayout(new GridBagLayout());
         GridBagConstraints colorChooserConstraints = new GridBagConstraints();
@@ -716,6 +736,7 @@ public class MainUI {
         colorChooserConstraints.insets = new Insets(PANEL_SECTION_SPACING, PANEL_SECTION_SPACING, 0, 0);
         colorChooserPanel.add(eyeDropperStats, colorChooserConstraints);
         colorPanel.add(colorChooserPanel);
+
         return colorPanel;
     }
 
@@ -731,6 +752,7 @@ public class MainUI {
         imageEditingPanel.setMaximumSize(new Dimension(IMAGE_EDITING_PANEL_WIDTH,
                 IMAGE_EDITING_PANEL_HEIGHT));
         imageEditingPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, Color.GRAY));
+
         GridBagConstraints imageButtonConstraints = new GridBagConstraints();
         imageButtonConstraints.insets = new Insets(PANEL_SECTION_SPACING, PANEL_SECTION_SPACING, 0, 0);
         imageEditingPanel.add(brightnessContrastButton, imageButtonConstraints);
@@ -738,6 +760,7 @@ public class MainUI {
         imageButtonConstraints.gridy = 0;
         imageButtonConstraints.insets = new Insets(PANEL_SECTION_SPACING, PANEL_SECTION_SPACING, 0, 0);
         imageEditingPanel.add(hueSaturationButton, imageButtonConstraints);
+
         return imageEditingPanel;
     }
 
@@ -1283,6 +1306,7 @@ public class MainUI {
      */
     public void focusWidthPanelToFalse() {
         widthChanger.getJTextFieldComponent().setFocusable(false);
+
     }
 
     /**

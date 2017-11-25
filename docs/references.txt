@@ -1,4 +1,4 @@
-1.  Gnatt Chart Template, Template was used from: https://www.officetimeline.com/gantt-chart-template/it-project-management-download
+﻿﻿1.  Gnatt Chart Template, Template was used from: https://www.officetimeline.com/gantt-chart-template/it-project-management-download
 
 2. Coding convention used: Dr. Brian Fraser, “Java Coding Standard”, Summer 2016 (with slight modifications).
 
@@ -19,3 +19,21 @@ https://stackoverflow.com/questions/11093326/restricting-jtextfield-input-to-int
 
 8. Java Swing DocumentListener documentation provided on Stack Overflow.
 https://stackoverflow.com/questions/3953208/value-change-listener-to-jtextfield
+
+9. Garbage icon (for deleting layers) taken from FreeIconsPng.
+http://www.freeiconspng.com/img/10498
+
+10. Pencil icon (for renaming layers) taken from simple icon.
+http://simpleicon.com/dev/pencil.html
+
+11. How to reorder elements in a JList using drag and drop.
+https://stackoverflow.com/questions/3804361/how-to-enable-drag-and-drop-inside-jlist/18543066
+
+12. Splash screen implementation referenced from JAVAWORLD:
+https://www.javaworld.com/article/2077467/core-java/java-tip-104--make-a-splash-with-swing.html
+
+13. JPanel layout
+https://stackoverflow.com/questions/34186291/how-do-i-lay-out-input-panel-with-multiple-textfields-and-ok-cancel-buttons
+
+14. JPanel and JLabel vertical margins
+https://stackoverflow.com/questions/1534889/how-to-make-jlabels-start-on-the-next-line
