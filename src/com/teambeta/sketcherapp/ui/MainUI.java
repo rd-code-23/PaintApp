@@ -480,14 +480,13 @@ public class MainUI {
         shortcuts = new Shortcuts(canvasTools, this);
         db_kbShortcuts = new DB_KBShortcuts(shortcuts);
         keboardShortCutPanel = new ShortcutDialog(this, shortcuts);
-
-        MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, saturationMenu, brightnessContrastMenu,
-                noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel);
-
-
         printCanvas = new PrintCanvas(drawArea, this);
-        MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, brightnessMenu, saturationMenu,
+        MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, saturationMenu, brightnessContrastMenu,
                 noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel, printCanvas);
+
+
+
+
         northPanel.add(menuUI, BorderLayout.NORTH);
         initializeToolSettings(northPanel);
         initializeWidthChanger();
@@ -510,7 +509,7 @@ public class MainUI {
         });
 
         //Any changes to shortcuts, drop table first
-        // db_kbShortcuts.dropTable();
+         db_kbShortcuts.dropTable();
 
         if (db_kbShortcuts.isTableExists()) {
             generateDBDefaultKeyBindings();
@@ -1051,7 +1050,7 @@ public class MainUI {
         });
 
         shortcuts.addKeyBinding(KeyEvent.VK_B, false, true, false, Shortcuts.BRIGHTNESS_SHORTCUT, (evt) -> {
-            brightnessMenu.showWindow();
+            brightnessContrastMenu.showWindow();
         });
 
         shortcuts.addKeyBinding(KeyEvent.VK_A, false, true, false, Shortcuts.SATURATION_SHORTCUT, (evt) -> {
@@ -1253,7 +1252,7 @@ public class MainUI {
         });
 
         shortcuts.addKeyBinding(shortcuts.getBrightToolKeyCode(), shortcuts.isCtrl_brightTool(), shortcuts.isShift_brightTool(), shortcuts.isAlt_brightTool(), Shortcuts.BRIGHTNESS_SHORTCUT, (evt) -> {
-            brightnessMenu.showWindow();
+            brightnessContrastMenu.showWindow();
         });
 
         shortcuts.addKeyBinding(shortcuts.getSaturationToolKeyCode(), shortcuts.isCtrl_saturationTool(), shortcuts.isShift_saturationTool(), shortcuts.isAlt_saturationTool(), Shortcuts.SATURATION_SHORTCUT, (evt) -> {
