@@ -53,6 +53,7 @@ public class MenuUI extends JMenuBar {
     private JMenuItem iCanvasSize;
     private JMenuItem iRotateCanvas;
     private JMenuItem iColourMode;
+    private JMenuItem iSaturation;
     private JMenuItem iBrightness;
     private JMenuItem iGeneratorsSubMenu;
     private JMenuItem iCheckerBoard;
@@ -64,6 +65,7 @@ public class MenuUI extends JMenuBar {
     private static final String ICANVASSIZE_MENU_BUTTON_TEXT = "Canvas Size";
     private static final String IROTATECANVAS_MENU_BUTTON_TEXT = "Rotate Canvas";
     private static final String ICOLOURMODE_MENU_BUTTON_TEXT = "Colour Mode";
+    private static final String ISATURATION_MENU_BUTTON_TEXT = "Saturation";
     private static final String IBRIGHTNESS_MENU_BUTTON_TEXT = "Brightness";
     private static final String IGENERATORSSUBMENU_MENU_BUTTON_TEXT = "Generators";
     private static final String ICHECKERBOARD_MENU_BUTTON_TEXT = "Checkerboard";
@@ -90,6 +92,7 @@ public class MenuUI extends JMenuBar {
 
     private DrawArea drawArea;
     private ImportExport importExport;
+    private SaturationMenu saturationMenu;
     private BrightnessMenu brightnessMenu;
     private GreyscaleMenu greyscaleMenu;
     private AboutMenu aboutMenu;
@@ -104,12 +107,13 @@ public class MenuUI extends JMenuBar {
     /**
      * Constructor
      */
-    public MenuUI(JFrame mainFrame, DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu, BrightnessMenu brightnessMenu,
-                  NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu, ShortcutDialog keyboardShortCutPanel, PrintCanvas printCanvas) {
+    public MenuUI(JFrame mainFrame, DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu, BrightnessMenu brightnessMenu, SaturationMenu saturationMenu,
+                  NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu, ShortcutDialog keyboardShortCutPanel) {
         this.mainFrame = mainFrame;
         this.drawArea = drawArea;
         this.importExport = importExport;
         this.greyscaleMenu = greyscaleMenu;
+        this.saturationMenu = saturationMenu;
         this.brightnessMenu = brightnessMenu;
         this.noiseGeneratorMenu = noiseGeneratorMenu;
         this.checkerboardMenu = checkerboardMenu;
@@ -159,6 +163,7 @@ public class MenuUI extends JMenuBar {
         iCanvasSize = new JMenuItem(ICANVASSIZE_MENU_BUTTON_TEXT);
         iRotateCanvas = new JMenuItem(IROTATECANVAS_MENU_BUTTON_TEXT);
         iColourMode = new JMenuItem(ICOLOURMODE_MENU_BUTTON_TEXT);
+        iSaturation = new JMenuItem(ISATURATION_MENU_BUTTON_TEXT);
         iBrightness = new JMenuItem(IBRIGHTNESS_MENU_BUTTON_TEXT);
         iGeneratorsSubMenu = new JMenu(IGENERATORSSUBMENU_MENU_BUTTON_TEXT);
         iCheckerBoard = new JMenuItem(ICHECKERBOARD_MENU_BUTTON_TEXT);
@@ -170,6 +175,7 @@ public class MenuUI extends JMenuBar {
         imageMenu.add(iCanvasSize);
         imageMenu.add(iRotateCanvas);
         imageMenu.add(iColourMode);
+        imageMenu.add(iSaturation);
         imageMenu.add(iBrightness);
         imageMenu.add(iGreyscale);
         imageMenu.add(iGeneratorsSubMenu);
@@ -201,7 +207,7 @@ public class MenuUI extends JMenuBar {
         hAbout.addActionListener(menuActionListener);
         fClose.addActionListener(menuActionListener);
         fNew.addActionListener(menuActionListener);
-
+        iSaturation.addActionListener(menuActionListener);
         iBrightness.addActionListener(menuActionListener);
         iNoise.addActionListener(menuActionListener);
         iCheckerBoard.addActionListener(menuActionListener);
@@ -220,6 +226,8 @@ public class MenuUI extends JMenuBar {
                 importExport.importImage();
             } else if (e.getSource() == iGreyscale) {
                 importExport.importImage();
+            } else if (e.getSource() == iSaturation) {
+                saturationMenu.showWindow();
             } else if (e.getSource() == iBrightness) {
                 brightnessMenu.showWindow();
             } else if (e.getSource() == iGreyscale) {
