@@ -125,6 +125,54 @@ public class Shortcuts {
     static boolean isShift_printTool;
     static boolean isAlt_printTool;
 
+    public static final String SHORTCUT_SHORTCUT = "SHORTCUT";
+    static int shortcutToolKeyCode;
+    static boolean isCtrl_shortcutTool;
+    static boolean isShift_shortcutTool;
+    static boolean isAlt_shortcutTool;
+
+    public static final String CLOSE_SHORTCUT = "CLOSE";
+    static int closeToolKeyCode;
+    static boolean isCtrl_closeTool;
+    static boolean isShift_closeTool;
+    static boolean isAlt_closeTool;
+
+    public static final String NEW_SHORTCUT = "NEW";
+    static int newToolKeyCode;
+    static boolean isCtrl_newTool;
+    static boolean isShift_newTool;
+    static boolean isAlt_newTool;
+
+    public static final String GREYSCALE_SHORTCUT = "GREYSCALE";
+    static int greyscaleToolKeyCode;
+    static boolean isCtrl_greyscaleTool;
+    static boolean isShift_greyscaleTool;
+    static boolean isAlt_greyscaleTool;
+
+    public static final String BRIGHTNESS_SHORTCUT = "BRIGHTNESS";
+    static int brightToolKeyCode;
+    static boolean isCtrl_brightTool;
+    static boolean isShift_brightTool;
+    static boolean isAlt_brightTool;
+
+    public static final String SATURATION_SHORTCUT = "SATURATION";
+    static int saturationToolKeyCode;
+    static boolean isCtrl_saturationTool;
+    static boolean isShift_saturationTool;
+    static boolean isAlt_saturationTool;
+
+    public static final String SPIRAL_TOOL_SHORTCUT = "SPIRAL TOOL";
+    static int spiralToolKeyCode;
+    static boolean isCtrl_spiralTool;
+    static boolean isShift_spiralTool;
+    static boolean isAlt_spiralTool;
+
+    public static final String ZOOM_TOOL_SHORTCUT = "ZOOM TOOL";
+    static int zoomToolKeyCode;
+    static boolean isCtrl_zoomTool;
+    static boolean isShift_zoomTool;
+    static boolean isAlt_zoomTool;
+
     private JComponent component;
     private MainUI mainUI;
     private ActionMap actionMap;
@@ -343,6 +391,54 @@ public class Shortcuts {
                 isShift_printTool = useShift;
                 isAlt_printTool = useAlt;
                 break;
+            case SHORTCUT_SHORTCUT:
+                shortcutToolKeyCode = keyCode;
+                isCtrl_shortcutTool = useControl;
+                isShift_shortcutTool = useShift;
+                isAlt_shortcutTool = useAlt;
+                break;
+            case CLOSE_SHORTCUT:
+                closeToolKeyCode = keyCode;
+                isCtrl_closeTool = useControl;
+                isShift_closeTool = useShift;
+                isAlt_closeTool = useAlt;
+                break;
+            case NEW_SHORTCUT:
+                newToolKeyCode = keyCode;
+                isCtrl_newTool = useControl;
+                isShift_newTool = useShift;
+                isAlt_newTool = useAlt;
+                break;
+            case GREYSCALE_SHORTCUT:
+                greyscaleToolKeyCode = keyCode;
+                isCtrl_greyscaleTool = useControl;
+                isShift_greyscaleTool = useShift;
+                isAlt_greyscaleTool = useAlt;
+                break;
+            case BRIGHTNESS_SHORTCUT:
+                brightToolKeyCode = keyCode;
+                isCtrl_brightTool = useControl;
+                isShift_brightTool = useShift;
+                isAlt_brightTool = useAlt;
+                break;
+            case SATURATION_SHORTCUT:
+                saturationToolKeyCode = keyCode;
+                isCtrl_saturationTool = useControl;
+                isShift_saturationTool = useShift;
+                isAlt_saturationTool = useAlt;
+                break;
+            case SPIRAL_TOOL_SHORTCUT:
+                spiralToolKeyCode = keyCode;
+                isCtrl_spiralTool = useControl;
+                isShift_spiralTool = useShift;
+                isAlt_spiralTool = useAlt;
+                break;
+            case ZOOM_TOOL_SHORTCUT:
+                zoomToolKeyCode = keyCode;
+                isCtrl_zoomTool = useControl;
+                isShift_zoomTool = useShift;
+                isAlt_zoomTool = useAlt;
+                break;
             default:
                 System.out.println(NO_SUCH_TOOL);
         }
@@ -434,6 +530,38 @@ public class Shortcuts {
         }
 
         if (keyCode == printToolKeyCode && ctrl == isCtrl_printTool && shift == isShift_printTool && alt == isAlt_printTool) {
+            return false;
+        }
+
+        if (keyCode == shortcutToolKeyCode && ctrl == isCtrl_shortcutTool && shift == isShift_shortcutTool && alt == isAlt_shortcutTool) {
+            return false;
+        }
+
+        if (keyCode == closeToolKeyCode && ctrl == isCtrl_closeTool && shift == isShift_closeTool && alt == isAlt_closeTool) {
+            return false;
+        }
+
+        if (keyCode == newToolKeyCode && ctrl == isCtrl_newTool && shift == isShift_newTool && alt == isAlt_newTool) {
+            return false;
+        }
+
+        if (keyCode == greyscaleToolKeyCode && ctrl == isCtrl_greyscaleTool && shift == isShift_greyscaleTool && alt == isAlt_greyscaleTool) {
+            return false;
+        }
+
+        if (keyCode == brightToolKeyCode && ctrl == isCtrl_brightTool && shift == isShift_brightTool && alt == isAlt_brightTool) {
+            return false;
+        }
+
+        if (keyCode == saturationToolKeyCode && ctrl == isCtrl_saturationTool && shift == isShift_saturationTool && alt == isAlt_saturationTool) {
+            return false;
+        }
+
+        if (keyCode == spiralToolKeyCode && ctrl == isCtrl_spiralTool && shift == isShift_spiralTool && alt == isAlt_spiralTool) {
+            return false;
+        }
+
+        if (keyCode == zoomToolKeyCode && ctrl == isCtrl_zoomTool && shift == isShift_zoomTool && alt == isAlt_zoomTool) {
             return false;
         }
         return true;
@@ -1110,5 +1238,293 @@ public class Shortcuts {
 
     public static void setIsAlt_printTool(boolean isAlt_printTool) {
         Shortcuts.isAlt_printTool = isAlt_printTool;
+    }
+
+    public static String getShortcutShortcut() {
+        return SHORTCUT_SHORTCUT;
+    }
+
+    public static int getShortcutToolKeyCode() {
+        return shortcutToolKeyCode;
+    }
+
+    public static void setShortcutToolKeyCode(int shortcutToolKeyCode) {
+        Shortcuts.shortcutToolKeyCode = shortcutToolKeyCode;
+    }
+
+    public static boolean isCtrl_shortcutTool() {
+        return isCtrl_shortcutTool;
+    }
+
+    public static void setIsCtrl_shortcutTool(boolean isCtrl_shortcutTool) {
+        Shortcuts.isCtrl_shortcutTool = isCtrl_shortcutTool;
+    }
+
+    public static boolean isShift_shortcutTool() {
+        return isShift_shortcutTool;
+    }
+
+    public static void setIsShift_shortcutTool(boolean isShift_shortcutTool) {
+        Shortcuts.isShift_shortcutTool = isShift_shortcutTool;
+    }
+
+    public static boolean isAlt_shortcutTool() {
+        return isAlt_shortcutTool;
+    }
+
+    public static void setIsAlt_shortcutTool(boolean isAlt_shortcutTool) {
+        Shortcuts.isAlt_shortcutTool = isAlt_shortcutTool;
+    }
+
+    public static String getCloseShortcut() {
+        return CLOSE_SHORTCUT;
+    }
+
+    public static int getCloseToolKeyCode() {
+        return closeToolKeyCode;
+    }
+
+    public static void setCloseToolKeyCode(int closeToolKeyCode) {
+        Shortcuts.closeToolKeyCode = closeToolKeyCode;
+    }
+
+    public static boolean isCtrl_closeTool() {
+        return isCtrl_closeTool;
+    }
+
+    public static void setIsCtrl_closeTool(boolean isCtrl_closeTool) {
+        Shortcuts.isCtrl_closeTool = isCtrl_closeTool;
+    }
+
+    public static boolean isShift_closeTool() {
+        return isShift_closeTool;
+    }
+
+    public static void setIsShift_closeTool(boolean isShift_closeTool) {
+        Shortcuts.isShift_closeTool = isShift_closeTool;
+    }
+
+    public static boolean isAlt_closeTool() {
+        return isAlt_closeTool;
+    }
+
+    public static void setIsAlt_closeTool(boolean isAlt_closeTool) {
+        Shortcuts.isAlt_closeTool = isAlt_closeTool;
+    }
+
+    public static String getNewShortcut() {
+        return NEW_SHORTCUT;
+    }
+
+    public static int getNewToolKeyCode() {
+        return newToolKeyCode;
+    }
+
+    public static void setNewToolKeyCode(int newToolKeyCode) {
+        Shortcuts.newToolKeyCode = newToolKeyCode;
+    }
+
+    public static boolean isCtrl_newTool() {
+        return isCtrl_newTool;
+    }
+
+    public static void setIsCtrl_newTool(boolean isCtrl_newTool) {
+        Shortcuts.isCtrl_newTool = isCtrl_newTool;
+    }
+
+    public static boolean isShift_newTool() {
+        return isShift_newTool;
+    }
+
+    public static void setIsShift_newTool(boolean isShift_newTool) {
+        Shortcuts.isShift_newTool = isShift_newTool;
+    }
+
+    public static boolean isAlt_newTool() {
+        return isAlt_newTool;
+    }
+
+    public static void setIsAlt_newTool(boolean isAlt_newTool) {
+        Shortcuts.isAlt_newTool = isAlt_newTool;
+    }
+
+    public static String getGreyscaleShortcut() {
+        return GREYSCALE_SHORTCUT;
+    }
+
+    public static int getGreyscaleToolKeyCode() {
+        return greyscaleToolKeyCode;
+    }
+
+    public static void setGreyscaleToolKeyCode(int greyscaleToolKeyCode) {
+        Shortcuts.greyscaleToolKeyCode = greyscaleToolKeyCode;
+    }
+
+    public static boolean isCtrl_greyscaleTool() {
+        return isCtrl_greyscaleTool;
+    }
+
+    public static void setIsCtrl_greyscaleTool(boolean isCtrl_greyscaleTool) {
+        Shortcuts.isCtrl_greyscaleTool = isCtrl_greyscaleTool;
+    }
+
+    public static boolean isShift_greyscaleTool() {
+        return isShift_greyscaleTool;
+    }
+
+    public static void setIsShift_greyscaleTool(boolean isShift_greyscaleTool) {
+        Shortcuts.isShift_greyscaleTool = isShift_greyscaleTool;
+    }
+
+    public static boolean isAlt_greyscaleTool() {
+        return isAlt_greyscaleTool;
+    }
+
+    public static void setIsAlt_greyscaleTool(boolean isAlt_greyscaleTool) {
+        Shortcuts.isAlt_greyscaleTool = isAlt_greyscaleTool;
+    }
+
+    public static String getBrightnessShortcut() {
+        return BRIGHTNESS_SHORTCUT;
+    }
+
+    public static int getBrightToolKeyCode() {
+        return brightToolKeyCode;
+    }
+
+    public static void setBrightToolKeyCode(int brightToolKeyCode) {
+        Shortcuts.brightToolKeyCode = brightToolKeyCode;
+    }
+
+    public static boolean isCtrl_brightTool() {
+        return isCtrl_brightTool;
+    }
+
+    public static void setIsCtrl_brightTool(boolean isCtrl_brightTool) {
+        Shortcuts.isCtrl_brightTool = isCtrl_brightTool;
+    }
+
+    public static boolean isShift_brightTool() {
+        return isShift_brightTool;
+    }
+
+    public static void setIsShift_brightTool(boolean isShift_brightTool) {
+        Shortcuts.isShift_brightTool = isShift_brightTool;
+    }
+
+    public static boolean isAlt_brightTool() {
+        return isAlt_brightTool;
+    }
+
+    public static void setIsAlt_brightTool(boolean isAlt_brightTool) {
+        Shortcuts.isAlt_brightTool = isAlt_brightTool;
+    }
+
+    public static String getSaturationShortcut() {
+        return SATURATION_SHORTCUT;
+    }
+
+    public static int getSaturationToolKeyCode() {
+        return saturationToolKeyCode;
+    }
+
+    public static void setSaturationToolKeyCode(int saturationToolKeyCode) {
+        Shortcuts.saturationToolKeyCode = saturationToolKeyCode;
+    }
+
+    public static boolean isCtrl_saturationTool() {
+        return isCtrl_saturationTool;
+    }
+
+    public static void setIsCtrl_saturationTool(boolean isCtrl_saturationTool) {
+        Shortcuts.isCtrl_saturationTool = isCtrl_saturationTool;
+    }
+
+    public static boolean isShift_saturationTool() {
+        return isShift_saturationTool;
+    }
+
+    public static void setIsShift_saturationTool(boolean isShift_saturationTool) {
+        Shortcuts.isShift_saturationTool = isShift_saturationTool;
+    }
+
+    public static boolean isAlt_saturationTool() {
+        return isAlt_saturationTool;
+    }
+
+    public static void setIsAlt_saturationTool(boolean isAlt_saturationTool) {
+        Shortcuts.isAlt_saturationTool = isAlt_saturationTool;
+    }
+
+    public static String getSpiralToolShortcut() {
+        return SPIRAL_TOOL_SHORTCUT;
+    }
+
+    public static int getSpiralToolKeyCode() {
+        return spiralToolKeyCode;
+    }
+
+    public static void setSpiralToolKeyCode(int spiralToolKeyCode) {
+        Shortcuts.spiralToolKeyCode = spiralToolKeyCode;
+    }
+
+    public static boolean isCtrl_spiralTool() {
+        return isCtrl_spiralTool;
+    }
+
+    public static void setIsCtrl_spiralTool(boolean isCtrl_spiralTool) {
+        Shortcuts.isCtrl_spiralTool = isCtrl_spiralTool;
+    }
+
+    public static boolean isShift_spiralTool() {
+        return isShift_spiralTool;
+    }
+
+    public static void setIsShift_spiralTool(boolean isShift_spiralTool) {
+        Shortcuts.isShift_spiralTool = isShift_spiralTool;
+    }
+
+    public static boolean isAlt_spiralTool() {
+        return isAlt_spiralTool;
+    }
+
+    public static void setIsAlt_spiralTool(boolean isAlt_spiralTool) {
+        Shortcuts.isAlt_spiralTool = isAlt_spiralTool;
+    }
+
+    public static String getZoomToolShortcut() {
+        return ZOOM_TOOL_SHORTCUT;
+    }
+
+    public static int getZoomToolKeyCode() {
+        return zoomToolKeyCode;
+    }
+
+    public static void setZoomToolKeyCode(int zoomToolKeyCode) {
+        Shortcuts.zoomToolKeyCode = zoomToolKeyCode;
+    }
+
+    public static boolean isCtrl_zoomTool() {
+        return isCtrl_zoomTool;
+    }
+
+    public static void setIsCtrl_zoomTool(boolean isCtrl_zoomTool) {
+        Shortcuts.isCtrl_zoomTool = isCtrl_zoomTool;
+    }
+
+    public static boolean isShift_zoomTool() {
+        return isShift_zoomTool;
+    }
+
+    public static void setIsShift_zoomTool(boolean isShift_zoomTool) {
+        Shortcuts.isShift_zoomTool = isShift_zoomTool;
+    }
+
+    public static boolean isAlt_zoomTool() {
+        return isAlt_zoomTool;
+    }
+
+    public static void setIsAlt_zoomTool(boolean isAlt_zoomTool) {
+        Shortcuts.isAlt_zoomTool = isAlt_zoomTool;
     }
 }

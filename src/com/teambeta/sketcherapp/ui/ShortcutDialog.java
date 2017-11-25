@@ -32,6 +32,15 @@ public class ShortcutDialog {
     private static final String TEXT_SHORTCUT_TABLE = "Text";
     private static final String TRIANGLE_SHORTCUT_TABLE = "Triangle";
     private static final String PRINT_SHORTCUT_TABLE = "Print";
+    private static final String SHORTCUT_SHORTCUT_TABLE = "Shortcuts";
+    private static final String CLOSE_SHORTCUT_TABLE = "Close";
+    private static final String NEW_SHORTCUT_TABLE = "New";
+    private static final String GREYSCALE_SHORTCUT_TABLE = "Greyscale";
+    private static final String BRIGHTNESS_SHORTCUT_TABLE = "Brightness";
+    private static final String SATURATION_SHORTCUT_TABLE = "Saturation";
+    private static final String SPIRAL_SHORTCUT_TABLE = "Spiral";
+    private static final String ZOOM_SHORTCUT_TABLE = "Zoom";
+
     private static final String ACTION_SHORTCUT_TABLE_COL = "Action";
     private static final String DEFAULT_BUTTON = "Default";
     private static final String APPLY_BUTTON = "Apply";
@@ -60,6 +69,7 @@ public class ShortcutDialog {
                         {AIRBRUSH_SHORTCUT_TABLE, printShortcut(sc.getAirBrushToolKeyCode(), sc.isCtrl_airBrushTool(), sc.isShift_airBrushTool(), sc.isAlt_airBrushTool())},
                         {ERASER_SHORTCUT_TABLE, printShortcut(sc.getEraserToolKeyCode(), sc.isCtrl_eraserTool(), sc.isShift_eraserTool(), sc.isAlt_eraserTool())},
                         {LINE_SHORTCUT_TABLE, printShortcut(sc.getLineToolKeyCode(), sc.isCtrl_lineTool(), sc.isShift_lineTool(), sc.isAlt_lineTool())},
+                        {SPIRAL_SHORTCUT_TABLE, printShortcut(sc.getSpiralToolKeyCode(), sc.isCtrl_spiralTool(), sc.isShift_spiralTool(), sc.isAlt_spiralTool())},
                         {FAN_SHORTCUT_TABLE, printShortcut(sc.getFanToolKeyCode(), sc.isCtrl_fanTool(), sc.isShift_fanTool(), sc.isAlt_fanTool())},
                         {RECTANGLE_SHORTCUT_TABLE, printShortcut(sc.getRectToolKeyCode(), sc.isCtrl_rectTool(), sc.isShift_rectTool(), sc.isAlt_rectTool())},
                         {ELLIPSE_SHORTCUT_TABLE, printShortcut(sc.getEllipseToolKeyCode(), sc.isCtrl_ellipseTool(), sc.isShift_ellipseTool(), sc.isAlt_ellipseTool())},
@@ -74,6 +84,14 @@ public class ShortcutDialog {
                         {IMPORT_SHORTCUT_TABLE, printShortcut(sc.getImportKeyCode(), sc.isCtrl_import(), sc.isShift_import(), sc.isAlt_import())},
                         {EXPORT_SHORTCUT_TABLE, printShortcut(sc.getExportKeyCode(), sc.isCtrl_export(), sc.isShift_export(), sc.isAlt_export())},
                         {PRINT_SHORTCUT_TABLE, printShortcut(sc.getPrintToolKeyCode(), sc.isCtrl_printTool(), sc.isShift_printTool(), sc.isAlt_printTool())},
+                        {SHORTCUT_SHORTCUT_TABLE, printShortcut(sc.getShortcutToolKeyCode(), sc.isCtrl_shortcutTool(), sc.isShift_shortcutTool(), sc.isAlt_shortcutTool())},
+                        {CLOSE_SHORTCUT_TABLE, printShortcut(sc.getCloseToolKeyCode(), sc.isCtrl_closeTool(), sc.isShift_closeTool(), sc.isAlt_closeTool())},
+                        {NEW_SHORTCUT_TABLE, printShortcut(sc.getNewToolKeyCode(), sc.isCtrl_newTool(), sc.isShift_newTool(), sc.isAlt_newTool())},
+                        {GREYSCALE_SHORTCUT_TABLE, printShortcut(sc.getGreyscaleToolKeyCode(), sc.isCtrl_greyscaleTool(), sc.isShift_greyscaleTool(), sc.isAlt_greyscaleTool())},
+                        {BRIGHTNESS_SHORTCUT_TABLE, printShortcut(sc.getBrightToolKeyCode(), sc.isCtrl_brightTool(), sc.isShift_brightTool(), sc.isAlt_brightTool())},
+                        {SATURATION_SHORTCUT_TABLE, printShortcut(sc.getSaturationToolKeyCode(), sc.isCtrl_saturationTool(), sc.isShift_saturationTool(), sc.isAlt_saturationTool())},
+                        {ZOOM_SHORTCUT_TABLE, printShortcut(sc.getZoomToolKeyCode(), sc.isCtrl_zoomTool(), sc.isShift_zoomTool(), sc.isAlt_zoomTool())},
+
                 },
                 new Object[]{ACTION_SHORTCUT_TABLE_COL, RE_ASSIGN_SHORTCUT_TABLE_COL});
         JTable table = new JTable(dm);
@@ -340,60 +358,92 @@ public class ShortcutDialog {
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.LINE_TOOL_SHORTCUT);
                     break;
                 case 5:
+                    sc.removeBinding(sc.getSpiralToolKeyCode(), sc.isCtrl_spiralTool(), sc.isShift_spiralTool(), sc.isAlt_spiralTool());
+                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.LINE_TOOL_SHORTCUT);
+                    break;
+                case 6:
                     sc.removeBinding(sc.getFanToolKeyCode(), sc.isCtrl_fanTool(), sc.isShift_fanTool(), sc.isAlt_fanTool());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.FAN_TOOL_SHORTCUT);
                     break;
-                case 6:
+                case 7:
                     sc.removeBinding(sc.getRectToolKeyCode(), sc.isCtrl_rectTool(), sc.isShift_rectTool(), sc.isAlt_rectTool());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.RECTANGLE_TOOL_SHORTCUT);
                     break;
-                case 7:
+                case 8:
                     sc.removeBinding(sc.getEllipseToolKeyCode(), sc.isCtrl_ellipseTool(), sc.isShift_ellipseTool(), sc.isAlt_ellipseTool());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.ELLIPSE_TOOL_SHORTCUT);
                     break;
-                case 8:
+                case 9:
                     sc.removeBinding(sc.getTriangleToolKeyCode(), sc.isCtrl_triangleTool(), sc.isShift_triangleTool(), sc.isAlt_triangleTool());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.TRIANGLE_TOOL_SHORTCUT);
                     break;
-                case 9:
+                case 10:
                     sc.removeBinding(sc.getPaintBucketToolKeyCode(), sc.isCtrl_paintBucketTool(), sc.isShift_paintBucketTool(), sc.isAlt_paintBucketTool());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.PAINTBUCKET_TOOL_SHORTCUT);
                     break;
-                case 10:
+                case 11:
                     sc.removeBinding(sc.getCelticKnotToolKeyCode(), sc.isCtrl_celticKnotTool(), sc.isShift_celticKnotTool(), sc.isAlt_celticKnotTool());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.CELTICKNOT_TOOL_SHORTCUT);
                     break;
-                case 11:
+                case 12:
                     sc.removeBinding(sc.getDnaToolKeyCode(), sc.isCtrl_dnaTool(), sc.isShift_dnaTool(), sc.isAlt_dnaTool());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.DNA_TOOL_SHORTCUT);
                     break;
-                case 12:
+                case 13:
                     sc.removeBinding(sc.getTextToolKeyCode(), sc.isCtrl_textTool(), sc.isShift_textTool(), sc.isAlt_textTool());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.TEXT_TOOL_SHORTCUT);
                     break;
-                case 13:
+                case 14:
                     sc.removeBinding(sc.getColorChooserToolKeyCode(), sc.isCtrl_colorChooserTool(), sc.isShift_colorChooserTool(), sc.isAlt_colorChooserTool());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.COLOR_CHOOSER_TOOL_SHORTCUT);
                     break;
-                case 14:
+                case 15:
                     sc.removeBinding(sc.getEyeDropToolKeyCode(), sc.isCtrl_eyeDropTool(), sc.isShift_eyeDropTool(), sc.isAlt_eyeDropTool());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.EYE_DROP_TOOL_SHORTCUT);
                     break;
-                case 15:
+                case 16:
                     sc.removeBinding(sc.getSelectionToolKeyCode(), sc.isCtrl_selectionTool(), sc.isShift_selectionTool(), sc.isAlt_selectionTool());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.SELECTION_TOOL_SHORTCUT);
                     break;
-                case 16:
+                case 17:
                     sc.removeBinding(sc.getImportKeyCode(), sc.isCtrl_import(), sc.isShift_import(), sc.isAlt_import());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.IMPORT_SHORTCUT);
                     break;
-                case 17:
+                case 18:
                     sc.removeBinding(sc.getExportKeyCode(), sc.isCtrl_export(), sc.isShift_export(), sc.isAlt_export());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.EXPORT_SHORTCUT);
                     break;
-                case 18:
+                case 19:
                     sc.removeBinding(sc.getPrintToolKeyCode(), sc.isCtrl_printTool(), sc.isShift_printTool(), sc.isAlt_printTool());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.PRINT_SHORTCUT);
+                    break;
+                case 20:
+                    sc.removeBinding(sc.getShortcutToolKeyCode(), sc.isCtrl_shortcutTool(), sc.isShift_shortcutTool(), sc.isAlt_shortcutTool());
+                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.SHORTCUT_SHORTCUT);
+                    break;
+                case 21:
+                    sc.removeBinding(sc.getCloseToolKeyCode(), sc.isCtrl_closeTool(), sc.isShift_closeTool(), sc.isAlt_closeTool());
+                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.CLOSE_SHORTCUT);
+                    break;
+                case 22:
+                    sc.removeBinding(sc.getNewToolKeyCode(), sc.isCtrl_newTool(), sc.isShift_newTool(), sc.isAlt_newTool());
+                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.NEW_SHORTCUT);
+                    break;
+                case 23:
+                    sc.removeBinding(sc.getGreyscaleToolKeyCode(), sc.isCtrl_greyscaleTool(), sc.isShift_greyscaleTool(), sc.isAlt_greyscaleTool());
+                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.GREYSCALE_SHORTCUT);
+                    break;
+                case 24:
+                    sc.removeBinding(sc.getBrightToolKeyCode(), sc.isCtrl_brightTool(), sc.isShift_brightTool(), sc.isAlt_brightTool());
+                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.BRIGHTNESS_SHORTCUT);
+                    break;
+                case 25:
+                    sc.removeBinding(sc.getSaturationToolKeyCode(), sc.isCtrl_saturationTool(), sc.isShift_saturationTool(), sc.isAlt_saturationTool());
+                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.SATURATION_SHORTCUT);
+                    break;
+                case 26:
+                    sc.removeBinding(sc.getZoomToolKeyCode(), sc.isCtrl_zoomTool(), sc.isShift_zoomTool(), sc.isAlt_zoomTool());
+                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.ZOOM_TOOL_SHORTCUT);
                     break;
                 default:
                     System.out.println(NO_SUCH_TOOL);

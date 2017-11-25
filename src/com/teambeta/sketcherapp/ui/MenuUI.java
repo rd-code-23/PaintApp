@@ -108,7 +108,7 @@ public class MenuUI extends JMenuBar {
      * Constructor
      */
     public MenuUI(JFrame mainFrame, DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu, BrightnessMenu brightnessMenu, SaturationMenu saturationMenu,
-                  NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu, ShortcutDialog keyboardShortCutPanel) {
+                  NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu, ShortcutDialog keyboardShortCutPanel,PrintCanvas printCanvas) {
         this.mainFrame = mainFrame;
         this.drawArea = drawArea;
         this.importExport = importExport;
@@ -224,17 +224,12 @@ public class MenuUI extends JMenuBar {
                 importExport.exportImage();
             } else if (e.getSource() == iImport) {
                 importExport.importImage();
-            } else if (e.getSource() == iGreyscale) {
-                importExport.importImage();
-            } else if (e.getSource() == iSaturation) {
+            }  else if (e.getSource() == iSaturation) {
                 saturationMenu.showWindow();
             } else if (e.getSource() == iBrightness) {
                 brightnessMenu.showWindow();
             } else if (e.getSource() == iGreyscale) {
                 greyscaleMenu.showWindow();
-            } else if (e.getSource() == iBrightness) {
-                brightnessMenu.showWindow();
-            } else if (e.getSource() == hAbout) {
             } else if (e.getSource() == hAbout) {
                 AboutMenu.prepareAbout();
             } else if (e.getSource() == iNoise) {

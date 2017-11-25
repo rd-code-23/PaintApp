@@ -88,7 +88,7 @@ public class RectangleSelectionTool extends DrawingTool {
     @Override
     public void onMove(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         if (selectedCanvas != null) {
-            int offset = 40;
+            int offset = 0;
             if (e.getY() >= initY - offset && e.getY() <= (selectedCanvas.getHeight() + initY - offset)
                     && e.getX() >= initX - offset && e.getX() <= (selectedCanvas.getWidth() + initX - offset)) {
                 if (isDrawn) {

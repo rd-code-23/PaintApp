@@ -19,15 +19,11 @@ public class MouseCursor {
     }
 
     public static void dragCursor() {
-
         setCursor(DRAG_CURSOR);
     }
 
     public static void targetCursor() {
-
         setCursor(TARGET_CURSOR);
-
-
     }
 
     private static void setCursor(String customCursor) {
