@@ -304,17 +304,21 @@ public class MainUI {
             } else if (e.getSource() == hueSaturationButton) {
                 saturationMenu.showWindow();
             } else if (e.getSource() == selectionButton) {
+
+                drawArea.clear();
+
                 selectedDrawingTool = rectangleSelectionTool;
                 textToolSettings.setVisibility(false);
                 setHighlightedToDefault();
-               // highlightedButton = selectionButton;
-               // selectionButton.setIcon(new ImageIcon(SELECTION_ICON_HIGHLIGHTED));
-                  rectangleSelectionTool.showPanel();
+                // highlightedButton = selectionButton;
+                // selectionButton.setIcon(new ImageIcon(SELECTION_ICON_HIGHLIGHTED));
+                rectangleSelectionTool.showPanel();
                 northPanel.remove(textToolSettings);
                 northPanel.add(rectangleSelectionTool.getSelectionOptionPanel(), BorderLayout.EAST);
                 northPanel.validate();
                 updateSizeSlider();
                 updateFillState();
+
             }
             /*
                Review 1: Default to hiding if the tool isn't the text tool. Use direct checks to see if the current tool
@@ -997,8 +1001,8 @@ public class MainUI {
             textToolSettings.setVisibility(false);
             selectedDrawingTool = rectangleSelectionTool;
             setHighlightedToDefault();
-          //  highlightedButton = selectionButton;
-          //  selectionButton.setIcon(new ImageIcon(SELECTION_ICON_HIGHLIGHTED));
+            //  highlightedButton = selectionButton;
+            //  selectionButton.setIcon(new ImageIcon(SELECTION_ICON_HIGHLIGHTED));
             updateSizeSlider();
         });
         shortcuts.addKeyBinding(KeyEvent.VK_T, true, false, false, Shortcuts.TEXT_TOOL_SHORTCUT, (evt) -> {
@@ -1191,8 +1195,8 @@ public class MainUI {
             selectedDrawingTool = rectangleSelectionTool;
             textToolSettings.setVisibility(false);
             setHighlightedToDefault();
-          //  highlightedButton = selectionButton;
-           // selectionButton.setIcon(new ImageIcon(SELECTION_ICON_HIGHLIGHTED));
+            //  highlightedButton = selectionButton;
+            // selectionButton.setIcon(new ImageIcon(SELECTION_ICON_HIGHLIGHTED));
             rectangleSelectionTool.showPanel();
             northPanel.remove(textToolSettings);
             northPanel.add(rectangleSelectionTool.getSelectionOptionPanel(), BorderLayout.EAST);
