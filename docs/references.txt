@@ -31,3 +31,9 @@ https://stackoverflow.com/questions/3804361/how-to-enable-drag-and-drop-inside-j
 
 12. Splash screen implementation referenced from JAVAWORLD:
 https://www.javaworld.com/article/2077467/core-java/java-tip-104--make-a-splash-with-swing.html
+
+13. JPanel layout
+https://stackoverflow.com/questions/34186291/how-do-i-lay-out-input-panel-with-multiple-textfields-and-ok-cancel-buttons
+
+14. JPanel and JLabel vertical margins
+https://stackoverflow.com/questions/1534889/how-to-make-jlabels-start-on-the-next-line

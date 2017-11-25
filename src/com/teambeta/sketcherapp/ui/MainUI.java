@@ -106,7 +106,7 @@ public class MainUI {
     private JPanel canvasTools;
     private DB_KBShortcuts db_kbShortcuts;
     private JButton highlightedButton;
-    private BrightnessMenu brightnessMenu;
+    private BrightnessContrastMenu brightnessContrastMenu;
     private SaturationMenu saturationMenu;
     private LayersPanel layersPanel;
 
@@ -300,7 +300,7 @@ public class MainUI {
                 spiralToolButton.setIcon(new ImageIcon(SPIRAL_ICON_HIGHLIGHTED));
                 updateSizeSlider();
             } else if (e.getSource() == brightnessContrastButton) {
-                brightnessMenu.showWindow();
+                brightnessContrastMenu.showWindow();
             } else if (e.getSource() == hueSaturationButton) {
                 saturationMenu.showWindow();
             }
@@ -440,7 +440,7 @@ public class MainUI {
         drawArea = new DrawArea(this);
 
         importExport = new ImportExport(drawArea, this);
-        brightnessMenu = new BrightnessMenu(drawArea);
+        brightnessContrastMenu = new BrightnessContrastMenu(drawArea);
         saturationMenu = new SaturationMenu(drawArea);
         GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
         NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
@@ -460,7 +460,7 @@ public class MainUI {
         db_kbShortcuts = new DB_KBShortcuts(shortcuts);
         keboardShortCutPanel = new ShortcutDialog(this, shortcuts);
 
-        MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, saturationMenu, brightnessMenu,
+        MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, saturationMenu, brightnessContrastMenu,
                 noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel);
 
 

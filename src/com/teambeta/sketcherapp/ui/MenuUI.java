@@ -54,7 +54,7 @@ public class MenuUI extends JMenuBar {
     private JMenuItem iRotateCanvas;
     private JMenuItem iColourMode;
     private JMenuItem iSaturation;
-    private JMenuItem iBrightness;
+    private JMenuItem iBrightnessContrast;
     private JMenuItem iGeneratorsSubMenu;
     private JMenuItem iCheckerBoard;
     private JMenuItem iGreyscale;
@@ -66,7 +66,7 @@ public class MenuUI extends JMenuBar {
     private static final String IROTATECANVAS_MENU_BUTTON_TEXT = "Rotate Canvas";
     private static final String ICOLOURMODE_MENU_BUTTON_TEXT = "Colour Mode";
     private static final String ISATURATION_MENU_BUTTON_TEXT = "Saturation";
-    private static final String IBRIGHTNESS_MENU_BUTTON_TEXT = "Brightness";
+    private static final String IBRIGHTNESSCONTRAST_MENU_BUTTON_TEXT = "Brightness / Contrast";
     private static final String IGENERATORSSUBMENU_MENU_BUTTON_TEXT = "Generators";
     private static final String ICHECKERBOARD_MENU_BUTTON_TEXT = "Checkerboard";
     private static final String IGREYSCALE_MENU_BUTTON_TEXT = "Greyscale";
@@ -93,7 +93,7 @@ public class MenuUI extends JMenuBar {
     private DrawArea drawArea;
     private ImportExport importExport;
     private SaturationMenu saturationMenu;
-    private BrightnessMenu brightnessMenu;
+    private BrightnessContrastMenu brightnessContrastMenu;
     private GreyscaleMenu greyscaleMenu;
     private AboutMenu aboutMenu;
     private NewWindow newWindow;
@@ -106,13 +106,13 @@ public class MenuUI extends JMenuBar {
      * Constructor
      */
     public MenuUI(JFrame mainFrame, DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu, SaturationMenu saturationMenu,
-                  BrightnessMenu brightnessMenu, NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu, ShortcutDialog keyboardShortCutPanel) {
+                  BrightnessContrastMenu brightnessContrastMenu, NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu, ShortcutDialog keyboardShortCutPanel) {
         this.mainFrame = mainFrame;
         this.drawArea = drawArea;
         this.importExport = importExport;
         this.greyscaleMenu = greyscaleMenu;
         this.saturationMenu = saturationMenu;
-        this.brightnessMenu = brightnessMenu;
+        this.brightnessContrastMenu = brightnessContrastMenu;
         this.noiseGeneratorMenu = noiseGeneratorMenu;
         this.checkerboardMenu = checkerboardMenu;
         this.keyboardShortCutPanel = keyboardShortCutPanel;
@@ -161,7 +161,7 @@ public class MenuUI extends JMenuBar {
         iRotateCanvas = new JMenuItem(IROTATECANVAS_MENU_BUTTON_TEXT);
         iColourMode = new JMenuItem(ICOLOURMODE_MENU_BUTTON_TEXT);
         iSaturation = new JMenuItem(ISATURATION_MENU_BUTTON_TEXT);
-        iBrightness = new JMenuItem(IBRIGHTNESS_MENU_BUTTON_TEXT);
+        iBrightnessContrast = new JMenuItem(IBRIGHTNESSCONTRAST_MENU_BUTTON_TEXT);
         iGeneratorsSubMenu = new JMenu(IGENERATORSSUBMENU_MENU_BUTTON_TEXT);
         iCheckerBoard = new JMenuItem(ICHECKERBOARD_MENU_BUTTON_TEXT);
         iGreyscale = new JMenuItem(IGREYSCALE_MENU_BUTTON_TEXT);
@@ -173,7 +173,7 @@ public class MenuUI extends JMenuBar {
         imageMenu.add(iRotateCanvas);
         imageMenu.add(iColourMode);
         imageMenu.add(iSaturation);
-        imageMenu.add(iBrightness);
+        imageMenu.add(iBrightnessContrast);
         imageMenu.add(iGreyscale);
         imageMenu.add(iGeneratorsSubMenu);
         iGeneratorsSubMenu.add(iCheckerBoard);
@@ -205,7 +205,7 @@ public class MenuUI extends JMenuBar {
         fClose.addActionListener(menuActionListener);
         fNew.addActionListener(menuActionListener);
         iSaturation.addActionListener(menuActionListener);
-        iBrightness.addActionListener(menuActionListener);
+        iBrightnessContrast.addActionListener(menuActionListener);
         iNoise.addActionListener(menuActionListener);
         iCheckerBoard.addActionListener(menuActionListener);
         eKeyboardShortCuts.addActionListener(menuActionListener);
@@ -224,8 +224,8 @@ public class MenuUI extends JMenuBar {
                 greyscaleMenu.showWindow();
             } else if (e.getSource() == iSaturation) {
                 saturationMenu.showWindow();
-            } else if (e.getSource() == iBrightness) {
-                brightnessMenu.showWindow();
+            } else if (e.getSource() == iBrightnessContrast) {
+                brightnessContrastMenu.showWindow();
             } else if (e.getSource() == hAbout) {
                 AboutMenu.prepareAbout();
             } else if (e.getSource() == iNoise) {
