@@ -173,6 +173,18 @@ public class Shortcuts {
     static boolean isShift_zoomTool;
     static boolean isAlt_zoomTool;
 
+    public static final String CHECKERBOARD_SHORTCUT = "CHECKERBOARD";
+    static int checkToolKeyCode;
+    static boolean isCtrl_checkTool;
+    static boolean isShift_checkTool;
+    static boolean isAlt_checkTool;
+
+    public static final String NOISE_SHORTCUT = "NOISE";
+    static int noiseToolKeyCode;
+    static boolean isCtrl_noiseTool;
+    static boolean isShift_noiseTool;
+    static boolean isAlt_noiseTool;
+
     private JComponent component;
     private MainUI mainUI;
     private ActionMap actionMap;
@@ -439,6 +451,18 @@ public class Shortcuts {
                 isShift_zoomTool = useShift;
                 isAlt_zoomTool = useAlt;
                 break;
+            case CHECKERBOARD_SHORTCUT:
+                checkToolKeyCode = keyCode;
+                isCtrl_checkTool = useControl;
+                isShift_checkTool = useShift;
+                isAlt_checkTool = useAlt;
+                break;
+            case NOISE_SHORTCUT:
+                noiseToolKeyCode = keyCode;
+                isCtrl_noiseTool = useControl;
+                isShift_noiseTool = useShift;
+                isAlt_noiseTool = useAlt;
+                break;
             default:
                 System.out.println(NO_SUCH_TOOL);
         }
@@ -562,6 +586,14 @@ public class Shortcuts {
         }
 
         if (keyCode == zoomToolKeyCode && ctrl == isCtrl_zoomTool && shift == isShift_zoomTool && alt == isAlt_zoomTool) {
+            return false;
+        }
+
+        if (keyCode == checkToolKeyCode && ctrl == isCtrl_checkTool && shift == isShift_checkTool && alt == isAlt_checkTool) {
+            return false;
+        }
+
+        if (keyCode == noiseToolKeyCode && ctrl == isCtrl_noiseTool && shift == isShift_noiseTool && alt == isAlt_noiseTool) {
             return false;
         }
         return true;
@@ -1526,5 +1558,77 @@ public class Shortcuts {
 
     public static void setIsAlt_zoomTool(boolean isAlt_zoomTool) {
         Shortcuts.isAlt_zoomTool = isAlt_zoomTool;
+    }
+
+    public static String getCheckerboardShortcut() {
+        return CHECKERBOARD_SHORTCUT;
+    }
+
+    public static int getCheckToolKeyCode() {
+        return checkToolKeyCode;
+    }
+
+    public static void setCheckToolKeyCode(int checkToolKeyCode) {
+        Shortcuts.checkToolKeyCode = checkToolKeyCode;
+    }
+
+    public static boolean isCtrl_checkTool() {
+        return isCtrl_checkTool;
+    }
+
+    public static void setIsCtrl_checkTool(boolean isCtrl_checkTool) {
+        Shortcuts.isCtrl_checkTool = isCtrl_checkTool;
+    }
+
+    public static boolean isShift_checkTool() {
+        return isShift_checkTool;
+    }
+
+    public static void setIsShift_checkTool(boolean isShift_checkTool) {
+        Shortcuts.isShift_checkTool = isShift_checkTool;
+    }
+
+    public static boolean isAlt_checkTool() {
+        return isAlt_checkTool;
+    }
+
+    public static void setIsAlt_checkTool(boolean isAlt_checkTool) {
+        Shortcuts.isAlt_checkTool = isAlt_checkTool;
+    }
+
+    public static String getNoiseShortcut() {
+        return NOISE_SHORTCUT;
+    }
+
+    public static int getNoiseToolKeyCode() {
+        return noiseToolKeyCode;
+    }
+
+    public static void setNoiseToolKeyCode(int noiseToolKeyCode) {
+        Shortcuts.noiseToolKeyCode = noiseToolKeyCode;
+    }
+
+    public static boolean isCtrl_noiseTool() {
+        return isCtrl_noiseTool;
+    }
+
+    public static void setIsCtrl_noiseTool(boolean isCtrl_noiseTool) {
+        Shortcuts.isCtrl_noiseTool = isCtrl_noiseTool;
+    }
+
+    public static boolean isShift_noiseTool() {
+        return isShift_noiseTool;
+    }
+
+    public static void setIsShift_noiseTool(boolean isShift_noiseTool) {
+        Shortcuts.isShift_noiseTool = isShift_noiseTool;
+    }
+
+    public static boolean isAlt_noiseTool() {
+        return isAlt_noiseTool;
+    }
+
+    public static void setIsAlt_noiseTool(boolean isAlt_noiseTool) {
+        Shortcuts.isAlt_noiseTool = isAlt_noiseTool;
     }
 }

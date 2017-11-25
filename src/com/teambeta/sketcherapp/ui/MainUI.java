@@ -104,8 +104,11 @@ public class MainUI {
     private BrightnessMenu brightnessMenu;
     private SaturationMenu saturationMenu;
     private GreyscaleMenu greyscaleMenu;
+   private NoiseGeneratorMenu noiseGeneratorMenu;
+   private CheckerboardMenu checkerboardMenu;
     private LayersPanel layersPanel;
     private PrintCanvas printCanvas;
+    private MouseCursor mouseCursor;
     JPanel northPanel;
     private static final String RES_PATH = System.getProperty("user.dir") + File.separator + "src" +
             File.separator + "res";
@@ -177,6 +180,8 @@ public class MainUI {
     private static final String TRIANGLE_ICON_HOVER = RES_PATH + File.separator + "triangle_hover.png";
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
+
+
 
             if (e.getSource() == clearButton) {
                 if (drawArea.getCurrentlySelectedLayer().isVisible()) {
@@ -330,9 +335,12 @@ public class MainUI {
                 textToolSettings.setVisibility(false);
             }
 
-            if (selectedDrawingTool == rectangleSelectionTool && e.getSource() != clearButton && e.getSource() instanceof JButton) {
+            if (selectedDrawingTool != rectangleSelectionTool && e.getSource() != clearButton && e.getSource() instanceof JButton) {
                 rectangleSelectionTool.restartSelection();
                 rectangleSelectionTool.hidePanel();
+                mouseCursor.setDefaultCursor();
+                drawArea.setFocusable(true);
+                drawArea.validate();
             }
 
         }
@@ -451,8 +459,8 @@ public class MainUI {
         brightnessMenu = new BrightnessMenu(drawArea);
         saturationMenu = new SaturationMenu(drawArea);
          greyscaleMenu = new GreyscaleMenu(drawArea);
-        NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
-        CheckerboardMenu checkerboardMenu = new CheckerboardMenu(drawArea);
+         noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
+        checkerboardMenu = new CheckerboardMenu(drawArea);
         initializeDrawArea(mainContent);
         initializeButtons();
         initializeCanvasTools();
@@ -496,7 +504,7 @@ public class MainUI {
             generateDefaultKeyBindings();
         }
 
-        MouseCursor mouseCursor = new MouseCursor(drawArea);
+         mouseCursor = new MouseCursor(drawArea);
 
         if (rectangleSelectionTool != null) {
             rectangleSelectionTool.renderPanel();
@@ -856,7 +864,6 @@ public class MainUI {
      */
     public void generateDefaultKeyBindings() {
         shortcuts.addKeyBinding(KeyEvent.VK_C, true, false, false, Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
-
             drawArea.clear();
         });
         shortcuts.addKeyBinding(KeyEvent.VK_O, false, true, false, Shortcuts.EXPORT_SHORTCUT, (evt) -> {
@@ -973,6 +980,7 @@ public class MainUI {
         });
         shortcuts.addKeyBinding(KeyEvent.VK_T, true, false, false, Shortcuts.TEXT_TOOL_SHORTCUT, (evt) -> {
             rectangleSelectionTool.restartSelection();
+            mouseCursor.setDefaultCursor();
             rectangleSelectionTool.hidePanel();
             northPanel.remove(rectangleSelectionTool.getSelectionOptionPanel());
             textToolSettings.setVisibility(true);
@@ -1025,6 +1033,14 @@ public class MainUI {
 
         shortcuts.addKeyBinding(KeyEvent.VK_A, false, true, false, Shortcuts.SATURATION_SHORTCUT, (evt) -> {
             saturationMenu.showWindow();
+        });
+
+        shortcuts.addKeyBinding(KeyEvent.VK_K,false, true, false, Shortcuts.CHECKERBOARD_SHORTCUT, (evt) -> {
+            checkerboardMenu.showWindow();
+        });
+
+        shortcuts.addKeyBinding(KeyEvent.VK_E,false, true, false, Shortcuts.NOISE_SHORTCUT, (evt) -> {
+            noiseGeneratorMenu.showWindow();
         });
 
         shortcuts.addKeyBinding(KeyEvent.VK_I, true, false, false, Shortcuts.SPIRAL_TOOL_SHORTCUT, (evt) -> {
@@ -1165,6 +1181,7 @@ public class MainUI {
         });
         shortcuts.addKeyBinding(shortcuts.getTextToolKeyCode(), shortcuts.isCtrl_textTool(), shortcuts.isShift_textTool(), shortcuts.isAlt_textTool(), Shortcuts.TEXT_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = textTool;
+            mouseCursor.setDefaultCursor();
             rectangleSelectionTool.restartSelection();
             rectangleSelectionTool.hidePanel();
             northPanel.remove(rectangleSelectionTool.getSelectionOptionPanel());
@@ -1220,6 +1237,13 @@ public class MainUI {
             saturationMenu.showWindow();
         });
 
+        shortcuts.addKeyBinding(shortcuts.getNoiseToolKeyCode(), shortcuts.isCtrl_noiseTool(), shortcuts.isShift_noiseTool(), shortcuts.isAlt_noiseTool(), Shortcuts.NOISE_SHORTCUT, (evt) -> {
+            noiseGeneratorMenu.showWindow();
+        });
+
+        shortcuts.addKeyBinding(shortcuts.getCheckToolKeyCode(), shortcuts.isCtrl_checkTool(), shortcuts.isShift_checkTool(), shortcuts.isAlt_checkTool(), Shortcuts.CHECKERBOARD_SHORTCUT, (evt) -> {
+            checkerboardMenu.showWindow();
+        });
         shortcuts.addKeyBinding(shortcuts.getSpiralToolKeyCode(), shortcuts.isCtrl_spiralTool(), shortcuts.isShift_spiralTool(), shortcuts.isAlt_spiralTool(), Shortcuts.SPIRAL_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = spiralTool;
             setHighlightedToDefault();
@@ -1234,7 +1258,12 @@ public class MainUI {
         });
     }
 
+    /**
+     * makes sure the north east panel does is hidden
+     * when it should not be displayed
+     */
     public void updateNorthEastPanel() {
+        mouseCursor.setDefaultCursor();
         textToolSettings.setVisibility(false);
         rectangleSelectionTool.restartSelection();
         rectangleSelectionTool.hidePanel();
