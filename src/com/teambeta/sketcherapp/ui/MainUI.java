@@ -100,14 +100,14 @@ public class MainUI {
     private static ColorChooser colorChooser;
     private WidthChanger widthChanger;
     private TextToolSettings textToolSettings;
-    private ShortcutDialog keboardShortCutPanel;
+    private ShortcutDialog keyboardShortCutPanel;
     private Shortcuts shortcuts;
     private ImportExport importExport;
     private JPanel canvasTools;
     private DB_KBShortcuts db_kbShortcuts;
     private JButton highlightedButton;
     private BrightnessContrastMenu brightnessContrastMenu;
-    private SaturationMenu saturationMenu;
+    private HueSaturationMenu hueSaturationMenu;
     private LayersPanel layersPanel;
 
     private static final String RES_PATH = System.getProperty("user.dir") + File.separator + "src" +
@@ -302,7 +302,7 @@ public class MainUI {
             } else if (e.getSource() == brightnessContrastButton) {
                 brightnessContrastMenu.showWindow();
             } else if (e.getSource() == hueSaturationButton) {
-                saturationMenu.showWindow();
+                hueSaturationMenu.showWindow();
             }
 
             /*
@@ -441,7 +441,7 @@ public class MainUI {
 
         importExport = new ImportExport(drawArea, this);
         brightnessContrastMenu = new BrightnessContrastMenu(drawArea);
-        saturationMenu = new SaturationMenu(drawArea);
+        hueSaturationMenu = new HueSaturationMenu(drawArea);
         GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
         NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
         CheckerboardMenu checkerboardMenu = new CheckerboardMenu(drawArea);
@@ -458,10 +458,10 @@ public class MainUI {
         //setting up the shortcuts and database
         shortcuts = new Shortcuts(canvasTools, this);
         db_kbShortcuts = new DB_KBShortcuts(shortcuts);
-        keboardShortCutPanel = new ShortcutDialog(this, shortcuts);
+        keyboardShortCutPanel = new ShortcutDialog(this, shortcuts);
 
-        MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, saturationMenu, brightnessContrastMenu,
-                noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel);
+        MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, hueSaturationMenu, brightnessContrastMenu,
+                noiseGeneratorMenu, checkerboardMenu, keyboardShortCutPanel);
 
 
         northPanel.add(menuUI, BorderLayout.NORTH);
@@ -485,13 +485,13 @@ public class MainUI {
             }
         });
 
-        if (db_kbShortcuts.isTableExists()) {
-            generateDBDefaultKeyBindings();
-            db_kbShortcuts.generateDBKeyBindings();
-        } else {
-            db_kbShortcuts.createTable();
-            generateDefaultKeyBindings();
-        }
+//        if (db_kbShortcuts.isTableExists()) {
+//            generateDBDefaultKeyBindings();
+//            db_kbShortcuts.generateDBKeyBindings();
+//        } else {
+//            db_kbShortcuts.createTable();
+//            generateDefaultKeyBindings();
+//        }
     }
 
     /**
