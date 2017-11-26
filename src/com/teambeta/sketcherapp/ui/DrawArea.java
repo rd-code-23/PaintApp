@@ -1,6 +1,8 @@
 package com.teambeta.sketcherapp.ui;
+
 import com.teambeta.sketcherapp.model.GeneratorFunctions;
 import com.teambeta.sketcherapp.model.ImageLayer;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -9,7 +11,9 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.util.LinkedList;
+
 import static java.awt.Color.black;
+
 /**
  * Class for drawable canvasBufferedImage.
  * Taken from "[Java] How to make a Swing Paint and Drawing application", Sylvain Saurel -
@@ -19,8 +23,8 @@ public class DrawArea extends JComponent {
     private static final int TRANSPARENCY_CHECKER_BOARD_SIZE = 35;
     private MainUI mainUI;
     private BufferedImage canvasBufferedImage;
-    private static BufferedImage layersAboveSelectedLayer;
     private static BufferedImage layersBelowSelectedLayer;
+    private static BufferedImage layersAboveSelectedLayer;
     private LinkedList<ImageLayer> drawingLayers;
     private ImageLayer currentlySelectedLayer;
     private static BufferedImage previewBufferedImage;
@@ -32,6 +36,7 @@ public class DrawArea extends JComponent {
     private static final double BLUE_LUMA_COEFFICIENT = 0.0722;
     private static final Color transparentColor = new Color(0x00FFFFFF, true);
     private BufferedImage checkerboardImage;
+
     /**
      * Constructor. Set actions upon mouse press events.
      */
@@ -50,6 +55,7 @@ public class DrawArea extends JComponent {
                     repaint();
                 }
             }
+
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
@@ -59,6 +65,7 @@ public class DrawArea extends JComponent {
                     repaint();
                 }
             }
+
             @Override
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
@@ -76,20 +83,10 @@ public class DrawArea extends JComponent {
                     repaint();
                 }
             }
-
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                if (currentlySelectedLayer.isVisible()) {
-                    MainUI.getSelectedDrawingTool().onMove(canvasBufferedImage, e, drawingLayers);
-                    isCanvasAltered = true;
-                    repaint();
-                }
-            }
-
-
         });
         drawingLayers = new LinkedList<>();
     }
+
     /**
      * Clears buffer image.
      *
@@ -102,6 +99,7 @@ public class DrawArea extends JComponent {
         graphics.setBackground(transparentColor);
         graphics.fillRect(0, 0, bufferedImage.getWidth(), bufferedImage.getHeight());
     }
+
     /**
      * Redraws the layers onto the canvas.
      */
@@ -109,6 +107,7 @@ public class DrawArea extends JComponent {
         refreshBufferedImages();
         drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
     }
+
     /**
      * Draws the provided layers onto the provided canvasBufferedImage.
      *
@@ -122,16 +121,19 @@ public class DrawArea extends JComponent {
         //draw the layers in order
         AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
         canvasGraphics.setComposite(alphaComposite);
+
         canvasGraphics.drawImage(layersBelowSelectedLayer, 0, 0, null);
         for (ImageLayer layer : layers) {
             if (layer != null) {
                 if (layer.isSelected() && layer.isVisible()) {
                     canvasGraphics.drawImage(layer.getBufferedImage(), 0, 0, null);
+                    break;
                 }
             }
         }
         canvasGraphics.drawImage(layersAboveSelectedLayer, 0, 0, null);
     }
+
     /**
      * Defines how the DrawArea component is painted.
      *
@@ -146,6 +148,7 @@ public class DrawArea extends JComponent {
         //draw the canvas image
         canvasGraphics.drawImage(canvasBufferedImage, 0, 0, null);
     }
+
     /**
      * Allows access to the ImageLayer the user has currently selected.
      *
@@ -154,6 +157,7 @@ public class DrawArea extends JComponent {
     public ImageLayer getCurrentlySelectedLayer() {
         return currentlySelectedLayer;
     }
+
     /**
      * Creates the BufferedImages and other objects that the DrawArea needs to function.
      */
@@ -161,8 +165,8 @@ public class DrawArea extends JComponent {
         // create a canvasBufferedImage to draw on
         canvasBufferedImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
         previewBufferedImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
-        layersAboveSelectedLayer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
         layersBelowSelectedLayer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+        layersAboveSelectedLayer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
         checkerboardImage = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
         fillCheckerPattern(checkerboardImage,
                 this.getWidth() / TRANSPARENCY_CHECKER_BOARD_SIZE,
@@ -183,36 +187,37 @@ public class DrawArea extends JComponent {
         }
         // clear draw area
         clear();
-        refreshBufferedImages();
-        drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
+        redrawLayers();
     }
+
     /**
      * Blend the drawArea layers above and below the selected layer into two BufferedImages.
      */
     private void refreshBufferedImages() {
-        Graphics2D layersAboveSelectedLayerGraphics = (Graphics2D) layersAboveSelectedLayer.getGraphics();
         Graphics2D layersBelowSelectedLayerGraphics = (Graphics2D) layersBelowSelectedLayer.getGraphics();
+        Graphics2D layersAboveSelectedLayerGraphics = (Graphics2D) layersAboveSelectedLayer.getGraphics();
         //clear the BufferedImages.
-        clearBufferImageToTransparent(layersAboveSelectedLayer);
         clearBufferImageToTransparent(layersBelowSelectedLayer);
+        clearBufferImageToTransparent(layersAboveSelectedLayer);
         //blend the layers
         AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
-        layersAboveSelectedLayerGraphics.setComposite(alphaComposite);
         layersBelowSelectedLayerGraphics.setComposite(alphaComposite);
+        layersAboveSelectedLayerGraphics.setComposite(alphaComposite);
         int indexOfSelectedLayer = drawingLayers.indexOf(currentlySelectedLayer);
-        for (int i = 0; i < indexOfSelectedLayer; i++) {
-            ImageLayer layer = drawingLayers.get(i);
-            if (layer.isVisible()) {
-                layersBelowSelectedLayerGraphics.drawImage(layer.getBufferedImage(), 0, 0, null);
-            }
-        }
-        for (int i = indexOfSelectedLayer + 1; i < drawingLayers.size(); i++) {
+        for (int i = indexOfSelectedLayer - 1; i >= 0; i--) {
             ImageLayer layer = drawingLayers.get(i);
             if (layer.isVisible()) {
                 layersAboveSelectedLayerGraphics.drawImage(layer.getBufferedImage(), 0, 0, null);
             }
         }
+        for (int i = drawingLayers.size() - 1; i > indexOfSelectedLayer; i--) {
+            ImageLayer layer = drawingLayers.get(i);
+            if (layer.isVisible()) {
+                layersBelowSelectedLayerGraphics.drawImage(layer.getBufferedImage(), 0, 0, null);
+            }
+        }
     }
+
     /**
      * Fill in a black and white checkerboard pattern to the layer.
      *
@@ -226,10 +231,12 @@ public class DrawArea extends JComponent {
                                     Color color1, Color color2) {
         Graphics2D layerGraphics = (Graphics2D) layer.getGraphics();
         Color old_color = layerGraphics.getColor();
+
         int square_width = layer.getWidth() / horizontal_count;
         int square_height = layer.getHeight() / vertical_count;
         int row = 0;
         boolean isBlack;
+
         for (int y = 0; y < layer.getHeight(); y += square_height) {
             if (y >= layer.getHeight()) y = layer.getHeight() - 1;
             // Alternate start colour for each row
@@ -240,11 +247,14 @@ public class DrawArea extends JComponent {
                 isBlack = false;
                 layerGraphics.setColor(color2);
             }
+
             for (int x = 0; x < layer.getWidth(); x += square_width) {
                 if (x >= layer.getWidth()) x = layer.getWidth() - 1;
+
                 // TODO: The bottom and right edges aren't drawing properly due to integer division data loss
                 // Maybe just draw the bottom and right edge squares up to their respective sides
                 layerGraphics.fillRect(x, y, square_width, square_height);
+
                 if (isBlack) {
                     layerGraphics.setColor(color2);
                 } else {
@@ -256,6 +266,7 @@ public class DrawArea extends JComponent {
         }
         layerGraphics.setColor(old_color);
     }
+
     /**
      * Clears written elements on canvasBufferedImage.
      */
@@ -270,6 +281,7 @@ public class DrawArea extends JComponent {
         isCanvasAltered = false;
         repaint();
     }
+
     /**
      * Set the graphics painter color.
      *
@@ -278,6 +290,7 @@ public class DrawArea extends JComponent {
     public void setColor(Color color) {
         graphics.setPaint(color);
     }
+
     /**
      * Get the background color of the canvasBufferedImage area.
      *
@@ -287,6 +300,7 @@ public class DrawArea extends JComponent {
     public Color getBackground() {
         return backgroundColor;
     }
+
     /**
      * Get the preview layer.
      *
@@ -295,6 +309,7 @@ public class DrawArea extends JComponent {
     public static BufferedImage getPreviewBufferedImage() {
         return previewBufferedImage;
     }
+
     /**
      * Get canvasBufferedImage.
      *
@@ -303,6 +318,7 @@ public class DrawArea extends JComponent {
     public BufferedImage getCanvasBufferedImage() {
         return canvasBufferedImage;
     }
+
     /**
      * Set class specified canvasBufferedImage.
      *
@@ -311,6 +327,7 @@ public class DrawArea extends JComponent {
     public void setCanvasBufferedImage(BufferedImage canvasBufferedImage) {
         this.canvasBufferedImage = canvasBufferedImage;
     }
+
     /**
      * lets user import an image
      *
@@ -325,6 +342,7 @@ public class DrawArea extends JComponent {
         redrawLayers();
         repaint();
     }
+
     /**
      * checks to see if the user has altered the canvasBufferedImage
      *
@@ -333,6 +351,7 @@ public class DrawArea extends JComponent {
     public boolean isCanvasAltered() {
         return isCanvasAltered;
     }
+
     /**
      * sets whether the canvasBufferedImage has been altered
      *
@@ -341,20 +360,18 @@ public class DrawArea extends JComponent {
     public void setCanvasAltered(boolean canvasAltered) {
         isCanvasAltered = canvasAltered;
     }
+
     /**
      * Redraw all canvasBufferedImage coordinates to the average of the coordinate's RGB values.
      */
     public void redrawToGreyscale() {
-        // Redraw all of the layers to greyscale
-//        for (ImageLayer layer : drawingLayers) {
-//            makeBufferedImageGrayscale(layer.getBufferedImage());
-//        }
         // convert selected imageLayer to greyscale
         BufferedImage currentlySelectedLayerBufferedImage = currentlySelectedLayer.getBufferedImage();
         makeBufferedImageGrayscale(currentlySelectedLayerBufferedImage);
         drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
         repaint();
     }
+
     private void makeBufferedImageGrayscale(BufferedImage layer) {
         Color color_at_point;
         int lumaValue;
@@ -377,18 +394,17 @@ public class DrawArea extends JComponent {
             }
         }
     }
+
     /**
      * Draw random colourful noise on the selectedLayer.
      */
     public void colouredNoiseGenerator() {
-//        for (ImageLayer layer : drawingLayers) {
-//            fillWithColouredNoise(layer.getBufferedImage());
-//        }
         BufferedImage currentlySelectedLayerBufferedImage = currentlySelectedLayer.getBufferedImage();
         fillWithColouredNoise(currentlySelectedLayerBufferedImage);
         drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
         repaint();
     }
+
     private void fillWithColouredNoise(BufferedImage layer) {
         Color color_at_point;
         for (int x = 0; x < layer.getWidth(); ++x) {
@@ -402,6 +418,7 @@ public class DrawArea extends JComponent {
             }
         }
     }
+
     /**
      * Fill in a black and white checkerboard pattern to the layer.
      *
@@ -412,6 +429,7 @@ public class DrawArea extends JComponent {
     private void fillCheckerPattern(BufferedImage layer, int horizontal_count, int vertical_count) {
         fillCheckerPattern(layer, horizontal_count, vertical_count, Color.BLACK, Color.WHITE);
     }
+
     /**
      * Draw a black and white checkerboard pattern to all layers.
      *
@@ -419,51 +437,53 @@ public class DrawArea extends JComponent {
      * @param verticalCount   The amount of squares vertically
      */
     public void drawCheckerPattern(int horizontalCount, int verticalCount) {
-//        for (ImageLayer layer : drawingLayers) {
-//            fillCheckerPattern(layer.getBufferedImage(), horizontalCount, verticalCount);
-//        }
         BufferedImage currentlySelectedLayerBufferedImage = currentlySelectedLayer.getBufferedImage();
         fillCheckerPattern(currentlySelectedLayerBufferedImage, horizontalCount, verticalCount);
         drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
         repaint();
     }
+
     public LinkedList<ImageLayer> getDrawingLayers() {
         return drawingLayers;
     }
+
     public void setCurrentlySelectedLayer(ImageLayer currentlySelectedLayer) {
         this.currentlySelectedLayer.setSelected(false);
         this.currentlySelectedLayer = currentlySelectedLayer;
         this.currentlySelectedLayer.setSelected(true);
         drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
     }
+
     /**
      * Use the RescaleOp class to transform an image's brightness and/or contrast
      * This assumes that the alpha layer remain as-is
      *
      * @param scaleFactor factor to adjust BufferedImage contrast
-     * @param offset offset to adjust BufferedImage brightness
-     * @param hints the RenderingHints to use
+     * @param offset      offset to adjust BufferedImage brightness
+     * @param hints       the RenderingHints to use
      */
     public void rescaleOperation(float scaleFactor, float offset, RenderingHints hints) {
         float scaleFactorArray[] = {scaleFactor, scaleFactor, scaleFactor, 1f};
         float offsetArray[] = {offset, offset, offset, 0f};
         rescaleOperation(scaleFactorArray, offsetArray, hints);
     }
+
     /**
      * Use the RescaleOp class to transform an image's brightness and/or contrast
      * Argument arrays are 4 floats-wide {RED, GREEN, BLUE, ALPHA}
      *
      * @param scaleFactor scaleFactor array to adjust BufferedImage contrast
-     * @param offset offset array to adjust BufferedImage brightness
-     * @param hints the RenderingHints to use
+     * @param offset      offset array to adjust BufferedImage brightness
+     * @param hints       the RenderingHints to use
      */
-    public void rescaleOperation(float[] scaleFactor, float[] offset, RenderingHints hints) {
+    private void rescaleOperation(float[] scaleFactor, float[] offset, RenderingHints hints) {
         RescaleOp transformationOperation = new RescaleOp(scaleFactor, offset, hints);
         transformationOperation.filter(this.currentlySelectedLayer.getBufferedImage(),
                 this.currentlySelectedLayer.getBufferedImage());
         drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
         repaint();
     }
+
     /**
      * Scale the current layer's transparency by a factor
      * (0.5f means half the value, 1.0 means maintain current alpha, 2.0 means double the alpha value.)
@@ -474,10 +494,12 @@ public class DrawArea extends JComponent {
         if (transparencyFactor < 0.0f) {
             transparencyFactor = 0.0f;
         }
+
         float scaleFactorArray[] = {1f, 1f, 1f, transparencyFactor};
         float offsetArray[] = {0f, 0f, 0f, 0f};
         rescaleOperation(scaleFactorArray, offsetArray, null);
     }
+
     /**
      * Multiply the current layer's hue by some float factor.
      * (0.0 effectively means set the hue to zero, 0.5 means half hue, 2.0 means double hue)
@@ -490,6 +512,7 @@ public class DrawArea extends JComponent {
         drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
         repaint();
     }
+
     /**
      * Multiply the current layer's saturation by some float factor.
      * (0.0 effectively means set the saturation to zero, 0.5 means half saturation, 2.0 means double saturation)
@@ -502,10 +525,11 @@ public class DrawArea extends JComponent {
         drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
         repaint();
     }
+
     /**
      * Multiply the current layer's brightness by some float factor.
      * (0.0 effectively means set the brightness to zero, 0.5 means half brightness, 2.0 means double brightness)
-     *
+     * <p>
      * NOTE: This may act differently than rescaleOperation.
      *
      * @param brightnessFactor the factor to multiply current brightness levels
@@ -516,41 +540,51 @@ public class DrawArea extends JComponent {
         drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
         repaint();
     }
+
     /**
      * Multiply the current layer's HSB by some float factors.
      *
-     * @param layer the layer to transform
-     * @param hueFactor the factor to multiply current hue levels
+     * @param layer            the layer to transform
+     * @param hueFactor        the factor to multiply current hue levels
      * @param saturationFactor the factor to multiply current saturation levels
      * @param brightnessFactor the factor to multiply current brightness levels
      */
     private void transformLayerHSB(BufferedImage layer, float hueFactor, float saturationFactor, float brightnessFactor) {
+
         hueFactor = Math.abs(hueFactor);
         saturationFactor = Math.abs(saturationFactor);
         brightnessFactor = Math.abs(brightnessFactor);
+
         Color originalPointColor;
         Color newPointColor;
         float[] hsbArray;
         int alphaPreserve;
         int newRBG;
+
         for (int x = 0; x < layer.getWidth(); ++x) {
             for (int y = 0; y < layer.getHeight(); ++y) {
+
                 originalPointColor = new Color(layer.getRGB(x, y), true);
                 if (originalPointColor.getAlpha() == 0) {
                     continue;
                 }
                 alphaPreserve = originalPointColor.getAlpha();
+
                 hsbArray = Color.RGBtoHSB(originalPointColor.getRed(), originalPointColor.getGreen(),
                         originalPointColor.getBlue(), null);
                 hsbArray[0] *= hueFactor;
                 hsbArray[1] *= saturationFactor;
                 hsbArray[2] *= brightnessFactor;
+
                 // Bound HSB values
                 for (int i = 0; i < 3; ++i) {
                     hsbArray[i] = Math.max(Math.min(hsbArray[i], 1.0f), 0.0f);
                 }
+
                 newRBG = Color.HSBtoRGB(hsbArray[0], hsbArray[1], hsbArray[2]);
+
                 newPointColor = new Color(newRBG, false);
+
                 layer.setRGB(x, y, new Color(newPointColor.getRed(), newPointColor.getGreen(),
                         newPointColor.getBlue(), alphaPreserve).getRGB());
             }
