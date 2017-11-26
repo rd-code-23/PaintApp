@@ -83,7 +83,6 @@ public class AirBrushTool extends DrawingTool {
 
         dotsToDraw = (dotsToDraw >= 1) ? dotsToDraw : 1;
 
-        //get the selected layer, this assumes there is only one selected layer.
         ImageLayer selectedLayer = null;
         for (int i = 0; i < drawingLayers.size(); i++) {
             ImageLayer drawingLayer = drawingLayers.get(i);
@@ -97,7 +96,12 @@ public class AirBrushTool extends DrawingTool {
         if (selectedLayer != null) {
             selectedLayerGraphics = initLayerGraphics(selectedLayer.getBufferedImage());
             for (int i = 0; i < dotsToDraw; ++i) {
-                dot_angle = GeneratorFunctions.randomDouble(0, 2 * Math.PI);
+                dot_angle = GeneratorFunctions.randomDouble(0, 2.0 * Math.PI);
+
+                // Regenerate dot angle if it's exactly 2PI.
+                while (dot_angle == (2.0 * Math.PI)) {
+                    dot_angle = GeneratorFunctions.randomDouble(0, 2.0 * Math.PI);
+                }
                 rand_radius = GeneratorFunctions.randomInt(-dotDiameter / 2, dotDiameter / 2);
                 dotX = (int) (currentX + rand_radius * Math.sin(dot_angle));
                 dotY = (int) (currentY + rand_radius * Math.cos(dot_angle));
