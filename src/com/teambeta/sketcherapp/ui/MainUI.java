@@ -152,7 +152,7 @@ public class MainUI {
     private static final String HAND_ICON_HOVER = "hand_hover.png";
     private static final String HUE_SATURATION_ICON_DEFAULT = "hue_saturation.png";
     private static final String HUE_SATURATION_ICON_HIGHLIGHTED = "hue_saturation_highlighted.png";
-    private static final String HUE_SATURATION_ICON_HOVER = "hue_saturation_highlighted.png";
+    private static final String HUE_SATURATION_ICON_HOVER = "hue_saturation_hover.png";
     private static final String LINE_ICON_DEFAULT = "line.png";
     private static final String LINE_ICON_HIGHLIGHTED = "line_highlighted.png";
     private static final String LINE_ICON_HOVER = "line_hover.png";
