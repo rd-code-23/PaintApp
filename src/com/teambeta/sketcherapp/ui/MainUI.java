@@ -938,13 +938,14 @@ public class MainUI {
             updateSizeSlider();
             updateNorthEastPanel();
         });
+        /*
         //TODO FIX
         shortcuts.addKeyBinding(KeyEvent.VK_C, false, false, true, Shortcuts.COLOR_CHOOSER_TOOL_SHORTCUT, (evt) -> {
             // colorPanel.setVisible(true);
             Color color = null;
             color = JColorChooser.showDialog(null, "Select a Color", color);
             updateSizeSlider();
-        });
+        });*/
         shortcuts.addKeyBinding(KeyEvent.VK_D, true, false, false, Shortcuts.DNA_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = dnaTool;
             setHighlightedToDefault();
@@ -1131,14 +1132,14 @@ public class MainUI {
             updateSizeSlider();
             updateNorthEastPanel();
         });
-
+/*
         //TODO fix
         shortcuts.addKeyBinding(shortcuts.getColorChooserToolKeyCode(), shortcuts.isCtrl_colorChooserTool(), shortcuts.isShift_colorChooserTool(), shortcuts.isAlt_colorChooserTool(), Shortcuts.COLOR_CHOOSER_TOOL_SHORTCUT, (evt) -> {
             Color color = null;
             color = JColorChooser.showDialog(null, "Select a Color", color);
 
             updateSizeSlider();
-        });
+        });*/
         shortcuts.addKeyBinding(shortcuts.getDnaToolKeyCode(), shortcuts.isCtrl_dnaTool(), shortcuts.isShift_dnaTool(), shortcuts.isAlt_dnaTool(), Shortcuts.DNA_TOOL_SHORTCUT, (evt) -> {
             selectedDrawingTool = dnaTool;
             setHighlightedToDefault();
@@ -1287,9 +1288,9 @@ public class MainUI {
             updateNorthEastPanel();
         });
 
-        shortcuts.addKeyBinding(shortcuts.getZoomToolKeyCode(), shortcuts.isCtrl_zoomTool(), shortcuts.isShift_zoomTool(), shortcuts.isAlt_zoomTool(), Shortcuts.ZOOM_TOOL_SHORTCUT, (evt) -> {
+        /*shortcuts.addKeyBinding(shortcuts.getZoomToolKeyCode(), shortcuts.isCtrl_zoomTool(), shortcuts.isShift_zoomTool(), shortcuts.isAlt_zoomTool(), Shortcuts.ZOOM_TOOL_SHORTCUT, (evt) -> {
 
-        });
+        });*/
     }
 
     /**
