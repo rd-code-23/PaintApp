@@ -183,6 +183,11 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                     );
                     drawingLayers.add(0, newImageLayer);
                     listModel.add(0, newImageLayer);
+                    drawArea.setCurrentlySelectedLayer(newImageLayer);
+                    listOfLayers.setSelectedIndex(0);
+                    listOfLayers.repaint();
+                    drawArea.redrawLayers();
+                    drawArea.repaint();
                 }
             }
         };
