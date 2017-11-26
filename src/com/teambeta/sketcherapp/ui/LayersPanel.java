@@ -181,8 +181,8 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                     ImageLayer newImageLayer = new ImageLayer(new BufferedImage(
                             drawArea.getWidth(), drawArea.getHeight(), BufferedImage.TYPE_INT_ARGB)
                     );
-                    drawingLayers.add(newImageLayer);
-                    listModel.addElement(newImageLayer);
+                    drawingLayers.add(0, newImageLayer);
+                    listModel.add(0, newImageLayer);
                 }
             }
         };
@@ -268,8 +268,8 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                         Graphics newImageLayerGraphics = newImageLayer.getBufferedImage().getGraphics();
                         newImageLayerGraphics.drawImage(currentlySelectedLayer.getBufferedImage(),
                                 0, 0, null);
-                        drawingLayers.add(newImageLayer);
-                        listModel.addElement(newImageLayer);
+                        drawingLayers.add(0,newImageLayer);
+                        listModel.add(0,newImageLayer);
                         listOfLayers.repaint();
                         drawArea.redrawLayers();
                         drawArea.repaint();
