@@ -24,7 +24,7 @@ public class AirBrushTool extends DrawingTool {
     private int dotY;
     private static final double DOT_WIDTH_RATIO = 0.50;
     private static final int DEFAULT_DOT_DIAMETER = 20;
-    private static final int DEFAULT_DOTS_TO_DRAW = 10;
+    private static final int DEFAULT_DOTS_TO_DRAW = 5;
     private static final int DEFAULT_STOKE_VALUE = 10;
 
     /**
