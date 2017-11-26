@@ -216,10 +216,13 @@ public class DB_KBShortcuts {
 
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
 
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            return false;
         }
 
-        return false;
     }
 
     /**

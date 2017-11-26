@@ -94,17 +94,21 @@ public class MainUI {
     private static ColorChooser colorChooser;
     private WidthChanger widthChanger;
     private TextToolSettings textToolSettings;
-    private ShortcutDialog keboardShortCutPanel;
+    private ShortcutDialog keyboardShortCutPanel;
     private Shortcuts shortcuts;
     private ImportExport importExport;
     private JPanel canvasTools;
     private DB_KBShortcuts db_kbShortcuts;
     private JButton highlightedButton;
     private BrightnessContrastMenu brightnessContrastMenu;
+<<<<<<< src/com/teambeta/sketcherapp/ui/MainUI.java
     private SaturationMenu saturationMenu;
     private GreyscaleMenu greyscaleMenu;
     private NoiseGeneratorMenu noiseGeneratorMenu;
     private CheckerboardMenu checkerboardMenu;
+=======
+    private HueSaturationMenu hueSaturationMenu;
+>>>>>>> src/com/teambeta/sketcherapp/ui/MainUI.java
     private LayersPanel layersPanel;
     private PrintCanvas printCanvas;
     private MouseCursor mouseCursor;
@@ -316,6 +320,7 @@ public class MainUI {
                 northPanel.validate();
                 updateSizeSlider();
                 updateFillState();
+                hueSaturationMenu.showWindow();
             }
             /*
                Review 1: Default to hiding if the tool isn't the text tool. Use direct checks to see if the current tool
@@ -466,10 +471,13 @@ public class MainUI {
 
         importExport = new ImportExport(drawArea, this);
         brightnessContrastMenu = new BrightnessContrastMenu(drawArea);
-        saturationMenu = new SaturationMenu(drawArea);
-        greyscaleMenu = new GreyscaleMenu(drawArea);
-        noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
-        checkerboardMenu = new CheckerboardMenu(drawArea);
+
+        hueSaturationMenu = new HueSaturationMenu(drawArea);
+        GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
+        NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
+        CheckerboardMenu checkerboardMenu = new CheckerboardMenu(drawArea);
+
+
         initializeDrawArea(mainContent);
         initializeButtons();
         initializeCanvasTools();
@@ -482,10 +490,12 @@ public class MainUI {
         //setting up the shortcuts and database
         shortcuts = new Shortcuts(canvasTools, this);
         db_kbShortcuts = new DB_KBShortcuts(shortcuts);
+
         keboardShortCutPanel = new ShortcutDialog(this, shortcuts);
         printCanvas = new PrintCanvas(drawArea, this);
-        MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, saturationMenu, brightnessContrastMenu,
-                noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel, printCanvas);
+        keyboardShortCutPanel = new ShortcutDialog(this, shortcuts);
+        MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, hueSaturationMenu, brightnessContrastMenu,
+                noiseGeneratorMenu, checkerboardMenu, keyboardShortCutPanel, printCanvas);
 
         northPanel.add(menuUI, BorderLayout.NORTH);
         initializeToolSettings(northPanel);
