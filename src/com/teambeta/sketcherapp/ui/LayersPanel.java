@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.net.URL;
 import java.util.LinkedList;
 
 public class LayersPanel extends JPanel implements ListSelectionListener {
@@ -46,32 +47,31 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private JButton layerUpButton;
     private JButton layerDownButton;
 
-    private static final String RES_PATH = System.getProperty("user.dir") + File.separator + "src" +
-            File.separator + "res";
-    private static final String ADD_LAYER_ICON_DEFAULT = RES_PATH + File.separator + "layer.png";
-    private static final String ADD_LAYER_ICON_HIGHLIGHTED = RES_PATH + File.separator + "layer_highlighted.png";
-    private static final String ADD_LAYER_ICON_HOVER = RES_PATH + File.separator + "layer_hover.png";
-    private static final String DELETE_LAYER_ICON_DEFAULT = RES_PATH + File.separator + "delete_layer.png";
-    private static final String DELETE_LAYER_ICON_HIGHLIGHTED = RES_PATH + File.separator +
-            "delete_layer_highlighted.png";
-    private static final String DELETE_LAYER_ICON_HOVER = RES_PATH + File.separator + "delete_layer_hover.png";
-    private static final String RENAME_LAYER_ICON_DEFAULT = RES_PATH + File.separator + "rename_layer.png";
-    private static final String RENAME_LAYER_ICON_HIGHLIGHTED = RES_PATH + File.separator +
-            "rename_layer_highlighted.png";
-    private static final String RENAME_LAYER_ICON_HOVER = RES_PATH + File.separator + "rename_layer_hover.png";
-    private static final String DUPLICATE_LAYER_ICON_DEFAULT = RES_PATH + File.separator + "duplicate_layer.png";
-    private static final String DUPLICATE_LAYER_ICON_HIGHLIGHTED = RES_PATH + File.separator +
-            "duplicate_layer_highlighted.png";
-    private static final String DUPLICATE_LAYER_ICON_HOVER = RES_PATH + File.separator + "duplicate_layer_hover.png";
-    private static final String HIDE_LAYER_ICON_DEFAULT = RES_PATH + File.separator + "hide_layer.png";
-    private static final String HIDE_LAYER_ICON_HIGHLIGHTED = RES_PATH + File.separator + "hide_layer_highlighted.png";
-    private static final String HIDE_LAYER_ICON_HOVER = RES_PATH + File.separator + "hide_layer_hover.png";
-    private static final String LAYER_UP_ICON_DEFAULT = RES_PATH + File.separator + "layer_up.png";
-    private static final String LAYER_UP_ICON_HIGHLIGHTED = RES_PATH + File.separator + "layer_up_highlighted.png";
-    private static final String LAYER_UP_ICON_HOVER = RES_PATH + File.separator + "layer_up_hover.png";
-    private static final String LAYER_DOWN_ICON_DEFAULT = RES_PATH + File.separator + "layer_down.png";
-    private static final String LAYER_DOWN_ICON_HIGHLIGHTED = RES_PATH + File.separator + "layer_down_highlighted.png";
-    private static final String LAYER_DOWN_ICON_HOVER = RES_PATH + File.separator + "layer_down_hover.png";
+    private static final String ADD_LAYER_ICON_DEFAULT = "layer.png";
+    private static final String ADD_LAYER_ICON_HIGHLIGHTED = "layer_highlighted.png";
+    private static final String ADD_LAYER_ICON_HOVER = "layer_hover.png";
+    private static final String DELETE_LAYER_ICON_DEFAULT = "delete_layer.png";
+    private static final String DELETE_LAYER_ICON_HIGHLIGHTED = "delete_layer_highlighted.png";
+    private static final String DELETE_LAYER_ICON_HOVER = "delete_layer_hover.png";
+    private static final String RENAME_LAYER_ICON_DEFAULT = "rename_layer.png";
+    private static final String RENAME_LAYER_ICON_HIGHLIGHTED = "rename_layer_highlighted.png";
+    private static final String RENAME_LAYER_ICON_HOVER = "rename_layer_hover.png";
+    private static final String DUPLICATE_LAYER_ICON_DEFAULT = "duplicate_layer.png";
+    private static final String DUPLICATE_LAYER_ICON_HIGHLIGHTED = "duplicate_layer_highlighted.png";
+    private static final String DUPLICATE_LAYER_ICON_HOVER = "duplicate_layer_hover.png";
+    private static final String HIDE_LAYER_ICON_DEFAULT = "hide_layer.png";
+    private static final String HIDE_LAYER_ICON_HIGHLIGHTED = "hide_layer_highlighted.png";
+    private static final String HIDE_LAYER_ICON_HOVER = "hide_layer_hover.png";
+    private static final String LAYER_UP_ICON_DEFAULT = "layer_up.png";
+    private static final String LAYER_UP_ICON_HIGHLIGHTED = "layer_up_highlighted.png";
+    private static final String LAYER_UP_ICON_HOVER = "layer_up_hover.png";
+    private static final String LAYER_DOWN_ICON_DEFAULT = "layer_down.png";
+    private static final String LAYER_DOWN_ICON_HIGHLIGHTED = "layer_down_highlighted.png";
+    private static final String LAYER_DOWN_ICON_HOVER = "layer_down_hover.png";
+
+    private URL getIconFromRES(String name) {
+        return getClass().getClassLoader().getResource(name);
+    }
 
     /**
      * Return The JList of ImageLayers stored in the LayersPanel
@@ -365,7 +365,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
             @Override
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
-                button.setIcon(new ImageIcon(iconHighlightedPath));
+                button.setIcon(new ImageIcon(getIconFromRES(iconHighlightedPath)));
             }
 
             @Override
@@ -374,22 +374,22 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                 Point mousePoint = new java.awt.Point(e.getLocationOnScreen());
                 SwingUtilities.convertPointFromScreen(mousePoint, e.getComponent());
                 if (e.getComponent().contains(mousePoint)) {
-                    button.setIcon(new ImageIcon(iconHoverPath));
+                    button.setIcon(new ImageIcon(getIconFromRES(iconHoverPath)));
                 } else {
-                    button.setIcon(new ImageIcon(iconDefaultPath));
+                    button.setIcon(new ImageIcon(getIconFromRES(iconDefaultPath)));
                 }
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
                 super.mouseEntered(e);
-                button.setIcon(new ImageIcon(iconHoverPath));
+                button.setIcon(new ImageIcon(getIconFromRES(iconHoverPath)));
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 super.mouseExited(e);
-                button.setIcon(new ImageIcon(iconDefaultPath));
+                button.setIcon(new ImageIcon(getIconFromRES(iconDefaultPath)));
             }
         });
     }
@@ -402,7 +402,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
      * @return created JButton.
      */
     private JButton createButton(String iconPath, String toolTipText) {
-        JButton button = new ToolButton(new ImageIcon(iconPath));
+        JButton button = new ToolButton(new ImageIcon(getIconFromRES(iconPath)));
         button.setBorderPainted(false);
         button.setFocusPainted(false);
         button.setContentAreaFilled(false);
