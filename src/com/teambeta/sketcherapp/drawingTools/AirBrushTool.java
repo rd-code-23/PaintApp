@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
 /**
- * The BrushTool class implements the drawing behavior for when the Brush tool has been selected
+ * The AirBrushTool class implements the drawing behavior for when the Air Brush tool has been selected
  */
 public class AirBrushTool extends DrawingTool {
 
