@@ -177,12 +177,24 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         ActionListener addLayerButtonActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
+                // Push new layer "above" current layer
+                int selectedIndex = listOfLayers.getSelectedIndex();
+                // If no layers are selected, push to the top
+                if (selectedIndex == -1) {
+                    selectedIndex = 0;
+                }
                 if (drawingLayers.size() < MAX_NUM_OF_LAYERS) {
                     ImageLayer newImageLayer = new ImageLayer(new BufferedImage(
                             drawArea.getWidth(), drawArea.getHeight(), BufferedImage.TYPE_INT_ARGB)
                     );
-                    drawingLayers.add(0, newImageLayer);
-                    listModel.add(0, newImageLayer);
+                    drawingLayers.add(selectedIndex, newImageLayer);
+                    listModel.add(selectedIndex, newImageLayer);
+                    drawArea.setCurrentlySelectedLayer(newImageLayer);
+                    listOfLayers.setSelectedIndex(selectedIndex);
+                    listOfLayers.repaint();
+                    drawArea.redrawLayers();
+                    drawArea.repaint();
                 }
             }
         };
@@ -257,7 +269,8 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         ActionListener duplicateLayerButtonActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (listOfLayers.getSelectedIndex() != -1) {
+                int selectedIndex = listOfLayers.getSelectedIndex();
+                if (selectedIndex != -1) {
                     if (drawingLayers.size() < MAX_NUM_OF_LAYERS) {
                         ImageLayer newImageLayer = new ImageLayer(new BufferedImage(
                                 drawArea.getWidth(),
@@ -268,9 +281,11 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                         Graphics newImageLayerGraphics = newImageLayer.getBufferedImage().getGraphics();
                         newImageLayerGraphics.drawImage(currentlySelectedLayer.getBufferedImage(),
                                 0, 0, null);
-                        drawingLayers.add(0,newImageLayer);
-                        listModel.add(0,newImageLayer);
+                        drawingLayers.add(selectedIndex, newImageLayer);
+                        listModel.add(selectedIndex, newImageLayer);
+                        listOfLayers.setSelectedIndex(selectedIndex);
                         listOfLayers.repaint();
+                        drawArea.setCurrentlySelectedLayer(newImageLayer);
                         drawArea.redrawLayers();
                         drawArea.repaint();
                     }
