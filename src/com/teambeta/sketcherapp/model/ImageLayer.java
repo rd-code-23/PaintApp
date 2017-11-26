@@ -11,7 +11,7 @@ public class ImageLayer {
     private boolean isSelected;
     private String name;
     private static int layerNumber = 1;
-    private final static String HIDDEN = "   [Hidden]";
+    private final static String HIDDEN = "  [Hidden]";
 
     /**
      * Constructor.
@@ -99,7 +99,7 @@ public class ImageLayer {
     @Override
     public String toString() {
         if (!isVisible) {
-            return name + HIDDEN;
+            return HIDDEN + " " + name;
         } else {
             return name;
         }
