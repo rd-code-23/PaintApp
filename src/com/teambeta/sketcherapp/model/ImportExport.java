@@ -75,6 +75,7 @@ public class ImportExport {
 
         if (retrieval == JFileChooser.APPROVE_OPTION) {
             File selectedFile = fileChooser.getSelectedFile();
+        
             BufferedImage image = null;
             File imageFile = new File(selectedFile.getAbsolutePath());
             try {
