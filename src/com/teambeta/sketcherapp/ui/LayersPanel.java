@@ -180,6 +180,10 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
 
                 // Push new layer "above" current layer
                 int selectedIndex = listOfLayers.getSelectedIndex();
+                // If no layers are selected, push to the top
+                if (selectedIndex == -1) {
+                    selectedIndex = 0;
+                }
                 if (drawingLayers.size() < MAX_NUM_OF_LAYERS) {
                     ImageLayer newImageLayer = new ImageLayer(new BufferedImage(
                             drawArea.getWidth(), drawArea.getHeight(), BufferedImage.TYPE_INT_ARGB)
