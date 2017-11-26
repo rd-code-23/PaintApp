@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 
 /**
- * The BrushTool class implements the drawing behavior for when the Brush tool has been selected
+ * The AirBrushTool class implements the drawing behavior for when the Air Brush tool has been selected
  */
 public class AirBrushTool extends DrawingTool {
 
@@ -22,9 +22,9 @@ public class AirBrushTool extends DrawingTool {
     private int dotDiameter;
     private int dotX;
     private int dotY;
-    private static final double DOT_WIDTH_RATIO = 0.50;
+    private static final double DOT_WIDTH_RATIO = 1.0 / 3.0;
     private static final int DEFAULT_DOT_DIAMETER = 20;
-    private static final int DEFAULT_DOTS_TO_DRAW = 10;
+    private static final int DEFAULT_DOTS_TO_DRAW = 5;
     private static final int DEFAULT_STOKE_VALUE = 10;
 
     /**
@@ -73,7 +73,16 @@ public class AirBrushTool extends DrawingTool {
         double dot_angle;
         double rand_radius;
 
-        //get the selected layer, this assumes there is only one selected layer.
+        dotsToDraw = (int) (
+                DEFAULT_DOTS_TO_DRAW
+                        * (
+                            (Math.PI * Math.pow( ((double) dotDiameter / 2.0), 2.0)) /
+                            (Math.PI * Math.pow( ((double) DEFAULT_DOT_DIAMETER / 2.0), 2.0 ))
+                          )
+        );
+
+        dotsToDraw = (dotsToDraw >= 1) ? dotsToDraw : 1;
+
         ImageLayer selectedLayer = null;
         for (int i = 0; i < drawingLayers.size(); i++) {
             ImageLayer drawingLayer = drawingLayers.get(i);
@@ -87,7 +96,12 @@ public class AirBrushTool extends DrawingTool {
         if (selectedLayer != null) {
             selectedLayerGraphics = initLayerGraphics(selectedLayer.getBufferedImage());
             for (int i = 0; i < dotsToDraw; ++i) {
-                dot_angle = GeneratorFunctions.randomDouble(0, 2 * Math.PI);
+                dot_angle = GeneratorFunctions.randomDouble(0, 2.0 * Math.PI);
+
+                // Regenerate dot angle if it's exactly 2PI.
+                while (dot_angle == (2.0 * Math.PI)) {
+                    dot_angle = GeneratorFunctions.randomDouble(0, 2.0 * Math.PI);
+                }
                 rand_radius = GeneratorFunctions.randomInt(-dotDiameter / 2, dotDiameter / 2);
                 dotX = (int) (currentX + rand_radius * Math.sin(dot_angle));
                 dotY = (int) (currentY + rand_radius * Math.cos(dot_angle));
