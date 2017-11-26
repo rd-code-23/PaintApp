@@ -318,7 +318,6 @@ public class MainUI {
                 northPanel.validate();
                 updateSizeSlider();
                 updateFillState();
-                hueSaturationMenu.showWindow();
             }
             /*
                Review 1: Default to hiding if the tool isn't the text tool. Use direct checks to see if the current tool
