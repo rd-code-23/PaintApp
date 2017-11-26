@@ -9,6 +9,7 @@ import com.teambeta.sketcherapp.model.ToolButton;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -18,6 +19,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+
+import static javax.swing.BorderFactory.createEmptyBorder;
 
 /**
  * Main UI class to wrap all GUI elements together.
@@ -468,7 +471,7 @@ public class MainUI {
         initializeToolSettings(northPanel);
         initializeWidthChanger();
 
-        JPanel westPanel = initializeWestPanel();
+        JScrollPane westPanel = initializeWestPanel();
         mainContent.add(westPanel, BorderLayout.WEST);
 
         JPanel colorPanel = initializeColorPanel();
@@ -746,17 +749,24 @@ public class MainUI {
     }
 
     /**
-     * Set up west panel.
+     * Set up west panel with a scroll bar (if needed).
      *
-     * @return westPanel of the application.
+     * @return scrollable west panel of the application.
      */
-    private JPanel initializeWestPanel() {
+    private JScrollPane initializeWestPanel() {
         JPanel westPanel = new JPanel();
         westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
-        westPanel.setPreferredSize(new Dimension(WEST_PANEL_WIDTH, 0));
+        westPanel.setMaximumSize(new Dimension(WEST_PANEL_WIDTH, Integer.MAX_VALUE));
         westPanel.setBackground(Color.DARK_GRAY);
         westPanel.add(canvasTools);
-        return westPanel;
+
+        JScrollPane scrollPaneWestPanel = new JScrollPane(westPanel);
+        scrollPaneWestPanel.setPreferredSize(new Dimension(WEST_PANEL_WIDTH, 0));
+        scrollPaneWestPanel.setBorder(createEmptyBorder());
+        scrollPaneWestPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPaneWestPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        return scrollPaneWestPanel;
     }
 
     /**
