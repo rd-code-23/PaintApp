@@ -485,13 +485,13 @@ public class MainUI {
             }
         });
 
-//        if (db_kbShortcuts.isTableExists()) {
-//            generateDBDefaultKeyBindings();
-//            db_kbShortcuts.generateDBKeyBindings();
-//        } else {
-//            db_kbShortcuts.createTable();
-//            generateDefaultKeyBindings();
-//        }
+        if (db_kbShortcuts.isTableExists()) {
+            generateDBDefaultKeyBindings();
+            db_kbShortcuts.generateDBKeyBindings();
+        } else {
+            db_kbShortcuts.createTable();
+            generateDefaultKeyBindings();
+        }
     }
 
     /**
