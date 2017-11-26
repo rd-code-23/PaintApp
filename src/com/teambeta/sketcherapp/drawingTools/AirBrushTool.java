@@ -73,6 +73,16 @@ public class AirBrushTool extends DrawingTool {
         double dot_angle;
         double rand_radius;
 
+        dotsToDraw = (int) (
+                DEFAULT_DOTS_TO_DRAW
+                        * (
+                            (Math.PI * Math.pow( ((double) dotDiameter / 2.0), 2.0)) /
+                            (Math.PI * Math.pow( ((double) DEFAULT_DOT_DIAMETER / 2.0), 2.0 ))
+                          )
+        );
+
+        dotsToDraw = (dotsToDraw >= 1) ? dotsToDraw : 1;
+
         //get the selected layer, this assumes there is only one selected layer.
         ImageLayer selectedLayer = null;
         for (int i = 0; i < drawingLayers.size(); i++) {
