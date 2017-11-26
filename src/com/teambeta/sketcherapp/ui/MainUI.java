@@ -189,7 +189,7 @@ public class MainUI {
                     drawArea.clear();
                 }
             } else if (e.getSource() == brushToolButton) {
-                widthChanger.showPanel();
+                widthChanger.showTextPanel();
                 selectedDrawingTool = brushTool;
                 setHighlightedToDefault();
                 highlightedButton = brushToolButton;
@@ -197,12 +197,14 @@ public class MainUI {
                 updateSizeSlider();
                 drawArea.setColor(brushTool.getColor());
             } else if (e.getSource() == fanToolButton) {
+                widthChanger.showTextPanel();
                 selectedDrawingTool = fanTool;
                 setHighlightedToDefault();
                 highlightedButton = fanToolButton;
                 fanToolButton.setIcon(new ImageIcon(FAN_ICON_HIGHLIGHTED));
                 updateSizeSlider();
             } else if (e.getSource() == lineToolButton) {
+                widthChanger.showTextPanel();
                 selectedDrawingTool = lineTool;
                 setHighlightedToDefault();
                 highlightedButton = lineToolButton;
@@ -210,6 +212,7 @@ public class MainUI {
                 updateSizeSlider();
                 drawArea.setColor(lineTool.getColor());
             } else if (e.getSource() == rectangleToolButton) {
+                widthChanger.showTextPanel();
                 selectedDrawingTool = rectangleTool;
                 setHighlightedToDefault();
                 highlightedButton = rectangleToolButton;
@@ -222,6 +225,7 @@ public class MainUI {
                 widthChanger.setCurrentWidthValue(widthChanger.getJTextFieldValue());
                 drawArea.setColor(brushTool.getColor());
             } else if (e.getSource() == ellipseToolButton) {
+                widthChanger.showTextPanel();
                 selectedDrawingTool = ellipseTool;
                 setHighlightedToDefault();
                 highlightedButton = ellipseToolButton;
@@ -230,35 +234,41 @@ public class MainUI {
                 updateFillState(); // Tool supports filling
                 drawArea.setColor(ellipseTool.getColor());
             } else if (e.getSource() == eraserToolButton) {
+                widthChanger.showTextPanel();
                 selectedDrawingTool = eraserTool;
                 setHighlightedToDefault();
                 highlightedButton = eraserToolButton;
                 eraserToolButton.setIcon(new ImageIcon(ERASER_ICON_HIGHLIGHTED));
                 updateSizeSlider();
             } else if (e.getSource() == paintBucketToolButton) {
+                widthChanger.hideTextPanel();
                 selectedDrawingTool = paintBucketTool;
                 setHighlightedToDefault();
                 highlightedButton = paintBucketToolButton;
                 paintBucketToolButton.setIcon(new ImageIcon(BUCKET_ICON_HIGHLIGHTED));
                 updateSizeSlider();
             } else if (e.getSource() == eyeDropperToolButton) {
+                widthChanger.hideTextPanel();
                 selectedDrawingTool = eyeDropperTool;
                 setHighlightedToDefault();
                 highlightedButton = eyeDropperToolButton;
                 eyeDropperToolButton.setIcon(new ImageIcon(EYEDROP_ICON_HIGHLIGHTED));
             } else if (e.getSource() == celticKnotToolButton) {
+                widthChanger.showTextPanel();
                 selectedDrawingTool = celticKnotTool;
                 setHighlightedToDefault();
                 highlightedButton = celticKnotToolButton;
                 celticKnotToolButton.setIcon(new ImageIcon(CELTIC_ICON_HIGHLIGHTED));
                 updateSizeSlider();
             } else if (e.getSource() == dnaToolButton) {
+                widthChanger.showTextPanel();
                 selectedDrawingTool = dnaTool;
                 setHighlightedToDefault();
                 highlightedButton = dnaToolButton;
                 dnaToolButton.setIcon(new ImageIcon(DNA_ICON_HIGHLIGHTED));
                 updateSizeSlider();
             } else if (e.getSource() == airBrushToolButton) {
+                widthChanger.showTextPanel();
                 selectedDrawingTool = airBrushTool;
                 setHighlightedToDefault();
                 highlightedButton = airBrushToolButton;
@@ -290,6 +300,7 @@ public class MainUI {
                 widthChanger.setFill(!widthChanger.isFill());
                 selectedDrawingTool.setFillState(widthChanger.isFill());
             } else if (e.getSource() == triangleToolButton) {
+                widthChanger.showTextPanel();
                 selectedDrawingTool = triangleTool;
                 setHighlightedToDefault();
                 highlightedButton = triangleToolButton;
@@ -297,6 +308,7 @@ public class MainUI {
                 updateSizeSlider();
                 updateFillState();
             } else if (e.getSource() == spiralToolButton) {
+                widthChanger.showTextPanel();
                 selectedDrawingTool = spiralTool;
                 setHighlightedToDefault();
                 highlightedButton = spiralToolButton;
@@ -308,13 +320,8 @@ public class MainUI {
                 hueSaturationMenu.showWindow();
             }
 
-            /*
-               Review 1: Default to hiding if the tool isn't the text tool. Use direct checks to see if the current tool
-               is allowed to use the font dropdown menu. JButton objects currently are the only ones allowed to hide.
-               Subclass JButton if we are going to use them for other purposes. Might as well add helper methods to this
-               future subclass.
-             */
             if (e.getSource() == textToolButton) {
+                widthChanger.showTextPanel();
                 selectedDrawingTool = textTool;
                 setHighlightedToDefault();
                 highlightedButton = textToolButton;
