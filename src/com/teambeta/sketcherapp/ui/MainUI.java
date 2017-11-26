@@ -1,9 +1,8 @@
 package com.teambeta.sketcherapp.ui;
 
-import com.teambeta.sketcherapp.Database.DB_KBShortcuts;
+
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.ImportExport;
-import com.teambeta.sketcherapp.model.Shortcuts;
 import com.teambeta.sketcherapp.model.ToolButton;
 
 import javax.swing.*;
@@ -100,11 +99,11 @@ public class MainUI {
     private static ColorChooser colorChooser;
     private WidthChanger widthChanger;
     private TextToolSettings textToolSettings;
-    private ShortcutDialog keboardShortCutPanel;
-    private Shortcuts shortcuts;
+
+
     private ImportExport importExport;
     private JPanel canvasTools;
-    private DB_KBShortcuts db_kbShortcuts;
+
     private JButton highlightedButton;
     private BrightnessContrastMenu brightnessContrastMenu;
     private SaturationMenu saturationMenu;
@@ -456,12 +455,10 @@ public class MainUI {
         northPanel.setLayout(new BorderLayout());
 
         //setting up the shortcuts and database
-        shortcuts = new Shortcuts(canvasTools, this);
-        db_kbShortcuts = new DB_KBShortcuts(shortcuts);
-        keboardShortCutPanel = new ShortcutDialog(this, shortcuts);
+
 
         MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, saturationMenu, brightnessContrastMenu,
-                noiseGeneratorMenu, checkerboardMenu, keboardShortCutPanel);
+                noiseGeneratorMenu, checkerboardMenu);
 
 
         northPanel.add(menuUI, BorderLayout.NORTH);
@@ -485,13 +482,7 @@ public class MainUI {
             }
         });
 
-        if (db_kbShortcuts.isTableExists()) {
-            generateDBDefaultKeyBindings();
-            db_kbShortcuts.generateDBKeyBindings();
-        } else {
-            db_kbShortcuts.createTable();
-            generateDefaultKeyBindings();
-        }
+
     }
 
     /**
@@ -843,177 +834,6 @@ public class MainUI {
         return drawArea;
     }
 
-    /**
-     * generates the default key binding for shortcut keys
-     */
-    public void generateDefaultKeyBindings() {
-
-        shortcuts.addKeyBinding(KeyEvent.VK_C, true, false, false,
-                Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
-                    drawArea.clear();
-                });
-
-        shortcuts.addKeyBinding(KeyEvent.VK_O, true, false, false,
-                Shortcuts.EXPORT_SHORTCUT, (evt) -> {
-                    importExport.exportImage();
-                });
-
-        shortcuts.addKeyBinding(KeyEvent.VK_I, true, false, false,
-                Shortcuts.IMPORT_SHORTCUT, (evt) -> {
-                    importExport.importImage();
-                });
-
-        shortcuts.addKeyBinding(KeyEvent.VK_B, true, false, false,
-                Shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
-                    selectedDrawingTool = brushTool;
-                    setHighlightedToDefault();
-                    highlightedButton = brushToolButton;
-                    brushToolButton.setIcon(new ImageIcon(BRUSH_ICON_HIGHLIGHTED));
-                    updateSizeSlider();
-                });
-
-        shortcuts.addKeyBinding(KeyEvent.VK_L, true, false, false,
-                Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
-                    selectedDrawingTool = lineTool;
-                    setHighlightedToDefault();
-                    highlightedButton = lineToolButton;
-                    lineToolButton.setIcon(new ImageIcon(LINE_ICON_HIGHLIGHTED));
-                    updateSizeSlider();
-                });
-/*
-        addKeyBinding(editorPanel, KeyEvent.VK_R, true, false, false, "RECT TOOL", (evt) -> {
-            selectedDrawingTool = rectangleTool;
-            updateFillState(); // Tool supports filling
-            updateSizeSlider();
-        });
-        addKeyBinding(editorPanel, KeyEvent.VK_E, true, false, false, "ELIPSE TOOL", (evt) -> {
-            selectedDrawingTool = ellipseTool;
-            updateSizeSlider();
-        });
-        addKeyBinding(editorPanel, KeyEvent.VK_Q, true, false, false, "ELIPSE TOOL", (evt) -> {
-            selectedDrawingTool = ellipseTool;
-            updateSizeSlider();
-            updateFillState(); // Tool supports filling
-        });
-        addKeyBinding(editorPanel, KeyEvent.VK_E, true, false, false, "ERASER TOOL", (evt) -> {
-            selectedDrawingTool = eraserTool;
-            updateSizeSlider();
-        });
-        addKeyBinding(editorPanel, KeyEvent.VK_T, true, false, false, "TEXT TOOL", (evt) -> {
-            selectedDrawingTool = textTool;
-            updateSizeSlider();
-        });
-        addKeyBinding(editorPanel, KeyEvent.VK_P, true, false, false, "PAINTBUCKET TOOL", (evt) -> {
-            selectedDrawingTool = paintBucketTool;
-            updateSizeSlider();
-        });
-        addKeyBinding(editorPanel, KeyEvent.VK_F, true, false, false, "FAN TOOL", (evt) -> {
-            selectedDrawingTool = fanTool;
-            updateSizeSlider();
-        });
-        addKeyBinding(editorPanel, KeyEvent.VK_C, false, false, false, "CELTIC TOOL", (evt) -> {
-            selectedDrawingTool = celticKnotTool;
-            updateSizeSlider();
-        });
-        addKeyBinding(editorPanel, KeyEvent.VK_D, true, false, false, "DNA TOOL", (evt) -> {
-            selectedDrawingTool = dnaTool;
-            updateSizeSlider();
-        });
-        addKeyBinding(editorPanel, KeyEvent.VK_N, true, false, false, "EYE TOOL", (evt) -> {
-            selectedDrawingTool = eyeDropperTool;
-            updateSizeSlider();
-        });
-        addKeyBinding(editorPanel, KeyEvent.VK_A, true, false, false, "AIRBRUSH TOOL", (evt) -> {
-            selectedDrawingTool = airBrushTool;
-            updateSizeSlider();
-        });*/
-    }
-
-    /**
-     * Gets the key binding for the shortcuts from the database.
-     */
-    private void generateDBDefaultKeyBindings() {
-
-        shortcuts.addKeyBinding(Shortcuts.getClearToolKeyCode(), Shortcuts.isAlt_clearTool(),
-                Shortcuts.isShift_clearTool(), Shortcuts.isAlt_clearTool(), Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
-                    drawArea.clear();
-                });
-
-        shortcuts.addKeyBinding(shortcuts.getExportKeyCode(), shortcuts.isCtrl_export(), shortcuts.isShift_export(),
-                shortcuts.isAlt_export(), Shortcuts.EXPORT_SHORTCUT, (evt) -> {
-                    importExport.exportImage();
-                });
-
-        shortcuts.addKeyBinding(shortcuts.getImportKeyCode(), shortcuts.isCtrl_import(), shortcuts.isShift_import(),
-                shortcuts.isAlt_import(), Shortcuts.IMPORT_SHORTCUT, (evt) -> {
-                    importExport.importImage();
-                });
-
-        shortcuts.addKeyBinding(shortcuts.getBrushToolKeyCode(), shortcuts.isCtrl_brushTool(),
-                shortcuts.isShift_brushTool(), shortcuts.isAlt_brushTool(), shortcuts.BRUSH_TOOL_SHORTCUT, (evt) -> {
-                    selectedDrawingTool = brushTool;
-                    setHighlightedToDefault();
-                    highlightedButton = brushToolButton;
-                    brushToolButton.setIcon(new ImageIcon(BRUSH_ICON_HIGHLIGHTED));
-                    updateSizeSlider();
-                });
-
-        shortcuts.addKeyBinding(shortcuts.getLineToolKeyCode(), shortcuts.isCtrl_lineTool(),
-                shortcuts.isShift_lineTool(), shortcuts.isAlt_lineTool(), Shortcuts.LINE_TOOL_SHORTCUT, (evt) -> {
-                    selectedDrawingTool = lineTool;
-                    setHighlightedToDefault();
-                    highlightedButton = lineToolButton;
-                    lineToolButton.setIcon(new ImageIcon(LINE_ICON_HIGHLIGHTED));
-                    updateSizeSlider();
-                });
-/*
-        addKeyBinding(editorPanel, KeyEvent.VK_R, true, false, false, "RECT TOOL", (evt) -> {
-            selectedDrawingTool = rectangleTool;
-            updateFillState(); // Tool supports filling
-            updateSizeSlider();
-        });
-        addKeyBinding(editorPanel, KeyEvent.VK_E, true, false, false, "ELIPSE TOOL", (evt) -> {
-            selectedDrawingTool = ellipseTool;
-            updateSizeSlider();
-        });
-        addKeyBinding(editorPanel, KeyEvent.VK_Q, true, false, false, "ELIPSE TOOL", (evt) -> {
-            selectedDrawingTool = ellipseTool;
-            updateSizeSlider();
-            updateFillState(); // Tool supports filling
-        });
-        addKeyBinding(editorPanel, KeyEvent.VK_E, true, false, false, "ERASER TOOL", (evt) -> {
-            selectedDrawingTool = eraserTool;
-            updateSizeSlider();
-        });
-        addKeyBinding(editorPanel, KeyEvent.VK_T, true, false, false, "TEXT TOOL", (evt) -> {
-            selectedDrawingTool = textTool;
-            updateSizeSlider();
-        });
-        addKeyBinding(editorPanel, KeyEvent.VK_P, true, false, false, "PAINTBUCKET TOOL", (evt) -> {
-            selectedDrawingTool = paintBucketTool;
-            updateSizeSlider();
-        });
-        addKeyBinding(editorPanel, KeyEvent.VK_F, true, false, false, "FAN TOOL", (evt) -> {
-            selectedDrawingTool = fanTool;
-            updateSizeSlider();
-        });
-        addKeyBinding(editorPanel, KeyEvent.VK_C, false, false, false, "CELTIC TOOL", (evt) -> {
-            selectedDrawingTool = celticKnotTool;
-            updateSizeSlider();
-        });
-        addKeyBinding(editorPanel, KeyEvent.VK_D, true, false, false, "DNA TOOL", (evt) -> {
-            selectedDrawingTool = dnaTool;
-            updateSizeSlider();
-        });
-        addKeyBinding(editorPanel, KeyEvent.VK_N, true, false, false, "EYE TOOL", (evt) -> {
-            selectedDrawingTool = eyeDropperTool;
-            updateSizeSlider();
-        });
-        addKeyBinding(editorPanel, KeyEvent.VK_A, true, false, false, "AIRBRUSH TOOL", (evt) -> {
-            selectedDrawingTool = airBrushTool;
-            updateSizeSlider();
-        });*/
-    }
 
     /**
      * Used in Shortcuts class to focus the canvas tools
@@ -1031,10 +851,5 @@ public class MainUI {
 
     }
 
-    /**
-     * returns the database for the key board shortcuts
-     */
-    public DB_KBShortcuts getDb_kbShortcuts() {
-        return db_kbShortcuts;
-    }
+
 }

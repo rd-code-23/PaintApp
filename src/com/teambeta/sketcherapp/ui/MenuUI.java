@@ -100,13 +100,13 @@ public class MenuUI extends JMenuBar {
 
     private NoiseGeneratorMenu noiseGeneratorMenu;
     private CheckerboardMenu checkerboardMenu;
-    private ShortcutDialog keyboardShortCutPanel;
+
 
     /**
      * Constructor
      */
     public MenuUI(JFrame mainFrame, DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu, SaturationMenu saturationMenu,
-                  BrightnessContrastMenu brightnessContrastMenu, NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu, ShortcutDialog keyboardShortCutPanel) {
+                  BrightnessContrastMenu brightnessContrastMenu, NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu) {
         this.mainFrame = mainFrame;
         this.drawArea = drawArea;
         this.importExport = importExport;
@@ -115,7 +115,6 @@ public class MenuUI extends JMenuBar {
         this.brightnessContrastMenu = brightnessContrastMenu;
         this.noiseGeneratorMenu = noiseGeneratorMenu;
         this.checkerboardMenu = checkerboardMenu;
-        this.keyboardShortCutPanel = keyboardShortCutPanel;
         prepareMenuBar();
     }
 
@@ -232,9 +231,7 @@ public class MenuUI extends JMenuBar {
                 noiseGeneratorMenu.showWindow();
             } else if (e.getSource() == iCheckerBoard) {
                 checkerboardMenu.showWindow();
-            } else if (e.getSource() == eKeyboardShortCuts) {
-                keyboardShortCutPanel.renderPanel();
-            } else if (e.getSource() == fClose) {
+            }  else if (e.getSource() == fClose) {
                 System.exit(0);
             } else if (e.getSource() == fNew) {
                 Dimension dimension = NewWindow.displayPrompt();
