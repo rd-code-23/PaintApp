@@ -15,7 +15,7 @@ public class BetaSplashScreen extends JWindow {
     private static final String SPLASH_SCREEN_DIRECTORY = RES_PATH + File.separator + "splash.png";
 
     public BetaSplashScreen(int splashDisplayDuration) {
-        super();;
+        super();
         JLabel l = new JLabel(new ImageIcon(SPLASH_SCREEN_DIRECTORY));
         getContentPane().add(l, BorderLayout.CENTER);
         pack();
