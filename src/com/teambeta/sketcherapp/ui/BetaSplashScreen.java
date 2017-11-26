@@ -10,13 +10,11 @@ import java.io.File;
  * https://www.javaworld.com/article/2077467/core-java/java-tip-104--make-a-splash-with-swing.html
  */
 public class BetaSplashScreen extends JWindow {
-    private static final String RES_PATH = System.getProperty("user.dir") + File.separator + "src" +
-            File.separator + "res";
-    private static final String SPLASH_SCREEN_DIRECTORY = RES_PATH + File.separator + "splash.png";
+    private static final String SPLASH_SCREEN_DIRECTORY = "splash.png";
 
     public BetaSplashScreen(int splashDisplayDuration) {
-        super();;
-        JLabel l = new JLabel(new ImageIcon(SPLASH_SCREEN_DIRECTORY));
+        super();
+        JLabel l = new JLabel(new ImageIcon(getClass().getClassLoader().getResource(SPLASH_SCREEN_DIRECTORY)));
         getContentPane().add(l, BorderLayout.CENTER);
         pack();
         Dimension screenSize =
