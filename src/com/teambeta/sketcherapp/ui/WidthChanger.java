@@ -23,6 +23,7 @@ public class WidthChanger {
     private static final String CUSTOM_DARK_GREY = "#343434";
     private static final int MINOR_TICK_SPACING = 100;
     private static final int TEXT_PANEL_SPACING = 225;
+    private static final int WIDTH_PANEL_HEIGHT = 100;
 
     private JPanel textPanel = new JPanel();
     private JPanel widthPanel = new JPanel();
@@ -48,6 +49,7 @@ public class WidthChanger {
      * Sets up the panel to change width.
      */
     private void renderPanel() {
+        widthPanel.setPreferredSize(new Dimension(Integer.MAX_VALUE, WIDTH_PANEL_HEIGHT));
         currentWidthValue = INITIAL_WIDTH_VALUE;
         textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.X_AXIS));
         textPanel.setBackground(Color.DARK_GRAY);
@@ -217,12 +219,34 @@ public class WidthChanger {
         return widthPanel;
     }
 
+    /**
+     * Shows width changer panel.
+     */
+    public void showPanel() {
+        widthPanel.setVisible(true);
+    }
+
+    /**
+     * Hides width changer panel.
+     */
     public void hidePanel() {
         widthPanel.setVisible(false);
     }
 
-    public void showPanel() {
-        widthPanel.setVisible(true);
+    /**
+     * Shows text panel in width changer panel.
+     */
+    public void showTextPanel() {
+        textPanel.setVisible(true);
+        widthSlider.setVisible(true);
+    }
+
+    /**
+     * Hides text panel in width changer panel.
+     */
+    public void hideTextPanel() {
+        textPanel.setVisible(false);
+        widthSlider.setVisible(false);
     }
 
     /**
