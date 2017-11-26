@@ -99,7 +99,7 @@ public class ImageLayer {
     @Override
     public String toString() {
         if (!isVisible) {
-            return HIDDEN + " " + name;
+            return name + " " + HIDDEN;
         } else {
             return name;
         }
