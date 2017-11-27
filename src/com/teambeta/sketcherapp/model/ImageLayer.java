@@ -1,5 +1,7 @@
 package com.teambeta.sketcherapp.model;
 
+import com.sun.org.apache.bcel.internal.generic.DUP;
+
 import java.awt.image.BufferedImage;
 
 /**
@@ -12,17 +14,27 @@ public class ImageLayer {
     private String name;
     private static int layerNumber = 1;
     private final static String HIDDEN = "  [Hidden]";
+    private final static String DUPLICATE = "(Duplicate)";
 
     /**
      * Constructor.
      *
      * @param bufferedImage for the image layer.
+     * @param nameOfOriginalLayerIfDuplicate the name of the original layer if this is a duplicate. Pass null for new layer.
      */
-    public ImageLayer(BufferedImage bufferedImage) {
+    public ImageLayer(BufferedImage bufferedImage, String nameOfOriginalLayerIfDuplicate) {
         this.bufferedImage = bufferedImage;
         isVisible = true;
         isSelected = false;
-        name = "  Layer " + layerNumber;
+        if (nameOfOriginalLayerIfDuplicate == null) {
+            this.name = "  Layer " + layerNumber;
+        } else {
+            if (!nameOfOriginalLayerIfDuplicate.contains(" " + DUPLICATE)) {
+                this.name = nameOfOriginalLayerIfDuplicate + " " + DUPLICATE;
+            } else {
+                this.name = nameOfOriginalLayerIfDuplicate;
+            }
+        }
         layerNumber++;
     }
 

@@ -185,9 +185,13 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                     selectedIndex = 0;
                 }
                 if (drawingLayers.size() < MAX_NUM_OF_LAYERS) {
-                    ImageLayer newImageLayer = new ImageLayer(new BufferedImage(
-                            drawArea.getWidth(), drawArea.getHeight(), BufferedImage.TYPE_INT_ARGB)
-                    );
+                    ImageLayer newImageLayer = new ImageLayer(
+                                                              new BufferedImage(
+                                                                                drawArea.getWidth(),
+                                                                                drawArea.getHeight(),
+                                                                                BufferedImage.TYPE_INT_ARGB),
+                                        null
+                                                             );
                     drawingLayers.add(selectedIndex, newImageLayer);
                     listModel.add(selectedIndex, newImageLayer);
                     drawArea.setCurrentlySelectedLayer(newImageLayer);
@@ -272,12 +276,14 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                 int selectedIndex = listOfLayers.getSelectedIndex();
                 if (selectedIndex != -1) {
                     if (drawingLayers.size() < MAX_NUM_OF_LAYERS) {
-                        ImageLayer newImageLayer = new ImageLayer(new BufferedImage(
-                                drawArea.getWidth(),
-                                drawArea.getHeight(),
-                                BufferedImage.TYPE_INT_ARGB)
-                        );
                         ImageLayer currentlySelectedLayer = drawArea.getCurrentlySelectedLayer();
+                        ImageLayer newImageLayer = new ImageLayer(
+                                                                    new BufferedImage(
+                                                                    drawArea.getWidth(),
+                                                                    drawArea.getHeight(),
+                                                                    BufferedImage.TYPE_INT_ARGB),
+                                                                    currentlySelectedLayer.getName()
+                                                                   );
                         Graphics newImageLayerGraphics = newImageLayer.getBufferedImage().getGraphics();
                         newImageLayerGraphics.drawImage(currentlySelectedLayer.getBufferedImage(),
                                 0, 0, null);
