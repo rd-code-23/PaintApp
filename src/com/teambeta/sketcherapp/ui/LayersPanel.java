@@ -1,5 +1,6 @@
 package com.teambeta.sketcherapp.ui;
 
+import com.teambeta.sketcherapp.model.GeneratorFunctions;
 import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.model.ToolButton;
 
@@ -42,7 +43,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private LinkedList<ImageLayer> drawingLayers;
     private JList<ImageLayer> listOfLayers = new JList<>();
     private DefaultListModel<ImageLayer> listModel = new DefaultListModel<>();
-    private Map<String, Integer> duplicationMap = new LinkedHashMap<String, Integer>();
+    private Map<Integer, Integer> duplicationMap = new LinkedHashMap<Integer, Integer>();
     private JScrollPane layersScrollPane;
     private JButton addLayerButton;
     private JButton deleteLayerButton;
@@ -297,28 +298,42 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                 int selectedIndex = listOfLayers.getSelectedIndex();
                 if (selectedIndex != -1) {
                     if (drawingLayers.size() < MAX_NUM_OF_LAYERS) {
+
                         ImageLayer currentlySelectedLayer = drawArea.getCurrentlySelectedLayer();
                         String workingDuplicationName = currentlySelectedLayer.getOriginalLayerName();
+                        int layerGroupID;
 
-                        if (duplicationMap.size() > 0) {
-                            for (Map.Entry duplicationEntry : duplicationMap.entrySet()) {
-                                boolean listModelContainsDuplicationEntry = false;
-                                for (int i = 0; i < listModel.getSize(); ++i) {
-                                    if (listModel.get(i).getOriginalLayerName() == duplicationEntry.getKey()) {
-                                        listModelContainsDuplicationEntry = true;
+                        // Setup shared duplicate-group key
+                        if (currentlySelectedLayer.getLayerDuplicateGroupKey() == -1) {
+                            layerGroupID = GeneratorFunctions.randomInt(0, 1000000);
+                            // Regenerate key if it is already used
+                            while (duplicationMap.containsKey(layerGroupID)) {
+                                layerGroupID = GeneratorFunctions.randomInt(0, 1000000);
+                            }
+                            currentlySelectedLayer.setLayerDuplicateGroupKey(layerGroupID);
+                        } else {
+                            layerGroupID = currentlySelectedLayer.getLayerDuplicateGroupKey();
+                        }
+
+                        // Clear key if all layers with it are deleted.
+                        if (listModel.size() > 0) {
+                            for (Integer key : duplicationMap.keySet()) {
+                                boolean listModelContainsKey = false;
+                                for (int i = 0; i < listModel.size(); ++i) {
+                                    if (listModel.getElementAt(i).getLayerDuplicateGroupKey() == (int) key) {
+                                        listModelContainsKey = true;
                                     }
-                                }
-                                if (!listModelContainsDuplicationEntry) {
-                                    duplicationMap.remove(duplicationEntry.getKey());
+                                    if (!listModelContainsKey) {
+                                        duplicationMap.remove(key);
+                                    }
                                 }
                             }
                         }
 
-
-                        if (duplicationMap.containsKey(workingDuplicationName)) {
-                            duplicationMap.put(workingDuplicationName, duplicationMap.get(workingDuplicationName) + 1);
+                        if (duplicationMap.containsKey(layerGroupID)) {
+                            duplicationMap.put(layerGroupID, duplicationMap.get(layerGroupID) + 1);
                         } else {
-                            duplicationMap.put(workingDuplicationName, 1);
+                            duplicationMap.put(layerGroupID, 1);
                         }
 
                         ImageLayer newImageLayer = new ImageLayer(
@@ -327,8 +342,10 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                                                                     drawArea.getHeight(),
                                                                     BufferedImage.TYPE_INT_ARGB),
                                                                     workingDuplicationName,
-                                                                    duplicationMap.get(workingDuplicationName)
+                                                                    duplicationMap.get(layerGroupID)
                                                                    );
+
+                        newImageLayer.setLayerDuplicateGroupKey(layerGroupID);
                         Graphics newImageLayerGraphics = newImageLayer.getBufferedImage().getGraphics();
                         newImageLayerGraphics.drawImage(currentlySelectedLayer.getBufferedImage(),
                                 0, 0, null);
