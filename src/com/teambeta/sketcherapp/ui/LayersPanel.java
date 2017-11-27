@@ -220,8 +220,6 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
             public void actionPerformed(ActionEvent e) {
                 int selectedIndex = listOfLayers.getSelectedIndex();
                 if (selectedIndex != -1) {
-                    System.out.println(selectedIndex);
-                    System.out.println(listModel.getSize());
                     listModel.remove(selectedIndex);
                     drawingLayers.remove(selectedIndex);
                     if (drawingLayers.isEmpty()) {
