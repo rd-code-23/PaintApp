@@ -453,6 +453,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
             public void mouseReleased(MouseEvent e) {
                 super.mouseReleased(e);
                 Point mousePoint = new java.awt.Point(e.getLocationOnScreen());
+                rectangleSelectionTool.restartSelection();
                 SwingUtilities.convertPointFromScreen(mousePoint, e.getComponent());
                 if (e.getComponent().contains(mousePoint)) {
                     button.setIcon(new ImageIcon(iconHoverPath));
@@ -502,6 +503,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
+        rectangleSelectionTool.restartSelection();
         if (e.getValueIsAdjusting()) {
             int selectedIndex = listOfLayers.getSelectedIndex();
             drawArea.setCurrentlySelectedLayer(drawingLayers.get(selectedIndex));
