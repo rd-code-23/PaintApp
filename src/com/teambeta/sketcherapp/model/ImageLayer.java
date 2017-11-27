@@ -1,7 +1,5 @@
 package com.teambeta.sketcherapp.model;
 
-import com.sun.org.apache.bcel.internal.generic.DUP;
-
 import java.awt.image.BufferedImage;
 
 /**
