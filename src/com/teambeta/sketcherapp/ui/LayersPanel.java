@@ -276,11 +276,8 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                         ImageLayer selectedLayer = drawArea.getDrawingLayers().get(selectedIndex);
                         if (selectedLayer != null) {
                             selectedLayer.setName(name);
-
-                            if (selectedLayer.getDuplicationCount() > 0) {
-                                selectedLayer.setDuplicationCount(0);
-                                selectedLayer.setOriginalLayerName(name);
-                            }
+                            selectedLayer.setDuplicationCount(0);
+                            selectedLayer.setOriginalLayerName(name);
                             listOfLayers.repaint();
                             listOfLayers.setFont(new Font(FONT_TYPE, Font.BOLD, FONT_SIZE));
                         }
@@ -303,15 +300,17 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                         ImageLayer currentlySelectedLayer = drawArea.getCurrentlySelectedLayer();
                         String workingDuplicationName = currentlySelectedLayer.getOriginalLayerName();
 
-                        for (Map.Entry duplicationEntry : duplicationMap.entrySet()) {
-                            boolean listModelContainsDuplicationEntry = false;
-                            for (int i = 0; i < listModel.getSize(); ++i) {
-                                if (listModel.get(i).getOriginalLayerName() == duplicationEntry.getKey()) {
-                                    listModelContainsDuplicationEntry = true;
+                        if (duplicationMap.size() > 0) {
+                            for (Map.Entry duplicationEntry : duplicationMap.entrySet()) {
+                                boolean listModelContainsDuplicationEntry = false;
+                                for (int i = 0; i < listModel.getSize(); ++i) {
+                                    if (listModel.get(i).getOriginalLayerName() == duplicationEntry.getKey()) {
+                                        listModelContainsDuplicationEntry = true;
+                                    }
                                 }
-                            }
-                            if (!listModelContainsDuplicationEntry) {
-                                duplicationMap.remove(duplicationEntry.getKey());
+                                if (!listModelContainsDuplicationEntry) {
+                                    duplicationMap.remove(duplicationEntry.getKey());
+                                }
                             }
                         }
 
