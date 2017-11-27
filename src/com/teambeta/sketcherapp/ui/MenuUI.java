@@ -1,9 +1,6 @@
 package com.teambeta.sketcherapp.ui;
 
-import com.teambeta.sketcherapp.model.ImageLayer;
-import com.teambeta.sketcherapp.model.ImportExport;
-import com.teambeta.sketcherapp.model.AboutMenu;
-import com.teambeta.sketcherapp.model.NewWindow;
+import com.teambeta.sketcherapp.model.*;
 
 
 import javax.swing.*;
@@ -46,6 +43,8 @@ public class MenuUI extends JMenuBar {
     private JMenuItem eUndo;
     private JMenuItem eRedo;
     private JMenuItem eKeyboardShortCuts;
+
+ ShortcutDialog   keyboardShortCutPanel;
 
     private static final String EUNDO_MENU_BUTTON_TEXT = "Undo";
     private static final String EREDO_MENU_BUTTON_TEXT = "Redo";
@@ -106,7 +105,7 @@ public class MenuUI extends JMenuBar {
      * Constructor
      */
     public MenuUI(JFrame mainFrame, DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu, SaturationMenu saturationMenu,
-                  BrightnessContrastMenu brightnessContrastMenu, NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu) {
+                  BrightnessContrastMenu brightnessContrastMenu, NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu, ShortcutDialog keyboardShortCutPanel) {
         this.mainFrame = mainFrame;
         this.drawArea = drawArea;
         this.importExport = importExport;
@@ -115,6 +114,7 @@ public class MenuUI extends JMenuBar {
         this.brightnessContrastMenu = brightnessContrastMenu;
         this.noiseGeneratorMenu = noiseGeneratorMenu;
         this.checkerboardMenu = checkerboardMenu;
+        this.keyboardShortCutPanel = keyboardShortCutPanel;
         prepareMenuBar();
     }
 
@@ -243,6 +243,9 @@ public class MenuUI extends JMenuBar {
                     mainUI.displayUI();
                     mainFrame.dispose();
                 }
+            } else if (e.getSource() ==  eKeyboardShortCuts){
+                keyboardShortCutPanel.renderPanel();
+
             }
         }
     };
