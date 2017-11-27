@@ -23,6 +23,7 @@ public class ImageLayer {
      *
      * @param bufferedImage for the image layer.
      * @param originalLayerName the name of the original layer if this is a duplicate. Pass null for new layer.
+     * @param duplicationCount the duplication number to use for the name
      */
     public ImageLayer(BufferedImage bufferedImage, String originalLayerName, int duplicationCount) {
         this.bufferedImage = bufferedImage;
@@ -32,12 +33,12 @@ public class ImageLayer {
             this.name = "  Layer " + layerNumber;
             this.originalLayerName = this.name;
             this.duplicationCount = 0;
+            layerNumber++;
         } else {
             this.originalLayerName = originalLayerName;
             this.name = originalLayerName + " " + LEFTBRACKET + DUPLICATE + " " + duplicationCount + RIGHTBRACKET;
             this.duplicationCount = duplicationCount + 1;
         }
-        layerNumber++;
     }
 
     /**
@@ -110,18 +111,38 @@ public class ImageLayer {
         this.name = "  " + name;
     }
 
+    /**
+     * Set the duplication count of the image layer.
+     *
+     * @param duplicationCount for the layer
+     */
     public void setDuplicationCount(int duplicationCount) {
         this.duplicationCount = duplicationCount;
     }
 
+    /**
+     * Get the duplication count of the layer.
+     *
+     * @return the duplication count of the layer
+     */
     public int getDuplicationCount() {
         return duplicationCount;
     }
 
+    /**
+     * Set the original name of the layer.
+     *
+     * @param name the original name of the layer
+     */
     public void setOriginalLayerName(String name) {
         originalLayerName = "  " + name;
     }
 
+    /**
+     * Get the original name of the layer.
+     *
+     * @return the original name of the layer
+     */
     public String getOriginalLayerName() {
         if (originalLayerName != null) {
             return originalLayerName;

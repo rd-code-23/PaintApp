@@ -224,6 +224,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                     drawingLayers.remove(selectedIndex);
                     if (drawingLayers.isEmpty()) {
                         ImageLayer.resetLayerNumber();
+                        duplicationMap.clear();
                     }
                     drawArea.redrawLayers();
                 }
@@ -290,6 +291,20 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                     if (drawingLayers.size() < MAX_NUM_OF_LAYERS) {
                         ImageLayer currentlySelectedLayer = drawArea.getCurrentlySelectedLayer();
                         String workingDuplicationName = currentlySelectedLayer.getOriginalLayerName();
+
+                        for (Map.Entry duplicationEntry : duplicationMap.entrySet()) {
+                            boolean listModelContainsDuplicationEntry = false;
+                            for (int i = 0; i < listModel.getSize(); ++i) {
+                                if (listModel.get(i).getOriginalLayerName() == duplicationEntry.getKey()) {
+                                    listModelContainsDuplicationEntry = true;
+                                }
+                            }
+                            if (!listModelContainsDuplicationEntry) {
+                                duplicationMap.remove(duplicationEntry.getKey());
+                            }
+                        }
+
+
                         if (duplicationMap.containsKey(workingDuplicationName)) {
                             duplicationMap.put(workingDuplicationName, duplicationMap.get(workingDuplicationName) + 1);
                         } else {
