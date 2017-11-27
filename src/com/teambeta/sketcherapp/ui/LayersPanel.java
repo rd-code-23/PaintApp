@@ -298,12 +298,22 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int selectedIndex = listOfLayers.getSelectedIndex();
+
                 if (selectedIndex != -1) {
                     //get the new name
                     String name = JOptionPane.showInputDialog(INPUT_POPUP_TEXT);
                     if (name != null) {
                         ImageLayer selectedLayer = drawArea.getDrawingLayers().get(selectedIndex);
                         if (selectedLayer != null) {
+                        // Setup shared duplicate-group key
+                            int layerGroupID = GeneratorFunctions.randomInt(0, MAX_GROUP_KEY_ID);
+                            // Regenerate key if it is already used
+                            while (duplicationMap.containsKey(layerGroupID)) {
+                                layerGroupID = GeneratorFunctions.randomInt(0, MAX_GROUP_KEY_ID);
+                            }
+                            selectedLayer.setLayerDuplicateGroupKey(layerGroupID);
+                            duplicationMap.put(layerGroupID, 0);
+
                             selectedLayer.setName(name);
                             selectedLayer.setDuplicationCount(0);
                             selectedLayer.setOriginalLayerName(name);
