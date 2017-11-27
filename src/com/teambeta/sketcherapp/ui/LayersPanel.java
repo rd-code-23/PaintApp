@@ -245,22 +245,24 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
 
                     // Duplication key "garbage collection"
                     if (System.currentTimeMillis() - lastDuplicationGarbageCollectTime > MINIMUM_DUPLICATION_CLEANING_COOLDOWN) {
-                        ArrayList<Integer> keysToClear = new ArrayList<Integer>();
-                        for (Integer duplicationKey : duplicationMap.keySet()) {
-                            boolean listModelContainsKey = false;
-                            for (int i = 0; i < listModel.size(); ++i) {
-                                if (listModel.getElementAt(i).getLayerDuplicateGroupKey() == (int) duplicationKey) {
-                                    listModelContainsKey = true;
+                        if (listModel.size() > 0) {
+                            ArrayList<Integer> keysToClear = new ArrayList<Integer>();
+                            for (Integer duplicationKey : duplicationMap.keySet()) {
+                                boolean listModelContainsKey = false;
+                                for (int i = 0; i < listModel.size(); ++i) {
+                                    if (listModel.getElementAt(i).getLayerDuplicateGroupKey() == (int) duplicationKey) {
+                                        listModelContainsKey = true;
+                                    }
+                                }
+                                if (!listModelContainsKey) {
+                                    keysToClear.add(duplicationKey);
                                 }
                             }
-                            if (!listModelContainsKey) {
-                                keysToClear.add(duplicationKey);
+                            for (Integer keyToClear : keysToClear) {
+                                duplicationMap.remove(keyToClear);
                             }
+                            lastDuplicationGarbageCollectTime = System.currentTimeMillis();
                         }
-                        for (Integer keyToClear : keysToClear) {
-                            duplicationMap.remove(keyToClear);
-                        }
-                        lastDuplicationGarbageCollectTime = System.currentTimeMillis();
                     }
 
                     drawArea.redrawLayers();
