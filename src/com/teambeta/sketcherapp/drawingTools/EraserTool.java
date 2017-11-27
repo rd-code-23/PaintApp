@@ -94,6 +94,11 @@ public class EraserTool extends DrawingTool {
     }
 
     @Override
+    public void onMove(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+
+    }
+
+    @Override
     public int getToolWidth() {
         return eraserWidth;
     }

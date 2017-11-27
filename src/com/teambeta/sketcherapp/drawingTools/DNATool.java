@@ -184,6 +184,11 @@ public class DNATool extends DrawingTool {
         }
     }
 
+    @Override
+    public void onMove(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+
+    }
+
     /**
      * getColor returns the current color that tool is set to.
      *

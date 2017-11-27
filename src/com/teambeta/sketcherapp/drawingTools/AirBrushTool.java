@@ -66,6 +66,11 @@ public class AirBrushTool extends DrawingTool {
         drawDotsAroundPoint(canvas, drawingLayers);
     }
 
+    @Override
+    public void onMove(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+
+    }
+
     /**
      * Generate random dots within the area of the unit circle bounded by the radius to the mouse cursor.
      */

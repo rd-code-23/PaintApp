@@ -166,6 +166,11 @@ public class RectangleTool extends DrawingTool {
     }
 
     @Override
+    public void onMove(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+
+    }
+
+    @Override
     public int getToolWidth() {
         return squareWidth;
     }
