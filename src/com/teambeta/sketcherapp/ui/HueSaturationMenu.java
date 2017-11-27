@@ -60,14 +60,14 @@ public class HueSaturationMenu {
                 saturationFactor = Float.parseFloat(saturationInput.getText());
 
                 if (hueFactor < 0.0f || saturationFactor < 0.0f) {
-                    throw new NumberFormatException(DIALOG_WARNING);
+                    throw new NumberFormatException();
                 }
 
                 drawArea.drawLayerHueScaling(hueFactor);
                 drawArea.drawLayerSaturationScaling(saturationFactor);
 
             } catch (NumberFormatException illegalInputError) {
-                JOptionPane.showMessageDialog(null, illegalInputError.getMessage());
+                JOptionPane.showMessageDialog(null, DIALOG_WARNING);
                 return;
             }
 
