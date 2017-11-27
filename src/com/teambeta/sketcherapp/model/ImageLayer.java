@@ -37,7 +37,7 @@ public class ImageLayer {
         } else {
             this.originalLayerName = originalLayerName;
             this.name = originalLayerName + " " + LEFTBRACKET + DUPLICATE + " " + duplicationCount + RIGHTBRACKET;
-            this.duplicationCount = duplicationCount + 1;
+            this.duplicationCount = duplicationCount;
         }
     }
 
