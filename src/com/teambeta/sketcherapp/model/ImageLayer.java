@@ -12,6 +12,7 @@ public class ImageLayer {
     private String name;
     private String originalLayerName;
     private int duplicationCount;
+    private int layerDuplicateGroupKey;
     private static int layerNumber = 1;
     private final static String HIDDEN = "  [Hidden]";
     private final static String DUPLICATE = "Duplicate";
@@ -29,6 +30,7 @@ public class ImageLayer {
         this.bufferedImage = bufferedImage;
         isVisible = true;
         isSelected = false;
+        this.layerDuplicateGroupKey = -1;
         if (originalLayerName == null && duplicationCount == 0) {
             this.name = "  Layer " + layerNumber;
             this.originalLayerName = this.name;
@@ -37,7 +39,7 @@ public class ImageLayer {
         } else {
             this.originalLayerName = originalLayerName;
             this.name = originalLayerName + " " + LEFTBRACKET + DUPLICATE + " " + duplicationCount + RIGHTBRACKET;
-            this.duplicationCount = duplicationCount + 1;
+            this.duplicationCount = duplicationCount;
         }
     }
 
@@ -148,6 +150,24 @@ public class ImageLayer {
             return originalLayerName;
         }
         return "";
+    }
+
+    /**
+     * Set the duplicate-group key for this layer.
+     *
+     * @param key the key to use
+     */
+    public void setLayerDuplicateGroupKey(int key) {
+        layerDuplicateGroupKey = key;
+    }
+
+    /**
+     * Get the duplicate-group key for this layer.
+     *
+     * @return the duplicate-group key
+     */
+    public int getLayerDuplicateGroupKey() {
+        return layerDuplicateGroupKey;
     }
 
     @Override
