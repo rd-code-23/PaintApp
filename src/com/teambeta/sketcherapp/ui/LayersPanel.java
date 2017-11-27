@@ -1,5 +1,6 @@
 package com.teambeta.sketcherapp.ui;
 
+import com.teambeta.sketcherapp.drawingTools.RectangleSelectionTool;
 import com.teambeta.sketcherapp.model.GeneratorFunctions;
 import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.model.ToolButton;
@@ -53,6 +54,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private JButton duplicateLayerButton;
     private JButton layerUpButton;
     private JButton layerDownButton;
+    private RectangleSelectionTool rectangleSelectionTool;
 
     private static final String RES_PATH = System.getProperty("user.dir") + File.separator + "src" +
             File.separator + "res";
@@ -95,7 +97,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
      *
      * @param drawArea The drawArea the layersPanel is utilizing.
      */
-    LayersPanel(DrawArea drawArea) {
+    LayersPanel(DrawArea drawArea, RectangleSelectionTool rectangleSelectionTool) {
         super(new BorderLayout());
         this.drawArea = drawArea;
         this.drawingLayers = drawArea.getDrawingLayers();
@@ -119,6 +121,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         layersScrollPane.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.GRAY));
         this.add(layersScrollPane);
         this.add(layersScrollPane, BorderLayout.EAST);
+        this.rectangleSelectionTool = rectangleSelectionTool;
         addLayerButtons(drawArea);
     }
 
@@ -137,6 +140,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                 super.mousePressed(e);
                 isLayerBeingDragged = true;
                 indexOfDraggedLayer = listOfLayers.getSelectedIndex();
+
             }
 
             @Override
@@ -185,7 +189,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         ActionListener addLayerButtonActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                rectangleSelectionTool.restartSelection();
                 // Push new layer "above" current layer
                 int selectedIndex = listOfLayers.getSelectedIndex();
                 // If no layers are selected, push to the top
@@ -220,6 +224,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         ActionListener deleteLayerButtonActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                rectangleSelectionTool.restartSelection();
                 int selectedIndex = listOfLayers.getSelectedIndex();
                 if (selectedIndex != -1) {
                     listModel.remove(selectedIndex);
@@ -252,6 +257,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         ActionListener hideShowLayerActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                rectangleSelectionTool.restartSelection();
                 if (listOfLayers.getSelectedIndex() != -1) {
                     ImageLayer selectedLayer = drawArea.getDrawingLayers().get(listOfLayers.getSelectedIndex());
                     selectedLayer.setVisible(!selectedLayer.isVisible());
@@ -270,6 +276,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         ActionListener renameLayerButtonActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                rectangleSelectionTool.restartSelection();
                 int selectedIndex = listOfLayers.getSelectedIndex();
                 if (selectedIndex != -1) {
                     //get the new name
@@ -296,6 +303,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         ActionListener duplicateLayerButtonActionListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                rectangleSelectionTool.restartSelection();
                 int selectedIndex = listOfLayers.getSelectedIndex();
                 if (selectedIndex != -1) {
                     if (drawingLayers.size() < MAX_NUM_OF_LAYERS) {
@@ -360,6 +368,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         layerUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                rectangleSelectionTool.restartSelection();
                 int selectedIndex = listOfLayers.getSelectedIndex();
                 if (selectedIndex == -1 || selectedIndex == 0) {
                     //early exit if there is no selected layer or no layer above the selected one.
@@ -380,6 +389,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         layerDownButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                rectangleSelectionTool.restartSelection();
                 int selectedIndex = listOfLayers.getSelectedIndex();
                 if (selectedIndex == -1 || selectedIndex == drawingLayers.size() - 1) {
                     //early exit if there is no selected layer or no layer below the selected one.
@@ -435,6 +445,8 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
             public void mousePressed(MouseEvent e) {
                 super.mousePressed(e);
                 button.setIcon(new ImageIcon(iconHighlightedPath));
+                rectangleSelectionTool.restartSelection();
+
             }
 
             @Override

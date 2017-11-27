@@ -785,7 +785,7 @@ public class MainUI {
         editorPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
         editorPanel.add(imageEditingPanel);
         editorPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
-        layersPanel = new LayersPanel(drawArea);
+        layersPanel = new LayersPanel(drawArea,rectangleSelectionTool);
         editorPanel.add(layersPanel);
         return editorPanel;
     }
