@@ -23,7 +23,7 @@ public class ImageLayer {
      *
      * @param bufferedImage for the image layer.
      * @param originalLayerName the name of the original layer if this is a duplicate. Pass null for new layer.
-     * @param duplicationCount the duplication number to use for the name
+     * @param duplicationCount the original duplication number
      */
     public ImageLayer(BufferedImage bufferedImage, String originalLayerName, int duplicationCount) {
         this.bufferedImage = bufferedImage;
