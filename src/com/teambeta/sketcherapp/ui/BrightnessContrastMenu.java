@@ -60,14 +60,14 @@ public class BrightnessContrastMenu {
                 contrastFactor = Float.parseFloat(contrastInput.getText());
 
                 if (brightnessFactor < 0.0f || contrastFactor < 0.0f) {
-                    throw new NumberFormatException(DIALOG_WARNING);
+                    throw new NumberFormatException();
                 }
 
                 drawArea.rescaleOperation(contrastFactor, ZERO_OFFSET, null);
                 drawArea.drawLayerBrightnessScaling(brightnessFactor);
 
             } catch (NumberFormatException illegalInputError) {
-                JOptionPane.showMessageDialog(null, illegalInputError.getMessage());
+                JOptionPane.showMessageDialog(null, DIALOG_WARNING);
                 return;
             }
 
