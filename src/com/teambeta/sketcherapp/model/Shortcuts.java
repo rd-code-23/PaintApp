@@ -467,6 +467,7 @@ public class Shortcuts {
                 System.out.println(NO_SUCH_TOOL);
         }
     }
+//TODO UNCOMMENT
 
     /**
      * sets the key binding to default settings

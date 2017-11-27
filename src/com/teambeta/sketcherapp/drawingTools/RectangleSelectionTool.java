@@ -57,11 +57,12 @@ public class RectangleSelectionTool extends DrawingTool {
     private boolean doNothing = false;
     private boolean isCutOption;
     private JPanel selectionOptionPanel;
+    private MouseCursor mouseCursor;
 
     /**
      * The constructor sets the properties of the tool to their default values
      */
-    public RectangleSelectionTool() {
+    public RectangleSelectionTool(MouseCursor mouseCursor) {
         registerObservers();
         color = Color.black;
         initX = 0;
@@ -77,6 +78,7 @@ public class RectangleSelectionTool extends DrawingTool {
         squareWidth = DEFAULT_WIDTH_VALUE;
         fillShape = false;
         isCutOption = true;
+        this.mouseCursor = mouseCursor;
     }
 
     /**
@@ -90,14 +92,14 @@ public class RectangleSelectionTool extends DrawingTool {
                     && e.getX() >= initX - offset && e.getX() <= (selectedCanvas.getWidth() + initX - offset)) {
                 if (isDrawn) {
                     isOverSelection = true;
-                    MouseCursor.dragCursor();
+                    mouseCursor.dragCursor();
                 }
             } else {
                 doNothing = false;
                 if (isDrawn) {
-                    MouseCursor.targetCursor();
+                    mouseCursor.targetCursor();
                 } else {
-                    MouseCursor.setDefaultCursor();
+                    mouseCursor.setDefaultCursor();
                 }
                 isOverSelection = false;
             }
@@ -334,7 +336,7 @@ public class RectangleSelectionTool extends DrawingTool {
             if (isDrawn) {
                 isDrawn = false;
                 doNothing = false;
-                MouseCursor.setDefaultCursor();
+                mouseCursor.setDefaultCursor();
                 initializeVariables(canvas, e);
                 pasteSelection(canvas, drawingLayers, null, e);
             }

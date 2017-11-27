@@ -2,15 +2,15 @@ package com.teambeta.sketcherapp.model;
 
 import com.teambeta.sketcherapp.ui.DrawArea;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.net.URL;
 
 public class MouseCursor {
-    private static final String DRAG_CURSOR = System.getProperty("user.dir") + File.separator + "src" +
-            File.separator + "res" + File.separator + "dragCursor.png";
+    private static final String DRAG_CURSOR =  "dragCursor.png";
 
-    private static final String TARGET_CURSOR = System.getProperty("user.dir") + File.separator + "src" +
-            File.separator + "res" + File.separator + "target.png";
+    private static final String TARGET_CURSOR =  "target.png";
 
     private static DrawArea drawArea;
 
@@ -18,17 +18,18 @@ public class MouseCursor {
         this.drawArea = drawArea;
     }
 
-    public static void dragCursor() {
+    public  void dragCursor() {
         setCursor(DRAG_CURSOR);
     }
 
-    public static void targetCursor() {
+    public  void targetCursor() {
         setCursor(TARGET_CURSOR);
     }
 
-    private static void setCursor(String customCursor) {
+    private  void setCursor(String customCursor) {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
-        Image image = toolkit.getImage(customCursor);
+        JLabel l = new JLabel(new ImageIcon(getClass().getClassLoader().getResource(customCursor)));
+        Image image = new ImageIcon(getClass().getClassLoader().getResource(customCursor)).getImage();
         Point point = new Point(0, 0);
         Cursor cursor = toolkit.createCustomCursor(image, point, "Cursor");
         drawArea.setCursor(cursor);
