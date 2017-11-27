@@ -33,6 +33,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private static final String FONT_TYPE = "Arial";
     private static final int FONT_SIZE = 18;
     private static final int MAX_NUM_OF_LAYERS = 32;
+    private static final int MAX_GROUP_KEY_ID = 10000000;
     private static final int LAYER_OPTIONS_PANEL_PADDING = 30;
     private static final int LAYER_MOVEMENT_BUTTONS_PADDING = 20;
     private static final int LAYER_MOVEMENT_PANEL_WIDTH = 400;
@@ -193,13 +194,13 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                 }
                 if (drawingLayers.size() < MAX_NUM_OF_LAYERS) {
                     ImageLayer newImageLayer = new ImageLayer(
-                                                              new BufferedImage(
-                                                                                drawArea.getWidth(),
-                                                                                drawArea.getHeight(),
-                                                                                BufferedImage.TYPE_INT_ARGB),
-                                               null,
-                                                 0
-                                                              );
+                            new BufferedImage(
+                                    drawArea.getWidth(),
+                                    drawArea.getHeight(),
+                                    BufferedImage.TYPE_INT_ARGB),
+                            null,
+                            0
+                    );
                     drawingLayers.add(selectedIndex, newImageLayer);
                     listModel.add(selectedIndex, newImageLayer);
                     drawArea.setCurrentlySelectedLayer(newImageLayer);
@@ -305,29 +306,14 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
 
                         // Setup shared duplicate-group key
                         if (currentlySelectedLayer.getLayerDuplicateGroupKey() == -1) {
-                            layerGroupID = GeneratorFunctions.randomInt(0, 1000000);
+                            layerGroupID = GeneratorFunctions.randomInt(0, MAX_GROUP_KEY_ID);
                             // Regenerate key if it is already used
                             while (duplicationMap.containsKey(layerGroupID)) {
-                                layerGroupID = GeneratorFunctions.randomInt(0, 1000000);
+                                layerGroupID = GeneratorFunctions.randomInt(0, MAX_GROUP_KEY_ID);
                             }
                             currentlySelectedLayer.setLayerDuplicateGroupKey(layerGroupID);
                         } else {
                             layerGroupID = currentlySelectedLayer.getLayerDuplicateGroupKey();
-                        }
-
-                        // Clear key if all layers with it are deleted.
-                        if (listModel.size() > 0) {
-                            for (Integer key : duplicationMap.keySet()) {
-                                boolean listModelContainsKey = false;
-                                for (int i = 0; i < listModel.size(); ++i) {
-                                    if (listModel.getElementAt(i).getLayerDuplicateGroupKey() == (int) key) {
-                                        listModelContainsKey = true;
-                                    }
-                                    if (!listModelContainsKey) {
-                                        duplicationMap.remove(key);
-                                    }
-                                }
-                            }
                         }
 
                         if (duplicationMap.containsKey(layerGroupID)) {
@@ -337,13 +323,13 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                         }
 
                         ImageLayer newImageLayer = new ImageLayer(
-                                                                    new BufferedImage(
-                                                                    drawArea.getWidth(),
-                                                                    drawArea.getHeight(),
-                                                                    BufferedImage.TYPE_INT_ARGB),
-                                                                    workingDuplicationName,
-                                                                    duplicationMap.get(layerGroupID)
-                                                                   );
+                                new BufferedImage(
+                                        drawArea.getWidth(),
+                                        drawArea.getHeight(),
+                                        BufferedImage.TYPE_INT_ARGB),
+                                workingDuplicationName,
+                                duplicationMap.get(layerGroupID)
+                        );
 
                         newImageLayer.setLayerDuplicateGroupKey(layerGroupID);
                         Graphics newImageLayerGraphics = newImageLayer.getBufferedImage().getGraphics();
