@@ -1,5 +1,6 @@
 package com.teambeta.sketcherapp.ui;
 
+import com.teambeta.sketcherapp.model.GeneratorFunctions;
 import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.model.ToolButton;
 
@@ -8,10 +9,15 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class LayersPanel extends JPanel implements ListSelectionListener {
     private static final String HIDE_SHOW_LAYER_BUTTON_TEXT = "Hide/Show";
@@ -37,6 +43,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private LinkedList<ImageLayer> drawingLayers;
     private JList<ImageLayer> listOfLayers = new JList<>();
     private DefaultListModel<ImageLayer> listModel = new DefaultListModel<>();
+    private Map<Integer, Integer> duplicationMap = new LinkedHashMap<Integer, Integer>();
     private JScrollPane layersScrollPane;
     private JButton addLayerButton;
     private JButton deleteLayerButton;
@@ -185,9 +192,14 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                     selectedIndex = 0;
                 }
                 if (drawingLayers.size() < MAX_NUM_OF_LAYERS) {
-                    ImageLayer newImageLayer = new ImageLayer(new BufferedImage(
-                            drawArea.getWidth(), drawArea.getHeight(), BufferedImage.TYPE_INT_ARGB)
-                    );
+                    ImageLayer newImageLayer = new ImageLayer(
+                                                              new BufferedImage(
+                                                                                drawArea.getWidth(),
+                                                                                drawArea.getHeight(),
+                                                                                BufferedImage.TYPE_INT_ARGB),
+                                               null,
+                                                 0
+                                                              );
                     drawingLayers.add(selectedIndex, newImageLayer);
                     listModel.add(selectedIndex, newImageLayer);
                     drawArea.setCurrentlySelectedLayer(newImageLayer);
@@ -213,8 +225,20 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                     drawingLayers.remove(selectedIndex);
                     if (drawingLayers.isEmpty()) {
                         ImageLayer.resetLayerNumber();
+                        duplicationMap.clear();
+                    } else {
+                        if (listModel.getSize() - selectedIndex > 1) {
+                            drawArea.setCurrentlySelectedLayer(listModel.get(selectedIndex));
+                            listOfLayers.setSelectedIndex(selectedIndex);
+                        } else {
+                            drawArea.setCurrentlySelectedLayer(listModel.get(listModel.getSize() - 1));
+                            listOfLayers.setSelectedIndex(listModel.getSize() - 1);
+                        }
+
+                        listOfLayers.repaint();
                     }
                     drawArea.redrawLayers();
+                    drawArea.repaint();
                 }
             }
         };
@@ -253,6 +277,8 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                         ImageLayer selectedLayer = drawArea.getDrawingLayers().get(selectedIndex);
                         if (selectedLayer != null) {
                             selectedLayer.setName(name);
+                            selectedLayer.setDuplicationCount(0);
+                            selectedLayer.setOriginalLayerName(name);
                             listOfLayers.repaint();
                             listOfLayers.setFont(new Font(FONT_TYPE, Font.BOLD, FONT_SIZE));
                         }
@@ -272,12 +298,54 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                 int selectedIndex = listOfLayers.getSelectedIndex();
                 if (selectedIndex != -1) {
                     if (drawingLayers.size() < MAX_NUM_OF_LAYERS) {
-                        ImageLayer newImageLayer = new ImageLayer(new BufferedImage(
-                                drawArea.getWidth(),
-                                drawArea.getHeight(),
-                                BufferedImage.TYPE_INT_ARGB)
-                        );
+
                         ImageLayer currentlySelectedLayer = drawArea.getCurrentlySelectedLayer();
+                        String workingDuplicationName = currentlySelectedLayer.getOriginalLayerName();
+                        int layerGroupID;
+
+                        // Setup shared duplicate-group key
+                        if (currentlySelectedLayer.getLayerDuplicateGroupKey() == -1) {
+                            layerGroupID = GeneratorFunctions.randomInt(0, 1000000);
+                            // Regenerate key if it is already used
+                            while (duplicationMap.containsKey(layerGroupID)) {
+                                layerGroupID = GeneratorFunctions.randomInt(0, 1000000);
+                            }
+                            currentlySelectedLayer.setLayerDuplicateGroupKey(layerGroupID);
+                        } else {
+                            layerGroupID = currentlySelectedLayer.getLayerDuplicateGroupKey();
+                        }
+
+                        // Clear key if all layers with it are deleted.
+                        if (listModel.size() > 0) {
+                            for (Integer key : duplicationMap.keySet()) {
+                                boolean listModelContainsKey = false;
+                                for (int i = 0; i < listModel.size(); ++i) {
+                                    if (listModel.getElementAt(i).getLayerDuplicateGroupKey() == (int) key) {
+                                        listModelContainsKey = true;
+                                    }
+                                    if (!listModelContainsKey) {
+                                        duplicationMap.remove(key);
+                                    }
+                                }
+                            }
+                        }
+
+                        if (duplicationMap.containsKey(layerGroupID)) {
+                            duplicationMap.put(layerGroupID, duplicationMap.get(layerGroupID) + 1);
+                        } else {
+                            duplicationMap.put(layerGroupID, 1);
+                        }
+
+                        ImageLayer newImageLayer = new ImageLayer(
+                                                                    new BufferedImage(
+                                                                    drawArea.getWidth(),
+                                                                    drawArea.getHeight(),
+                                                                    BufferedImage.TYPE_INT_ARGB),
+                                                                    workingDuplicationName,
+                                                                    duplicationMap.get(layerGroupID)
+                                                                   );
+
+                        newImageLayer.setLayerDuplicateGroupKey(layerGroupID);
                         Graphics newImageLayerGraphics = newImageLayer.getBufferedImage().getGraphics();
                         newImageLayerGraphics.drawImage(currentlySelectedLayer.getBufferedImage(),
                                 0, 0, null);

@@ -1,10 +1,9 @@
 package com.teambeta.sketcherapp.ui;
 
+import com.teambeta.sketcherapp.model.AboutMenu;
 import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.model.ImportExport;
-import com.teambeta.sketcherapp.model.AboutMenu;
 import com.teambeta.sketcherapp.model.NewWindow;
-
 
 import javax.swing.*;
 import java.awt.*;

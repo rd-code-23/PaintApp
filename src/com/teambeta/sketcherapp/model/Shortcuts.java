@@ -1,11 +1,11 @@
 package com.teambeta.sketcherapp.model;
 
+import com.teambeta.sketcherapp.ui.MainUI;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
-
-import com.teambeta.sketcherapp.ui.MainUI;
 
 public class Shortcuts {
 
