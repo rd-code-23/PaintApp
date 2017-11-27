@@ -308,7 +308,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                         if (duplicationMap.containsKey(workingDuplicationName)) {
                             duplicationMap.put(workingDuplicationName, duplicationMap.get(workingDuplicationName) + 1);
                         } else {
-                            duplicationMap.put(workingDuplicationName, 0);
+                            duplicationMap.put(workingDuplicationName, 1);
                         }
 
                         ImageLayer newImageLayer = new ImageLayer(
