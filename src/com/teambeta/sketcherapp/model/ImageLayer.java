@@ -12,28 +12,32 @@ public class ImageLayer {
     private BufferedImage bufferedImage;
     private boolean isSelected;
     private String name;
+    private String originalLayerName;
+    private int duplicationCount;
     private static int layerNumber = 1;
     private final static String HIDDEN = "  [Hidden]";
-    private final static String DUPLICATE = "(Duplicate)";
+    private final static String DUPLICATE = "Duplicate";
+    private final static String LEFTBRACKET = "(";
+    private final static String RIGHTBRACKET = ")";
 
     /**
      * Constructor.
      *
      * @param bufferedImage for the image layer.
-     * @param nameOfOriginalLayerIfDuplicate the name of the original layer if this is a duplicate. Pass null for new layer.
+     * @param originalLayerName the name of the original layer if this is a duplicate. Pass null for new layer.
      */
-    public ImageLayer(BufferedImage bufferedImage, String nameOfOriginalLayerIfDuplicate) {
+    public ImageLayer(BufferedImage bufferedImage, String originalLayerName, int duplicationCount) {
         this.bufferedImage = bufferedImage;
         isVisible = true;
         isSelected = false;
-        if (nameOfOriginalLayerIfDuplicate == null) {
+        if (originalLayerName == null && duplicationCount == 0) {
             this.name = "  Layer " + layerNumber;
+            this.originalLayerName = this.name;
+            this.duplicationCount = 0;
         } else {
-            if (!nameOfOriginalLayerIfDuplicate.contains(" " + DUPLICATE)) {
-                this.name = nameOfOriginalLayerIfDuplicate + " " + DUPLICATE;
-            } else {
-                this.name = nameOfOriginalLayerIfDuplicate;
-            }
+            this.originalLayerName = originalLayerName;
+            this.name = originalLayerName + " " + LEFTBRACKET + DUPLICATE + " " + duplicationCount + RIGHTBRACKET;
+            this.duplicationCount = duplicationCount + 1;
         }
         layerNumber++;
     }
@@ -106,6 +110,25 @@ public class ImageLayer {
      */
     public void setName(String name) {
         this.name = "  " + name;
+    }
+
+    public void setDuplicationCount(int duplicationCount) {
+        this.duplicationCount = duplicationCount;
+    }
+
+    public int getDuplicationCount() {
+        return duplicationCount;
+    }
+
+    public void setOriginalLayerName(String name) {
+        originalLayerName = "  " + name;
+    }
+
+    public String getOriginalLayerName() {
+        if (originalLayerName != null) {
+            return originalLayerName;
+        }
+        return "";
     }
 
     @Override

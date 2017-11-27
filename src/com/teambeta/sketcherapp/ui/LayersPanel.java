@@ -11,7 +11,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class LayersPanel extends JPanel implements ListSelectionListener {
     private static final String HIDE_SHOW_LAYER_BUTTON_TEXT = "Hide/Show";
@@ -37,6 +39,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private LinkedList<ImageLayer> drawingLayers;
     private JList<ImageLayer> listOfLayers = new JList<>();
     private DefaultListModel<ImageLayer> listModel = new DefaultListModel<>();
+    private Map<String, Integer> duplicationMap = new LinkedHashMap<String, Integer>();
     private JScrollPane layersScrollPane;
     private JButton addLayerButton;
     private JButton deleteLayerButton;
@@ -190,7 +193,8 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                                                                                 drawArea.getWidth(),
                                                                                 drawArea.getHeight(),
                                                                                 BufferedImage.TYPE_INT_ARGB),
-                                        null
+                                        null,
+                                            0
                                                              );
                     drawingLayers.add(selectedIndex, newImageLayer);
                     listModel.add(selectedIndex, newImageLayer);
@@ -257,6 +261,11 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                         ImageLayer selectedLayer = drawArea.getDrawingLayers().get(selectedIndex);
                         if (selectedLayer != null) {
                             selectedLayer.setName(name);
+
+                            if (selectedLayer.getDuplicationCount() > 0) {
+                                selectedLayer.setDuplicationCount(0);
+                                selectedLayer.setOriginalLayerName(name);
+                            }
                             listOfLayers.repaint();
                             listOfLayers.setFont(new Font(FONT_TYPE, Font.BOLD, FONT_SIZE));
                         }
@@ -277,12 +286,20 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                 if (selectedIndex != -1) {
                     if (drawingLayers.size() < MAX_NUM_OF_LAYERS) {
                         ImageLayer currentlySelectedLayer = drawArea.getCurrentlySelectedLayer();
+                        String workingDuplicationName = currentlySelectedLayer.getOriginalLayerName();
+                        if (duplicationMap.containsKey(workingDuplicationName)) {
+                            duplicationMap.put(workingDuplicationName, duplicationMap.get(workingDuplicationName) + 1);
+                        } else {
+                            duplicationMap.put(workingDuplicationName, 0);
+                        }
+
                         ImageLayer newImageLayer = new ImageLayer(
                                                                     new BufferedImage(
                                                                     drawArea.getWidth(),
                                                                     drawArea.getHeight(),
                                                                     BufferedImage.TYPE_INT_ARGB),
-                                                                    currentlySelectedLayer.getName()
+                                                                    workingDuplicationName,
+                                                                    duplicationMap.get(workingDuplicationName)
                                                                    );
                         Graphics newImageLayerGraphics = newImageLayer.getBufferedImage().getGraphics();
                         newImageLayerGraphics.drawImage(currentlySelectedLayer.getBufferedImage(),
