@@ -8,10 +8,15 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class LayersPanel extends JPanel implements ListSelectionListener {
     private static final String HIDE_SHOW_LAYER_BUTTON_TEXT = "Hide/Show";
@@ -37,6 +42,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private LinkedList<ImageLayer> drawingLayers;
     private JList<ImageLayer> listOfLayers = new JList<>();
     private DefaultListModel<ImageLayer> listModel = new DefaultListModel<>();
+    private Map<String, Integer> duplicationMap = new LinkedHashMap<String, Integer>();
     private JScrollPane layersScrollPane;
     private JButton addLayerButton;
     private JButton deleteLayerButton;
@@ -185,9 +191,14 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                     selectedIndex = 0;
                 }
                 if (drawingLayers.size() < MAX_NUM_OF_LAYERS) {
-                    ImageLayer newImageLayer = new ImageLayer(new BufferedImage(
-                            drawArea.getWidth(), drawArea.getHeight(), BufferedImage.TYPE_INT_ARGB)
-                    );
+                    ImageLayer newImageLayer = new ImageLayer(
+                                                              new BufferedImage(
+                                                                                drawArea.getWidth(),
+                                                                                drawArea.getHeight(),
+                                                                                BufferedImage.TYPE_INT_ARGB),
+                                               null,
+                                                 0
+                                                              );
                     drawingLayers.add(selectedIndex, newImageLayer);
                     listModel.add(selectedIndex, newImageLayer);
                     drawArea.setCurrentlySelectedLayer(newImageLayer);
@@ -213,6 +224,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                     drawingLayers.remove(selectedIndex);
                     if (drawingLayers.isEmpty()) {
                         ImageLayer.resetLayerNumber();
+                        duplicationMap.clear();
                     }
                     drawArea.redrawLayers();
                 }
@@ -253,6 +265,11 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                         ImageLayer selectedLayer = drawArea.getDrawingLayers().get(selectedIndex);
                         if (selectedLayer != null) {
                             selectedLayer.setName(name);
+
+                            if (selectedLayer.getDuplicationCount() > 0) {
+                                selectedLayer.setDuplicationCount(0);
+                                selectedLayer.setOriginalLayerName(name);
+                            }
                             listOfLayers.repaint();
                             listOfLayers.setFont(new Font(FONT_TYPE, Font.BOLD, FONT_SIZE));
                         }
@@ -272,12 +289,36 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                 int selectedIndex = listOfLayers.getSelectedIndex();
                 if (selectedIndex != -1) {
                     if (drawingLayers.size() < MAX_NUM_OF_LAYERS) {
-                        ImageLayer newImageLayer = new ImageLayer(new BufferedImage(
-                                drawArea.getWidth(),
-                                drawArea.getHeight(),
-                                BufferedImage.TYPE_INT_ARGB)
-                        );
                         ImageLayer currentlySelectedLayer = drawArea.getCurrentlySelectedLayer();
+                        String workingDuplicationName = currentlySelectedLayer.getOriginalLayerName();
+
+                        for (Map.Entry duplicationEntry : duplicationMap.entrySet()) {
+                            boolean listModelContainsDuplicationEntry = false;
+                            for (int i = 0; i < listModel.getSize(); ++i) {
+                                if (listModel.get(i).getOriginalLayerName() == duplicationEntry.getKey()) {
+                                    listModelContainsDuplicationEntry = true;
+                                }
+                            }
+                            if (!listModelContainsDuplicationEntry) {
+                                duplicationMap.remove(duplicationEntry.getKey());
+                            }
+                        }
+
+
+                        if (duplicationMap.containsKey(workingDuplicationName)) {
+                            duplicationMap.put(workingDuplicationName, duplicationMap.get(workingDuplicationName) + 1);
+                        } else {
+                            duplicationMap.put(workingDuplicationName, 0);
+                        }
+
+                        ImageLayer newImageLayer = new ImageLayer(
+                                                                    new BufferedImage(
+                                                                    drawArea.getWidth(),
+                                                                    drawArea.getHeight(),
+                                                                    BufferedImage.TYPE_INT_ARGB),
+                                                                    workingDuplicationName,
+                                                                    duplicationMap.get(workingDuplicationName)
+                                                                   );
                         Graphics newImageLayerGraphics = newImageLayer.getBufferedImage().getGraphics();
                         newImageLayerGraphics.drawImage(currentlySelectedLayer.getBufferedImage(),
                                 0, 0, null);
