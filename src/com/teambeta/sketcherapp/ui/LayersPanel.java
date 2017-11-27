@@ -15,6 +15,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -40,6 +41,8 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private static final int LAYER_MOVEMENT_PANEL_HEIGHT = 100;
     private static final int LAYER_PANEL_WIDTH = 383;
     private static final int LAYER_PANEL_HEIGHT = 150;
+    private static final long MINIMUM_DUPLICATION_CLEANING_COOLDOWN = 2250;
+    private static long lastDuplicationGarbageCollectTime;
     private DrawArea drawArea;
     private LinkedList<ImageLayer> drawingLayers;
     private JList<ImageLayer> listOfLayers = new JList<>();
@@ -120,6 +123,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         this.add(layersScrollPane);
         this.add(layersScrollPane, BorderLayout.EAST);
         addLayerButtons(drawArea);
+        lastDuplicationGarbageCollectTime = 0;
     }
 
     /**
@@ -238,6 +242,27 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
 
                         listOfLayers.repaint();
                     }
+
+                    // Duplication key "garbage collection"
+                    if (System.currentTimeMillis() - lastDuplicationGarbageCollectTime > MINIMUM_DUPLICATION_CLEANING_COOLDOWN) {
+                        ArrayList<Integer> keysToClear = new ArrayList<Integer>();
+                        for (Integer duplicationKey : duplicationMap.keySet()) {
+                            boolean listModelContainsKey = false;
+                            for (int i = 0; i < listModel.size(); ++i) {
+                                if (listModel.getElementAt(i).getLayerDuplicateGroupKey() == (int) duplicationKey) {
+                                    listModelContainsKey = true;
+                                }
+                            }
+                            if (!listModelContainsKey) {
+                                keysToClear.add(duplicationKey);
+                            }
+                        }
+                        for (Integer keyToClear : keysToClear) {
+                            duplicationMap.remove(keyToClear);
+                        }
+                        lastDuplicationGarbageCollectTime = System.currentTimeMillis();
+                    }
+
                     drawArea.redrawLayers();
                     drawArea.repaint();
                 }
