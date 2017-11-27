@@ -190,6 +190,8 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+                attemptDuplicationKeyGarbageCollection();
+
                 // Push new layer "above" current layer
                 int selectedIndex = listOfLayers.getSelectedIndex();
                 // If no layers are selected, push to the top
@@ -243,27 +245,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                         listOfLayers.repaint();
                     }
 
-                    // Duplication key "garbage collection"
-                    if (System.currentTimeMillis() - lastDuplicationGarbageCollectTime > MINIMUM_DUPLICATION_CLEANING_COOLDOWN) {
-                        if (listModel.size() > 0) {
-                            ArrayList<Integer> keysToClear = new ArrayList<Integer>();
-                            for (Integer duplicationKey : duplicationMap.keySet()) {
-                                boolean listModelContainsKey = false;
-                                for (int i = 0; i < listModel.size(); ++i) {
-                                    if (listModel.getElementAt(i).getLayerDuplicateGroupKey() == (int) duplicationKey) {
-                                        listModelContainsKey = true;
-                                    }
-                                }
-                                if (!listModelContainsKey) {
-                                    keysToClear.add(duplicationKey);
-                                }
-                            }
-                            for (Integer keyToClear : keysToClear) {
-                                duplicationMap.remove(keyToClear);
-                            }
-                            lastDuplicationGarbageCollectTime = System.currentTimeMillis();
-                        }
-                    }
+                    attemptDuplicationKeyGarbageCollection();
 
                     drawArea.redrawLayers();
                     drawArea.repaint();
@@ -298,9 +280,9 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int selectedIndex = listOfLayers.getSelectedIndex();
-
                 if (selectedIndex != -1) {
                     //get the new name
+                    attemptDuplicationKeyGarbageCollection();
                     String name = JOptionPane.showInputDialog(INPUT_POPUP_TEXT);
                     if (name != null) {
                         ImageLayer selectedLayer = drawArea.getDrawingLayers().get(selectedIndex);
@@ -336,6 +318,8 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                 int selectedIndex = listOfLayers.getSelectedIndex();
                 if (selectedIndex != -1) {
                     if (drawingLayers.size() < MAX_NUM_OF_LAYERS) {
+
+                        attemptDuplicationKeyGarbageCollection();
 
                         ImageLayer currentlySelectedLayer = drawArea.getCurrentlySelectedLayer();
                         String workingDuplicationName = currentlySelectedLayer.getOriginalLayerName();
@@ -535,4 +519,32 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
         drawArea.repaint();
         listOfLayers.repaint();
     }
+
+    /**
+     * Attempt garbage collection on the duplication key scheme.
+     */
+    private void attemptDuplicationKeyGarbageCollection() {
+        // Duplication key "garbage collection"
+        if (System.currentTimeMillis() - lastDuplicationGarbageCollectTime > MINIMUM_DUPLICATION_CLEANING_COOLDOWN) {
+            if (listModel.size() > 0) {
+                ArrayList<Integer> keysToClear = new ArrayList<Integer>();
+                for (Integer duplicationKey : duplicationMap.keySet()) {
+                    boolean listModelContainsKey = false;
+                    for (int i = 0; i < listModel.size(); ++i) {
+                        if (listModel.getElementAt(i).getLayerDuplicateGroupKey() == (int) duplicationKey) {
+                            listModelContainsKey = true;
+                        }
+                    }
+                    if (!listModelContainsKey) {
+                        keysToClear.add(duplicationKey);
+                    }
+                }
+                for (Integer keyToClear : keysToClear) {
+                    duplicationMap.remove(keyToClear);
+                }
+                lastDuplicationGarbageCollectTime = System.currentTimeMillis();
+            }
+        }
+    }
+
 }
