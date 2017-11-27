@@ -14,7 +14,6 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.awt.event.KeyEvent;
-import java.io.File;
 import java.net.URL;
 /**
  * Main UI class to wrap all GUI elements together.
@@ -96,7 +95,7 @@ public class MainUI {
     private JPanel canvasTools;
     private JButton highlightedButton;
     private BrightnessContrastMenu brightnessContrastMenu;
-    private SaturationMenu saturationMenu;
+    private HueSaturationMenu hueSaturationMenu;
     private LayersPanel layersPanel;
     private ShortcutDialog keyboardShortCutPanel;
     private Shortcuts shortcuts;
@@ -298,7 +297,7 @@ public class MainUI {
             } else if (e.getSource() == brightnessContrastButton) {
                 brightnessContrastMenu.showWindow();
             } else if (e.getSource() == hueSaturationButton) {
-               // saturationMenu.showWindow();
+               // hueSaturationMenu.showWindow();
             }else if (e.getSource() == selectionButton) {
                 selectedDrawingTool = rectangleSelectionTool;
                 textToolSettings.setVisibility(false);
@@ -447,10 +446,11 @@ public class MainUI {
 
         importExport = new ImportExport(drawArea, this);
         brightnessContrastMenu = new BrightnessContrastMenu(drawArea);
-        saturationMenu = new SaturationMenu(drawArea);
+        hueSaturationMenu = new HueSaturationMenu(drawArea);
         greyscaleMenu = new GreyscaleMenu(drawArea);
          noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
         checkerboardMenu = new CheckerboardMenu(drawArea);
+        printCanvas = new PrintCanvas(drawArea, this);
         initializeDrawArea(mainContent);
         initializeButtons();
         initializeCanvasTools();
@@ -463,8 +463,8 @@ public class MainUI {
         keyboardShortCutPanel = new ShortcutDialog(this, shortcuts);
      //   printCanvas = new PrintCanvas(drawArea, this);
         //setting up the shortcuts and database
-        MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, saturationMenu, brightnessContrastMenu,
-                noiseGeneratorMenu, checkerboardMenu,keyboardShortCutPanel);
+        MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, hueSaturationMenu, brightnessContrastMenu,
+                noiseGeneratorMenu, checkerboardMenu,keyboardShortCutPanel,printCanvas);
         northPanel.add(menuUI, BorderLayout.NORTH);
         initializeToolSettings(northPanel);
         initializeWidthChanger();

@@ -1,8 +1,6 @@
 package com.teambeta.sketcherapp.ui;
-import com.teambeta.sketcherapp.model.ImageLayer;
-import com.teambeta.sketcherapp.model.ImportExport;
-import com.teambeta.sketcherapp.model.AboutMenu;
-import com.teambeta.sketcherapp.model.NewWindow;
+import com.teambeta.sketcherapp.model.*;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -76,28 +74,30 @@ public class MenuUI extends JMenuBar {
     private static final String HABOUT_MENU_BUTTON_TEXT = "About";
     private DrawArea drawArea;
     private ImportExport importExport;
-    private SaturationMenu saturationMenu;
+    private HueSaturationMenu hueSaturationMenu;
     private BrightnessContrastMenu brightnessContrastMenu;
     private GreyscaleMenu greyscaleMenu;
     private AboutMenu aboutMenu;
     private NewWindow newWindow;
     private NoiseGeneratorMenu noiseGeneratorMenu;
     private CheckerboardMenu checkerboardMenu;
-    private ShortcutDialog keyboardShortCutPanel;;
+    private ShortcutDialog keyboardShortCutPanel;
+    private PrintCanvas printCanvas;
     /**
      * Constructor
      */
-    public MenuUI(JFrame mainFrame, DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu, SaturationMenu saturationMenu,
-                  BrightnessContrastMenu brightnessContrastMenu, NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu, ShortcutDialog keyboardShortCutPanel) {
+    public MenuUI(JFrame mainFrame, DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu, HueSaturationMenu hueSaturationMenu,
+                  BrightnessContrastMenu brightnessContrastMenu, NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu, ShortcutDialog keyboardShortCutPanel,PrintCanvas printCanvas) {
         this.mainFrame = mainFrame;
         this.drawArea = drawArea;
         this.importExport = importExport;
         this.greyscaleMenu = greyscaleMenu;
-        this.saturationMenu = saturationMenu;
+        this.hueSaturationMenu = hueSaturationMenu;
         this.brightnessContrastMenu = brightnessContrastMenu;
         this.noiseGeneratorMenu = noiseGeneratorMenu;
         this.checkerboardMenu = checkerboardMenu;
         this.keyboardShortCutPanel = keyboardShortCutPanel;
+        this.printCanvas = printCanvas;
         prepareMenuBar();
     }
     /**
@@ -178,6 +178,7 @@ public class MenuUI extends JMenuBar {
         iNoise.addActionListener(menuActionListener);
         iCheckerBoard.addActionListener(menuActionListener);
         eKeyboardShortCuts.addActionListener(menuActionListener);
+        fPrint.addActionListener(menuActionListener);
     }
     private ActionListener menuActionListener = new ActionListener() {
         @Override
@@ -190,7 +191,7 @@ public class MenuUI extends JMenuBar {
             } else if (e.getSource() == iGreyscale) {
                 greyscaleMenu.showWindow();
             } else if (e.getSource() == iSaturation) {
-                saturationMenu.showWindow();
+                hueSaturationMenu.showWindow();
             } else if (e.getSource() == iBrightnessContrast) {
                 brightnessContrastMenu.showWindow();
             } else if (e.getSource() == hAbout) {
@@ -213,6 +214,8 @@ public class MenuUI extends JMenuBar {
                 }
             } else if(e.getSource()  == eKeyboardShortCuts){
                 keyboardShortCutPanel.renderPanel();
+            } else if(e.getSource() == fPrint){
+                printCanvas.getPrintDimensionsDialog();
             }
         }
     };
