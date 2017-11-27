@@ -1,4 +1,4 @@
-﻿1.  Gnatt Chart Template, Template was used from: https://www.officetimeline.com/gantt-chart-template/it-project-management-download
+﻿﻿1.  Gnatt Chart Template, Template was used from: https://www.officetimeline.com/gantt-chart-template/it-project-management-download
 
 2. Coding convention used: Dr. Brian Fraser, “Java Coding Standard”, Summer 2016 (with slight modifications).
 
@@ -37,9 +37,3 @@ https://stackoverflow.com/questions/34186291/how-do-i-lay-out-input-panel-with-m
 
 14. JPanel and JLabel vertical margins
 https://stackoverflow.com/questions/1534889/how-to-make-jlabels-start-on-the-next-line
-
-15. LinkedHashMap for layer duplication numbering
-https://www.javatpoint.com/java-linkedhashmap
-
-16. Overwriting pre-existing map value
-https://stackoverflow.com/questions/27705908/how-to-replace-the-value-in-particular-key-in-linkedhashmap

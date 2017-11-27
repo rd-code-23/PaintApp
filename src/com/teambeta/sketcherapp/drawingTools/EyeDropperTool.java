@@ -35,6 +35,11 @@ public class EyeDropperTool extends DrawingTool {
     public void onClick(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
     }
 
+    @Override
+    public void onMove(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+
+    }
+
     private ImageLayer getSelectedLayer(LinkedList<ImageLayer> drawingLayers) {
         //get the selected layer, this assumes there is only one selected layer.
         for (int i = 0; i < drawingLayers.size(); i++) {
@@ -54,7 +59,7 @@ public class EyeDropperTool extends DrawingTool {
         Color colorAtPoint = null; // Pull from layer 0 by default.
         if (selectedLayer != null) {
             colorAtPoint = new Color(selectedLayer.getBufferedImage()
-                    .getRGB(e.getX(), e.getY()), true);
+                    .getRGB(e.getX(), e.getY()));
             MainUI.getColorChooser().setColorFromEyeDropper(colorAtPoint); // Update to the color chooser.
         }
     }

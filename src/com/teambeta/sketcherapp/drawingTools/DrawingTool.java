@@ -44,6 +44,15 @@ public abstract class DrawingTool {
     public abstract void onClick(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers);
 
     /**
+     * onMove defines the graphical behavior of the tool when the mouse is moved
+     *
+     * @param canvas        The final image to mix onto.
+     * @param e             The mouse event that needs to be responded to.
+     * @param drawingLayers The canvas layer to draw on.
+     */
+    public abstract void onMove(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers);
+
+    /**
      * onPress defines the graphical behavior of the tool when the mouse is released.
      *
      * @param canvas        The final image to mix onto.

@@ -59,6 +59,11 @@ public class AirBrushTool extends DrawingTool {
     }
 
     @Override
+    public void onMove(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+
+    }
+
+    @Override
     public void onPress(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         // Set the coordinates to the current point when the mouse is pressed.
         currentX = e.getX();
@@ -167,4 +172,5 @@ public class AirBrushTool extends DrawingTool {
     @Override
     public void setFillState(boolean fillState) {
     }
+
 }

@@ -1,7 +1,5 @@
 package com.teambeta.sketcherapp.model;
-
 import java.awt.image.BufferedImage;
-
 /**
  * The Layer class represents a drawing layer for our painting app.
  */
@@ -10,46 +8,26 @@ public class ImageLayer {
     private BufferedImage bufferedImage;
     private boolean isSelected;
     private String name;
-    private String originalLayerName;
-    private int duplicationCount;
-    private int layerDuplicateGroupKey;
     private static int layerNumber = 1;
     private final static String HIDDEN = "  [Hidden]";
-    private final static String DUPLICATE = "Duplicate";
-    private final static String LEFTBRACKET = "(";
-    private final static String RIGHTBRACKET = ")";
-
     /**
      * Constructor.
      *
      * @param bufferedImage for the image layer.
-     * @param originalLayerName the name of the original layer if this is a duplicate. Pass null for new layer.
-     * @param duplicationCount the original duplication number
      */
-    public ImageLayer(BufferedImage bufferedImage, String originalLayerName, int duplicationCount) {
+    public ImageLayer(BufferedImage bufferedImage) {
         this.bufferedImage = bufferedImage;
         isVisible = true;
         isSelected = false;
-        this.layerDuplicateGroupKey = -1;
-        if (originalLayerName == null && duplicationCount == 0) {
-            this.name = "  Layer " + layerNumber;
-            this.originalLayerName = this.name;
-            this.duplicationCount = 0;
-            layerNumber++;
-        } else {
-            this.originalLayerName = originalLayerName;
-            this.name = originalLayerName + " " + LEFTBRACKET + DUPLICATE + " " + duplicationCount + RIGHTBRACKET;
-            this.duplicationCount = duplicationCount;
-        }
+        name = "  Layer " + layerNumber;
+        layerNumber++;
     }
-
     /**
      * Resets the layerNumber to 1.
      */
     public static void resetLayerNumber() {
         layerNumber = 1;
     }
-
     /**
      * Get the buffered image.
      *
@@ -58,7 +36,6 @@ public class ImageLayer {
     public BufferedImage getBufferedImage() {
         return bufferedImage;
     }
-
     /**
      * Checks if layer is visible.
      *
@@ -67,7 +44,6 @@ public class ImageLayer {
     public boolean isVisible() {
         return isVisible;
     }
-
     /**
      * Set visibility of the layer.
      *
@@ -76,7 +52,6 @@ public class ImageLayer {
     public void setVisible(boolean visible) {
         isVisible = visible;
     }
-
     /**
      * Specifies if layer is selected.
      *
@@ -85,7 +60,6 @@ public class ImageLayer {
     public void setSelected(boolean selected) {
         this.isSelected = selected;
     }
-
     /**
      * Checks if layer is selected.
      *
@@ -94,7 +68,6 @@ public class ImageLayer {
     public boolean isSelected() {
         return isSelected;
     }
-
     /**
      * Get the name of the image layer.
      *
@@ -103,7 +76,6 @@ public class ImageLayer {
     public String getName() {
         return name;
     }
-
     /**
      * Set the name of the image layer.
      *
@@ -112,64 +84,6 @@ public class ImageLayer {
     public void setName(String name) {
         this.name = "  " + name;
     }
-
-    /**
-     * Set the duplication count of the image layer.
-     *
-     * @param duplicationCount for the layer
-     */
-    public void setDuplicationCount(int duplicationCount) {
-        this.duplicationCount = duplicationCount;
-    }
-
-    /**
-     * Get the duplication count of the layer.
-     *
-     * @return the duplication count of the layer
-     */
-    public int getDuplicationCount() {
-        return duplicationCount;
-    }
-
-    /**
-     * Set the original name of the layer.
-     *
-     * @param name the original name of the layer
-     */
-    public void setOriginalLayerName(String name) {
-        originalLayerName = "  " + name;
-    }
-
-    /**
-     * Get the original name of the layer.
-     *
-     * @return the original name of the layer
-     */
-    public String getOriginalLayerName() {
-        if (originalLayerName != null) {
-            return originalLayerName;
-        }
-        return "";
-    }
-
-    /**
-     * Set the duplicate-group key for this layer.
-     *
-     * @param key the key to use
-     */
-    public void setLayerDuplicateGroupKey(int key) {
-        layerDuplicateGroupKey = key;
-    }
-
-    /**
-     * Get the duplicate-group key for this layer.
-     *
-     * @return the duplicate-group key
-     */
-    public int getLayerDuplicateGroupKey() {
-        return layerDuplicateGroupKey;
-    }
-
     @Override
     public String toString() {
         if (!isVisible) {

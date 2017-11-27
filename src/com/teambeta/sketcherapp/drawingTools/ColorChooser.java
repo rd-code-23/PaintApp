@@ -14,19 +14,14 @@ import java.util.List;
  * tools.
  */
 public class ColorChooser extends JPanel {
-    private static final String FONT_TYPE = "Arial";
-    private static final int FONT_SIZE = 16;
-    private static final String COLOR_SELECTOR_TEXT = "Color Selector";
     private static Color color;
-    private static final int SQUARE_LENGTH = 80;
-    private static final int PANEL_LENGTH = 80;
-    private static final String DARK_GREY_CANVAS = "#222222";
+    private static final int SQUARE_LENGTH = 50;
+    private static final int PANEL_LENGTH = 50;
     private static List<GeneralObserver> observers = new ArrayList<>();
 
-    // Constructor that displays default color as a square panel (graphic selector).
+    // Constructor that displays default color as a square selectionOptionPanel (graphic selector).
     public ColorChooser() {
         color = Color.BLACK;
-        setToolTipText(COLOR_SELECTOR_TEXT);
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -36,22 +31,11 @@ public class ColorChooser extends JPanel {
     }
 
     @Override
-    public JToolTip createToolTip() {
-        JToolTip toolTip = new JToolTip();
-        toolTip.setBackground(Color.decode(DARK_GREY_CANVAS));
-        toolTip.setForeground(Color.WHITE);
-        toolTip.setBorder(null);
-        toolTip.setFont(new Font(FONT_TYPE, Font.PLAIN, FONT_SIZE));
-        return toolTip;
-    }
-
-    @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBackground(Color.DARK_GRAY);
         setSize(SQUARE_LENGTH, SQUARE_LENGTH);
-
         graphics.setColor(getColor());
         graphics.fillRect(0, 0, SQUARE_LENGTH, SQUARE_LENGTH);
         graphics.dispose();
@@ -68,7 +52,7 @@ public class ColorChooser extends JPanel {
     private void changeColor() {
         Color previousColor = getColor();
         color = JColorChooser.showDialog(null, "Select a Color", color);
-        // Canceling or exiting the colour panel will return null and break everything.
+        // Canceling or exiting the colour selectionOptionPanel will return null and break everything.
         // Store the previous colour and keep it if null is encountered.
         if (color == null) {
             color = previousColor;

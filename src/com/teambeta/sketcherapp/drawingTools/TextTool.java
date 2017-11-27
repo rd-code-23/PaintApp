@@ -68,6 +68,11 @@ public class TextTool extends DrawingTool {
         placeText(canvas, drawingLayers, e);
     }
 
+    @Override
+    public void onMove(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+
+    }
+
 
     @Override
     public void onPress(BufferedImage canvas, MouseEvent e,

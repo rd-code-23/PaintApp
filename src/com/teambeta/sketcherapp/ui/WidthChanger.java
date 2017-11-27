@@ -17,13 +17,14 @@ public class WidthChanger {
     private static final int WIDTH_PANEL_LABEL = 50;
     private static final int WIDTH_TEXTFIELD = 30;
     private static final int WIDTH_SLIDER = 450;
+    private static final int HEIGHT_PANEL = 300;
+    private static final int WIDTH_PANEL = 50;
     private static final String FILL_CHECKBOX_TEXT = "Fill Shape";
     private static final String GLOBAL_WIDTH_CHECKBOX_TEXT = "Global";
     private static final String FONT_TYPE = "Arial";
     private static final String CUSTOM_DARK_GREY = "#343434";
     private static final int MINOR_TICK_SPACING = 100;
     private static final int TEXT_PANEL_SPACING = 225;
-    private static final int WIDTH_PANEL_HEIGHT = 100;
 
     private JPanel textPanel = new JPanel();
     private JPanel widthPanel = new JPanel();
@@ -38,6 +39,8 @@ public class WidthChanger {
     private JCheckBox fillBox;
     private boolean isFill = false;
 
+
+
     /**
      * Constructor.
      */
@@ -49,7 +52,6 @@ public class WidthChanger {
      * Sets up the panel to change width.
      */
     private void renderPanel() {
-        widthPanel.setPreferredSize(new Dimension(Integer.MAX_VALUE, WIDTH_PANEL_HEIGHT));
         currentWidthValue = INITIAL_WIDTH_VALUE;
         textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.X_AXIS));
         textPanel.setBackground(Color.DARK_GRAY);
@@ -91,20 +93,15 @@ public class WidthChanger {
      * Build check boxes.
      */
     private void buildCheckBoxes() {
-        Font checkBoxFont = new Font(FONT_TYPE, Font.PLAIN, SIZE_FONT_JLABEL);
         globalSize = new JCheckBox(GLOBAL_WIDTH_CHECKBOX_TEXT);
         globalSize.setBackground(Color.DARK_GRAY);
         globalSize.setForeground(Color.WHITE);
         globalSize.setSelected(true);
-        globalSize.setFont(checkBoxFont);
-        globalSize.setFocusPainted(false);
 
         fillBox = new JCheckBox(FILL_CHECKBOX_TEXT);
         fillBox.setBackground(Color.DARK_GRAY);
         fillBox.setForeground(Color.WHITE);
         fillBox.setSelected(false);
-        fillBox.setFont(checkBoxFont);
-        fillBox.setFocusPainted(false);
         isFill = fillBox.isSelected();
     }
 
@@ -119,7 +116,6 @@ public class WidthChanger {
         panelLabel.setPreferredSize(new Dimension(WIDTH_PANEL_LABEL, HEIGHT_COMPONENT));
         panelLabel.setMinimumSize(new Dimension(WIDTH_PANEL_LABEL, HEIGHT_COMPONENT));
         widthTextField = new JTextField("" + INITIAL_WIDTH_VALUE, MAX_COL_JTEXTFIELD);
-        widthTextField.setFont(new Font(FONT_TYPE, Font.PLAIN, SIZE_FONT_JLABEL));
         widthTextField.setBackground(Color.decode(CUSTOM_DARK_GREY));
         widthTextField.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.GRAY));
         widthTextField.setForeground(Color.WHITE);
@@ -219,34 +215,12 @@ public class WidthChanger {
         return widthPanel;
     }
 
-    /**
-     * Shows width changer panel.
-     */
-    public void showPanel() {
-        widthPanel.setVisible(true);
-    }
-
-    /**
-     * Hides width changer panel.
-     */
     public void hidePanel() {
         widthPanel.setVisible(false);
     }
 
-    /**
-     * Shows text panel in width changer panel.
-     */
-    public void showTextPanel() {
-        textPanel.setVisible(true);
-        widthSlider.setVisible(true);
-    }
-
-    /**
-     * Hides text panel in width changer panel.
-     */
-    public void hideTextPanel() {
-        textPanel.setVisible(false);
-        widthSlider.setVisible(false);
+    public void showPanel() {
+        widthPanel.setVisible(true);
     }
 
     /**

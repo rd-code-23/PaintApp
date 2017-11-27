@@ -2,6 +2,7 @@ package com.teambeta.sketcherapp.drawingTools;
 
 import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.ui.DrawArea;
+import com.teambeta.sketcherapp.ui.MainUI;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -73,6 +74,11 @@ public class EraserTool extends DrawingTool {
     public void onClick(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         currentX = e.getX();
         currentY = e.getY();
+    }
+
+    @Override
+    public void onMove(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+
     }
 
     @Override

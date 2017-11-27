@@ -83,6 +83,15 @@ public class DrawArea extends JComponent {
                     repaint();
                 }
             }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                if (currentlySelectedLayer.isVisible()) {
+                    MainUI.getSelectedDrawingTool().onMove(canvasBufferedImage, e, drawingLayers);
+                    isCanvasAltered = true;
+                    repaint();
+                }
+            }
         });
         drawingLayers = new LinkedList<>();
     }
@@ -177,8 +186,7 @@ public class DrawArea extends JComponent {
         // enable antialiasing
         graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         if (drawingLayers.isEmpty()) {
-            drawingLayers.add(new ImageLayer(new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB),
-                    null, 0));
+            drawingLayers.add(new ImageLayer(new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB)));
             currentlySelectedLayer = drawingLayers.get(0);
             currentlySelectedLayer.setSelected(true);
             LayersPanel layersPanel = mainUI.getLayersPanel();

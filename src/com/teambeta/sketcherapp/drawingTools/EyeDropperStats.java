@@ -10,10 +10,9 @@ import java.awt.*;
  */
 public class EyeDropperStats extends JPanel {
     private static final int TEXTFIELD_EYEDROPPER_FONTSIZE = 16;
-    private static final String EYEDROPPER_TEXTFIELD_RED_PREFIX = "    R:    ";
-    private static final String EYEDROPPER_TEXTFIELD_GREEN_PREFIX = "    G:    ";
-    private static final String EYEDROPPER_TEXTFIELD_BLUE_PREFIX = "    B:    ";
-    private static final String EYEDROPPER_TEXTFIELD_ALPHA_PREFIX = "    A:    ";
+    private static final String EYEDROPPER_TEXTFIELD_RED_PREFIX = "R:    ";
+    private static final String EYEDROPPER_TEXTFIELD_GREEN_PREFIX = "G:    ";
+    private static final String EYEDROPPER_TEXTFIELD_BLUE_PREFIX = "B:    ";
     private static final String EYEDROPPER_TEXTFIELD_SPACE = "\n";
     private static final String FONT_TYPE = "Arial";
 
@@ -33,7 +32,7 @@ public class EyeDropperStats extends JPanel {
         eyeDropperTextField.setForeground(Color.WHITE);
         eyeDropperTextField.setFont(new Font(FONT_TYPE, Font.BOLD, TEXTFIELD_EYEDROPPER_FONTSIZE));
         eyeDropperTextField.setEditable(false);
-        setBorder(BorderFactory.createMatteBorder(0, 1, 0, 0, Color.GRAY));
+
         updateTextField();
         add(eyeDropperTextField);
     }
@@ -46,9 +45,7 @@ public class EyeDropperStats extends JPanel {
                 + EYEDROPPER_TEXTFIELD_SPACE
                 + EYEDROPPER_TEXTFIELD_GREEN_PREFIX + color.getGreen()
                 + EYEDROPPER_TEXTFIELD_SPACE
-                + EYEDROPPER_TEXTFIELD_BLUE_PREFIX + color.getBlue()
-                + EYEDROPPER_TEXTFIELD_SPACE
-                + EYEDROPPER_TEXTFIELD_ALPHA_PREFIX + color.getAlpha());
+                + EYEDROPPER_TEXTFIELD_BLUE_PREFIX + color.getBlue());
     }
 
     /**
