@@ -1,6 +1,6 @@
 package com.teambeta.sketcherapp.model;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import java.awt.*;
 
 /**
