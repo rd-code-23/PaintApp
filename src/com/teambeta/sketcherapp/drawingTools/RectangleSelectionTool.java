@@ -144,7 +144,7 @@ public class RectangleSelectionTool extends DrawingTool {
                     Graphics2D previewLayerGraphics = (Graphics2D) previewLayer.getGraphics();
                     canvasGraphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                     previewLayerGraphics.setColor(color);
-                    previewLayerGraphics.setStroke(new BasicStroke(1f, BasicStroke.CAP_BUTT,
+                    previewLayerGraphics.setStroke(new BasicStroke(2f, BasicStroke.CAP_BUTT,
                             BasicStroke.JOIN_MITER, 10.0f, dash, 0.0f));
                     calcSquareCoordinateData(e);
                     previewLayerGraphics.drawRect(initX, initY, drawWidthX, drawHeightY);
