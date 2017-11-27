@@ -220,13 +220,26 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
             public void actionPerformed(ActionEvent e) {
                 int selectedIndex = listOfLayers.getSelectedIndex();
                 if (selectedIndex != -1) {
+                    System.out.println(selectedIndex);
+                    System.out.println(listModel.getSize());
                     listModel.remove(selectedIndex);
                     drawingLayers.remove(selectedIndex);
                     if (drawingLayers.isEmpty()) {
                         ImageLayer.resetLayerNumber();
                         duplicationMap.clear();
+                    } else {
+                        if (listModel.getSize() - selectedIndex > 1) {
+                            drawArea.setCurrentlySelectedLayer(listModel.get(selectedIndex));
+                            listOfLayers.setSelectedIndex(selectedIndex);
+                        } else {
+                            drawArea.setCurrentlySelectedLayer(listModel.get(listModel.getSize() - 1));
+                            listOfLayers.setSelectedIndex(listModel.getSize() - 1);
+                        }
+
+                        listOfLayers.repaint();
                     }
                     drawArea.redrawLayers();
+                    drawArea.repaint();
                 }
             }
         };
