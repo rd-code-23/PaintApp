@@ -3,6 +3,7 @@ package com.teambeta.sketcherapp.ui;
 import com.teambeta.sketcherapp.Database.DB_KBShortcuts;
 import com.teambeta.sketcherapp.drawingTools.*;
 import com.teambeta.sketcherapp.model.ImportExport;
+import com.teambeta.sketcherapp.model.MouseCursor;
 import com.teambeta.sketcherapp.model.Shortcuts;
 import com.teambeta.sketcherapp.model.ToolButton;
 
@@ -37,6 +38,7 @@ public class MainUI {
     private static SpiralTool spiralTool;
     private static DrawingTool selectedDrawingTool;
     private static EyeDropperStats eyeDropperStats;
+    private RectangleSelectionTool rectangleSelectionTool;
 
     private static final String CLEAR_TOOL_BUTTON_TEXT = "Clear";
     private static final String SELECTION_TOOL_BUTTON_TEXT = "Selection";
@@ -76,7 +78,7 @@ public class MainUI {
     private int canvasHeight;
 
     private JButton clearButton;
-    private JButton selectionButton;
+    private JButton selectionToolButton;
     private JButton brushToolButton;
     private JButton lineToolButton;
     private JButton rectangleToolButton;
@@ -107,6 +109,8 @@ public class MainUI {
     private BrightnessContrastMenu brightnessContrastMenu;
     private HueSaturationMenu hueSaturationMenu;
     private LayersPanel layersPanel;
+    private MouseCursor mouseCursor;
+    private JPanel northPanel;
 
     private static final String RES_PATH = System.getProperty("user.dir") + File.separator + "src" +
             File.separator + "res";
@@ -132,9 +136,6 @@ public class MainUI {
     private static final String CLEAR_ICON_DEFAULT = RES_PATH + File.separator + "clear_canvas.png";
     private static final String CLEAR_ICON_HIGHLIGHTED = RES_PATH + File.separator + "clear_canvas_highlighted.png";
     private static final String CLEAR_ICON_HOVER = RES_PATH + File.separator + "clear_canvas_hover.png";
-    private static final String CROP_ICON_DEFAULT = RES_PATH + File.separator + "crop.png";
-    private static final String CROP_ICON_HIGHLIGHTED = RES_PATH + File.separator + "crop_highlighted.png";
-    private static final String CROP_ICON_HOVER = RES_PATH + File.separator + "crop_hover.png";
     private static final String DNA_ICON_DEFAULT = RES_PATH + File.separator + "dna.png";
     private static final String DNA_ICON_HIGHLIGHTED = RES_PATH + File.separator + "dna_highlighted.png";
     private static final String DNA_ICON_HOVER = RES_PATH + File.separator + "dna_hover.png";
@@ -147,9 +148,6 @@ public class MainUI {
     private static final String FAN_ICON_DEFAULT = RES_PATH + File.separator + "fan.png";
     private static final String FAN_ICON_HIGHLIGHTED = RES_PATH + File.separator + "fan_highlighted.png";
     private static final String FAN_ICON_HOVER = RES_PATH + File.separator + "fan_hover.png";
-    private static final String HAND_ICON_DEFAULT = RES_PATH + File.separator + "hand.png";
-    private static final String HAND_ICON_HIGHLIGHTED = RES_PATH + File.separator + "hand_highlighted.png";
-    private static final String HAND_ICON_HOVER = RES_PATH + File.separator + "hand_hover.png";
     private static final String HUE_SATURATION_ICON_DEFAULT = RES_PATH + File.separator + "hue_saturation.png";
     private static final String HUE_SATURATION_ICON_HIGHLIGHTED = RES_PATH + File.separator +
             "hue_saturation_highlighted.png";
@@ -161,9 +159,6 @@ public class MainUI {
     private static final String SELECTION_ICON_DEFAULT = RES_PATH + File.separator + "selection.png";
     private static final String SELECTION_ICON_HIGHLIGHTED = RES_PATH + File.separator + "selection_highlighted.png";
     private static final String SELECTION_ICON_HOVER = RES_PATH + File.separator + "selection_hover.png";
-    private static final String SHAPES_ICON_DEFAULT = RES_PATH + File.separator + "shapes.png";
-    private static final String SHAPES_ICON_HIGHLIGHTED = RES_PATH + File.separator + "shapes_highlighted.png";
-    private static final String SHAPES_ICON_HOVER = RES_PATH + File.separator + "shapes_hover.png";
     private static final String SPIRAL_ICON_DEFAULT = RES_PATH + File.separator + "spiral.png";
     private static final String SPIRAL_ICON_HIGHLIGHTED = RES_PATH + File.separator + "spiral_highlighted.png";
     private static final String SPIRAL_ICON_HOVER = RES_PATH + File.separator + "spiral_hover.png";
@@ -313,19 +308,46 @@ public class MainUI {
                 brightnessContrastMenu.showWindow();
             } else if (e.getSource() == hueSaturationButton) {
                 hueSaturationMenu.showWindow();
+            } else if (e.getSource() == selectionToolButton) {
+                widthChanger.showTextPanel();
+                selectedDrawingTool = rectangleSelectionTool;
+                setHighlightedToDefault();
+                highlightedButton = selectionToolButton;
+                selectionToolButton.setIcon(new ImageIcon(SELECTION_ICON_HIGHLIGHTED));
+                textToolSettings.setVisibility(false);
+                northPanel.remove(textToolSettings);
+                northPanel.validate();
+                rectangleSelectionTool.showPanel();
+                northPanel.add(rectangleSelectionTool.getSelectionOptionPanel(), BorderLayout.EAST);
+                northPanel.validate();
+                updateSizeSlider();
+                updateFillState();
             }
 
             if (e.getSource() == textToolButton) {
-                widthChanger.showTextPanel();
+                rectangleSelectionTool.hidePanel();
+                northPanel.remove(rectangleSelectionTool.getSelectionOptionPanel());
+                northPanel.add(textToolSettings, BorderLayout.EAST);
+                northPanel.validate();
                 selectedDrawingTool = textTool;
                 setHighlightedToDefault();
                 highlightedButton = textToolButton;
                 textToolButton.setIcon(new ImageIcon(TEXT_ICON_HIGHLIGHTED));
                 textToolSettings.setVisibility(true);
+
             } else if ((e.getSource() != textToolButton && e.getSource() != clearButton)
                     && (e.getSource() instanceof JButton)) {
                 textToolSettings.setVisibility(false);
             }
+
+            if (selectedDrawingTool != rectangleSelectionTool && e.getSource() != clearButton && e.getSource() instanceof JButton) {
+                rectangleSelectionTool.restartSelection();
+                rectangleSelectionTool.hidePanel();
+                mouseCursor.setDefaultCursor();
+                drawArea.setFocusable(true);
+                drawArea.validate();
+            }
+
         }
     };
 
@@ -335,6 +357,8 @@ public class MainUI {
     public MainUI(int canvasWidth, int canvasHeight) {
         this.canvasWidth = canvasWidth;
         this.canvasHeight = canvasHeight;
+        drawArea = new DrawArea(this);
+        mouseCursor = new MouseCursor(drawArea);
         initDrawingTools();
         prepareGUI();
     }
@@ -358,6 +382,7 @@ public class MainUI {
         airBrushTool = new AirBrushTool();
         triangleTool = new TriangleTool();
         spiralTool = new SpiralTool();
+        rectangleSelectionTool = new RectangleSelectionTool(mouseCursor);
         selectedDrawingTool = brushTool;
     }
 
@@ -442,7 +467,7 @@ public class MainUI {
 
         Container mainContent = mainFrame.getContentPane();
         mainContent.setLayout(new BorderLayout());
-        drawArea = new DrawArea(this);
+
 
         importExport = new ImportExport(drawArea, this);
         brightnessContrastMenu = new BrightnessContrastMenu(drawArea);
@@ -457,7 +482,7 @@ public class MainUI {
         brushToolButton.setIcon(new ImageIcon(BRUSH_ICON_HIGHLIGHTED));
 
         /* END MAIN UI BUTTONS */
-        JPanel northPanel = new JPanel();
+        northPanel = new JPanel();
         northPanel.setLayout(new BorderLayout());
 
         //setting up the shortcuts and database
@@ -496,6 +521,12 @@ public class MainUI {
         } else {
             db_kbShortcuts.createTable();
             generateDefaultKeyBindings();
+        }
+
+        if (rectangleSelectionTool != null) {
+            rectangleSelectionTool.renderPanel();
+            northPanel.add(rectangleSelectionTool.getSelectionOptionPanel(), BorderLayout.EAST);
+            rectangleSelectionTool.hidePanel();
         }
     }
 
@@ -545,7 +576,7 @@ public class MainUI {
      */
     private void initializeButtons() {
         clearButton = new ToolButton(new ImageIcon(CLEAR_ICON_DEFAULT));
-        selectionButton = new ToolButton(new ImageIcon(SELECTION_ICON_DEFAULT));
+        selectionToolButton = new ToolButton(new ImageIcon(SELECTION_ICON_DEFAULT));
         brushToolButton = new ToolButton(new ImageIcon(BRIGHTNESS_ICON_DEFAULT));
         lineToolButton = new ToolButton(new ImageIcon(LINE_ICON_DEFAULT));
         rectangleToolButton = new ToolButton(new ImageIcon(SQUARE_ICON_DEFAULT));
@@ -573,7 +604,7 @@ public class MainUI {
         // The order of this list determines the order of the buttons in the generated UI. Index -> 0 = Position ->
         // First
         JButton[] buttonContainer = {
-                clearButton, selectionButton, brushToolButton, airBrushToolButton, eraserToolButton, lineToolButton,
+                clearButton, selectionToolButton, brushToolButton, airBrushToolButton, eraserToolButton, lineToolButton,
                 spiralToolButton, fanToolButton, rectangleToolButton, ellipseToolButton, triangleToolButton,
                 paintBucketToolButton, celticKnotToolButton, dnaToolButton, textToolButton, eyeDropperToolButton,
                 brightnessContrastButton, hueSaturationButton
@@ -745,7 +776,7 @@ public class MainUI {
         editorPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
         editorPanel.add(imageEditingPanel);
         editorPanel.add(Box.createRigidArea(new Dimension(0, PANEL_SECTION_SPACING)));
-        layersPanel = new LayersPanel(drawArea);
+        layersPanel = new LayersPanel(drawArea, rectangleSelectionTool);
         editorPanel.add(layersPanel);
         return editorPanel;
     }
@@ -776,8 +807,8 @@ public class MainUI {
      */
     private void setHighlightedToDefault() {
         if (highlightedButton != null) {
-            if (highlightedButton == selectionButton) {
-                selectionButton.setIcon(new ImageIcon(SELECTION_ICON_DEFAULT));
+            if (highlightedButton == selectionToolButton) {
+                selectionToolButton.setIcon(new ImageIcon(SELECTION_ICON_DEFAULT));
             } else if (highlightedButton == brushToolButton) {
                 brushToolButton.setIcon(new ImageIcon(BRUSH_ICON_DEFAULT));
             } else if (highlightedButton == airBrushToolButton) {

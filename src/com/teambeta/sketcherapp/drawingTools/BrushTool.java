@@ -87,6 +87,11 @@ public class BrushTool extends DrawingTool {
         lastY = currentY;
     }
 
+    @Override
+    public void onMove(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+
+    }
+
     /**
      * getColor returns the current color the brush tool is set to.
      *

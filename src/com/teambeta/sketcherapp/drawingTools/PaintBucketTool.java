@@ -150,6 +150,11 @@ public class PaintBucketTool extends DrawingTool {
     }
 
     @Override
+    public void onMove(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
+
+    }
+
+    @Override
     public int getToolWidth() {
         return 0;
     }
