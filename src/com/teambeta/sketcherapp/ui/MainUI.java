@@ -486,6 +486,7 @@ public class MainUI {
         initializeButtons();
         initializeCanvasTools();
         brushToolButton.setIcon(new ImageIcon(getRESFile(BRUSH_ICON_HIGHLIGHTED)));
+        printCanvas = new PrintCanvas(drawArea,this);
 
         /* END MAIN UI BUTTONS */
         northPanel = new JPanel();
