@@ -81,7 +81,7 @@ public class ImportExport {
                 exc.printStackTrace();
             }
 
-            if (drawArea.isCanvasAltered()) {
+       /*     if (drawArea.isCanvasAltered()) {
                 Object[] options = {JOPTION_SAVE,
                         JOPTION_DONT_SAVE,
                         JOPTION_CANCEL};
@@ -92,15 +92,15 @@ public class ImportExport {
                         JOptionPane.QUESTION_MESSAGE,
                         null,
                         options,
-                        options[2]);
+                        options[2]);*/
 
-                if (userOption == JOptionPane.YES_OPTION) {
-                    exportImage();
-                }
-                if (userOption == JOptionPane.YES_OPTION || userOption == JOptionPane.NO_OPTION) {
+            //    if (userOption == JOptionPane.YES_OPTION) {
+           //         exportImage();
+           //     }
+           //     if (userOption == JOptionPane.YES_OPTION || userOption == JOptionPane.NO_OPTION) {
                     drawArea.setImportedImage(image);
-                }
-            }
+
+          //  }}
 
         }
     }
