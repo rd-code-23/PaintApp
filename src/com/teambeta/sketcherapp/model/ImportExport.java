@@ -94,11 +94,14 @@ public class ImportExport {
                         options,
                         options[2]);
 
-                if (userOption == 0) {
+                if (userOption == JOptionPane.YES_OPTION) {
                     exportImage();
                 }
+                if (userOption == JOptionPane.YES_OPTION || userOption == JOptionPane.NO_OPTION) {
+                    drawArea.setImportedImage(image);
+                }
             }
-            drawArea.setImportedImage(image);
+
         }
     }
 
