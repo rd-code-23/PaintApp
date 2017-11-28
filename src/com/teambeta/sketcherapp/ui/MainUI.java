@@ -529,7 +529,7 @@ public class MainUI {
         });
 
         //drop table if shortcuts are changed
-         //db_kbShortcuts.dropTable();
+      //  db_kbShortcuts.dropTable();
         if (db_kbShortcuts.isTableExists()) {
             generateDBDefaultKeyBindings();
             db_kbShortcuts.generateDBKeyBindings();
@@ -1040,7 +1040,7 @@ public class MainUI {
                 });
         shortcuts.addKeyBinding(KeyEvent.VK_S, true, false, false,
                 Shortcuts.SELECTION_TOOL_SHORTCUT, (evt) -> {
-                    widthChanger.showTextPanel();
+                    widthChanger.hideTextPanel();
                     selectedDrawingTool = rectangleSelectionTool;
                     setHighlightedToDefault();
                     highlightedButton = selectionToolButton;
@@ -1065,6 +1065,7 @@ public class MainUI {
                     highlightedButton = textToolButton;
                     textToolButton.setIcon(new ImageIcon(getRESFile(TEXT_ICON_HIGHLIGHTED)));
                     textToolSettings.setVisibility(true);
+                    updateSizeSlider();
                 });
         shortcuts.addKeyBinding(KeyEvent.VK_Z, true, false, false,
                 Shortcuts.TRIANGLE_TOOL_SHORTCUT, (evt) -> {
@@ -1264,7 +1265,7 @@ public class MainUI {
         shortcuts.addKeyBinding(shortcuts.getSelectionToolKeyCode(), shortcuts.isCtrl_selectionTool(),
                 shortcuts.isShift_selectionTool(), shortcuts.isAlt_selectionTool(), Shortcuts.SELECTION_TOOL_SHORTCUT,
                 (evt) -> {
-                    widthChanger.showTextPanel();
+                    widthChanger.hideTextPanel();
                     selectedDrawingTool = rectangleSelectionTool;
                     setHighlightedToDefault();
                     highlightedButton = selectionToolButton;
@@ -1300,6 +1301,7 @@ public class MainUI {
                     highlightedButton = textToolButton;
                     textToolButton.setIcon(new ImageIcon(getRESFile(TEXT_ICON_HIGHLIGHTED)));
                     textToolSettings.setVisibility(true);
+                    updateSizeSlider();
                 });
         shortcuts.addKeyBinding(shortcuts.getTriangleToolKeyCode(), shortcuts.isCtrl_triangleTool(),
                 shortcuts.isShift_triangleTool(), shortcuts.isAlt_triangleTool(), Shortcuts.TRIANGLE_TOOL_SHORTCUT,
@@ -1386,6 +1388,8 @@ public class MainUI {
         textToolSettings.setVisibility(false);
         rectangleSelectionTool.restartSelection();
         rectangleSelectionTool.hidePanel();
+        updateSizeSlider();
+        widthChanger.showTextPanel();
         northPanel.validate();
     }
 
