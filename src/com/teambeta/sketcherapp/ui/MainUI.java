@@ -318,7 +318,7 @@ public class MainUI {
             } else if (e.getSource() == hueSaturationButton) {
                 hueSaturationMenu.showWindow();
             } else if (e.getSource() == selectionToolButton) {
-                widthChanger.showTextPanel();
+                widthChanger.hideTextPanel();
                 selectedDrawingTool = rectangleSelectionTool;
                 setHighlightedToDefault();
                 highlightedButton = selectionToolButton;
@@ -334,6 +334,7 @@ public class MainUI {
             }
 
             if (e.getSource() == textToolButton) {
+                widthChanger.showTextPanel();
                 rectangleSelectionTool.hidePanel();
                 northPanel.remove(rectangleSelectionTool.getSelectionOptionPanel());
                 northPanel.add(textToolSettings, BorderLayout.EAST);
