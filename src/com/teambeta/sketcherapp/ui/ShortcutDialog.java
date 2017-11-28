@@ -202,9 +202,9 @@ public class ShortcutDialog {
         private static final String KEY_STROKE_SYMBOL_BUTTON = "-";
         private static final String SAVE_TEXT_BUTTON = "Save";
         private static final String CANCEL_TEXT_BUTTON = "Cancel";
-        private static final String CTRL_TEXT_BUTTON = "ctrl";
-        private static final String ALT_TEXT_BUTTON = "alt";
-        private static final String SHIFT_TEXT_BUTTON = "shift";
+        private static final String CTRL_TEXT_BUTTON = "CTRL";
+        private static final String ALT_TEXT_BUTTON = "ALT";
+        private static final String SHIFT_TEXT_BUTTON = "SHIFT";
         private static final String INSTRUCTION_EDIT_SHORTCUT_LABEL = "You can toggle CTRL,ALT and SHIFT. Then type a letter";
         private static final String INSTRUCTION_INVALID_BINDING_EDIT_LABEL = "That Binding is Already Taken! Try Again";
         private static final String INSTRUCTION_ENTER_LETTER_LABEL = "You need to enter a letter!";
@@ -217,7 +217,7 @@ public class ShortcutDialog {
         private JButton strokeKey;
         private JButton saveButton;
         private JButton exitButton;
-        private KeyStroke ks;
+        private KeyStroke keyStroke;
         private JDialog dialog;
         private JLabel instructions;
         private JLabel notValidShortcut;
@@ -273,8 +273,8 @@ public class ShortcutDialog {
                 }
                 @Override
                 public void keyTyped(KeyEvent e) {
-                    ks = KeyStroke.getKeyStroke(Character.toUpperCase(e.getKeyChar()), 0);
-                    newKeyCode = ks.getKeyCode();
+                    keyStroke = KeyStroke.getKeyStroke(Character.toUpperCase(e.getKeyChar()), 0);
+                    newKeyCode = keyStroke.getKeyCode();
                 }
             });
             strokeKey = new JButton(KEY_STROKE_SYMBOL_BUTTON);
