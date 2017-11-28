@@ -113,8 +113,9 @@ public class MenuUI extends JMenuBar {
         fileMenu.add(fNew);
         fileMenu.add(fImport);
         fileMenu.add(fExport);
-        fileMenu.add(fClose);
         fileMenu.add(fPrint);
+        fileMenu.add(fClose);
+
 
         eKeyboardShortCuts = new JMenuItem(ESHORTCUTS_MENU_BUTTON_TEXT);
 
