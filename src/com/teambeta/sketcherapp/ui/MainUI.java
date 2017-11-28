@@ -909,6 +909,8 @@ public class MainUI {
         shortcuts.addKeyBinding(KeyEvent.VK_C, true, false, false,
                 Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
                     rectangleSelectionTool.restartSelection();
+                    setHighlightedToDefault();
+                    highlightedButton = clearButton;
                     drawArea.clear();
                 });
         shortcuts.addKeyBinding(KeyEvent.VK_O, false, true, false,
@@ -1134,6 +1136,7 @@ public class MainUI {
     public void generateDBDefaultKeyBindings() {
         shortcuts.addKeyBinding(Shortcuts.getClearToolKeyCode(), Shortcuts.isAlt_clearTool(),
                 Shortcuts.isShift_clearTool(), Shortcuts.isAlt_clearTool(), Shortcuts.CLEAR_TOOL_SHORTCUT, (evt) -> {
+                    rectangleSelectionTool.restartSelection();
                     setHighlightedToDefault();
                     highlightedButton = clearButton;
                     drawArea.clear();
