@@ -63,7 +63,7 @@ public class MenuUI extends JMenuBar {
     private GreyscaleMenu greyscaleMenu;
     private AboutMenu aboutMenu;
     private NewWindow newWindow;
-    
+
     private NoiseGeneratorMenu noiseGeneratorMenu;
     private CheckerboardMenu checkerboardMenu;
     private ShortcutDialog keyboardShortCutPanel;
@@ -75,7 +75,7 @@ public class MenuUI extends JMenuBar {
     public MenuUI(JFrame mainFrame, DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu,
                   HueSaturationMenu hueSaturationMenu, BrightnessContrastMenu brightnessContrastMenu,
                   NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu,
-                  ShortcutDialog keyboardShortCutPanel,PrintCanvas printCanvas) {
+                  ShortcutDialog keyboardShortCutPanel, PrintCanvas printCanvas) {
         this.mainFrame = mainFrame;
         this.drawArea = drawArea;
         this.importExport = importExport;
@@ -115,7 +115,6 @@ public class MenuUI extends JMenuBar {
         fileMenu.add(fExport);
         fileMenu.add(fPrint);
         fileMenu.add(fClose);
-
 
         eKeyboardShortCuts = new JMenuItem(ESHORTCUTS_MENU_BUTTON_TEXT);
 
