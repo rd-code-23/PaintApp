@@ -81,9 +81,9 @@ public class AirBrushTool extends DrawingTool {
         dotsToDraw = (int) (
                 DEFAULT_DOTS_TO_DRAW
                         * (
-                            (Math.PI * Math.pow( ((double) dotDiameter / 2.0), 2.0)) /
-                            (Math.PI * Math.pow( ((double) DEFAULT_DOT_DIAMETER / 2.0), 2.0 ))
-                          )
+                        (Math.PI * Math.pow(((double) dotDiameter / 2.0), 2.0)) /
+                                (Math.PI * Math.pow(((double) DEFAULT_DOT_DIAMETER / 2.0), 2.0))
+                )
         );
 
         dotsToDraw = (dotsToDraw >= 1) ? dotsToDraw : 1;

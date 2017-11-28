@@ -42,7 +42,7 @@ public class SpiralTool extends DrawingTool {
 
     /**
      * Get selected image layer.
-     * 
+     *
      * @param drawingLayers of the canvas.
      * @return selected layer.
      */
@@ -101,7 +101,7 @@ public class SpiralTool extends DrawingTool {
 
     /**
      * Get the selected tool width.
-     * 
+     *
      * @return brush width.
      */
     public int getToolWidth() {
@@ -110,7 +110,7 @@ public class SpiralTool extends DrawingTool {
 
     /**
      * Set the tool width.
-     * 
+     *
      * @param brushWidth size for the brush width.
      */
     public void setToolWidth(int brushWidth) {
@@ -137,9 +137,9 @@ public class SpiralTool extends DrawingTool {
      * Write a parametric spiral curve to the given layer.
      *
      * @param distalPowerFactor The scaling factor to determine the rate of change of the radius away from the origin
-     * @param x_centre the x-coordinate of the centre point
-     * @param y_centre the y-coordinate of the centre point
-     * @param layer the layer to draw on
+     * @param x_centre          the x-coordinate of the centre point
+     * @param y_centre          the y-coordinate of the centre point
+     * @param layer             the layer to draw on
      */
     private void writeParametricSpiral(double distalPowerFactor, int x_centre, int y_centre, BufferedImage layer, boolean flip) {
         // take arguments for the center point
@@ -183,14 +183,14 @@ public class SpiralTool extends DrawingTool {
 
             radius = Math.sqrt(Math.pow(x - x_centre, 2) + Math.pow(y - y_centre, 2));
 
-            if ( (x > 0) && (x < layer.getWidth()) && (y > 0) && (y < layer.getHeight())
+            if ((x > 0) && (x < layer.getWidth()) && (y > 0) && (y < layer.getHeight())
                     ||
-                        (
+                    (
                             (x > -MAXIMUM_PIXEL_MARGIN) || (y > -MAXIMUM_PIXEL_MARGIN) ||
-                            (x < layer.getWidth() + MAXIMUM_PIXEL_MARGIN) || (y < layer.getHeight() + MAXIMUM_PIXEL_MARGIN)
-                        )
+                                    (x < layer.getWidth() + MAXIMUM_PIXEL_MARGIN) || (y < layer.getHeight() + MAXIMUM_PIXEL_MARGIN)
+                    )
                     ) {
-                    layerGraphics.drawLine((int) x, (int) y, (int) x_prev, (int) y_prev);
+                layerGraphics.drawLine((int) x, (int) y, (int) x_prev, (int) y_prev);
             }
 
             t += T_VAL_INCREMENT;

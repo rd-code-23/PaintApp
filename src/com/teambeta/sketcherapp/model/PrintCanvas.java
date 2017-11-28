@@ -1,6 +1,8 @@
 package com.teambeta.sketcherapp.model;
+
 import com.teambeta.sketcherapp.ui.DrawArea;
 import com.teambeta.sketcherapp.ui.MainUI;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -8,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.print.*;
 import java.util.LinkedList;
+
 public class PrintCanvas implements Printable {
     private static final Color transparentColor = new Color(0x00FFFFFF, true);
     private static final String WIDTH_PRINT_DIALOG = "Width:";
@@ -37,10 +40,12 @@ public class PrintCanvas implements Printable {
     private JTextField newWidth;
     private JTextField newHeight;
     private JLabel instructions;
+
     public PrintCanvas(DrawArea drawArea, MainUI mainUI) {
         this.drawArea = drawArea;
         this.mainUI = mainUI;
     }
+
     /**
      * dialog to get the users preferred print dimensions
      */
@@ -127,6 +132,7 @@ public class PrintCanvas implements Printable {
             print();
         }
     }
+
     ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == autoFitButton) {
@@ -153,6 +159,7 @@ public class PrintCanvas implements Printable {
             }
         }
     };
+
     /**
      * setups the print job
      */
@@ -192,6 +199,7 @@ public class PrintCanvas implements Printable {
                 dest.setRGB(y, x, src.getRGB(x, y));
         return dest;
     }
+
     /**
      * checks if user input is an integer
      */
@@ -203,6 +211,7 @@ public class PrintCanvas implements Printable {
             return false;
         }
     }
+
     /**
      * prints the canvas
      */
@@ -217,6 +226,7 @@ public class PrintCanvas implements Printable {
             }
         }
     }
+
     /**
      * Draws the provided layers onto the provided canvasBufferedImage.
      *
@@ -236,6 +246,7 @@ public class PrintCanvas implements Printable {
             }
         }
     }
+
     /**
      * Draws the provided layers onto the provided canvasBufferedImage.
      */
@@ -249,6 +260,7 @@ public class PrintCanvas implements Printable {
         }
         drawLayersOntoCanvas(bufferedImages, canvas);
     }
+
     /**
      * Clears buffer image.
      *

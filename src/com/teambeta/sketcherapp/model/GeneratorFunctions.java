@@ -198,7 +198,7 @@ public class GeneratorFunctions {
      * Encrypt a character with the Caesar cipher.
      *
      * @param letter The character
-     * @param shift The shift value
+     * @param shift  The shift value
      * @return The encrypted character
      */
     private static char getEncryptedCaesarChar(char letter, int shift) {

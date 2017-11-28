@@ -95,12 +95,12 @@ public class ImportExport {
                         options[2]);*/
 
             //    if (userOption == JOptionPane.YES_OPTION) {
-           //         exportImage();
-           //     }
-           //     if (userOption == JOptionPane.YES_OPTION || userOption == JOptionPane.NO_OPTION) {
-                    drawArea.setImportedImage(image);
+            //         exportImage();
+            //     }
+            //     if (userOption == JOptionPane.YES_OPTION || userOption == JOptionPane.NO_OPTION) {
+            drawArea.setImportedImage(image);
 
-          //  }}
+            //  }}
 
         }
     }

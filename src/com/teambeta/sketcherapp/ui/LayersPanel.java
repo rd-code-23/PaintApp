@@ -91,7 +91,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private URL getRESFile(String filename) {
         return getClass().getClassLoader().getResource(filename);
     }
-    
+
     /**
      * Return The JList of ImageLayers stored in the LayersPanel
      *
@@ -300,7 +300,7 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
                     if (name != null) {
                         ImageLayer selectedLayer = drawArea.getDrawingLayers().get(selectedIndex);
                         if (selectedLayer != null) {
-                        // Setup shared duplicate-group key
+                            // Setup shared duplicate-group key
                             int layerGroupID = GeneratorFunctions.randomInt(0, MAX_GROUP_KEY_ID);
                             // Regenerate key if it is already used
                             while (duplicationMap.containsKey(layerGroupID)) {

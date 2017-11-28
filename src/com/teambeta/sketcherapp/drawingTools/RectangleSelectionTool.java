@@ -1,8 +1,10 @@
 package com.teambeta.sketcherapp.drawingTools;
+
 import com.teambeta.sketcherapp.model.GeneralObserver;
 import com.teambeta.sketcherapp.model.ImageLayer;
 import com.teambeta.sketcherapp.model.MouseCursor;
 import com.teambeta.sketcherapp.ui.DrawArea;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.awt.print.Paper;
 import java.util.LinkedList;
+
 /**
  * The Rectangle Selection tool class is used to select an image by a rectangle and drag them to another location
  * on the canvas
@@ -53,6 +56,7 @@ public class RectangleSelectionTool extends DrawingTool {
     private boolean isCutOption;
     private JPanel selectionOptionPanel;
     private MouseCursor mouseCursor;
+
     /**
      * The constructor sets the properties of the tool to their default values
      */
@@ -74,6 +78,7 @@ public class RectangleSelectionTool extends DrawingTool {
         isCutOption = true;
         this.mouseCursor = mouseCursor;
     }
+
     /**
      * Checks to see where the user mouse is
      */
@@ -98,6 +103,7 @@ public class RectangleSelectionTool extends DrawingTool {
             }
         }
     }
+
     @Override
     public void onPress(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         canvasCopy = canvas;
@@ -127,6 +133,7 @@ public class RectangleSelectionTool extends DrawingTool {
             }
         }
     }
+
     @Override
     public void onDrag(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         if (!drawingLayers.isEmpty()) {
@@ -162,6 +169,7 @@ public class RectangleSelectionTool extends DrawingTool {
             }
         }
     }
+
     @Override
     public void onRelease(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         if (!doNothing) {
@@ -190,6 +198,7 @@ public class RectangleSelectionTool extends DrawingTool {
             doNothing = false;
         }
     }
+
     /**
      * if the user selects the canvas that goes out of bounds this function will correct the results
      */
@@ -217,6 +226,7 @@ public class RectangleSelectionTool extends DrawingTool {
             drawHeightY = 2;
         }
     }
+
     /**
      * getting sub-image is pass by reference so this will transform it to pass by value
      */
@@ -227,6 +237,7 @@ public class RectangleSelectionTool extends DrawingTool {
         g.dispose();
         return bufferedImage;
     }
+
     /**
      * clears the space where the user selected the canvas
      */
@@ -242,6 +253,7 @@ public class RectangleSelectionTool extends DrawingTool {
         selectedLayerGraphics.drawRect(initX, initY, drawWidthX - offset, drawHeightY - offset);
         DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
     }
+
     /**
      * drags the selected canvas to its new location
      */
@@ -262,6 +274,7 @@ public class RectangleSelectionTool extends DrawingTool {
         DrawArea.drawLayersOntoCanvas(drawingLayers, canvas);
         canvasGraphics.drawImage(selectedCanvas, prevX + e.getX(), prevY + e.getY(), null);
     }
+
     /**
      * places the selected canvas where the user has dragged it to its new location
      */
@@ -279,6 +292,7 @@ public class RectangleSelectionTool extends DrawingTool {
         }
         isDrawn = false;
     }
+
     /**
      * cut and paste the image into clicked location
      */
@@ -295,6 +309,7 @@ public class RectangleSelectionTool extends DrawingTool {
         DrawArea.clearBufferImageToTransparent(selectedCanvas);
         isDrawn = false;
     }
+
     @Override
     public void onClick(BufferedImage canvas, MouseEvent e, LinkedList<ImageLayer> drawingLayers) {
         canvasCopy = canvas;
@@ -313,6 +328,7 @@ public class RectangleSelectionTool extends DrawingTool {
             }
         }
     }
+
     private ImageLayer getSelectedLayer(LinkedList<ImageLayer> drawingLayers) {
         //get the selected layer, this assumes there is only one selected layer.
         for (int i = 0; i < drawingLayers.size(); i++) {
@@ -323,14 +339,17 @@ public class RectangleSelectionTool extends DrawingTool {
         }
         return null;
     }
+
     @Override
     public int getToolWidth() {
         return squareWidth;
     }
+
     @Override
     public void setToolWidth(int width) {
         squareWidth = width;
     }
+
     /**
      * getColor returns the current color the square tool is set to.
      *
@@ -340,6 +359,7 @@ public class RectangleSelectionTool extends DrawingTool {
     public Color getColor() {
         return ColorChooser.getColor();
     }
+
     /**
      * Add a new observer to ColorChooser. Selecting a color in ColorChooser will update the color in this class
      */
@@ -351,9 +371,11 @@ public class RectangleSelectionTool extends DrawingTool {
             }
         });
     }
+
     public void setFillState(boolean fillState) {
         fillShape = fillState;
     }
+
     private void calcSquareCoordinateData(MouseEvent e) {
         // Get the coordinates of where the user released the mouse.
         currentX = e.getX();
@@ -382,6 +404,7 @@ public class RectangleSelectionTool extends DrawingTool {
             initX = mouseOriginX - drawWidthX;
         }
     }
+
     /**
      * initializes variables for this class
      */
@@ -395,6 +418,7 @@ public class RectangleSelectionTool extends DrawingTool {
         mouseOriginY = currentY;
         isCutOption = cutOption.isSelected();
     }
+
     /**
      * when we switch to another tool, restart the selection
      */
@@ -405,6 +429,7 @@ public class RectangleSelectionTool extends DrawingTool {
         isOverSelection = false;
         isDrawn = false;
     }
+
     /**
      * gui for the north east panel
      */
@@ -457,12 +482,15 @@ public class RectangleSelectionTool extends DrawingTool {
         cutOption.addActionListener(actionListener);
         copyOption.addActionListener(actionListener);
     }
+
     public void hidePanel() {
         selectionOptionPanel.setVisible(false);
     }
+
     public void showPanel() {
         selectionOptionPanel.setVisible(true);
     }
+
     ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == cutOption) {
@@ -473,6 +501,7 @@ public class RectangleSelectionTool extends DrawingTool {
             }
         }
     };
+
     /**
      * returns a panel tom display message, and cut/paste options
      */
