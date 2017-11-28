@@ -1124,6 +1124,10 @@ public class MainUI {
                     updateSizeSlider();
                     updateNorthEastPanel();
                 });
+        shortcuts.addKeyBinding(KeyEvent.VK_V, false, true, false, Shortcuts.INVERT_SHORTCUT,
+                (evt) -> {
+
+                });
     }
 
     /**
@@ -1362,6 +1366,11 @@ public class MainUI {
         /*shortcuts.addKeyBinding(shortcuts.getZoomToolKeyCode(), shortcuts.isCtrl_zoomTool(),
         shortcuts.isShift_zoomTool(), shortcuts.isAlt_zoomTool(), Shortcuts.ZOOM_TOOL_SHORTCUT, (evt) -> {
         });*/
+
+         shortcuts.addKeyBinding(shortcuts.getInvertToolKeyCode(), shortcuts.isCtrl_invertTool(),
+        shortcuts.isShift_invertTool(), shortcuts.isAlt_invertTool(), Shortcuts.INVERT_SHORTCUT, (evt) -> {
+
+        });
     }
 
     /**

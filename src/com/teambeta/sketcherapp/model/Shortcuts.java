@@ -151,6 +151,15 @@ public class Shortcuts {
     static boolean isCtrl_noiseTool;
     static boolean isShift_noiseTool;
     static boolean isAlt_noiseTool;
+
+
+    public static final String INVERT_SHORTCUT = "INVERT";
+    static int invertToolKeyCode;
+    static boolean isCtrl_invertTool;
+    static boolean isShift_invertTool;
+    static boolean isAlt_invertTool;
+
+
     private JComponent component;
     private MainUI mainUI;
     private ActionMap actionMap;
@@ -419,11 +428,17 @@ public class Shortcuts {
                 isShift_noiseTool = useShift;
                 isAlt_noiseTool = useAlt;
                 break;
+            case INVERT_SHORTCUT:
+                invertToolKeyCode = keyCode;
+                isCtrl_invertTool = useControl;
+                isShift_invertTool = useShift;
+                isAlt_invertTool = useAlt;
+                break;
             default:
                 System.out.println(NO_SUCH_TOOL);
         }
     }
-//TODO UNCOMMENT
+
     /**
      * sets the key binding to default settings
      */
@@ -523,6 +538,9 @@ public class Shortcuts {
             return false;
         }
         if (keyCode == noiseToolKeyCode && ctrl == isCtrl_noiseTool && shift == isShift_noiseTool && alt == isAlt_noiseTool) {
+            return false;
+        }
+        if (keyCode == invertToolKeyCode && ctrl == isCtrl_invertTool && shift == isShift_invertTool && alt == isAlt_invertTool) {
             return false;
         }
         return true;
@@ -1300,5 +1318,45 @@ public class Shortcuts {
     }
     public static void setIsAlt_noiseTool(boolean isAlt_noiseTool) {
         Shortcuts.isAlt_noiseTool = isAlt_noiseTool;
+    }
+
+    public static String getNoSuchTool() {
+        return NO_SUCH_TOOL;
+    }
+
+    public static String getInvertShortcut() {
+        return INVERT_SHORTCUT;
+    }
+
+    public static int getInvertToolKeyCode() {
+        return invertToolKeyCode;
+    }
+
+    public static void setInvertToolKeyCode(int invertToolKeyCode) {
+        Shortcuts.invertToolKeyCode = invertToolKeyCode;
+    }
+
+    public static boolean isCtrl_invertTool() {
+        return isCtrl_invertTool;
+    }
+
+    public static void setIsCtrl_invertTool(boolean isCtrl_invertTool) {
+        Shortcuts.isCtrl_invertTool = isCtrl_invertTool;
+    }
+
+    public static boolean isShift_invertTool() {
+        return isShift_invertTool;
+    }
+
+    public static void setIsShift_invertTool(boolean isShift_invertTool) {
+        Shortcuts.isShift_invertTool = isShift_invertTool;
+    }
+
+    public static boolean isAlt_invertTool() {
+        return isAlt_invertTool;
+    }
+
+    public static void setIsAlt_invertTool(boolean isAlt_invertTool) {
+        Shortcuts.isAlt_invertTool = isAlt_invertTool;
     }
 }

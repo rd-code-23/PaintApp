@@ -38,9 +38,10 @@ public class ShortcutDialog {
     private static final String BRIGHTNESS_SHORTCUT_TABLE = "Brightness";
     private static final String SATURATION_SHORTCUT_TABLE = "Saturation";
     private static final String SPIRAL_SHORTCUT_TABLE = "Spiral";
-    private static final String CHECKERBOARD_SHORTCUT_TABLE = "Checker Board";
-    private static final String NOISE_SHORTCUT_TABLE = "Noise Board";
+    private static final String CHECKERBOARD_SHORTCUT_TABLE = "Checkerboard";
+    private static final String NOISE_SHORTCUT_TABLE = "Random Noise";
     private static final String ZOOM_SHORTCUT_TABLE = "Zoom";
+    private static final String INVERT_SHORTCUT_TABLE = "Invert";
     private static final String ACTION_SHORTCUT_TABLE_COL = "Action";
     private static final String DEFAULT_BUTTON = "Default";
     private static final String APPLY_BUTTON = "Apply";
@@ -94,6 +95,7 @@ public class ShortcutDialog {
                         /*{ZOOM_SHORTCUT_TABLE, printShortcut(sc.getZoomToolKeyCode(), sc.isCtrl_zoomTool(), sc.isShift_zoomTool(), sc.isAlt_zoomTool())},*/
                         {CHECKERBOARD_SHORTCUT_TABLE, printShortcut(sc.getCheckToolKeyCode(), sc.isCtrl_checkTool(), sc.isShift_checkTool(), sc.isAlt_checkTool())},
                         {NOISE_SHORTCUT_TABLE, printShortcut(sc.getNoiseToolKeyCode(), sc.isCtrl_noiseTool(), sc.isShift_noiseTool(), sc.isAlt_noiseTool())},
+                        {INVERT_SHORTCUT_TABLE, printShortcut(sc.getInvertToolKeyCode(), sc.isCtrl_invertTool(), sc.isShift_invertTool(), sc.isAlt_invertTool())},
                 },
                 new Object[]{ACTION_SHORTCUT_TABLE_COL, RE_ASSIGN_SHORTCUT_TABLE_COL});
         JTable table = new JTable(dm);
@@ -463,6 +465,10 @@ public class ShortcutDialog {
                 case 26:
                     sc.removeBinding(sc.getNoiseToolKeyCode(), sc.isCtrl_noiseTool(), sc.isShift_noiseTool(), sc.isAlt_noiseTool());
                     sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.NOISE_SHORTCUT);
+                    break;
+                case 27:
+                    sc.removeBinding(sc.getInvertToolKeyCode(), sc.isCtrl_invertTool(), sc.isShift_invertTool(), sc.isAlt_invertTool());
+                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.INVERT_SHORTCUT);
                     break;
                 default:
                     System.out.println(NO_SUCH_TOOL);
