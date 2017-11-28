@@ -335,6 +335,7 @@ public class MainUI {
 
             if (e.getSource() == textToolButton) {
                 widthChanger.showTextPanel();
+                updateSizeSlider();
                 rectangleSelectionTool.hidePanel();
                 northPanel.remove(rectangleSelectionTool.getSelectionOptionPanel());
                 northPanel.add(textToolSettings, BorderLayout.EAST);
