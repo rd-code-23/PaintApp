@@ -1059,13 +1059,15 @@ public class MainUI {
                     rectangleSelectionTool.hidePanel();
                     northPanel.remove(rectangleSelectionTool.getSelectionOptionPanel());
                     northPanel.add(textToolSettings, BorderLayout.EAST);
+                    widthChanger.showTextPanel();
+                    updateSizeSlider();
                     northPanel.validate();
                     selectedDrawingTool = textTool;
                     setHighlightedToDefault();
                     highlightedButton = textToolButton;
                     textToolButton.setIcon(new ImageIcon(getRESFile(TEXT_ICON_HIGHLIGHTED)));
                     textToolSettings.setVisibility(true);
-                    updateSizeSlider();
+
                 });
         shortcuts.addKeyBinding(KeyEvent.VK_Z, true, false, false,
                 Shortcuts.TRIANGLE_TOOL_SHORTCUT, (evt) -> {
@@ -1295,13 +1297,15 @@ public class MainUI {
                     rectangleSelectionTool.hidePanel();
                     northPanel.remove(rectangleSelectionTool.getSelectionOptionPanel());
                     northPanel.add(textToolSettings, BorderLayout.EAST);
+                    widthChanger.showTextPanel();
+                    updateSizeSlider();
                     northPanel.validate();
                     selectedDrawingTool = textTool;
                     setHighlightedToDefault();
                     highlightedButton = textToolButton;
                     textToolButton.setIcon(new ImageIcon(getRESFile(TEXT_ICON_HIGHLIGHTED)));
                     textToolSettings.setVisibility(true);
-                    updateSizeSlider();
+
                 });
         shortcuts.addKeyBinding(shortcuts.getTriangleToolKeyCode(), shortcuts.isCtrl_triangleTool(),
                 shortcuts.isShift_triangleTool(), shortcuts.isAlt_triangleTool(), Shortcuts.TRIANGLE_TOOL_SHORTCUT,
