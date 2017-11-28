@@ -525,7 +525,7 @@ public class MainUI {
         });
 
         //drop table if shortcuts are changed
-     //  db_kbShortcuts.dropTable();
+       db_kbShortcuts.dropTable();
         if (db_kbShortcuts.isTableExists()) {
             generateDBDefaultKeyBindings();
             db_kbShortcuts.generateDBKeyBindings();
@@ -1052,19 +1052,15 @@ public class MainUI {
                 });
         shortcuts.addKeyBinding(KeyEvent.VK_T, true, false, false,
                 Shortcuts.TEXT_TOOL_SHORTCUT, (evt) -> {
-                    rectangleSelectionTool.restartSelection();
-                    MouseCursor.setDefaultCursor();
                     rectangleSelectionTool.hidePanel();
                     northPanel.remove(rectangleSelectionTool.getSelectionOptionPanel());
-                    textToolSettings.setVisibility(true);
-                    setHighlightedToDefault();
-                    highlightedButton = textToolButton;
-                    textToolButton.setIcon(new ImageIcon(getRESFile(TEXT_ICON_HIGHLIGHTED)));
                     northPanel.add(textToolSettings, BorderLayout.EAST);
                     northPanel.validate();
                     selectedDrawingTool = textTool;
-                    updateFillState(); // Tool supports filling
-                    updateSizeSlider();
+                    setHighlightedToDefault();
+                    highlightedButton = textToolButton;
+                    textToolButton.setIcon(new ImageIcon(getRESFile(TEXT_ICON_HIGHLIGHTED)));
+                    textToolSettings.setVisibility(true);
                 });
         shortcuts.addKeyBinding(KeyEvent.VK_Z, true, false, false,
                 Shortcuts.TRIANGLE_TOOL_SHORTCUT, (evt) -> {
@@ -1294,7 +1290,7 @@ public class MainUI {
                     selectedDrawingTool = textTool;
                     setHighlightedToDefault();
                     highlightedButton = textToolButton;
-                    textToolButton.setIcon(new ImageIcon(TEXT_ICON_HIGHLIGHTED));
+                    textToolButton.setIcon(new ImageIcon(getRESFile(TEXT_ICON_HIGHLIGHTED)));
                     textToolSettings.setVisibility(true);
                 });
         shortcuts.addKeyBinding(shortcuts.getTriangleToolKeyCode(), shortcuts.isCtrl_triangleTool(),
