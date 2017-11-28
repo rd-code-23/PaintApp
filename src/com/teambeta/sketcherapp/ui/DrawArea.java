@@ -376,10 +376,12 @@ public class DrawArea extends JComponent {
      */
     public void redrawToGreyscale() {
         // convert selected imageLayer to greyscale
-        BufferedImage currentlySelectedLayerBufferedImage = currentlySelectedLayer.getBufferedImage();
-        makeBufferedImageGrayscale(currentlySelectedLayerBufferedImage);
-        drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
-        repaint();
+        if (currentlySelectedLayer != null) {
+            BufferedImage currentlySelectedLayerBufferedImage = currentlySelectedLayer.getBufferedImage();
+            makeBufferedImageGrayscale(currentlySelectedLayerBufferedImage);
+            drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
+            repaint();
+        }
     }
 
     private void makeBufferedImageGrayscale(BufferedImage layer) {
@@ -409,10 +411,12 @@ public class DrawArea extends JComponent {
      * Draw random colourful noise on the selectedLayer.
      */
     public void colouredNoiseGenerator() {
-        BufferedImage currentlySelectedLayerBufferedImage = currentlySelectedLayer.getBufferedImage();
-        fillWithColouredNoise(currentlySelectedLayerBufferedImage);
-        drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
-        repaint();
+        if (currentlySelectedLayer != null) {
+            BufferedImage currentlySelectedLayerBufferedImage = currentlySelectedLayer.getBufferedImage();
+            fillWithColouredNoise(currentlySelectedLayerBufferedImage);
+            drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
+            repaint();
+        }
     }
 
     private void fillWithColouredNoise(BufferedImage layer) {
@@ -433,9 +437,11 @@ public class DrawArea extends JComponent {
      * Invert the colours of the current layer.
      */
     public void drawInvertCurrentLayerColours() {
-        invertLayerColours(currentlySelectedLayer.getBufferedImage());
-        drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
-        repaint();
+        if (currentlySelectedLayer != null) {
+            invertLayerColours(currentlySelectedLayer.getBufferedImage());
+            drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
+            repaint();
+        }
     }
 
     /**
@@ -517,11 +523,13 @@ public class DrawArea extends JComponent {
      * @param hints       the RenderingHints to use
      */
     private void rescaleOperation(float[] scaleFactor, float[] offset, RenderingHints hints) {
-        RescaleOp transformationOperation = new RescaleOp(scaleFactor, offset, hints);
-        transformationOperation.filter(this.currentlySelectedLayer.getBufferedImage(),
-                this.currentlySelectedLayer.getBufferedImage());
-        drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
-        repaint();
+        if (currentlySelectedLayer != null) {
+            RescaleOp transformationOperation = new RescaleOp(scaleFactor, offset, hints);
+            transformationOperation.filter(this.currentlySelectedLayer.getBufferedImage(),
+                    this.currentlySelectedLayer.getBufferedImage());
+            drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
+            repaint();
+        }
     }
 
     /**
@@ -547,10 +555,12 @@ public class DrawArea extends JComponent {
      * @param hueFactor the factor to multiply current hue levels
      */
     public void drawLayerHueScaling(float hueFactor) {
-        transformLayerHSB(getCurrentlySelectedLayer().getBufferedImage(),
-                hueFactor, 1f, 1f);
-        drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
-        repaint();
+        if (currentlySelectedLayer != null) {
+            transformLayerHSB(getCurrentlySelectedLayer().getBufferedImage(),
+                    hueFactor, 1f, 1f);
+            drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
+            repaint();
+        }
     }
 
     /**
@@ -560,10 +570,12 @@ public class DrawArea extends JComponent {
      * @param saturationFactor the factor to multiply current saturation levels
      */
     public void drawLayerSaturationScaling(float saturationFactor) {
-        transformLayerHSB(getCurrentlySelectedLayer().getBufferedImage(),
-                1f, saturationFactor, 1f);
-        drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
-        repaint();
+        if (currentlySelectedLayer != null) {
+            transformLayerHSB(getCurrentlySelectedLayer().getBufferedImage(),
+                    1f, saturationFactor, 1f);
+            drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
+            repaint();
+        }
     }
 
     /**
@@ -575,10 +587,12 @@ public class DrawArea extends JComponent {
      * @param brightnessFactor the factor to multiply current brightness levels
      */
     public void drawLayerBrightnessScaling(float brightnessFactor) {
-        transformLayerHSB(getCurrentlySelectedLayer().getBufferedImage(),
-                1f, 1f, brightnessFactor);
-        drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
-        repaint();
+        if (currentlySelectedLayer != null) {
+            transformLayerHSB(getCurrentlySelectedLayer().getBufferedImage(),
+                    1f, 1f, brightnessFactor);
+            drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
+            repaint();
+        }
     }
 
     /**
