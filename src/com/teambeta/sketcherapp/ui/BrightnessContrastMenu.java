@@ -9,8 +9,8 @@ public class BrightnessContrastMenu {
     private static final int PANEL_WIDTH = 330;
     private static final int PANEL_HEIGHT = 100;
     private static final float ZERO_OFFSET = 0f;
-    private static final String BRIGHTNESS_LABEL = "Multiply layer brightness:";
-    private static final String CONTRAST_LABEL = "Multiply layer contrast:";
+    private static final String BRIGHTNESS_LABEL = "Multiply Layer Brightness:";
+    private static final String CONTRAST_LABEL = "Multiply Layer Contrast:";
     private static final String DEFAULT_BRIGHTNESS_FACTOR = "1.0";
     private static final String DEFAULT_CONTRAST_FACTOR = "1.0";
     private static final String DIALOG_WARNING = "Only positive decimal numbers can be input";

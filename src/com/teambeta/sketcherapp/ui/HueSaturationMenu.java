@@ -9,8 +9,8 @@ public class HueSaturationMenu {
     private static final int PANEL_WIDTH = 330;
     private static final int PANEL_HEIGHT = 100;
     private static final float ZERO_OFFSET = 0f;
-    private static final String HUE_LABEL = "Multiply layer hue:";
-    private static final String SATURATION_LABEL = "Multiply layer saturation:";
+    private static final String HUE_LABEL = "Multiply Layer Hue:";
+    private static final String SATURATION_LABEL = "Multiply Layer Saturation:";
     private static final String DEFAULT_HUE_FACTOR = "1.0";
     private static final String DEFAULT_SATURATION_FACTOR = "1.0";
     private static final String DIALOG_WARNING = "Only positive decimal numbers can be input";

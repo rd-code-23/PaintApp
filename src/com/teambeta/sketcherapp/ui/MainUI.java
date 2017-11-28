@@ -480,9 +480,10 @@ public class MainUI {
         importExport = new ImportExport(drawArea, this);
         brightnessContrastMenu = new BrightnessContrastMenu(drawArea);
         hueSaturationMenu = new HueSaturationMenu(drawArea);
-        greyscaleMenu = new GreyscaleMenu(drawArea);
-        noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
-        checkerboardMenu = new CheckerboardMenu(drawArea);
+        GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
+        InvertMenu invertMenu = new InvertMenu(drawArea);
+        NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
+        CheckerboardMenu checkerboardMenu = new CheckerboardMenu(drawArea);
 
         initializeDrawArea(mainContent);
         initializeButtons();
@@ -500,7 +501,7 @@ public class MainUI {
         keyboardShortCutPanel = new ShortcutDialog(this, shortcuts);
 
         MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, hueSaturationMenu, brightnessContrastMenu,
-                noiseGeneratorMenu, checkerboardMenu, keyboardShortCutPanel, printCanvas);
+                noiseGeneratorMenu, checkerboardMenu, keyboardShortCutPanel, printCanvas, invertMenu);
 
 
         northPanel.add(menuUI, BorderLayout.NORTH);
