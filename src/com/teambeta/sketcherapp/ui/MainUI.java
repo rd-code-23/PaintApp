@@ -2,10 +2,7 @@ package com.teambeta.sketcherapp.ui;
 
 import com.teambeta.sketcherapp.Database.DB_KBShortcuts;
 import com.teambeta.sketcherapp.drawingTools.*;
-import com.teambeta.sketcherapp.model.ImportExport;
-import com.teambeta.sketcherapp.model.MouseCursor;
-import com.teambeta.sketcherapp.model.Shortcuts;
-import com.teambeta.sketcherapp.model.ToolButton;
+import com.teambeta.sketcherapp.model.*;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -111,6 +108,7 @@ public class MainUI {
     private LayersPanel layersPanel;
     private MouseCursor mouseCursor;
     private JPanel northPanel;
+    private PrintCanvas printCanvas;
 
     private static final String RES_PATH = System.getProperty("user.dir") + File.separator + "src" +
             File.separator + "res";
@@ -176,6 +174,7 @@ public class MainUI {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == clearButton) {
                 if (drawArea.getCurrentlySelectedLayer().isVisible()) {
+                    rectangleSelectionTool.restartSelection();
                     drawArea.clear();
                 }
             } else if (e.getSource() == brushToolButton) {
@@ -340,7 +339,7 @@ public class MainUI {
                 textToolSettings.setVisibility(false);
             }
 
-            if (selectedDrawingTool != rectangleSelectionTool && e.getSource() != clearButton && e.getSource() instanceof JButton) {
+            if (selectedDrawingTool != rectangleSelectionTool  && e.getSource() instanceof JButton) {
                 rectangleSelectionTool.restartSelection();
                 rectangleSelectionTool.hidePanel();
                 mouseCursor.setDefaultCursor();
@@ -480,6 +479,7 @@ public class MainUI {
         initializeButtons();
         initializeCanvasTools();
         brushToolButton.setIcon(new ImageIcon(BRUSH_ICON_HIGHLIGHTED));
+        printCanvas = new PrintCanvas(drawArea,this);
 
         /* END MAIN UI BUTTONS */
         northPanel = new JPanel();
@@ -491,7 +491,7 @@ public class MainUI {
         keyboardShortCutPanel = new ShortcutDialog(this, shortcuts);
 
         MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, hueSaturationMenu, brightnessContrastMenu,
-                noiseGeneratorMenu, checkerboardMenu, keyboardShortCutPanel);
+                noiseGeneratorMenu, checkerboardMenu, keyboardShortCutPanel,printCanvas);
 
 
         northPanel.add(menuUI, BorderLayout.NORTH);
