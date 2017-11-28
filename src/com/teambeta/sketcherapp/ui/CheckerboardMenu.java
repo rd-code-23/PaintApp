@@ -10,9 +10,9 @@ public class CheckerboardMenu {
     private static final String DIALOG_MESSAGE = "Draw checkerboard pattern?\n" +
             "This will overwrite the selected layer";
     private static final String DIALOG_WINDOW_TITLE = "Confirm Checkerboard";
-    private static final String DIALOG_HORIZONTAL = "Horizontal amount";
-    private static final String DIALOG_VERTICAL = "Vertical amount";
-    private static final String DIALOG_WARNING = "You cannot input a non-integer";
+    private static final String DIALOG_HORIZONTAL = "Horizontal Amount";
+    private static final String DIALOG_VERTICAL = "Vertical Amount";
+    private static final String DIALOG_WARNING = "You can only input positive numbers";
 
     /*
         Constructor to access the drawArea
@@ -42,6 +42,9 @@ public class CheckerboardMenu {
             }
             try {
                 horizontalCount = Integer.parseInt(horizontalInput);
+                if (horizontalCount <= 0) {
+                    throw new NumberFormatException();
+                }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, DIALOG_WARNING);
                 return; // Explicit quit
@@ -53,6 +56,9 @@ public class CheckerboardMenu {
             }
             try {
                 verticalCount = Integer.parseInt(verticalInput);
+                if (verticalCount <= 0) {
+                    throw new NumberFormatException();
+                }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, DIALOG_WARNING);
                 return; // Explicit quit
