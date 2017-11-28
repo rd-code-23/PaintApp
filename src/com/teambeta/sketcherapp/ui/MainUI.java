@@ -169,8 +169,14 @@ public class MainUI {
     private static final String TRIANGLE_ICON_HIGHLIGHTED = "triangle_highlighted.png";
     private static final String TRIANGLE_ICON_HOVER = "triangle_hover.png";
 
-    private URL getRESFile(String name) {
-        return getClass().getClassLoader().getResource(name);
+    /**
+     * Get the resource URL of the resource
+     *
+     * @param filename filename
+     * @return resource URL
+     */
+    private URL getRESFile(String filename) {
+        return getClass().getClassLoader().getResource(filename);
     }
 
     private ActionListener actionListener = new ActionListener() {
