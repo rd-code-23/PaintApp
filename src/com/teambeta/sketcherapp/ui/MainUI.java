@@ -172,6 +172,7 @@ public class MainUI {
     private URL getRESFile(String name) {
         return getClass().getClassLoader().getResource(name);
     }
+
     private ActionListener actionListener = new ActionListener() {
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == clearButton) {
