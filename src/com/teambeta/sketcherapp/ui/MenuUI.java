@@ -43,6 +43,7 @@ public class MenuUI extends JMenuBar {
     private JMenuItem iGeneratorsSubMenu;
     private JMenuItem iCheckerBoard;
     private JMenuItem iGreyscale;
+    private JMenuItem iInvertColours;
     private JMenuItem iNoise;
 
     private static final String IHUESATURATION_MENU_BUTTON_TEXT = "Hue / Saturation";
@@ -50,6 +51,7 @@ public class MenuUI extends JMenuBar {
     private static final String IGENERATORSSUBMENU_MENU_BUTTON_TEXT = "Generators";
     private static final String ICHECKERBOARD_MENU_BUTTON_TEXT = "Checkerboard";
     private static final String IGREYSCALE_MENU_BUTTON_TEXT = "Greyscale";
+    private static final String IINVERTCOLOURS_MENU_BUTTON_TEXT = "Invert Colours";
     private static final String INOISE_MENU_BUTTON_TEXT = "Noise";
 
     private JMenuItem hAbout;
@@ -61,6 +63,7 @@ public class MenuUI extends JMenuBar {
     private HueSaturationMenu hueSaturationMenu;
     private BrightnessContrastMenu brightnessContrastMenu;
     private GreyscaleMenu greyscaleMenu;
+    private InvertMenu invertMenu;
     private AboutMenu aboutMenu;
     private NewWindow newWindow;
 
@@ -75,7 +78,7 @@ public class MenuUI extends JMenuBar {
     public MenuUI(JFrame mainFrame, DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu,
                   HueSaturationMenu hueSaturationMenu, BrightnessContrastMenu brightnessContrastMenu,
                   NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu,
-                  ShortcutDialog keyboardShortCutPanel, PrintCanvas printCanvas) {
+                  ShortcutDialog keyboardShortCutPanel, PrintCanvas printCanvas, InvertMenu invertMenu) {
         this.mainFrame = mainFrame;
         this.drawArea = drawArea;
         this.importExport = importExport;
@@ -86,6 +89,7 @@ public class MenuUI extends JMenuBar {
         this.checkerboardMenu = checkerboardMenu;
         this.keyboardShortCutPanel = keyboardShortCutPanel;
         this.printCanvas = printCanvas;
+        this.invertMenu = invertMenu;
 
         prepareMenuBar();
     }
@@ -125,14 +129,17 @@ public class MenuUI extends JMenuBar {
         iGeneratorsSubMenu = new JMenu(IGENERATORSSUBMENU_MENU_BUTTON_TEXT);
         iCheckerBoard = new JMenuItem(ICHECKERBOARD_MENU_BUTTON_TEXT);
         iGreyscale = new JMenuItem(IGREYSCALE_MENU_BUTTON_TEXT);
+        iInvertColours = new JMenuItem(IINVERTCOLOURS_MENU_BUTTON_TEXT);
         iNoise = new JMenuItem(INOISE_MENU_BUTTON_TEXT);
 
         imageMenu.add(iHueSaturation);
         imageMenu.add(iBrightnessContrast);
         imageMenu.add(iGreyscale);
+        imageMenu.add(iInvertColours);
         imageMenu.add(iGeneratorsSubMenu);
-        iGeneratorsSubMenu.add(iCheckerBoard);
         iGeneratorsSubMenu.add(iNoise);
+        iGeneratorsSubMenu.add(iCheckerBoard);
+
 
         hAbout = new JMenuItem(HABOUT_MENU_BUTTON_TEXT);
 
@@ -142,6 +149,7 @@ public class MenuUI extends JMenuBar {
         fExport.addActionListener(menuActionListener);
         fImport.addActionListener(menuActionListener);
         iGreyscale.addActionListener(menuActionListener);
+        iInvertColours.addActionListener(menuActionListener);
         hAbout.addActionListener(menuActionListener);
         fClose.addActionListener(menuActionListener);
         fNew.addActionListener(menuActionListener);
@@ -164,6 +172,8 @@ public class MenuUI extends JMenuBar {
                 importExport.importImage();
             } else if (e.getSource() == iGreyscale) {
                 greyscaleMenu.showWindow();
+            } else if (e.getSource() == iInvertColours) {
+                invertMenu.showWindow();
             } else if (e.getSource() == iHueSaturation) {
                 hueSaturationMenu.showWindow();
             } else if (e.getSource() == iBrightnessContrast) {

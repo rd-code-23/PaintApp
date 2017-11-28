@@ -430,6 +430,35 @@ public class DrawArea extends JComponent {
     }
 
     /**
+     * Invert the colours of the current layer.
+     */
+    public void drawInvertCurrentLayerColours() {
+        invertLayerColours(currentlySelectedLayer.getBufferedImage());
+        drawLayersOntoCanvas(drawingLayers, canvasBufferedImage);
+        repaint();
+    }
+
+    /**
+     * Invert layer colours.
+     *
+     * @param layer the layer to transform
+     */
+    private void invertLayerColours(BufferedImage layer) {
+        Color color_at_point;
+        for (int x = 0; x < layer.getWidth(); ++x) {
+            for (int y = 0; y < layer.getHeight(); ++y) {
+                color_at_point = new Color(layer.getRGB(x, y), true);
+                int alphaPreserve = color_at_point.getAlpha();
+                color_at_point = new Color(255 - color_at_point.getRed(),
+                        255 - color_at_point.getGreen(),
+                        255 - color_at_point.getBlue(),
+                        alphaPreserve);
+                layer.setRGB(x, y, color_at_point.getRGB());
+            }
+        }
+    }
+
+    /**
      * Fill in a black and white checkerboard pattern to the layer.
      *
      * @param layer            The BufferedImage layer to write on

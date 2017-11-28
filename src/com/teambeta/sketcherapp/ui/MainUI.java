@@ -479,6 +479,7 @@ public class MainUI {
         brightnessContrastMenu = new BrightnessContrastMenu(drawArea);
         hueSaturationMenu = new HueSaturationMenu(drawArea);
         GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
+        InvertMenu invertMenu = new InvertMenu(drawArea);
         NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
         CheckerboardMenu checkerboardMenu = new CheckerboardMenu(drawArea);
 
@@ -498,7 +499,7 @@ public class MainUI {
         keyboardShortCutPanel = new ShortcutDialog(this, shortcuts);
 
         MenuUI menuUI = new MenuUI(mainFrame, drawArea, importExport, greyscaleMenu, hueSaturationMenu, brightnessContrastMenu,
-                noiseGeneratorMenu, checkerboardMenu, keyboardShortCutPanel,printCanvas);
+                noiseGeneratorMenu, checkerboardMenu, keyboardShortCutPanel, printCanvas, invertMenu);
 
 
         northPanel.add(menuUI, BorderLayout.NORTH);
