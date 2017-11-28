@@ -1,9 +1,6 @@
 package com.teambeta.sketcherapp.ui;
 
-import com.teambeta.sketcherapp.model.AboutMenu;
-import com.teambeta.sketcherapp.model.ImageLayer;
-import com.teambeta.sketcherapp.model.ImportExport;
-import com.teambeta.sketcherapp.model.NewWindow;
+import com.teambeta.sketcherapp.model.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,11 +26,13 @@ public class MenuUI extends JMenuBar {
     private static final String FIMPORT_MENU_BUTTON_TEXT = "Import";
     private static final String FEXPORT_MENU_BUTTON_TEXT = "Export";
     private static final String FCLOSE_MENU_BUTTON_TEXT = "Close";
+    private static final String FPRINT_MENU_BUTTON_TEXT = "Print";
 
     private JMenuItem fNew;
     private JMenuItem fImport;
     private JMenuItem fExport;
     private JMenuItem fClose;
+    private JMenuItem fPrint;
 
     private static final String ESHORTCUTS_MENU_BUTTON_TEXT = "Shortcuts";
 
@@ -64,10 +63,11 @@ public class MenuUI extends JMenuBar {
     private GreyscaleMenu greyscaleMenu;
     private AboutMenu aboutMenu;
     private NewWindow newWindow;
-    
+
     private NoiseGeneratorMenu noiseGeneratorMenu;
     private CheckerboardMenu checkerboardMenu;
     private ShortcutDialog keyboardShortCutPanel;
+    private PrintCanvas printCanvas;
 
     /**
      * Constructor
@@ -75,7 +75,7 @@ public class MenuUI extends JMenuBar {
     public MenuUI(JFrame mainFrame, DrawArea drawArea, ImportExport importExport, GreyscaleMenu greyscaleMenu,
                   HueSaturationMenu hueSaturationMenu, BrightnessContrastMenu brightnessContrastMenu,
                   NoiseGeneratorMenu noiseGeneratorMenu, CheckerboardMenu checkerboardMenu,
-                  ShortcutDialog keyboardShortCutPanel) {
+                  ShortcutDialog keyboardShortCutPanel, PrintCanvas printCanvas) {
         this.mainFrame = mainFrame;
         this.drawArea = drawArea;
         this.importExport = importExport;
@@ -85,6 +85,8 @@ public class MenuUI extends JMenuBar {
         this.noiseGeneratorMenu = noiseGeneratorMenu;
         this.checkerboardMenu = checkerboardMenu;
         this.keyboardShortCutPanel = keyboardShortCutPanel;
+        this.printCanvas = printCanvas;
+
         prepareMenuBar();
     }
 
@@ -106,10 +108,12 @@ public class MenuUI extends JMenuBar {
         fImport = new JMenuItem(FIMPORT_MENU_BUTTON_TEXT);
         fExport = new JMenuItem(FEXPORT_MENU_BUTTON_TEXT);
         fClose = new JMenuItem(FCLOSE_MENU_BUTTON_TEXT);
+        fPrint = new JMenuItem(FPRINT_MENU_BUTTON_TEXT);
 
         fileMenu.add(fNew);
         fileMenu.add(fImport);
         fileMenu.add(fExport);
+        fileMenu.add(fPrint);
         fileMenu.add(fClose);
 
         eKeyboardShortCuts = new JMenuItem(ESHORTCUTS_MENU_BUTTON_TEXT);
@@ -146,6 +150,7 @@ public class MenuUI extends JMenuBar {
         iNoise.addActionListener(menuActionListener);
         iCheckerBoard.addActionListener(menuActionListener);
         eKeyboardShortCuts.addActionListener(menuActionListener);
+        fPrint.addActionListener(menuActionListener);
     }
 
     private ActionListener menuActionListener = new ActionListener() {
@@ -183,6 +188,8 @@ public class MenuUI extends JMenuBar {
                     mainUI.displayUI();
                     mainFrame.dispose();
                 }
+            } else {
+                printCanvas.getPrintDimensionsDialog();
             }
         }
     };
