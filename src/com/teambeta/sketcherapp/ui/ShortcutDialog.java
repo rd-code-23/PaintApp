@@ -426,7 +426,7 @@ public class ShortcutDialog {
                 case 5:
                     sc.removeBinding(sc.getSpiralToolKeyCode(), sc.isCtrl_spiralTool(), sc.isShift_spiralTool(),
                             sc.isAlt_spiralTool());
-                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.LINE_TOOL_SHORTCUT);
+                    sc.changeKeyBinding(newKeyCode, isCtrl, isShift, isAlt, Shortcuts.SPIRAL_TOOL_SHORTCUT);
                     break;
                 case 6:
                     sc.removeBinding(sc.getFanToolKeyCode(), sc.isCtrl_fanTool(), sc.isShift_fanTool(),
