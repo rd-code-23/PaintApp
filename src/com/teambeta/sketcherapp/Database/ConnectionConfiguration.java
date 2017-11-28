@@ -17,7 +17,7 @@ public class ConnectionConfiguration {
         Connection connection = null;
         try {
             Class.forName(JDBC_DRIVER);
-            connection = DriverManager.getConnection(DB_ADDRESS);
+         //   connection = DriverManager.getConnection(DB_ADDRESS);
             //  System.out.println("Connected");
         } catch (Exception e) {
             e.printStackTrace();

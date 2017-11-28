@@ -28,33 +28,40 @@ public class DB_KBShortcuts {
     /**
      * creates a table
      */
-    public void createTable() {
+    public boolean createTable()  {
+        Statement stmt = null;
         try {
             connection = ConnectionConfiguration.getConnection();
+            if (connection != null) {
 
-            String sqlCreate = "CREATE TABLE IF NOT EXISTS " + KB_SHORTCUTS_TABLE
-                    + "( "
-                    + SHORTCUT_NAME + "  VARCHAR(50) PRIMARY KEY, "
-                    + KEY_STROKE + "  VARCHAR(5), "
-                    + IS_CTRL + "    VARCHAR(5)       NOT NULL, "
-                    + IS_SHIFT + "    VARCHAR(5)       NOT NULL, "
-                    + IS_ALT + "     VARCHAR(5)       NOT NULL "
-                    + " );";
+                String sqlCreate = "CREATE TABLE IF NOT EXISTS " + KB_SHORTCUTS_TABLE
+                        + "( "
+                        + SHORTCUT_NAME + "  VARCHAR(50) PRIMARY KEY, "
+                        + KEY_STROKE + "  VARCHAR(5), "
+                        + IS_CTRL + "    VARCHAR(5)       NOT NULL, "
+                        + IS_SHIFT + "    VARCHAR(5)       NOT NULL, "
+                        + IS_ALT + "     VARCHAR(5)       NOT NULL "
+                        + " );";
 
-            Statement stmt = connection.createStatement();
-            stmt.execute(sqlCreate);
-            stmt.close();
-            connection.close();
-        } catch (Exception e) {
+
+                stmt = connection.createStatement();
+                stmt.execute(sqlCreate);
+                stmt.close();
+                connection.close();
+                return  true;
+            } else {
+                return  false;
+            }
+        }catch(Exception e){
             e.printStackTrace();
         }
-
+        return false;
     }
 
     /**
      * inserts a record into the database
      */
-    public void insert(String shortcutName, String keyStroke, String isCTRL, String isALT, String isSHIFT) {
+    public void insert(String shortcutName, String keyStroke, String isCTRL, String isALT, String isSHIFT)  {
 
         if (isDataExists(shortcutName)) {
             return;
@@ -64,20 +71,24 @@ public class DB_KBShortcuts {
 
         try {
             connection = ConnectionConfiguration.getConnection();
-            pst = connection.prepareStatement(
-                    "INSERT INTO " + KB_SHORTCUTS_TABLE +
-                            "(SHORTCUT_NAME,KEY_STROKE,IS_CTRL,IS_SHIFT,IS_ALT)" +
-                            "VALUES(?,?,?,?,?) ");
+            if (connection != null) {
 
-            pst.setString(1, shortcutName); // 1 the first ?
 
-            pst.setString(2, keyStroke);
-            pst.setString(3, isCTRL);
-            pst.setString(4, isSHIFT);
-            pst.setString(5, isALT);
-            pst.executeUpdate();
-            pst.close();
-            connection.close();
+                pst = connection.prepareStatement(
+                        "INSERT INTO " + KB_SHORTCUTS_TABLE +
+                                "(SHORTCUT_NAME,KEY_STROKE,IS_CTRL,IS_SHIFT,IS_ALT)" +
+                                "VALUES(?,?,?,?,?) ");
+
+                pst.setString(1, shortcutName); // 1 the first ?
+
+                pst.setString(2, keyStroke);
+                pst.setString(3, isCTRL);
+                pst.setString(4, isSHIFT);
+                pst.setString(5, isALT);
+                pst.executeUpdate();
+                pst.close();
+                connection.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -90,26 +101,28 @@ public class DB_KBShortcuts {
         try {
             connection = ConnectionConfiguration.getConnection();
 
-            String query = "UPDATE  " + KB_SHORTCUTS_TABLE
-                    + " SET "
-                    + SHORTCUT_NAME + " =  ?, "
-                    + KEY_STROKE + " =  ?, "
-                    + IS_CTRL + " =  ?, "
-                    + IS_SHIFT + " =  ?, "
-                    + IS_ALT + " =  ? "
-                    + " WHERE "
-                    + SHORTCUT_NAME + " LIKE ? ";
+            if(connection !=null) {
+                String query = "UPDATE  " + KB_SHORTCUTS_TABLE
+                        + " SET "
+                        + SHORTCUT_NAME + " =  ?, "
+                        + KEY_STROKE + " =  ?, "
+                        + IS_CTRL + " =  ?, "
+                        + IS_SHIFT + " =  ?, "
+                        + IS_ALT + " =  ? "
+                        + " WHERE "
+                        + SHORTCUT_NAME + " LIKE ? ";
 
-            PreparedStatement pst = connection.prepareStatement(query);
-            pst.setString(1, shortcutName);
-            pst.setString(2, keyStroke);
-            pst.setString(3, isCTRL);
-            pst.setString(4, isSHIFT);
-            pst.setString(5, isALT);
-            pst.setString(6, shortcutName);
-            pst.executeUpdate();
-            pst.close();
-            connection.close();
+                PreparedStatement pst = connection.prepareStatement(query);
+                pst.setString(1, shortcutName);
+                pst.setString(2, keyStroke);
+                pst.setString(3, isCTRL);
+                pst.setString(4, isSHIFT);
+                pst.setString(5, isALT);
+                pst.setString(6, shortcutName);
+                pst.executeUpdate();
+                pst.close();
+                connection.close();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -121,11 +134,13 @@ public class DB_KBShortcuts {
     public void dropTable() {
         try {
             connection = ConnectionConfiguration.getConnection();
-            String sqlCreate = " DROP TABLE " + KB_SHORTCUTS_TABLE;
-            Statement stmt = connection.createStatement();
-            stmt.execute(sqlCreate);
-            stmt.close();
-            connection.close();
+            if(connection !=null ) {
+                String sqlCreate = " DROP TABLE " + KB_SHORTCUTS_TABLE;
+                Statement stmt = connection.createStatement();
+                stmt.execute(sqlCreate);
+                stmt.close();
+                connection.close();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -138,35 +153,37 @@ public class DB_KBShortcuts {
     public void generateDBKeyBindings() {
         try {
             connection = ConnectionConfiguration.getConnection();
-            Statement stmt = connection.createStatement();
-            ResultSet rset = stmt.executeQuery("select * from " + KB_SHORTCUTS_TABLE);
+            if(connection!=null) {
+                Statement stmt = connection.createStatement();
+                ResultSet rset = stmt.executeQuery("select * from " + KB_SHORTCUTS_TABLE);
 
-            while (rset.next()) {
-                boolean isCtrl = false;
-                boolean isShift = false;
-                boolean isAlt = false;
+                while (rset.next()) {
+                    boolean isCtrl = false;
+                    boolean isShift = false;
+                    boolean isAlt = false;
 
-                if (rset.getString(IS_CTRL).equals("true")) {
-                    isCtrl = true;
+                    if (rset.getString(IS_CTRL).equals("true")) {
+                        isCtrl = true;
+                    }
+
+                    if (rset.getString(IS_SHIFT).equals("true")) {
+                        isShift = true;
+                    }
+
+                    if (rset.getString(IS_ALT).equals("true")) {
+                        isAlt = true;
+                    }
+
+                    int keyCode;
+                    keyCode = rset.getString(KEY_STROKE).charAt(0);
+                    shortcuts.removeBinding(keyCode, isCtrl, isShift, isAlt);
+                    shortcuts.getDBShortcuts(keyCode, isCtrl, isShift, isAlt, rset.getString(SHORTCUT_NAME));
                 }
 
-                if (rset.getString(IS_SHIFT).equals("true")) {
-                    isShift = true;
-                }
-
-                if (rset.getString(IS_ALT).equals("true")) {
-                    isAlt = true;
-                }
-
-                int keyCode;
-                keyCode = rset.getString(KEY_STROKE).charAt(0);
-                shortcuts.removeBinding(keyCode, isCtrl, isShift, isAlt);
-                shortcuts.getDBShortcuts(keyCode, isCtrl, isShift, isAlt, rset.getString(SHORTCUT_NAME));
+                stmt.close();
+                rset.close();
+                connection.close();
             }
-
-            stmt.close();
-            rset.close();
-            connection.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -179,50 +196,73 @@ public class DB_KBShortcuts {
     public boolean isDataExists(String shortcutName) {
         try {
             connection = ConnectionConfiguration.getConnection();
-            String query = "SELECT (count(*) > 0) as found FROM " + KB_SHORTCUTS_TABLE + " WHERE " + SHORTCUT_NAME + " LIKE ? ";
-            PreparedStatement pst = connection.prepareStatement(query);
-            pst.setString(1, shortcutName);
+            if (connection != null) {
 
-            try (ResultSet rs = pst.executeQuery()) {
-                // Only expecting a single result
-                if (rs.next()) {
-                    boolean found = rs.getBoolean(1); // "found" column
-                    if (found) {
-                        return true;
-                    } else {
-                        return false;
+
+                String query = "SELECT (count(*) > 0) as found FROM " + KB_SHORTCUTS_TABLE + " WHERE " + SHORTCUT_NAME + " LIKE ? ";
+                PreparedStatement pst = connection.prepareStatement(query);
+                pst.setString(1, shortcutName);
+
+                try (ResultSet rs = pst.executeQuery()) {
+                    // Only expecting a single result
+                    if (rs.next()) {
+                        boolean found = rs.getBoolean(1); // "found" column
+                        if (found) {
+                            return true;
+                        } else {
+                            return false;
+                        }
                     }
                 }
-            }
 
-            pst.close();
-            connection.close();
+                pst.close();
+                connection.close();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return false;
     }
 
+    public boolean testConnection(){
+
+        connection = ConnectionConfiguration.getConnection();
+        if(connection == null){
+            return false;
+        } else {
+            return true;
+        }
+
+
+    }
+
+
     /**
      * checks to see if a table exists
      */
     public boolean isTableExists() {
+        ResultSet rset = null;
+        DatabaseMetaData dbm = null;
         try {
             connection = ConnectionConfiguration.getConnection();
-            DatabaseMetaData dbm = connection.getMetaData();
 
-            ResultSet rset = dbm.getTables(null, null, KB_SHORTCUTS_TABLE, null);
+            if(connection !=null) {
+                dbm = connection.getMetaData();
 
-            if (rset.next()) {
-                rset.close();
-                connection.close();
-                return true;
-            } else {
-                rset.close();
-                connection.close();
-                return false;
+                rset = dbm.getTables(null, null, KB_SHORTCUTS_TABLE, null);
+
+                if (rset.next()) {
+
+                    rset.close();
+                    connection.close();
+                    return true;
+                } else {
+
+                    rset.close();
+                    connection.close();
+                    return false;
+                }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -231,7 +271,7 @@ public class DB_KBShortcuts {
             e.printStackTrace();
             return false;
         }
-
+        return false;
     }
 
     /**
