@@ -71,6 +71,7 @@ public class MainUI {
     private static final String DARK_GREY_CANVAS = "#222222";
     private static final String FONT_TYPE = "Arial";
     private static final int FONT_SIZE = 16;
+    private static final int SCROLL_INCREMENT = 15;
     private int canvasWidth;
     private int canvasHeight;
 
@@ -584,6 +585,8 @@ public class MainUI {
         drawAreaPanel.setBackground(Color.decode(DARK_GREY_CANVAS));
         drawAreaPanel.add(drawArea, gridBagConstraints);
         JScrollPane drawAreaScrollPane = new JScrollPane(drawAreaPanel);
+        drawAreaScrollPane.getVerticalScrollBar().setBlockIncrement(SCROLL_INCREMENT);
+        drawAreaScrollPane.getHorizontalScrollBar().setUnitIncrement(SCROLL_INCREMENT);
         drawAreaScrollPane.setBorder(createEmptyBorder());
         drawAreaScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         drawAreaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -816,6 +819,7 @@ public class MainUI {
         JScrollPane scrollPaneWestPanel = new JScrollPane(westPanel);
         scrollPaneWestPanel.setPreferredSize(new Dimension(WEST_PANEL_WIDTH, 0));
         scrollPaneWestPanel.setBorder(createEmptyBorder());
+        scrollPaneWestPanel.getVerticalScrollBar().setUnitIncrement(SCROLL_INCREMENT);
         scrollPaneWestPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPaneWestPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
