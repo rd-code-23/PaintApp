@@ -43,7 +43,8 @@ public class LayersPanel extends JPanel implements ListSelectionListener {
     private static final int LAYER_MOVEMENT_PANEL_HEIGHT = 100;
     private static final int LAYER_PANEL_WIDTH = 383;
     private static final int LAYER_PANEL_HEIGHT = 150;
-    private static final long MINIMUM_DUPLICATION_CLEANING_COOLDOWN = 2250;
+    private static final int MSINSECOND = 1000;
+    private static final long MINIMUM_DUPLICATION_CLEANING_COOLDOWN = 20 * MSINSECOND;
     private static long lastDuplicationGarbageCollectTime;
     private DrawArea drawArea;
     private LinkedList<ImageLayer> drawingLayers;
