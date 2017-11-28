@@ -112,6 +112,7 @@ public class MainUI {
     private GreyscaleMenu greyscaleMenu;
     private NoiseGeneratorMenu noiseGeneratorMenu;
     private CheckerboardMenu checkerboardMenu;
+    private InvertMenu invertMenu;
 
     private static final String APPLICATION_LOGO_IMAGE_DIRECTORY = "BPIcon.png";
     private static final String AIR_BRUSH_ICON_DEFAULT = "airbrush.png";
@@ -480,10 +481,10 @@ public class MainUI {
         importExport = new ImportExport(drawArea, this);
         brightnessContrastMenu = new BrightnessContrastMenu(drawArea);
         hueSaturationMenu = new HueSaturationMenu(drawArea);
-        GreyscaleMenu greyscaleMenu = new GreyscaleMenu(drawArea);
-        InvertMenu invertMenu = new InvertMenu(drawArea);
-        NoiseGeneratorMenu noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
-        CheckerboardMenu checkerboardMenu = new CheckerboardMenu(drawArea);
+        greyscaleMenu = new GreyscaleMenu(drawArea);
+        invertMenu = new InvertMenu(drawArea);
+        noiseGeneratorMenu = new NoiseGeneratorMenu(drawArea);
+        checkerboardMenu = new CheckerboardMenu(drawArea);
 
         initializeDrawArea(mainContent);
         initializeButtons();
@@ -526,7 +527,7 @@ public class MainUI {
         });
 
         //drop table if shortcuts are changed
-     //  db_kbShortcuts.dropTable();
+         db_kbShortcuts.dropTable();
         if (db_kbShortcuts.isTableExists()) {
             generateDBDefaultKeyBindings();
             db_kbShortcuts.generateDBKeyBindings();
@@ -1127,7 +1128,7 @@ public class MainUI {
                 });
         shortcuts.addKeyBinding(KeyEvent.VK_V, false, true, false, Shortcuts.INVERT_SHORTCUT,
                 (evt) -> {
-
+                    invertMenu.showWindow();
                 });
     }
 
@@ -1368,10 +1369,10 @@ public class MainUI {
         shortcuts.isShift_zoomTool(), shortcuts.isAlt_zoomTool(), Shortcuts.ZOOM_TOOL_SHORTCUT, (evt) -> {
         });*/
 
-         shortcuts.addKeyBinding(shortcuts.getInvertToolKeyCode(), shortcuts.isCtrl_invertTool(),
-        shortcuts.isShift_invertTool(), shortcuts.isAlt_invertTool(), Shortcuts.INVERT_SHORTCUT, (evt) -> {
-
-        });
+        shortcuts.addKeyBinding(shortcuts.getInvertToolKeyCode(), shortcuts.isCtrl_invertTool(),
+                shortcuts.isShift_invertTool(), shortcuts.isAlt_invertTool(), Shortcuts.INVERT_SHORTCUT, (evt) -> {
+                    invertMenu.showWindow();
+                });
     }
 
     /**
