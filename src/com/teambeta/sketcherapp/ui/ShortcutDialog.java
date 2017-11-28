@@ -18,7 +18,7 @@ public class ShortcutDialog {
     private static final int SHORTCUT_DIALOG_WIDTH = 700;
     private static final int SHORTCUT_DIALOG_HEIGHT = 900;
     private static final String KEYBOARD_SHORTCUTS_TITLE = "Keyboard Shortcuts";
-    private static final String RE_ASSIGN_BUTTON_TABLE_COL = "Re-Assign";
+    private static final String RE_ASSIGN_BUTTON_TABLE_COL = "Reassign";
     private static final String RE_ASSIGN_SHORTCUT_TABLE_COL = RE_ASSIGN_BUTTON_TABLE_COL;
     private static final String CLEAR_SHORTCUT_TABLE = "Clear";
     private static final String BRUSH_SHORTCUT_TABLE = "Brush";
@@ -28,9 +28,10 @@ public class ShortcutDialog {
     private static final String ACTION_SHORTCUT_TABLE_COL = "Action";
     private static final String DEFAULT_BUTTON = "Default";
     private static final String APPLY_BUTTON = "Apply";
-    private static final String CTRL_PLUS_STRING = "Ctrl+";
-    private static final String SHIFT_PLUS_STRING = "Shift+";
-    private static final String ALT_PLUS_STRING = "Alt+";
+    private static final String CTRL_PLUS_STRING = "CTRL + ";
+    private static final String SHIFT_PLUS_STRING = "SHIFT + ";
+    private static final String ALT_PLUS_STRING = "ALT + ";
+    private static final int DIALOG_VERTICAL_MARGIN = 40;
 
     private MainUI mainUI;
     private Shortcuts sc;
@@ -177,11 +178,11 @@ public class ShortcutDialog {
         private static final String KEY_STROKE_SYMBOL_BUTTON = "-";
         private static final String SAVE_TEXT_BUTTON = "Save";
         private static final String CANCEL_TEXT_BUTTON = "Cancel";
-        private static final String CTRL_TEXT_BUTTON = "ctrl";
-        private static final String ALT_TEXT_BUTTON = "alt";
-        private static final String SHIFT_TEXT_BUTTON = "shift";
-        private static final String INSTRUCTION_EDIT_SHORTCUT_LABEL = "Toggle ctrl,alt and shift. Then type a letter";
-        private static final String INSTRUCTION_INVALID_BINDING_EDIT_LABEL = "That Binding is Already Taken! Try Again";
+        private static final String CTRL_TEXT_BUTTON = "CTRL";
+        private static final String ALT_TEXT_BUTTON = "ALT";
+        private static final String SHIFT_TEXT_BUTTON = "SHIFT";
+        private static final String INSTRUCTION_EDIT_SHORTCUT_LABEL = "You can toggle CTRL, ALT and SHIFT. Then type a letter";
+        private static final String INSTRUCTION_INVALID_BINDING_EDIT_LABEL = "That binding is already taken! Try again";
         private static final String INSTRUCTION_ENTER_LETTER_LABEL = "You need to enter a letter!";
         private static final String NO_SUCH_TOOL = "NO SUCH TOOL";
 
@@ -314,6 +315,7 @@ public class ShortcutDialog {
                 c.gridx = 0;
                 c.gridy = 0;
                 dialog.add(instructions, c);
+                dialog.add(Box.createVerticalStrut(DIALOG_VERTICAL_MARGIN), c);
 
                 listPane.setLayout(new BoxLayout(listPane, BoxLayout.LINE_AXIS));
                 listPane.add(ctrlKey);
