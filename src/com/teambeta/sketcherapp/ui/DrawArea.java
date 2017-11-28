@@ -445,13 +445,14 @@ public class DrawArea extends JComponent {
      */
     private void invertLayerColours(BufferedImage layer) {
         Color color_at_point;
+        final int RGBMAXVAL = 255;
         for (int x = 0; x < layer.getWidth(); ++x) {
             for (int y = 0; y < layer.getHeight(); ++y) {
                 color_at_point = new Color(layer.getRGB(x, y), true);
                 int alphaPreserve = color_at_point.getAlpha();
-                color_at_point = new Color(255 - color_at_point.getRed(),
-                        255 - color_at_point.getGreen(),
-                        255 - color_at_point.getBlue(),
+                color_at_point = new Color(RGBMAXVAL - color_at_point.getRed(),
+                        RGBMAXVAL - color_at_point.getGreen(),
+                        RGBMAXVAL - color_at_point.getBlue(),
                         alphaPreserve);
                 layer.setRGB(x, y, color_at_point.getRGB());
             }
