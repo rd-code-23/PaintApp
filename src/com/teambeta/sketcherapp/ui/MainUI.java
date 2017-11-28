@@ -525,7 +525,7 @@ public class MainUI {
         });
 
         //drop table if shortcuts are changed
-       db_kbShortcuts.dropTable();
+     //  db_kbShortcuts.dropTable();
         if (db_kbShortcuts.isTableExists()) {
             generateDBDefaultKeyBindings();
             db_kbShortcuts.generateDBKeyBindings();
