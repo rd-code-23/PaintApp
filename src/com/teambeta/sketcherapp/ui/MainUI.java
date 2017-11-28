@@ -172,6 +172,7 @@ public class MainUI {
     private static final String TRIANGLE_ICON_HOVER = "triangle_hover.png";
 
     public static boolean isDatabaseGood = false;
+
     /**
      * Get the resource URL of the resource
      *
@@ -534,7 +535,7 @@ public class MainUI {
         //  db_kbShortcuts.dropTable();
         isDatabaseGood = db_kbShortcuts.testConnection();
         System.out.println("connected is: " + isDatabaseGood);
-        if(isDatabaseGood) {
+        if (isDatabaseGood) {
 
             if (db_kbShortcuts.isTableExists()) {
                 generateDBDefaultKeyBindings();

@@ -28,7 +28,7 @@ public class DB_KBShortcuts {
     /**
      * creates a table
      */
-    public boolean createTable()  {
+    public boolean createTable() {
         Statement stmt = null;
         try {
             connection = ConnectionConfiguration.getConnection();
@@ -48,11 +48,11 @@ public class DB_KBShortcuts {
                 stmt.execute(sqlCreate);
                 stmt.close();
                 connection.close();
-                return  true;
+                return true;
             } else {
-                return  false;
+                return false;
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -61,7 +61,7 @@ public class DB_KBShortcuts {
     /**
      * inserts a record into the database
      */
-    public void insert(String shortcutName, String keyStroke, String isCTRL, String isALT, String isSHIFT)  {
+    public void insert(String shortcutName, String keyStroke, String isCTRL, String isALT, String isSHIFT) {
 
         if (isDataExists(shortcutName)) {
             return;
@@ -72,8 +72,6 @@ public class DB_KBShortcuts {
         try {
             connection = ConnectionConfiguration.getConnection();
             if (connection != null) {
-
-
                 pst = connection.prepareStatement(
                         "INSERT INTO " + KB_SHORTCUTS_TABLE +
                                 "(SHORTCUT_NAME,KEY_STROKE,IS_CTRL,IS_SHIFT,IS_ALT)" +
@@ -101,7 +99,7 @@ public class DB_KBShortcuts {
         try {
             connection = ConnectionConfiguration.getConnection();
 
-            if(connection !=null) {
+            if (connection != null) {
                 String query = "UPDATE  " + KB_SHORTCUTS_TABLE
                         + " SET "
                         + SHORTCUT_NAME + " =  ?, "
@@ -134,7 +132,7 @@ public class DB_KBShortcuts {
     public void dropTable() {
         try {
             connection = ConnectionConfiguration.getConnection();
-            if(connection !=null ) {
+            if (connection != null) {
                 String sqlCreate = " DROP TABLE " + KB_SHORTCUTS_TABLE;
                 Statement stmt = connection.createStatement();
                 stmt.execute(sqlCreate);
@@ -153,7 +151,7 @@ public class DB_KBShortcuts {
     public void generateDBKeyBindings() {
         try {
             connection = ConnectionConfiguration.getConnection();
-            if(connection!=null) {
+            if (connection != null) {
                 Statement stmt = connection.createStatement();
                 ResultSet rset = stmt.executeQuery("select * from " + KB_SHORTCUTS_TABLE);
 
@@ -197,8 +195,6 @@ public class DB_KBShortcuts {
         try {
             connection = ConnectionConfiguration.getConnection();
             if (connection != null) {
-
-
                 String query = "SELECT (count(*) > 0) as found FROM " + KB_SHORTCUTS_TABLE + " WHERE " + SHORTCUT_NAME + " LIKE ? ";
                 PreparedStatement pst = connection.prepareStatement(query);
                 pst.setString(1, shortcutName);
@@ -224,10 +220,10 @@ public class DB_KBShortcuts {
         return false;
     }
 
-    public boolean testConnection(){
+    public boolean testConnection() {
 
         connection = ConnectionConfiguration.getConnection();
-        if(connection == null){
+        if (connection == null) {
             return false;
         } else {
             return true;
@@ -246,7 +242,7 @@ public class DB_KBShortcuts {
         try {
             connection = ConnectionConfiguration.getConnection();
 
-            if(connection !=null) {
+            if (connection != null) {
                 dbm = connection.getMetaData();
 
                 rset = dbm.getTables(null, null, KB_SHORTCUTS_TABLE, null);
