@@ -568,7 +568,12 @@ public class MainUI {
         gridBagConstraints.ipadx = canvasWidth;
         drawAreaPanel.setBackground(Color.decode(DARK_GREY_CANVAS));
         drawAreaPanel.add(drawArea, gridBagConstraints);
-        mainContent.add(drawAreaPanel, BorderLayout.CENTER);
+        JScrollPane drawAreaScrollPane = new JScrollPane(drawAreaPanel);
+        drawAreaScrollPane.setBorder(createEmptyBorder());
+        drawAreaScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        drawAreaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
+        mainContent.add(drawAreaScrollPane, BorderLayout.CENTER);
     }
 
     /**
