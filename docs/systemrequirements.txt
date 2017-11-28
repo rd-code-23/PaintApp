@@ -1,0 +1,9 @@
+Requirements:
+CPU: Desktop i3 or equivalent within the last 5 years
+GPU: Supports OpenGL
+Monitor: 1080p 16:9 or greater
+
+Recommended:
+CPU: Core i7 or greater
+GPU: 1080ti SLI
+Touchscreen and Pen
