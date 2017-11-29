@@ -171,6 +171,8 @@ public class MainUI {
     private static final String TRIANGLE_ICON_HIGHLIGHTED = "triangle_highlighted.png";
     private static final String TRIANGLE_ICON_HOVER = "triangle_hover.png";
 
+    public static boolean isDatabaseGood = false;
+
     /**
      * Get the resource URL of the resource
      *
@@ -531,11 +533,18 @@ public class MainUI {
 
         //drop table if shortcuts are changed
         //  db_kbShortcuts.dropTable();
-        if (db_kbShortcuts.isTableExists()) {
-            generateDBDefaultKeyBindings();
-            db_kbShortcuts.generateDBKeyBindings();
+        isDatabaseGood = db_kbShortcuts.testConnection();
+        if (isDatabaseGood) {
+
+            if (db_kbShortcuts.isTableExists()) {
+                generateDBDefaultKeyBindings();
+                db_kbShortcuts.generateDBKeyBindings();
+            } else {
+                db_kbShortcuts.createTable();
+                generateDefaultKeyBindings();
+            }
+
         } else {
-            db_kbShortcuts.createTable();
             generateDefaultKeyBindings();
         }
 
