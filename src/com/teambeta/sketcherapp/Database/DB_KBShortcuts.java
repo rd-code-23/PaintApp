@@ -42,7 +42,6 @@ public class DB_KBShortcuts {
                         + IS_ALT + "     VARCHAR(5)       NOT NULL "
                         + " );";
 
-
                 stmt = connection.createStatement();
                 stmt.execute(sqlCreate);
                 stmt.close();
@@ -65,9 +64,7 @@ public class DB_KBShortcuts {
         if (isDataExists(shortcutName)) {
             return;
         }
-
         PreparedStatement pst = null;
-
         try {
             connection = ConnectionConfiguration.getConnection();
             if (connection != null) {
@@ -157,15 +154,12 @@ public class DB_KBShortcuts {
                     boolean isCtrl = false;
                     boolean isShift = false;
                     boolean isAlt = false;
-
                     if (rset.getString(IS_CTRL).equals("true")) {
                         isCtrl = true;
                     }
-
                     if (rset.getString(IS_SHIFT).equals("true")) {
                         isShift = true;
                     }
-
                     if (rset.getString(IS_ALT).equals("true")) {
                         isAlt = true;
                     }
@@ -300,9 +294,5 @@ public class DB_KBShortcuts {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
     }
-
-
 }

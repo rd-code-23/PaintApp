@@ -30,7 +30,7 @@ public class Main {
             System.setProperty("sun.java2d.opengl", "True");
             MainUI mainUI = new MainUI(DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT);
             mainUI.displayUI();
-            if(!MainUI.isDatabaseGood) {
+            if (!MainUI.isDatabaseGood) {
                 JOptionPane.showMessageDialog(null, DATABASE_EXCEPTION, DATABASE_ERROR_TITLE,
                         JOptionPane.ERROR_MESSAGE);
             }
