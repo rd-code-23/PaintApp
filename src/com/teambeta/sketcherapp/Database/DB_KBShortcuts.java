@@ -33,7 +33,6 @@ public class DB_KBShortcuts {
         try {
             connection = ConnectionConfiguration.getConnection();
             if (connection != null) {
-
                 String sqlCreate = "CREATE TABLE IF NOT EXISTS " + KB_SHORTCUTS_TABLE
                         + "( "
                         + SHORTCUT_NAME + "  VARCHAR(50) PRIMARY KEY, "
@@ -98,7 +97,6 @@ public class DB_KBShortcuts {
     public void update(String shortcutName, String keyStroke, String isCTRL, String isALT, String isSHIFT) {
         try {
             connection = ConnectionConfiguration.getConnection();
-
             if (connection != null) {
                 String query = "UPDATE  " + KB_SHORTCUTS_TABLE
                         + " SET "
@@ -241,7 +239,6 @@ public class DB_KBShortcuts {
         DatabaseMetaData dbm = null;
         try {
             connection = ConnectionConfiguration.getConnection();
-
             if (connection != null) {
                 dbm = connection.getMetaData();
 
