@@ -58,7 +58,7 @@ public class MainUI {
 
     private JFrame mainFrame;
 
-    private static final String APPLICATION_NAME = "Beta Sketcher";
+    private static final String APPLICATION_NAME = "BetaPaint";
     private static final int APPLICATION_WIDTH = 1920;
     private static final int APPLICATION_HEIGHT = 1080;
     private static final int EDITOR_PANEL_WIDTH = 400;
@@ -69,8 +69,6 @@ public class MainUI {
     private static final int IMAGE_EDITING_PANEL_HEIGHT = 180;
     private static final int IMAGE_EDITING_PANEL_WIDTH = 340;
     private static final String DARK_GREY_CANVAS = "#222222";
-    private static final String FONT_TYPE = "Arial";
-    private static final int FONT_SIZE = 16;
     private static final int SCROLL_INCREMENT = 15;
     private int canvasWidth;
     private int canvasHeight;
