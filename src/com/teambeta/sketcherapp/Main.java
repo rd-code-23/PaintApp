@@ -14,6 +14,8 @@ public class Main {
     private static final int SPLASH_DISPLAY_DURATION = 5000;
     private static final String DATABASE_EXCEPTION = "The database cannot be accessed.";
     private static final String MINIMUM_REQUIREMENT_EXCEPTION = "Your computer does not meet the minimum requirements.";
+    private static final String REQUIREMENTS_ERROR_TITLE = "Requirements Error";
+    private static final String DATABASE_ERROR_TITLE = "Database Error";
 
     /**
      * Main program.
@@ -29,13 +31,16 @@ public class Main {
             MainUI mainUI = new MainUI(DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT);
             mainUI.displayUI();
             if(!MainUI.isDatabaseGood) {
-                JOptionPane.showMessageDialog(null, DATABASE_EXCEPTION);
+                JOptionPane.showMessageDialog(null, DATABASE_EXCEPTION, DATABASE_ERROR_TITLE,
+                        JOptionPane.ERROR_MESSAGE);
             }
         } catch (NullPointerException e) {
-            JOptionPane.showMessageDialog(null, DATABASE_EXCEPTION);
+            JOptionPane.showMessageDialog(null, DATABASE_EXCEPTION, DATABASE_ERROR_TITLE,
+                    JOptionPane.ERROR_MESSAGE);
             System.exit(-1);
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, MINIMUM_REQUIREMENT_EXCEPTION);
+            JOptionPane.showMessageDialog(null, MINIMUM_REQUIREMENT_EXCEPTION,
+                    REQUIREMENTS_ERROR_TITLE, JOptionPane.INFORMATION_MESSAGE);
             System.exit(-1);
         }
     }
