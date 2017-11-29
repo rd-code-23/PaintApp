@@ -43,3 +43,21 @@ https://www.javatpoint.com/java-linkedhashmap
 
 16. Overwriting pre-existing map value
 https://stackoverflow.com/questions/27705908/how-to-replace-the-value-in-particular-key-in-linkedhashmap
+
+17. SQLITE
+http://www.sqlitetutorial.net/sqlite-java/sqlite-jdbc-driver/
+
+18. Shortcut button table
+http://www.java2s.com/Code/Java/Swing-Components/ButtonTableExample.htm
+
+19. Shortcut change layout
+https://stackoverflow.com/questions/46985936/using-keybinding-and-action-map-in-java-for-shortcut-keys-for-buttons
+
+20. Scaling imported images
+https://stackoverflow.com/questions/11367324/how-do-i-scale-a-bufferedimage?noredirect=1&lq=1
+
+21. Drag cursor PNG
+Icon made by [https://www.flaticon.com/authors/stephen-hutchings] from www.flaticon.com
+
+22. Target cursor PNG
+Icon made by [https://www.flaticon.com/authors/smashicons] from www.flaticon.com

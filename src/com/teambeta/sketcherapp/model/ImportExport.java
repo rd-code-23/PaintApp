@@ -5,6 +5,7 @@ import com.teambeta.sketcherapp.ui.MainUI;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -77,6 +78,12 @@ public class ImportExport {
             File imageFile = new File(selectedFile.getAbsolutePath());
             try {
                 image = ImageIO.read(imageFile);
+
+                if(image.getWidth()>drawArea.getWidth())
+                    image = getScaledImage(image, drawArea.getWidth(),image.getHeight());
+                if(image.getHeight()>drawArea.getHeight())
+                    image = getScaledImage(image, image.getWidth(),drawArea.getHeight());
+
             } catch (IOException exc) {
                 exc.printStackTrace();
             }
@@ -107,5 +114,19 @@ public class ImportExport {
 
     public static boolean isExported() {
         return exported;
+    }
+
+    /**
+     * scales the canvas
+     * TAKEN FROM
+     * https://stackoverflow.com/questions/11367324/how-do-i-scale-a-bufferedimage?noredirect=1&lq=1
+     */
+    private BufferedImage getScaledImage(Image srcImg, int w, int h) {
+        BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TRANSLUCENT);
+        Graphics2D g2 = resizedImg.createGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2.drawImage(srcImg, 0, 0, w, h, null);
+        g2.dispose();
+        return resizedImg;
     }
 }
