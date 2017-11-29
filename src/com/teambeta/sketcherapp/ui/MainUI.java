@@ -534,7 +534,6 @@ public class MainUI {
         //drop table if shortcuts are changed
         //  db_kbShortcuts.dropTable();
         isDatabaseGood = db_kbShortcuts.testConnection();
-        System.out.println("connected is: " + isDatabaseGood);
         if (isDatabaseGood) {
 
             if (db_kbShortcuts.isTableExists()) {

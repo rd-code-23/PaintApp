@@ -28,7 +28,9 @@ public class Main {
             System.setProperty("sun.java2d.opengl", "True");
             MainUI mainUI = new MainUI(DEFAULT_CANVAS_WIDTH, DEFAULT_CANVAS_HEIGHT);
             mainUI.displayUI();
-
+            if(!MainUI.isDatabaseGood) {
+                JOptionPane.showMessageDialog(null, DATABASE_EXCEPTION);
+            }
         } catch (NullPointerException e) {
             JOptionPane.showMessageDialog(null, DATABASE_EXCEPTION);
             System.exit(-1);
