@@ -1,9 +1,10 @@
-Requirements:
-CPU: Desktop i3 or equivalent within the last 5 years
+Minimum Requirements:
+CPU: Desktop Intel i3 or equivalent within the last 5 years
 GPU: Supports OpenGL
-Monitor: 1080p 16:9 or greater
+Monitor: HD 1920 x 1080p
 
-Recommended:
-CPU: Core i7 or greater
-GPU: 1080ti SLI
-Touchscreen and Pen
+Recommended Requirements:
+CPU: Intel Core i7
+GPU: GeForce GTX 780 or AMD Radeon R9 290
+Monitor: UHD 3840 x 2160p, 16:9, touchscreen
+Tools: Stylus pen
